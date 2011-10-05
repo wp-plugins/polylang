@@ -1,4 +1,4 @@
-=== Plugin Name ===
+=== Polylang ===
 Contributors: Chouby
 Tags: bilingual, multilingual, language, i18n, l10n, international, translate, translation, widget
 Requires at least: 3.1
