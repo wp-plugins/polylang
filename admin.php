@@ -1,6 +1,7 @@
 <?php
 
-require_once(dirname(__FILE__).'/list-table.php');
+require_once(POLYLANG_DIR.'/list-table.php');
+define('POLYLANG_URL', WP_PLUGIN_URL .'/polylang');
 
 class Polylang_Admin extends Polylang_Base {
 	function __construct() {
@@ -10,6 +11,9 @@ class Polylang_Admin extends Polylang_Base {
 
 		// adds the link to the languages panel in the wordpress admin menu 
 		add_action('admin_menu', array(&$this, 'add_menus'));
+
+		// setup js scripts
+		add_action('admin_print_scripts', array($this,'admin_js'));
 
 		// add the language column (as well as a filter by language) in 'All Posts' an 'All Pages' panels  
 		add_filter('manage_posts_columns',  array(&$this, 'add_post_column'), 10, 2);
@@ -21,6 +25,9 @@ class Polylang_Admin extends Polylang_Base {
 
 		// adds the Languages box in the 'Edit Post' and 'Edit Page' panels
 		add_action('add_meta_boxes', array(&$this, 'add_meta_boxes'));
+
+		// ajax response for post metabox
+		add_action('wp_ajax_post_lang_choice', array($this,'post_lang_choice'));
 
 		// adds actions related to languages when saving aor deleting posts and pages
 		add_action('save_post', array(&$this, 'save_post'));
@@ -34,6 +41,9 @@ class Polylang_Admin extends Polylang_Base {
 		add_action('category_edit_form_fields',  array(&$this, 'edit_term_form'));
 		add_action('post_tag_edit_form_fields',  array(&$this, 'edit_term_form'));
 
+		// ajax response for edit term form
+		add_action('wp_ajax_term_lang_choice', array($this,'term_lang_choice'));
+
 		// adds the language column in the 'Categories' and 'Post Tags' tables 
 		add_filter('manage_edit-category_columns',  array(&$this, 'add_term_column'));
 		add_filter('manage_edit-post_tag_columns',  array(&$this, 'add_term_column'));
@@ -41,15 +51,18 @@ class Polylang_Admin extends Polylang_Base {
     add_action('manage_post_tag_custom_column', array(&$this, 'term_column'), 10, 3);		
 
 		// adds actions related to languages when saving or deleting categories and post tags
-		add_action('created_category', array(&$this,'save_term'));	
-		add_action('created_post_tag', array(&$this,'save_term'));	
-		add_action('edited_category', array(&$this,'save_term'));	
-		add_action('edited_post_tag', array(&$this,'save_term'));	
-		add_action('delete_category', array(&$this,'delete_term'));	
-		add_action('delete_post_tag', array(&$this,'delete_term'));
+		add_action('created_category', array(&$this, 'save_term'));	
+		add_action('created_post_tag', array(&$this, 'save_term'));	
+		add_action('edited_category', array(&$this, 'save_term'));	
+		add_action('edited_post_tag', array(&$this, 'save_term'));	
+		add_action('delete_category', array(&$this, 'delete_term'));	
+		add_action('delete_post_tag', array(&$this, 'delete_term'));
+
+		// modifies the theme location nav menu metabox
+		add_filter('admin_head-nav-menus.php', array(&$this, 'nav_menu_theme_locations'));
 
 		// refresh rewrite rules if the 'page_on_front' option is modified
-		add_action('update_option', array(&$this,'update_option'));
+		add_action('update_option', array(&$this, 'update_option'));
 	}
 
 	// adds a 'settings' link in the plugins table
@@ -64,6 +77,11 @@ class Polylang_Admin extends Polylang_Base {
 		add_submenu_page('options-general.php', __('Languages','polylang'), __('Languages','polylang'), 'manage_options', 'mlang',  array($this, 'languages_page'));
 	}
 
+	// setup js scripts
+	function admin_js() {
+		wp_enqueue_script('polylang_admin', POLYLANG_URL.'/admin.js');
+	}
+
 	// the languages panel
 	function languages_page() {
 		global $wp_rewrite;
@@ -71,6 +89,11 @@ class Polylang_Admin extends Polylang_Base {
 
 		$listlanguages = $this->get_languages_list();
 		$list_table = new Polylang_List_Table();
+
+		// for nav menus form
+		$locations = get_registered_nav_menus();
+		$menus = wp_get_nav_menus();
+		$menu_lang = get_option('polylang_nav_menus');
 
 		$action = '';
 		if (isset($_REQUEST['action']))		
@@ -186,6 +209,12 @@ class Polylang_Admin extends Polylang_Base {
 				exit;
 				break;
 
+			case 'nav-menus':
+				check_admin_referer( 'nav-menus-lang', '_wpnonce_nav-menus-lang' );
+				$menu_lang = $_POST['menu-lang'];
+				update_option('polylang_nav_menus', $menu_lang);
+				break;
+
 			case 'options':
 				check_admin_referer( 'options-lang', '_wpnonce_options-lang' );
 
@@ -210,7 +239,7 @@ class Polylang_Admin extends Polylang_Base {
 		$list_table->prepare_items($data);
 
 		// displays the page 
-		include(dirname(__FILE__).'/languages-form.php');
+		include(POLYLANG_DIR.'/languages-form.php');
 	}
 
 	// adds the language column (before the date column) in the posts and pages list table
@@ -251,11 +280,11 @@ class Polylang_Admin extends Polylang_Base {
 
 	// adds a filter for languages in the Posts and Pages panels
 	function restrict_manage_posts() {
-		global $typenow;
 		global $wp_query;
+		$screen = get_current_screen();
 		$languages = $this->get_languages_list();
 
-		if (!empty($languages) && in_array($typenow, array('', 'post', 'page'))) {
+		if (!empty($languages) && $screen->base == 'edit') {
 			$qvars = $wp_query->query;
 			wp_dropdown_categories(array(
 				'show_option_all' => __('Show all languages', 'polylang'),
@@ -267,8 +296,8 @@ class Polylang_Admin extends Polylang_Base {
 
 	// adds the Languages box in the 'Edit Post' and 'Edit Page' panels
 	function add_meta_boxes() {
-		add_meta_box('ml_box', __('Languages','multiLang'), array(&$this,'post_language'), 'post', 'side','high');
-		add_meta_box('ml_box', __('Languages','multiLang'), array(&$this,'post_language'), 'page', 'side','high');
+		add_meta_box('ml_box', __('Languages','polylang'), array(&$this,'post_language'), 'post', 'side','high');
+		add_meta_box('ml_box', __('Languages','polylang'), array(&$this,'post_language'), 'page', 'side','high');
 	}
 
 	// the Languages metabox in the 'Edit Post' and 'Edit Page' panels  
@@ -279,30 +308,52 @@ class Polylang_Admin extends Polylang_Base {
 		$lang = $this->get_post_language($post_ID);
 		if (isset($_GET['new_lang']))
 			$lang = $this->get_language($_GET['new_lang']);
+
+		$listlanguages = $this->get_languages_list();
  
-		include(dirname(__FILE__).'/post-metabox.php');
+		include(POLYLANG_DIR.'/post-metabox.php');
+	}
+
+	// ajax response for post metabox
+	function post_lang_choice() {
+		$listlanguages = $this->get_languages_list();
+
+		$lang = $this->get_language($_POST['lang']);
+		$post_ID = $_POST['post_id'];
+
+		if ($lang)
+			include(POLYLANG_DIR.'/post-translations.php');
+
+		die();
 	}
 
 	// called when a post (or page) is saved, published or updated
 	// the underscore in '_lang' hides the post meta in the Custom Fields metabox in the Edit Post screen
 	function save_post($post_id) {
+
 		$id = wp_is_post_revision($post_id);
 		if ($id)
 			$post_id = $id;
 
-		if (isset($_POST['lang_choice']))
-			wp_set_object_terms($post_id, $_POST['lang_choice'], 'language' );
+		if (isset($_POST['post_lang_choice']))
+			wp_set_post_terms($post_id, $_POST['post_lang_choice'], 'language' );
 
 		$lang = $this->get_post_language($post_id);		
 		$listlanguages = $this->get_languages_list();
+
 		foreach ($listlanguages as $language) {
-			if (isset($_POST[$language->slug])) {
-				$value = $_POST[$language->slug];
-				if ($value)
-					update_post_meta($post_id, '_lang-'.$language->slug, $value); // saves the links to translated posts 
+
+			if (isset($_POST[$language->slug]) && $_POST[$language->slug]) {
+				// FIXME I don't check that the translated post is in the right language !
+				update_post_meta($post_id, '_lang-'.$language->slug, $_POST[$language->slug]); // saves the links to translated posts 
+				if ($lang)
+					update_post_meta($this->get_translated_post($post_id, $language), '_lang-'.$lang->slug, $post_id); // tells the translated to link to this post
 			}
-			if ($lang && $language != $lang){
-				update_post_meta($this->get_translated_post($post_id, $language), '_lang-'.$lang->slug, $post_id); // tells the translated to link to this post
+			else {
+				// deletes the translation in case there was previously one
+				if ($lang)
+					delete_post_meta($this->get_translated_post($post_id, $language), '_lang-'.$lang->slug); // in the translated post
+				delete_post_meta($post_id, '_lang-'.$language->slug); // in this post
 			}
 		}
 
@@ -334,25 +385,40 @@ class Polylang_Admin extends Polylang_Base {
 
 	// adds the language field in the 'Categories' and 'Post Tags' panels
 	function add_term_form() {
-		$lang = NULL;
+		$taxonomy = $_GET['taxonomy'];
+		$lang = null;
 		if (isset($_GET['new_lang']))
 			$lang = $this->get_language($_GET['new_lang']); 
 
 		$listlanguages = $this->get_languages_list();
 
 		// displays the language field
-		include(dirname(__FILE__).'/add-term-form.php');
+		include(POLYLANG_DIR.'/add-term-form.php');
 	}
 
 	// adds the language field and translations tables in the 'Edit Category' and 'Edit Tag' panels
 	function edit_term_form($tag) {
 		$term_id = $tag->term_id;
 		$lang = $this->get_term_language($term_id);
-
-		$listlanguages = $this->get_languages_list();
 		$taxonomy = $tag->taxonomy;
+		$listlanguages = $this->get_languages_list();
 
-		include(dirname(__FILE__).'/edit-term-form.php');
+		include(POLYLANG_DIR.'/edit-term-form.php');
+	}
+
+	// ajax response for edit term form
+	function term_lang_choice()
+	{
+		if ($_POST['lang']) {
+			$lang = $this->get_language($_POST['lang']);
+			$term_id = isset($_POST['term_id']) ? $_POST['term_id'] : null;
+			$taxonomy = $_POST['taxonomy'];
+
+			$listlanguages = $this->get_languages_list();
+
+			include(POLYLANG_DIR.'/term-translations.php');
+		}
+		die();
 	}
 
 	// adds the language column (before the posts column) in the 'Categories' or Post Tags table
@@ -377,36 +443,44 @@ class Polylang_Admin extends Polylang_Base {
 
 	// called when a category or post tag is created or edited
 	function save_term($term_id) {
-		if (isset($_POST['lang_choice']) && $_POST['lang_choice'] != -1 ) {
-			update_metadata('term', $term_id, '_language', $_POST['lang_choice'] );
-			$lang = $this->get_language($_POST['lang_choice']);
 
-			$listlanguages = $this->get_languages_list();
-			foreach ($listlanguages as $language)	{
-				$slug = '_lang-'.$language->slug;
-				if (isset($_POST[$slug]) && $_POST[$slug] != -1) {
-					update_metadata('term', $term_id, $slug, $_POST[$slug] );
+		if (isset($_POST['term_lang_choice']) && $_POST['term_lang_choice'])
+			update_metadata('term', $term_id, '_language', $_POST['term_lang_choice'] );
+		else
+			delete_metadata('term', $term_id, '_language');
+
+
+		$lang = $this->get_term_language($term_id);
+		$listlanguages = $this->get_languages_list();
+
+		foreach ($listlanguages as $language)	{
+			$slug = '_lang-'.$language->slug;
+			if (isset($_POST[$slug]) && $_POST[$slug]) {
+				// FIXME I don't check that the translated term is in the right language !
+				update_metadata('term', $term_id, $slug, $_POST[$slug] );
+				if ($lang)
 					update_metadata('term', $_POST[$slug], '_lang-'.$lang->slug, $term_id );
+			}
+			else {
+				// deletes the translation in case there was previously one
+				if ($lang)
+					delete_metadata('term', $this->get_translated_term($term_id, $language), '_lang-'.$lang->slug); // in the translated term
+				delete_metadata('term', $term_id, '_lang-'.$language->slug); // in this term
+			}
+
+		}
+
+		// propagates translations between them
+		if (isset($lang)) {
+			foreach ($listlanguages as $language) {
+				foreach ($listlanguages as $lg) {
+					$id = $this->get_translated_term($term_id, $lg);
+					if ($lg != $lang && $lg != $language && $id)
+						update_metadata('term',$this->get_translated_term($term_id, $language), '_lang-'.$lg->slug, $id);
 				}
 			}
 		}
 
-		$qvars = $this->get_referer_vars();
-		if (isset($qvars['from_tag']) && isset($qvars['from_lang']) && isset($qvars['new_lang'])) {
-			$from_lang = $this->get_language($qvars['from_lang']);
-			update_metadata('term', $term_id, '_lang-'.$from_lang->slug, $qvars['from_tag'] );
-			$new_lang = $this->get_language($qvars['new_lang']);
-			update_metadata('term', $qvars['from_tag'], '_lang-'.$new_lang->slug, $term_id );
-		}
-
-		// propagates translations between them
-		foreach ($listlanguages as $language) {
-			foreach ($listlanguages as $lg) {
-				$id = $this->get_translated_term($term_id, $lg);
-				if ($lg != $lang && $lg != $language && $id)
-					update_metadata('term',$this->get_translated_term($term_id, $language), '_lang-'.$lg->slug, $id);
-			}
-		}
 	}
 
 	// called when a category or post tag is deleted
@@ -437,6 +511,24 @@ class Polylang_Admin extends Polylang_Base {
 			}
 		}
 		return $new_terms;
+	}
+
+	// modifies the theme location nav menu metabox
+	function nav_menu_theme_locations() {
+		// only if the theme supports nav menus
+		if ( ! current_theme_supports( 'menus' ) )
+			return;
+
+		// thanks to : http://wordpress.stackexchange.com/questions/2770/how-to-add-a-custom-metabox-to-the-menu-management-admin-screen
+		$metabox = &$GLOBALS['wp_meta_boxes']['nav-menus']['side']['default']['nav-menu-theme-locations'];
+		$metabox['callback'] = array(&$this,'nav_menu_language');
+		$metabox['title'] = __('Theme locations and languages', 'polylang');
+	}
+
+	// displays a message to redirect to the languages options page
+	function nav_menu_language() {
+		echo '<p class="howto">' . sprintf (__('Please go to the %slanguages page%s to set theme locations and languages', 'polylang'),
+			'<a href="' . admin_url('options-general.php?page=mlang#menus') . '">', '</a>') . '</p>';
 	}
 
 	// refresh rewrite rules if the 'page_on_front' option is modified

@@ -21,19 +21,19 @@ class Polylang_Base {
 	}
 
 	// returns the language by its id or its slug
+	// Note ist seems that the first option is better for performance (3.2.1)
 	function get_language($value) {
 		if (is_numeric($value))
-			$field = 'id';
+			return get_term($value, 'language');
 		elseif (is_string($value))
-			$field = 'slug';
-
-		return get_term_by($field, $value , 'language');
+			return get_term_by('slug', $value , 'language');
+		return null;
 	}
 
 	// returns the language of a post
 	function get_post_language($post_id) {
 		$lang = get_the_terms($post_id, 'language' );
-		return ($lang) ? reset($lang) : NULL; // there's only one language per post : first element of the array returned
+		return ($lang) ? reset($lang) : null; // there's only one language per post : first element of the array returned
 	}
 
 	// returns the id of the translation of a post
@@ -49,8 +49,7 @@ class Polylang_Base {
 
 	// returns the language of a term
 	function get_term_language($term_id) {
-		$value = get_metadata('term', $term_id, '_language', true);
-		return $this->get_language($value);
+		return $this->get_language(get_metadata('term', $term_id, '_language', true));
 	}
 
 	// returns the id of the translation of a term (category or post_tag)

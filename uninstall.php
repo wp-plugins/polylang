@@ -5,6 +5,7 @@ $wpdb->termmeta = $wpdb->prefix . 'termmeta'; // registers the termmeta table in
 register_taxonomy('language', 'post', array('label' => false, 'query_var'=>'lang')); // temporarily register the language taxonomy
 
 $languages = get_terms('language', array('hide_empty'=>false));
+
 foreach ($languages as $lang) {
 	// delete references to this language in all posts
 	$args = array('numberposts'=> -1, 'post_type'=>'any', 'post_status'=>'any');
@@ -30,7 +31,8 @@ if (!$count) {
 	unset($wpdb->termmeta);
 }
 
-// finally delete options 
+// delete options 
 delete_option('polylang');
-delete_option('widget_polylang_widget');
+delete_option('polylang_nav_menus');
+delete_option('widget_polylang_widget'); // automatically created by WP
 ?>

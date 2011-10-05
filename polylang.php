@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.1
+Version: 0.1.0.12
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 */
@@ -23,13 +23,15 @@ Description: Adds multilingual capability to Wordpress
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('MULTILANG_VERSION', '0.1');
-require_once(dirname(__FILE__).'/base.php');
-require_once(dirname(__FILE__).'/admin.php');
-require_once(dirname(__FILE__).'/widget.php');
+define('POLYLANG_VERSION', '0.2');
+define('POLYLANG_DIR', dirname(__FILE__));
+require_once(POLYLANG_DIR.'/base.php');
+require_once(POLYLANG_DIR.'/admin.php');
+require_once(POLYLANG_DIR.'/widget.php');
 
 class Polylang extends Polylang_Base {
 	var $curlang;
+	var $default_locale;
 	var $list_textdomains = array();
 	var $search_form_filter = false;
 
@@ -40,61 +42,67 @@ class Polylang extends Polylang_Base {
 		register_deactivation_hook( __FILE__, array(&$this, 'deactivate') );
 
 		// plugin and widget initialization
-		add_action('init', array(&$this,'init'));
-		add_action('widgets_init', array(&$this,'widgets_init'));
+		add_action('init', array(&$this, 'init'));
+		add_action('widgets_init', array(&$this, 'widgets_init'));
 
 		// rewrite rules
-		add_filter('rewrite_rules_array', array(&$this,'rewrite_rules_array' ));
+		add_filter('rewrite_rules_array', array(&$this, 'rewrite_rules_array' ));
 
 		// filters categories and post tags by language
-		add_filter('get_terms', array(&$this,'get_terms'), 10, 3);
+		add_filter('terms_clauses', array(&$this, 'terms_clauses'), 10, 3);
 
 		if (is_admin()) 
 			new Polylang_Admin();
 		else {
 			// text domain management
-			add_filter('locale', array(&$this,'get_locale'));
-			add_filter('override_load_textdomain', array(&$this,'mofile'), 10, 3);
-			add_action('wp', array(&$this,'load_textdomains'));
+			add_filter('locale', array(&$this, 'get_locale'));
+			add_filter('override_load_textdomain', array(&$this, 'mofile'), 10, 3);
+			add_action('wp', array(&$this, 'load_textdomains'));
 
 			// filters posts according to the language
-			add_filter('pre_get_posts', array(&$this,'pre_get_posts')); 
+			add_filter('pre_get_posts', array(&$this, 'pre_get_posts')); 
 
 			// meta in the html head section
 			remove_action('wp_head', 'rel_canonical');
-			add_action('wp_head', array(&$this,'wp_head'));
+			add_action('wp_head', array(&$this, 'wp_head'));
 
 			// prevents redirection of the homepage
-			add_filter('redirect_canonical', array(&$this,'redirect_canonical'), 10, 2);
+			add_filter('redirect_canonical', array(&$this, 'redirect_canonical'), 10, 2);
 
 			// adds javascript at the end of the document
-			add_action('wp_print_footer_scripts', array(&$this,'wp_print_footer_scripts'));
+			add_action('wp_print_footer_scripts', array(&$this, 'wp_print_footer_scripts'));
 
 			// adds the language information in the search form
-			add_filter('get_search_form', array(&$this,'get_search_form'));
+			add_filter('get_search_form', array(&$this, 'get_search_form'));
 
 			// filters the pages according to the current language
-			add_filter('get_pages', array(&$this,'get_pages'), 10, 2);
+			add_filter('get_pages', array(&$this, 'get_pages'), 10, 2);
+
+			// filters the comments according to the current language 
+			add_filter('comments_clauses', array(&$this, 'comments_clauses'));
 
 			// rewrites feed links to filter them by language 
-			add_filter('feed_link', array(&$this,'feed_link'), 10, 2);
+			add_filter('feed_link', array(&$this, 'feed_link'), 10, 2);
 
 			// rewrites archives links to filter them by language 
-			add_filter('getarchives_join', array(&$this,'posts_join'));
-			add_filter('getarchives_where', array(&$this,'posts_where'));
-			add_filter('get_archives_link', array(&$this,'get_archives_link'));
+			add_filter('getarchives_join', array(&$this, 'posts_join'));
+			add_filter('getarchives_where', array(&$this, 'posts_where'));
+			add_filter('get_archives_link', array(&$this, 'get_archives_link'));
 
 			// rewrites next and previous post links to filter them by language 
-			add_filter('get_previous_post_join', array(&$this,'posts_join'));
-			add_filter('get_next_post_join', array(&$this,'posts_join'));
-			add_filter('get_previous_post_where', array(&$this,'posts_where'));
-			add_filter('get_next_post_where', array(&$this,'posts_where'));
+			add_filter('get_previous_post_join', array(&$this, 'posts_join'));
+			add_filter('get_next_post_join', array(&$this, 'posts_join'));
+			add_filter('get_previous_post_where', array(&$this, 'posts_where'));
+			add_filter('get_next_post_where', array(&$this, 'posts_where'));
+
+			// filters the nav menus according to current language			
+			add_filter('wp_nav_menu_args', array(&$this, 'wp_nav_menu_args'));
 
 			// allows a new value for the 'show' parameter to display the homepage url according to the current language
-			add_filter('bloginfo_url', array(&$this,'bloginfo_url'), 10, 2);
+			add_filter('bloginfo_url', array(&$this, 'bloginfo_url'), 10, 2);
 
 			// Template tags
-	 		add_action('the_languages', array(&$this,'the_languages'));
+	 		add_action('the_languages', array(&$this, 'the_languages'));
 		}
 	}
 
@@ -124,7 +132,7 @@ class Polylang extends Polylang_Base {
 		  ) $charset_collate;");
 
 		// codex tells to use the init action to call register_taxonomy but I need it now for my rewrite rules
-		register_taxonomy('language', 'post', array('label' => false, 'query_var'=>'lang')); 
+		register_taxonomy('language', array('post', 'page'), array('label' => false, 'query_var'=>'lang')); 
 
 		// defines default values for options in case this is the first installation
 		$options = get_option('polylang');
@@ -132,7 +140,7 @@ class Polylang extends Polylang_Base {
 			$options['browser'] = 1; // default language for the front page is set by browser preference
 			$options['rewrite'] = 0; // do not remove /language/ in permalinks
 		}
-		$options['version'] = MULTILANG_VERSION; // do not manage versions yet but prepare for it
+		$options['version'] = POLYLANG_VERSION; // do not manage versions yet but prepare for it
 		update_option('polylang', $options);
 
 		// add our rewrite rules
@@ -168,6 +176,7 @@ class Polylang extends Polylang_Base {
 			$wp_rewrite->extra_permastructs['language'][0] = '%language%';
 		}
 
+		$this->default_locale = get_locale(); // save the default locale before we start any language manipulation
 		load_plugin_textdomain('polylang', false, dirname(plugin_basename( __FILE__ ))); // plugin i18n
 	}
 
@@ -225,40 +234,42 @@ class Polylang extends Polylang_Base {
 		return $newrules + $rules;
 	}
 
-	// filters categories and post tags by language when needed (both in admin panels and frontend
-	function get_terms($terms, $taxonomies, $args) {
+	// filters categories and post tags by language when needed (both in admin panels and frontend)
+	function terms_clauses($clauses, $taxonomies, $args) {
+		// does nothing except on categories and post tags
+		if ( !in_array('category', $taxonomies) && !in_array('post_tag', $taxonomies) )
+			return $clauses;
+
 		if (is_admin()) {
-			$screen = get_current_screen();
+			$screen = get_current_screen(); //FIXME breaks a user's admin -> use pagenow instead ? Or simply test the function.
+
+			// NOTE: $screen is not defined in the tag cloud of the Edit Post panel ($pagenow set to admin-ajax.php)
 			if (isset($screen))
 				// does nothing in the Categories, Post tags, Languages an Posts* admin panels
 				if ($screen->base == 'edit-tags' || $screen->base == 'toplevel_page_mlang' || $screen->base == 'edit')
-					return $terms;
+					return $clauses;
 
 				// *FIXME I want all categories in the dropdown list and only the ones in the right language in the inline edit
 				// It seems that I need javascript to get the post_id as inline edit data are manipulated in inline-edit-post.js
+
+			$this->curlang = $this->get_current_language();
 		}
 
-		// does nothing except on categories and post tags
-		if ( !in_array('category', $taxonomies) && !in_array('post_tag', $taxonomies) )
-			return $terms;
-
-		$lang = $this->get_current_language();
-		if ($lang) {
-			$slug = $lang->slug;
-			foreach($terms as $key => $term) {
-				$lang = $this->get_term_language($term->term_id);
-				if (!$lang || ($lang->slug) != $slug)		
-					unset($terms[$key]); // remove terms with no language set or different language
-			}
+		// adds our clauses to filter by current language
+		if ($this->curlang) {
+			global $wpdb;
+			$value = $this->curlang->term_id;
+			$clauses['join'] .= " INNER JOIN $wpdb->termmeta AS tm ON t.term_id = tm.term_id";
+			$clauses['where'] .= " AND tm.meta_key = '_language' AND tm.meta_value = $value";
 		}
-		return $terms;
+		return $clauses;
 	}
 
 	// returns the language according to browser preference or the default language
 	function get_preferred_language() {
 		// check first is the user was already browsing this site
-		if ($lang = $this->get_language($_COOKIE['wordpress_polylang']))
-			return $lang;
+		if (isset($_COOKIE['wordpress_polylang']))
+			return $this->get_language($_COOKIE['wordpress_polylang']);
 
 		// sets the browsing language according to the browser preferences
 		// code adapted from http://www.thefutureoftheweb.com/blog/use-accept-language-header 
@@ -285,7 +296,7 @@ class Polylang extends Polylang_Base {
 			foreach ($accept_langs as $accept_lang => $val) {
 				foreach ($listlanguages as $language) {
 					if (strpos($accept_lang, $language->slug) === 0 && !isset($pref_lang)) {
-						$pref_lang = $this->get_language($language->slug);
+						$pref_lang = $language;
 					}
 				}
 			}
@@ -354,7 +365,7 @@ class Polylang extends Polylang_Base {
 		return true; // prevents WP loading text domains as we will load them all later
 	}
 
-	// NOTE : I believe there are two ways for a plugin to force the WP language 
+	// NOTE: I believe there are two ways for a plugin to force the WP language 
 	// as done by xili_language and here : load text domains and reinitialize wp_locale with the action 'wp'
 	// as done by qtranslate : define the locale with the action 'plugins_loaded', but in this case, the language must be specified in the url.	
 	function load_textdomains() {	
@@ -363,13 +374,12 @@ class Polylang extends Polylang_Base {
 			setcookie('wordpress_polylang', $this->curlang->slug, time() + 31536000 /* 1 year */, COOKIEPATH, COOKIE_DOMAIN);			
 
 		// our override_load_textdomain has done its job. let's remove it before calling load_textdomain
-		remove_filter('override_load_textdomain', array(&$this,'mofile'));
+		remove_filter('override_load_textdomain', array(&$this, 'mofile'));
 
-		// now we can load text domains with the right language
-		foreach ($this->list_textdomains as $textdomain) {
-			$mo = preg_replace('#(.+)\/[a-zA-Z_]+\.mo$#', '$1/'.get_locale().'.mo', $textdomain['mo']); // replace the .mo file
-			load_textdomain( $textdomain['domain'], $mo);
-		}
+		// now we can load text domains with the right language		
+		$new_locale = get_locale();
+		foreach ($this->list_textdomains as $textdomain)
+			load_textdomain( $textdomain['domain'], str_replace($this->default_locale, $new_locale, $textdomain['mo']));
 
 		global $wp_locale;
 		$wp_locale->init(); // reinitializes wp_locale for weekdays and months
@@ -400,12 +410,16 @@ class Polylang extends Polylang_Base {
 			}
 		}
 
+		$qvars = $query->query_vars;
+
 		// filters recent posts to the current language
-		if ($query->is_home && $this->curlang)
+		// FIXME if $qvars['post_type'] == 'nav_menu_item', setting lang breaks custom menus.
+		// since to get nav_menu_items, get_post is used and no language is linked to nav_menu_items
+		// (even if the object behind the nav_menu_item is linked to a language)
+		if ($query->is_home && $this->curlang && !isset($qvars['post_type'])) 
 			$query->set('lang', $this->curlang->slug);
 
 		// remove pages from archives when the language is set
-		$qvars = $query->query_vars;
 		if (isset($qvars['m']) && isset($qvars['lang']))
 			$query->set('post_type', 'post');	
 	}
@@ -414,7 +428,6 @@ class Polylang extends Polylang_Base {
 		// modifies the canonical link to the homepage
 		if (is_singular()) {
 			global $wp_the_query; 
-
 			if ($id = $wp_the_query->get_queried_object_id()) {
 				if (is_page())
 					$link = _get_page_link($id); // ignores page_on_front unlike get_permalink
@@ -496,16 +509,31 @@ class Polylang extends Polylang_Base {
 		return $form;
 	}
 
-	// filters the pages according to the current language
+	// filters the list of pages according to the current language
+	// FIXME: it seems that there is currently no way to filter before the database query (3.2) -> lot of sql queries
+	// cannot play with widget_pages_args filter either as it seems that get_pages does not query taxonomies :(
+	// should try to improve this...
 	function get_pages($pages, $r) {
 		if (isset($this->curlang)) {
 			foreach ($pages as $key => $page) {
 				$lang = $this->get_post_language($page->ID);
-				if ($this->curlang != $lang)
+				if (!$lang || $this->curlang->slug != $lang->slug)
 					unset($pages[$key]);
 			}
 		}		
 		return $pages;
+	}
+
+	// filters the comments according to the current language 
+	function comments_clauses($clauses) {
+		if ($this->curlang) {
+			global $wpdb;
+			$value = $this->curlang->term_id;
+			$clauses['join'] .= " INNER JOIN $wpdb->term_relationships AS tr ON tr.object_id = ID";
+			$clauses['join'] .= " INNER JOIN $wpdb->term_taxonomy AS tt ON tr.term_taxonomy_id = tt.term_taxonomy_id";
+			$clauses['where'] .= " AND tt.term_id = $value";
+		}
+		return $clauses;
 	}
 
 	// Modifies the feed link to add the language parameter
@@ -608,6 +636,15 @@ class Polylang extends Polylang_Base {
 
 		return isset($url) ? $url : null;
 	}
+
+	// filters the nav menus according to current language			
+	function wp_nav_menu_args($args) {
+		if (!$args['menu'] && $args['theme_location'] && $this->curlang) {
+			$menu_lang = get_option('polylang_nav_menus');
+			$args['menu'] = $menu_lang[$args['theme_location']][$this->curlang->slug]; 
+		}
+		return $args;
+	} 
 
 	// returns the home url in the right language
 	function get_home_url($language) {
