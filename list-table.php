@@ -26,9 +26,11 @@ class Polylang_List_Table extends WP_List_Table {
 	}
 
 	function column_name($item){
+		$edit_link = esc_url(admin_url('admin.php?page=mlang&amp;action=edit&amp;lang='.$item['term_id']));
+		$delete_link = wp_nonce_url('?page=mlang&amp;action=delete&amp;noheader=true&amp;lang=' . $item['term_id'], 'delete-lang');
 		$actions = array(
-			'edit'   => sprintf('<a href="?page=mlang&amp;action=edit&amp;lang=%s">%s</a>',$item['term_id'],__('Edit','polylang')),
-			'delete' => '<a href="' . wp_nonce_url('?page=mlang&amp;action=delete&amp;noheader=true&amp;lang=' . $item['term_id'], 'delete-lang') .'">' . __('Delete','polylang') .'</a>'
+			'edit'   => '<a href="' . $edit_link . '">' . __('Edit','polylang') . '</a>',
+			'delete' => '<a href="' . $delete_link .'">' . __('Delete','polylang') .'</a>'
 		);
         
 		return $item['name'].$this->row_actions($actions);
@@ -37,8 +39,8 @@ class Polylang_List_Table extends WP_List_Table {
 	function column_cb($item){
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
-			/*$1%s*/ $this->_args['singular'],
-			/*$2%s*/ $item['term_id']
+			/*$1%s*/ esc_attr($this->_args['singular']),
+			/*$2%s*/ esc_attr($item['term_id'])
 		);
 	}
 

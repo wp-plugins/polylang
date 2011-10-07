@@ -14,12 +14,25 @@
 			if (isset($_GET['from_post']))
 				$value = $this->get_post($_GET['from_post'], $language); ?>			
 			<tr>
-			<td style="font-size: 11px;"><?php echo $language->name;?></td><?php
-			printf('<td><input name="%s" id="%s" class="tags-input" type="text" value="%s" size="6"/></td>', $language->slug, $language->slug, $value);
+			<td style="font-size: 11px;"><?php echo esc_attr($language->name);?></td><?php
+			printf(
+				'<td><input name="%s" id="%s" class="tags-input" type="text" value="%s" size="6"/></td>',
+				esc_attr($language->slug),
+				esc_attr($language->slug),
+				esc_attr($value)
+			);
 			if ($lang) {				
 				$link = $value ? 
-					sprintf('<a href="post.php?action=edit&amp;post=%s">%s</a>', $value, __('Edit','polylang')) :
-					sprintf('<a href="post-new.php?from_post=%s&amp;new_lang=%s">%s</a>',$post_ID, $language->slug, __('Add new','polylang')); ?>
+					sprintf(
+						'<a href="%s">%s</a>',
+						esc_url(admin_url('post.php?action=edit&amp;post=' . $value)),
+						__('Edit','polylang')
+					) :
+					sprintf(
+						'<a href="%s">%s</a>',
+						esc_url(admin_url('post-new.php?from_post='. $post_ID . '&amp;new_lang=' .$language->slug)),
+						__('Add new','polylang')
+					);?>
 				<td style="font-size: 11px;"><?php echo $link ?><td><?php
 			}?>
 			</tr><?php

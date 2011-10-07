@@ -36,7 +36,7 @@
 
 if ($action=='edit') {?>
 	<input type="hidden" name="action" value="update" /> 
-	<input type="hidden" name="lang" value="<?php echo $edit_lang->term_id;?>" /><?php
+	<input type="hidden" name="lang" value="<?php echo esc_attr($edit_lang->term_id);?>" /><?php
 }
 else { ?>
 	<input type="hidden" name="action" value="add" /><?php
@@ -44,19 +44,19 @@ else { ?>
 
 <div class="form-field form-required">
 	<label for="name"><?php _e('Full name', 'polylang');?></label>
-	<input name="name" id="name" type="text" value="<?php if ($action=='edit') echo $edit_lang->name;?>" size="40" aria-required="true" />
+	<input name="name" id="name" type="text" value="<?php if ($action=='edit') echo esc_attr($edit_lang->name);?>" size="40" aria-required="true" />
 	<p><?php _e('The name is how it is displayed on your site (for example: English).', 'polylang');?></p>
 </div>
 
 <div class="form-field form-required">
 	<label for="description"><?php _e('Locale', 'polylang');?></label>
-	<input name="description" id="description" type="text" value="<?php if ($action=='edit') echo $edit_lang->description;?>" size="40" aria-required="true" />
+	<input name="description" id="description" type="text" value="<?php if ($action=='edit') echo esc_attr($edit_lang->description);?>" size="40" aria-required="true" />
 	<p><?php _e('Wordpress Locale for the language (for example: en_US). You will need to install the .mo file for this language.', 'polylang');?></p>
 </div>
 
 <div class="form-field">
 	<label for="slug"><?php _e('Language code', 'polylang');?></label>
-	<input name="slug" id="slug" type="text" value="<?php if ($action=='edit') echo $edit_lang->slug;?>" size="40" />
+	<input name="slug" id="slug" type="text" value="<?php if ($action=='edit') echo esc_attr($edit_lang->slug);?>" size="40" />
 	<p><?php _e('2-letters ISO 639-1 language code (for example: en)', 'polylang');?></p>
 </div>
 
@@ -85,21 +85,30 @@ if (current_theme_supports( 'menus' )) { ?>
 	<thead><tr>
 		<th><?php _e('Theme location','Polylang') ?></th><?php
 		foreach ($listlanguages as $language) {
-			echo '<th>' . $language->name . '</th>';
+			echo '<th>' . esc_attr($language->name) . '</th>';
 		} ?>
 	</tr></thead>
 
 	<tbody>
 	<?php foreach ( $locations as $location => $description ) { ?>
-		<tr><td><?php echo $description; ?></td><?php
+		<tr><td><?php echo esc_attr($description); ?></td><?php
 		foreach ($listlanguages as $language) { ?>
-			<td><?php printf('<select name="menu-lang[%s][%s]" id="menu-lang-%s-%s">', $location, $language->slug, $location, $language->slug); ?>
-				<option value="0"></option>
-				<?php foreach ( $menus as $menu ) {
-					printf("<option value='%s'%s>%s</option>\n",
-						$menu->term_id,
+			<td><?php
+				printf(
+					'<select name="menu-lang[%s][%s]" id="menu-lang-%s-%s">',
+					esc_attr($location),
+					esc_attr($language->slug),
+					esc_attr($location),
+					esc_attr($language->slug)
+				);?>
+				<option value="0"></option><?php
+				foreach ( $menus as $menu ) {
+					printf(
+						"<option value='%s'%s>%s</option>\n",
+						esc_attr($menu->term_id),
 						$menu_lang[$location][$language->slug] == $menu->term_id ? ' selected="selected"' : '',
-						$menu->name);
+						esc_attr($menu->name)
+					);
 				} ?>
 			</select></td><?php
 		}?>
@@ -128,25 +137,45 @@ if (current_theme_supports( 'menus' )) { ?>
 <table class="form-table">
 
 <tr>
-	<th style="width: 300px;"><label><?php printf ('<input name="rewrite" type="radio" value="0" %s /> %s', 
-		$options['rewrite'] ? '' : 'checked="checked"', __('Keep /language/ in pretty permalinks', 'polylang')); ?></label></th>
+	<th style="width: 300px;"><label><?php
+		printf(
+			'<input name="rewrite" type="radio" value="0" %s /> %s', 
+			$options['rewrite'] ? '' : 'checked="checked"',
+			 __('Keep /language/ in pretty permalinks', 'polylang')
+		);?>
+	</label></th>
 	<td><code><?php echo home_url('language/en/'); ?></code></td>
 </tr>
 
 <tr>
-	<th><label><?php printf ('<input name="rewrite" type="radio" value="1" %s /> %s', 
-		$options['rewrite'] ? 'checked="checked"' : '', __('Remove /language/ in pretty permalinks', 'polylang')); ?></label></th>
+	<th><label><?php
+		printf(
+			'<input name="rewrite" type="radio" value="1" %s /> %s', 
+		$options['rewrite'] ? 'checked="checked"' : '',
+		__('Remove /language/ in pretty permalinks', 'polylang')
+		);?>
+	</label></th>
 	<td><code><?php echo home_url('en/'); ?></code></td>
 </tr>
 
 <tr>
 	<th><?php _e('The front page default language is : ', 'polylang');?></th>
-	<td><label><?php printf('<input name="browser" type="checkbox" value="1" %s /> %s',
-		 $options['browser'] ? 'checked="checked"' :'', __('set by the browser preference', 'polylang')) ?></label>
+	<td><label><?php
+		printf(
+			'<input name="browser" type="checkbox" value="1" %s /> %s',
+			$options['browser'] ? 'checked="checked"' :'',
+			__('set by the browser preference', 'polylang')
+		);?>
+		</label>
 		<label><?php _e('otherwise: ', 'polylang');?><select name="default_lang" id="default_lang">
 			<?php $listlanguages = $this->get_languages_list();
 			foreach ($listlanguages as $language) {
-				printf("<option value='%s'%s>%s</option>\n", $language->slug, $options['default_lang'] == $language->slug ? ' selected="selected"' : '', $language->name);
+				printf(
+					"<option value='%s'%s>%s</option>\n",
+					esc_attr($language->slug),
+					$options['default_lang'] == $language->slug ? ' selected="selected"' : '',
+					esc_attr($language->name)
+				);
 			} ?>
 		</select></label>
 	</td>
