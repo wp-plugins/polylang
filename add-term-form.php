@@ -4,7 +4,7 @@
 	<select name="term_lang_choice" id="term_lang_choice">
 		<option value="0"></option><?php
 		foreach ($listlanguages as $language) {
-			printf("<option value='%s'%s>%s</option>\n", $language->term_id, $language == $lang ? ' selected="selected"' : '', $language->name);
+			printf("<option value='%s'%s>%s</option>\n", esc_attr($language->term_id), $language == $lang ? ' selected="selected"' : '', esc_attr($language->name));
 		} ?>
 	</select>
 	<p><?php _e('Sets the language', 'polylang');?></p>

@@ -3,9 +3,14 @@
 <p><em><?php $post_type == 'page' ? _e('Page\'s language:', 'polylang') : _e('Post\'s language:', 'polylang');?></em></p>
 <p>
 <select name="post_lang_choice" id="post_lang_choice" class="tags-input">
-	<option value=""></option> <?php
+	<option value="0"></option> <?php
 	foreach ($listlanguages as $language) {
-		printf("<option value='%s'%s>%s</option>\n", $language->slug, $language == $lang ? ' selected="selected"' : '', $language->name);
+		printf(
+			"<option value='%s'%s>%s</option>\n",
+			esc_attr($language->slug),
+			$language == $lang ? ' selected="selected"' : '',
+			esc_attr($language->name)
+		);
 	} ?>
 	</select><br />
 </p>
