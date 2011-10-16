@@ -3,7 +3,7 @@ Contributors: Chouby
 Tags: bilingual, multilingual, language, i18n, l10n, international, translate, translation, widget
 Requires at least: 3.1
 Tested up to: 3.2.1
-Stable tag: 0.3
+Stable tag: 0.3.1
 
 Adds multilingual support to WordPress.
 
@@ -88,6 +88,14 @@ You MUST define a language for all your posts and pages otherwise they will not 
 You MUST define a language for all your categories and post tags otherwise they will not pass the language filter... 
 
 == Changelog ==
+
+= 0.3.1 =
+
+* Bug correction: the widget settings cannot be saved when activating Polylang
+* Bug correction: the archives widget does not display any links
+* Bug correction: ajax form for translations not working in the 'Categories' and 'Post tags' admin panels 
+
+release: October 16th, 2011
 
 = 0.3 =
 

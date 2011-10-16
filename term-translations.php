@@ -74,8 +74,7 @@ else { // add term form?>
 							$taxonomy,
 							$translation->term_id
 						)));
-						echo '<a href="' . $link . '">' . __('Edit','polylang') . '</a>';
-					};?>
+						echo '<a href="' . $link . '">' . __('Edit','polylang') . '</a>';?>
 					</td><?php
 				} ?>
 				</tr><?php

@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.3
+Version: 0.3.1
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 */
@@ -400,6 +400,7 @@ class Polylang extends Polylang_Base {
 			$post_id = get_option('page_on_front');
 			if (isset($this->curlang) && $post_id) {
 				// a static page is used as front page
+
 				$language = $this->get_post_language($post_id);
 				if ($language->slug != $this->curlang->slug) {
 					// but the one defined in the "Reading Settings" panel is not in the right language, so let's redirect to the right one
@@ -580,10 +581,10 @@ class Polylang extends Polylang_Base {
 			$home = home_url();
 			if ($wp_rewrite->using_permalinks()) {
 				$options['rewrite'] ? $base = '/' : $base = '/language/';
-				$link_html = esc_url(str_replace($home, $home.$base.$this->curlang->slug, $link_html));
+				$link_html = str_replace($home, esc_attr($home.$base.$this->curlang->slug), $link_html);
 			}
 			else
-				$link_html = esc_url(str_replace($home.'/?', $home.'/?lang='.$this->curlang->slug.'&amp;', $link_html));
+				$link_html = str_replace($home.'/?', esc_attr($home.'/?lang='.$this->curlang->slug).'&amp;', $link_html);
 		}
 		return $link_html;
 	}
@@ -645,13 +646,12 @@ class Polylang extends Polylang_Base {
 
 	// filters the widgets according to the current language			
 	function widget_display_callback($instance, $widget, $args) {
-		if (isset($this->curlang)) {		
-			$widget_lang = get_option('polylang_widgets');
-			// don't display if a language filter is set and this is not the current one
-			if (isset($widget_lang[$widget->id]) && $widget_lang[$widget->id] && $widget_lang[$widget->id] != $this->curlang->slug)
-				return false;
-		}
-		return true;
+		$widget_lang = get_option('polylang_widgets');			
+		// don't display if a language filter is set and this is not the current one
+		if (isset($this->curlang) && isset($widget_lang[$widget->id]) && $widget_lang[$widget->id] && $widget_lang[$widget->id] != $this->curlang->slug)
+			return false;
+
+		return $instance;
 	}
 
 	// returns the home url in the right language

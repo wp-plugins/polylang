@@ -587,6 +587,7 @@ class Polylang_Admin extends Polylang_Base {
 			$widget_lang[$widget->id] = $_POST[$id];
 			update_option('polylang_widgets', $widget_lang); 
 		}
+		return $instance;
 	}
 
 	// refresh rewrite rules if the 'page_on_front' option is modified
