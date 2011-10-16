@@ -34,5 +34,6 @@ if (!$count) {
 // delete options 
 delete_option('polylang');
 delete_option('polylang_nav_menus');
+delete_option('polylang_widgets');
 delete_option('widget_polylang_widget'); // automatically created by WP
 ?>

@@ -3,15 +3,15 @@ Contributors: Chouby
 Tags: bilingual, multilingual, language, i18n, l10n, international, translate, translation, widget
 Requires at least: 3.1
 Tested up to: 3.2.1
-Stable tag: 0.2
+Stable tag: 0.3.1
 
 Adds multilingual support to WordPress.
 
 == Description ==
 
-Polylang adds multilingual support to WordPress. It acts as a language filter for posts you have written in several languages. It will however not make the translation for you ! I you are looking for automatic translation, look for another plugin. Unlike some other plugins, it does not integrate professionnal translation.
+Polylang adds multilingual support to WordPress. It acts as a language filter for posts you have written in several languages. It will however not make the translation for you ! If you are looking for automatic translation, look for another plugin. Unlike some other plugins, it does not integrate professionnal translation.
 
-You write posts, pages and create categories and post tags as usual. You just have to define the language and it will be displayed only if the visitor is browsing this language. Optionaly, you can mark each post, page, category and post tag to be the translation of another one. Thus if, for example, your visitor is reading a post, it can switch (using the simple language switcher widget provided with the plugin) to the same post translated in another language (provided that you translated it !).
+You write posts, pages and create categories and post tags as usual. You just have to define the language and it will be displayed only if the visitor is browsing this language. Optionaly, you can mark each post, page, category and post tag to be the translation of another one. Thus if, for example, your visitor is reading a post, he can switch (using the simple language switcher widget provided with the plugin) to the same post translated in another language (provided that you translated it !).
 
 = Features =
 
@@ -22,12 +22,14 @@ You write posts, pages and create categories and post tags as usual. You just ha
 * Support for pretty permalinks
 * Support for static page (in the right language) used as front page
 * The following widgets are automatically in the right language : archives, categories, pages, recent comments, recent posts, tag cloud (calendar not supported yet)
+* All widgets can be displayed or not, depending on the language
 * Simple language switcher provided as a widget
 * The plugin backend is currently available in English, French, German
 
 = Notes =
 
 * The tests have been made with WordPress 3.2.1 and with the Twenty Eleven theme (see FAQ). Although I did not test previous versions, I see no reason why it should not work with WordPress 3.1. However the plugin should not work with WordPress 3.0.5 and lower.
+* Your server must run PHP5
 * Multisite has not been tested.
 * You must deactivate other multilingual plugins before activating Polylang. Otherwise, you may get unexpected results !
 * Unlike some other plugins, if you deactivate Polylang, your blog will go on working as smoothly as possible. All your posts, pages, category and post tags would be accessible (without language filter of course !).
@@ -87,6 +89,23 @@ You MUST define a language for all your categories and post tags otherwise they 
 
 == Changelog ==
 
+= 0.3.1 =
+
+* Bug correction: the widget settings cannot be saved when activating Polylang
+* Bug correction: the archives widget does not display any links
+* Bug correction: ajax form for translations not working in the 'Categories' and 'Post tags' admin panels 
+
+release: October 16th, 2011
+
+= 0.3 =
+
+* Add language filter for widgets
+* Improved performance for filtering pages by language
+* Improved security
+* Minor bug correction with versions management
+
+release: October 7th, 2011
+
 = 0.2 =
 
 * Add language filter for nav menus 
@@ -97,6 +116,9 @@ You MUST define a language for all your categories and post tags otherwise they 
 * Improved performance for filtering terms by language
 * Bugs correction
 
+release: October 5th, 2011
+
 = 0.1 =
 * Initial release
 
+release: September 22nd, 2011
