@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: polylang\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-04 12:14+0100\n"
+"POT-Creation-Date: 2011-10-19 20:43+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: F. Demarle\n"
 "Language-Team: \n"
@@ -14,174 +14,190 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-KeywordsList: _e;__;_c\n"
 "X-Poedit-Basepath: .\n"
-"X-Poedit-SearchPath-0: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang\n"
+"X-Poedit-SearchPath-0: .\n"
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/edit-term-form.php:6
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/admin.php:255
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/admin.php:422
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/term-translations.php:16
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/add-term-form.php:3
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/list-table.php:12
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/post-translations.php:5
+#: edit-term-form.php:6
+#: admin.php:277
+#: admin.php:453
+#: term-translations.php:16
+#: add-term-form.php:3
+#: list-table.php:12
+#: post-translations.php:5
 msgid "Language"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/edit-term-form.php:13
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/add-term-form.php:10
+#: edit-term-form.php:18
+#: add-term-form.php:10
 msgid "Sets the language"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/widget.php:5
+#: widget.php:5
 msgid "Displays a language switcher"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/widget.php:6
+#: widget.php:6
 msgid "Language Switcher"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/admin.php:70
+#: admin.php:86
 msgid "Settings"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/admin.php:77
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/admin.php:300
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/admin.php:301
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/list-table.php:13
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/languages-form.php:14
+#: admin.php:93
+#: admin.php:322
+#: admin.php:323
+#: list-table.php:13
+#: languages-form.php:14
 msgid "Languages"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/admin.php:291
+#: admin.php:313
 msgid "Show all languages"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/admin.php:514
+#: admin.php:549
 msgid "Theme locations and languages"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/admin.php:519
+#: admin.php:554
 #, php-format
 msgid "Please go to the %slanguages page%s to set theme locations and languages"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/post-metabox.php:3
+#: admin.php:567
+msgid "The widget is displayed for:"
+msgstr ""
+
+#: admin.php:570
+msgid "All languages"
+msgstr ""
+
+#: post-metabox.php:3
 msgid "Page's language:"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/post-metabox.php:3
+#: post-metabox.php:3
 msgid "Post's language:"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/term-translations.php:6
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/term-translations.php:10
+#: term-translations.php:6
+#: term-translations.php:10
 msgid "Translations"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/term-translations.php:16
+#: term-translations.php:16
 msgid "Translation"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/term-translations.php:16
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/term-translations.php:52
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/list-table.php:30
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/post-translations.php:7
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/post-translations.php:21
+#: term-translations.php:16
+#: term-translations.php:77
+#: list-table.php:32
+#: post-translations.php:7
+#: post-translations.php:29
 msgid "Edit"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/term-translations.php:42
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/post-translations.php:22
+#: term-translations.php:63
+#: post-translations.php:34
 msgid "Add new"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/list-table.php:31
+#: list-table.php:33
 msgid "Delete"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/list-table.php:48
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/languages-form.php:46
+#: list-table.php:50
+#: languages-form.php:46
 msgid "Full name"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/list-table.php:49
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/languages-form.php:52
+#: list-table.php:51
+#: languages-form.php:52
 msgid "Locale"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/list-table.php:50
+#: list-table.php:52
 msgid "Code"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/list-table.php:51
+#: list-table.php:53
 msgid "Posts"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/languages-form.php:29
+#: languages-form.php:29
 msgid "Edit language"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/languages-form.php:29
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/languages-form.php:66
+#: languages-form.php:29
+#: languages-form.php:66
 msgid "Add new language"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/languages-form.php:48
+#: languages-form.php:48
 msgid "The name is how it is displayed on your site (for example: English)."
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/languages-form.php:54
+#: languages-form.php:54
 msgid "Wordpress Locale for the language (for example: en_US). You will need to install the .mo file for this language."
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/languages-form.php:58
+#: languages-form.php:58
 msgid "Language code"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/languages-form.php:60
+#: languages-form.php:60
 msgid "2-letters ISO 639-1 language code (for example: en)"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/languages-form.php:64
+#: languages-form.php:64
 msgid "Update"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/languages-form.php:76
+#: languages-form.php:78
 msgid "Menus"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/languages-form.php:84
+#: languages-form.php:86
 msgid "Theme location"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/languages-form.php:118
+#: languages-form.php:131
 msgid "Options"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/languages-form.php:128
+#: languages-form.php:144
 msgid "Keep /language/ in pretty permalinks"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/languages-form.php:134
+#: languages-form.php:155
 msgid "Remove /language/ in pretty permalinks"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/languages-form.php:139
+#: languages-form.php:162
 msgid "The front page default language is : "
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/languages-form.php:141
+#: languages-form.php:167
 msgid "set by the browser preference"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/languages-form.php:142
+#: languages-form.php:170
 msgid "otherwise: "
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/post-translations.php:2
+#: post-translations.php:2
+msgid "ID of pages in other languages:"
+msgstr ""
+
+#: post-translations.php:2
 msgid "ID of posts in other languages:"
 msgstr ""
 
-#: /home/fred/Documents/Web/test-flabellina.com/wordpress/wp-content/plugins/polylang/post-translations.php:6
+#: post-translations.php:6
+msgid "Page ID"
+msgstr ""
+
+#: post-translations.php:6
 msgid "Post ID"
 msgstr ""
 
