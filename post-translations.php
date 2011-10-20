@@ -1,9 +1,9 @@
 <?php // FIXME inline CSS ! ?>
-<p><em><?php _e('ID of posts in other languages:', 'polylang');?></em></p>
+<p><em><?php $post_type == 'page' ? _e('ID of pages in other languages:', 'polylang') : _e('ID of posts in other languages:', 'polylang');?></em></p>
 <table style="width: 100%; text-align: left; font-size: 11px; margin: 0 6px;">
 	<thead><tr>
 		<th><?php _e('Language', 'polylang');?></th>
-		<th><?php _e('Post ID', 'polylang');?></th>
+		<th><?php $post_type == 'page' ? _e('Page ID', 'polylang') : _e('Post ID', 'polylang');?></th>
 		<th><?php  _e('Edit', 'polylang');?></th>
 	</tr></thead>
 
@@ -30,7 +30,7 @@
 					) :
 					sprintf(
 						'<a href="%s">%s</a>',
-						esc_url(admin_url('post-new.php?from_post='. $post_ID . '&amp;new_lang=' .$language->slug)),
+						esc_url(admin_url('post-new.php?post_type=' . $post_type . '&amp;from_post=' . $post_ID . '&amp;new_lang=' . $language->slug)),
 						__('Add new','polylang')
 					);?>
 				<td style="font-size: 11px;"><?php echo $link ?><td><?php

@@ -3,7 +3,7 @@ Contributors: Chouby
 Tags: bilingual, multilingual, language, i18n, l10n, international, translate, translation, widget
 Requires at least: 3.1
 Tested up to: 3.2.1
-Stable tag: 0.3.1
+Stable tag: 0.3.2
 
 Adds multilingual support to WordPress.
 
@@ -24,7 +24,7 @@ You write posts, pages and create categories and post tags as usual. You just ha
 * The following widgets are automatically in the right language : archives, categories, pages, recent comments, recent posts, tag cloud (calendar not supported yet)
 * All widgets can be displayed or not, depending on the language
 * Simple language switcher provided as a widget
-* The plugin backend is currently available in English, French, German
+* The plugin backend is currently available in English, French and German
 
 = Notes =
 
@@ -88,6 +88,16 @@ You MUST define a language for all your posts and pages otherwise they will not 
 You MUST define a language for all your categories and post tags otherwise they will not pass the language filter... 
 
 == Changelog ==
+
+= 0.3.2 =
+
+* Bug correction: authors pages are not filtered by language
+* Bug correction: language pages use the archive template
+* Bug correction: database error for comments on posts and pages
+* Bug correction: "Add new" translation for pages creates a post instead of a page
+* Bug correction: the search query does not look into pages
+
+release: October 20th, 2011
 
 = 0.3.1 =
 

@@ -343,8 +343,9 @@ class Polylang_Admin extends Polylang_Base {
 
 		$lang = $this->get_language($_POST['lang']);
 		$post_ID = $_POST['post_id'];
+		$post_type = get_post_type($post_ID);
 
-		if ($lang)
+		if ($lang && !is_wp_error($lang))
 			include(POLYLANG_DIR.'/post-translations.php');
 
 		die();

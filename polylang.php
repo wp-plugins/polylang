@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.3.1
+Version: 0.3.2
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 */
@@ -79,7 +79,7 @@ class Polylang extends Polylang_Base {
 			add_filter('get_pages', array(&$this, 'get_pages'), 10, 2);
 
 			// filters the comments according to the current language 
-			add_filter('comments_clauses', array(&$this, 'comments_clauses'));
+			add_filter('comments_clauses', array(&$this, 'comments_clauses'), 10, 2);
 
 			// rewrites feed links to filter them by language 
 			add_filter('feed_link', array(&$this, 'feed_link'), 10, 2);
@@ -88,6 +88,9 @@ class Polylang extends Polylang_Base {
 			add_filter('getarchives_join', array(&$this, 'posts_join'));
 			add_filter('getarchives_where', array(&$this, 'posts_where'));
 			add_filter('get_archives_link', array(&$this, 'get_archives_link'));
+
+			// rewrites author links to filter them by language 
+			add_filter('author_link', array(&$this, 'author_link'));
 
 			// rewrites next and previous post links to filter them by language 
 			add_filter('get_previous_post_join', array(&$this, 'posts_join'));
@@ -319,7 +322,8 @@ class Polylang extends Polylang_Base {
 		if($this->curlang)
 			return $this->curlang;
 
-		if (is_404())
+		// no language set for 404 and attachment
+		if (is_404() || is_attachment())
 			return $this->get_preferred_language();
 
 		if (is_admin()) {
@@ -421,9 +425,21 @@ class Polylang extends Polylang_Base {
 		if ($query->is_home && $this->curlang && !isset($qvars['post_type'])) 
 			$query->set('lang', $this->curlang->slug);
 
-		// remove pages query when the language is set
-		if (isset($qvars['lang']) && $qvars['lang'] && !isset($qvars['post_type']))
-			$query->set('post_type', 'post');	
+		// remove pages query when the language is set unless we do a search
+		// FIXME is only search broken by this ?
+		if (isset($qvars['lang']) && $qvars['lang'] && !isset($qvars['post_type']) && !is_search())
+			$query->set('post_type', 'post');
+
+		// unset the is_archive flag for language pages to prevent loading the archive template
+		// keep archive flag for comment feed otherwise the language filter does not work
+		if ( isset($qvars['lang']) && $qvars['lang'] && !is_post_type_archive() && !is_date() && !is_author() && !is_category() && !is_tag() && !is_comment_feed())
+			$query->is_archive = false;
+
+		// unset the is_tax flag for authors pages
+		// FIXME Probably I should do this for other cases
+		if ( isset($qvars['lang']) && $qvars['lang'] && is_author() )
+			$query->is_tax = false;
+
 	}
 
 	function wp_head() {
@@ -524,9 +540,10 @@ class Polylang extends Polylang_Base {
 		return $pages;
 	}
 
-	// filters the comments according to the current language 
-	function comments_clauses($clauses) {
-		if ($this->curlang) {
+	// filters the comments according to the current language mainly for the recent comments widget
+	function comments_clauses($clauses, $comment_query) {
+		// first test if wp_posts.ID already available in the query
+		if ($this->curlang && strpos($clauses['join'], '.ID')) {
 			global $wpdb;
 			$clauses['join'] .= " INNER JOIN $wpdb->term_relationships AS tr ON tr.object_id = ID";
 			$clauses['join'] .= " INNER JOIN $wpdb->term_taxonomy AS tt ON tr.term_taxonomy_id = tt.term_taxonomy_id";
@@ -589,10 +606,28 @@ class Polylang extends Polylang_Base {
 		return $link_html;
 	}
 
+	// modifies the author link to add the language parameter
+	function author_link($link) {
+		if ($this->curlang) {
+			global $wp_rewrite;
+			$options = get_option('polylang');
+			$home = home_url();
+			if ($wp_rewrite->using_permalinks()) {
+				$options['rewrite'] ? $base = '/' : $base = '/language/';
+				$link = esc_url(str_replace($home, $home.$base.$this->curlang->slug, $link));
+			}
+			else
+				$link = esc_url(str_replace($home.'/?', $home.'/?lang='.$this->curlang->slug.'&amp;', $link));
+		}
+		return $link;
+	}
+
 	// returns the url of the translation (if exists) of the current page 
 	function get_translation_url($language) {
 
-		if ( is_single()) {
+		// posts		
+		// is_single is set to 1 for attachment but no language is set
+		if ( is_single() && !is_attachment() ) {
 			$id = $this->get_post(get_the_ID(), $language);
 			if ($id)
 				$url = get_permalink($id);
