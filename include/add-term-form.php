@@ -12,5 +12,5 @@
 <div id="term-translations" class="form-field"><?php
 // adds translation field if we already know the language
 if (isset($_GET['from_tag']) && isset($_GET['from_lang']) && isset($_GET['new_lang']))
-	include(POLYLANG_DIR.'/term-translations.php');?>
+	include(INC_DIR.'/term-translations.php');?>
 </div>

@@ -52,9 +52,9 @@ class Polylang_Base {
 		return $this->get_language(get_metadata('term', $term_id, '_language', true));
 	}
 
-	// returns the id of the translation of a term (category or post_tag)
+	// returns the id of the translation of a term (category, post tag or custom taxonomy)
 	function get_translated_term($term_id, $language) {
-		return get_metadata('term', $term_id, '_lang-'.$language->slug, true); 
+		return get_metadata('term', $term_id, '_lang-'.$language->slug, true); // since WP 2.9
 	}
 
 } //class Polylang_Base

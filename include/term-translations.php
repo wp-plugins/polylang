@@ -1,6 +1,5 @@
 <?php
 // displays the translations fields
-// FIXME inline CSS
 
 if (isset($term_id)) { // edit term form?>
 	<th scope="row" valign="top"><?php _e('Translations', 'polylang');?></th>
@@ -10,11 +9,10 @@ else { // add term form?>
 	<label><?php _e('Translations', 'polylang');?></label><?php
 }
 ?>
-<table style="width: 100%">
+<table>
 	<thead><tr><?php
-		$style = 'style="padding: 0px; font-weight: bold; text-align: left"';
 		foreach (array(__('Language', 'polylang'), __('Translation', 'polylang'), __('Edit', 'polylang')) as $title)
-			printf('<th %s>%s</th>', $style, $title);?>
+			printf('<th>%s</th>', $title);?>
 	</tr></thead>
 	<tbody>
 		<?php foreach ($listlanguages as $language) {
@@ -31,14 +29,14 @@ else { // add term form?>
 						$translation = get_term($translation_id, $taxonomy);
 				}?>
 
-				<tr><td style="padding: 0px"><?php echo esc_attr($language->name);?></td><?php
+				<tr><td><?php echo esc_attr($language->name);?></td><?php
 
 				// no translation exits in this language
 				if (!$translation) {
 					$translations = $this->get_terms_not_translated($taxonomy, $language, $lang);
 					if (!empty($translations)) { ?>
-						<td style="padding: 0px">
-							<select name="_lang-<?php echo esc_attr($language->slug);?>" id="_lang-<?php echo esc_attr($language->slug);?>" style="width: 15em">
+						<td>
+							<select name="_lang-<?php echo esc_attr($language->slug);?>" id="_lang-<?php echo esc_attr($language->slug);?>">
 								<option value="0"></option><?php
 								foreach ($translations as $translation) { ?>
 									<option value="<?php echo esc_attr($translation->term_id);?>"><?php echo esc_attr($translation->name);?></option><?php
@@ -47,10 +45,10 @@ else { // add term form?>
 						</td><?php
 					} 
 					else { ?>
-						<td style="padding: 0px">
+						<td>
 						</td><?php
 					} ?>
-					<td style="padding: 0px"><?php
+					<td><?php
 						// do not display the add new link in add term form ($term_id not set !!!)
 						if (isset($term_id)) {
 							$link = esc_url(admin_url(sprintf(
@@ -67,8 +65,8 @@ else { // add term form?>
 
 				// a translation exists
 				else { ?>
-					<td style="padding: 0px"><?php echo esc_attr($translation->name); ?></td>									
-					<td style="padding: 0px"><?php
+					<td><?php echo esc_attr($translation->name); ?></td>									
+					<td><?php
 						$link = esc_url(admin_url(sprintf(
 							'edit-tags.php?action=edit&amp;taxonomy=%s&amp;tag_ID=%s',
 							$taxonomy,

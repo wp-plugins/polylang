@@ -21,5 +21,5 @@
 <tr id="term-translations" class="form-field"><?php
 // do not display translation fields if term language is not set
 if ($lang)
-	include(POLYLANG_DIR.'/term-translations.php');?>
+	include(INC_DIR.'/term-translations.php');?>
 </tr>

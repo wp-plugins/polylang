@@ -1,0 +1,28 @@
+#term-translations table {
+	width: 100%;
+}
+
+#term-translations th {
+	padding: 0px;
+	font-weight: bold;
+	text-align: left;
+}
+
+#term-translations td {
+	padding: 0px;
+}
+
+#term-translations select {
+	width: 15em;
+}
+
+#post-translations table {
+	width: 100%;
+	text-align: left;
+	font-size: 11px;
+	margin: 0 6px;
+}
+
+#post-translations td {
+	font-size: 11px;
+}

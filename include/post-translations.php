@@ -1,6 +1,5 @@
-<?php // FIXME inline CSS ! ?>
 <p><em><?php $post_type == 'page' ? _e('ID of pages in other languages:', 'polylang') : _e('ID of posts in other languages:', 'polylang');?></em></p>
-<table style="width: 100%; text-align: left; font-size: 11px; margin: 0 6px;">
+<table>
 	<thead><tr>
 		<th><?php _e('Language', 'polylang');?></th>
 		<th><?php $post_type == 'page' ? _e('Page ID', 'polylang') : _e('Post ID', 'polylang');?></th>
@@ -14,7 +13,7 @@
 			if (isset($_GET['from_post']))
 				$value = $this->get_post($_GET['from_post'], $language); ?>			
 			<tr>
-			<td style="font-size: 11px;"><?php echo esc_attr($language->name);?></td><?php
+			<td><?php echo esc_attr($language->name);?></td><?php
 			printf(
 				'<td><input name="%s" id="%s" class="tags-input" type="text" value="%s" size="6"/></td>',
 				esc_attr($language->slug),
@@ -33,7 +32,7 @@
 						esc_url(admin_url('post-new.php?post_type=' . $post_type . '&amp;from_post=' . $post_ID . '&amp;new_lang=' . $language->slug)),
 						__('Add new','polylang')
 					);?>
-				<td style="font-size: 11px;"><?php echo $link ?><td><?php
+				<td><?php echo $link ?><td><?php
 			}?>
 			</tr><?php
 		} 

@@ -2,7 +2,7 @@
 
 global $wpdb;
 $wpdb->termmeta = $wpdb->prefix . 'termmeta'; // registers the termmeta table in wpdb
-register_taxonomy('language', 'post', array('label' => false, 'query_var'=>'lang')); // temporarily register the language taxonomy
+register_taxonomy('language', get_post_types(array('show_ui' => true)), array('label' => false, 'query_var'=>'lang')); // temporarily register the language taxonomy
 
 $languages = get_terms('language', array('hide_empty'=>false));
 
@@ -14,7 +14,7 @@ foreach ($languages as $lang) {
 		delete_post_meta($post->ID, '_lang-'.$lang->slug);
 	}
 	// delete references to this language in categories & post tags
-	$terms = get_terms(array('category', 'post_tag'), 'get=all');
+	$terms = get_terms(get_taxonomies(array('show_ui'=>true)), 'get=all');
  	foreach ($terms as $term) {
 		delete_metadata('term', $term->term_id, '_language');
 		delete_metadata('term', $term->term_id, '_lang-'.$lang->slug);
