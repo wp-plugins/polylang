@@ -1,0 +1,256 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: polylang\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-11-14 21:57+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: F. Demarle\n"
+"Language-Team: \n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2: nplural=n>1\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: _e;__;_c\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: ..\n"
+"X-Poedit-SearchPath-1: ../include\n"
+
+#: ../include/edit-term-form.php:6
+#: ../include/admin.php:348
+#: ../include/admin.php:502
+#: ../include/term-translations.php:14
+#: ../include/add-term-form.php:3
+#: ../include/list-table.php:12
+#: ../include/post-translations.php:4
+msgid "Language"
+msgstr "Langue"
+
+#: ../include/edit-term-form.php:18
+#: ../include/add-term-form.php:10
+msgid "Sets the language"
+msgstr "Définit la langue"
+
+#: ../include/widget.php:5
+msgid "Displays a language switcher"
+msgstr "Affiche la liste des langues "
+
+#: ../include/widget.php:6
+msgid "Language Switcher"
+msgstr "Liste des langues"
+
+#: ../include/widget.php:50
+msgid "Display language names"
+msgstr "Afficher le nom des langues "
+
+#: ../include/widget.php:56
+msgid "Display flags"
+msgstr "Afficher les drapeaux"
+
+#: ../include/widget.php:62
+msgid "Display as dropdown"
+msgstr "Afficher comme liste déroulante"
+
+#: ../include/admin.php:90
+msgid "Settings"
+msgstr "Réglages"
+
+#: ../include/admin.php:97
+#: ../include/admin.php:392
+#: ../include/list-table.php:13
+#: ../include/languages-form.php:14
+msgid "Languages"
+msgstr "Langues"
+
+#: ../include/admin.php:309
+msgid "Enter a valid WorPress locale"
+msgstr "Entrez un code local WordPress valide"
+
+#: ../include/admin.php:310
+msgid "The language code must be 2 characters long"
+msgstr "Le code de la langue doit avoir 2 lettres"
+
+#: ../include/admin.php:311
+msgid "The language code must be unique"
+msgstr "Le code de la langue doit être unique"
+
+#: ../include/admin.php:312
+msgid "The language must have a name"
+msgstr "La langue doit avoir un nom"
+
+#: ../include/admin.php:380
+msgid "Show all languages"
+msgstr "Afficher toutes les langues"
+
+#: ../include/admin.php:607
+msgid "Theme locations and languages"
+msgstr "Emplacements du thème et langues"
+
+#: ../include/admin.php:612
+#, php-format
+msgid "Please go to the %slanguages page%s to set theme locations and languages"
+msgstr "Aller à la %spage langues%s pour définir les emplacements du thème et les langues "
+
+#: ../include/admin.php:624
+msgid "The widget is displayed for:"
+msgstr "Afficher le widget pour :"
+
+#: ../include/admin.php:627
+msgid "All languages"
+msgstr "Toutes les langues"
+
+#: ../include/post-metabox.php:3
+msgid "Page's language:"
+msgstr "Langue de la page"
+
+#: ../include/post-metabox.php:3
+msgid "Post's language:"
+msgstr "Langue de l'article"
+
+#: ../include/term-translations.php:5
+#: ../include/term-translations.php:9
+msgid "Translations"
+msgstr "Traductions"
+
+#: ../include/term-translations.php:14
+msgid "Translation"
+msgstr "Traduction"
+
+#: ../include/term-translations.php:14
+#: ../include/term-translations.php:75
+#: ../include/list-table.php:32
+#: ../include/post-translations.php:6
+#: ../include/post-translations.php:28
+msgid "Edit"
+msgstr "Modifier"
+
+#: ../include/term-translations.php:61
+#: ../include/post-translations.php:33
+msgid "Add new"
+msgstr "Ajouter"
+
+#: ../include/list-table.php:33
+msgid "Delete"
+msgstr "Supprimer"
+
+#: ../include/list-table.php:50
+#: ../include/languages-form.php:50
+msgid "Full name"
+msgstr "Nom"
+
+#: ../include/list-table.php:51
+#: ../include/languages-form.php:56
+msgid "Locale"
+msgstr "Code local"
+
+#: ../include/list-table.php:52
+msgid "Code"
+msgstr "Code"
+
+#: ../include/list-table.php:53
+msgid "Posts"
+msgstr "Articles"
+
+#: ../include/languages-form.php:33
+msgid "Edit language"
+msgstr "Modifier la langue"
+
+#: ../include/languages-form.php:33
+#: ../include/languages-form.php:70
+msgid "Add new language"
+msgstr "Ajouter une nouvelle langue"
+
+#: ../include/languages-form.php:52
+msgid "The name is how it is displayed on your site (for example: English)."
+msgstr "Le nom est utilisé un peu partout sur le site (par exemple : Français)"
+
+#: ../include/languages-form.php:58
+msgid "Wordpress Locale for the language (for example: en_US). You will need to install the .mo file for this language."
+msgstr "Code local utilisé par Wordpress pour la langue (par exemple : fr_FR). Vous aurez besoin d'installer les fichiers .mo correspondant"
+
+#: ../include/languages-form.php:62
+msgid "Language code"
+msgstr "Code de la langue"
+
+#: ../include/languages-form.php:64
+msgid "2-letters ISO 639-1 language code (for example: en)"
+msgstr "Code ISO 639-1 à 2 lettres (par exemple : fr)"
+
+#: ../include/languages-form.php:68
+msgid "Update"
+msgstr "Mettre à jour"
+
+#: ../include/languages-form.php:82
+msgid "Menus"
+msgstr "Menus"
+
+#: ../include/languages-form.php:90
+msgid "Theme location"
+msgstr "Emplacement du thème"
+
+#: ../include/languages-form.php:134
+msgid "Options"
+msgstr "Options"
+
+#: ../include/languages-form.php:143
+msgid "Default language"
+msgstr "Langue par défaut"
+
+#: ../include/languages-form.php:172
+msgid "There are posts, pages, categories or tags without language set. Do you want to set them all to default language ?"
+msgstr "Il y a des articles, pages, catégories ou tags sans langue définie. Voulez-vous leur attribuer la langue par défaut ?"
+
+#: ../include/languages-form.php:180
+msgid "Detect browser language"
+msgstr "Détecter la langue du navigateur"
+
+#: ../include/languages-form.php:186
+msgid "When the front page is visited, set the language according to the browser preference"
+msgstr "Lorsque la page d'accueil est visitée pour la première fois, le visiteur est redirigé à la bonne URL en fonction des préférences de langue de son navigateur"
+
+#: ../include/languages-form.php:193
+msgid "URL modifications"
+msgstr "Modifications des URL"
+
+#: ../include/languages-form.php:199
+msgid "Keep /language/ in pretty permalinks. Example: "
+msgstr "Conserve /language/ dans les permaliens. Exemple :"
+
+#: ../include/languages-form.php:207
+msgid "Remove /language/ in pretty permalinks. Example: "
+msgstr "Supprime /language/ dans les permaliens. Exemple :"
+
+#: ../include/languages-form.php:215
+msgid "Hide URL language information for default language"
+msgstr "Cacher l'information de langue dans l'URL pour la langue par défaut"
+
+#: ../include/post-translations.php:1
+msgid "ID of pages in other languages:"
+msgstr "ID des pages dans les autres langues"
+
+#: ../include/post-translations.php:1
+msgid "ID of posts in other languages:"
+msgstr "ID des articles dans les autres langues"
+
+#: ../include/post-translations.php:5
+msgid "Page ID"
+msgstr "ID de la page"
+
+#: ../include/post-translations.php:5
+msgid "Post ID"
+msgstr "ID de l'article"
+
+#: ../include/personal-options.php:3
+msgid "Admin language"
+msgstr "Langue pour l'interface d'administration"
+
+#~ msgid "Title:"
+#~ msgstr "Titre :"
+#~ msgid "The front page default language is : "
+#~ msgstr "La langue par défaut de la page d'accueil est :"
+#~ msgid "set by the browser preference"
+#~ msgstr "définie par les préférences du navigateur"
+#~ msgid "otherwise: "
+#~ msgstr "sinon :"
+
