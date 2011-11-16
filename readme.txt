@@ -3,7 +3,7 @@ Contributors: Chouby
 Tags: bilingual, multilingual, language, i18n, l10n, international, translate, translation, widget
 Requires at least: 3.1
 Tested up to: 3.2.1
-Stable tag: 0.4.1
+Stable tag: 0.4.2
 
 Adds multilingual support to WordPress.
 
@@ -105,6 +105,10 @@ You can look at the following forum topics:
 [How to translate/switch specific contents on templates](http://wordpress.org/support/topic/plugin-polylang-how-to-translateswitch-specific-contents-on-templates.html)
 
 == Changelog ==
+
+= 0.4.2 (2011-11-16) =
+
+* Bug correction: language settings page is broken
 
 = 0.4.1 (2011-11-16) =
 

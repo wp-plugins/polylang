@@ -160,7 +160,7 @@ if (!empty($posts) || !empty($terms) && $options['default_lang']) {
 	if (!empty($terms))
 		echo '<input type="hidden" name="terms" value="'.esc_attr($terms).'" />';?>
 
-	<tr><?php
+	<tr>
 		<th></th>
 		<td>
 			<label style="color: red"><?php
