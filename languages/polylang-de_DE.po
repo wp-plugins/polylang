@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: polylang\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-07 21:37+0100\n"
+"POT-Creation-Date: 2011-11-14 21:57+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: F. Demarle\n"
 "Language-Team: \n"
@@ -18,13 +18,12 @@ msgstr ""
 "X-Poedit-SearchPath-1: ../include\n"
 
 #: ../include/edit-term-form.php:6
-#: ../include/admin.php:342
-#: ../include/admin.php:496
-#: ../include/term-translations.php:16
+#: ../include/admin.php:348
+#: ../include/admin.php:502
+#: ../include/term-translations.php:14
 #: ../include/add-term-form.php:3
 #: ../include/list-table.php:12
-#: ../include/post-translations.php:5
-#: ../include/personal-options.php:3
+#: ../include/post-translations.php:4
 msgid "Language"
 msgstr "Sprache"
 
@@ -41,64 +40,64 @@ msgstr "Zeigen die Sprachenliste"
 msgid "Language Switcher"
 msgstr "Sprachenliste"
 
-#: ../include/widget.php:44
+#: ../include/widget.php:50
 msgid "Display language names"
 msgstr "Zeigen die Sprachen Namen"
 
-#: ../include/widget.php:49
+#: ../include/widget.php:56
 msgid "Display flags"
 msgstr "Zeigen Flaggen"
 
-#: ../include/widget.php:54
+#: ../include/widget.php:62
 msgid "Display as dropdown"
 msgstr "Als Auswahlbox darstellen"
 
-#: ../include/admin.php:89
+#: ../include/admin.php:90
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: ../include/admin.php:96
-#: ../include/admin.php:386
+#: ../include/admin.php:97
+#: ../include/admin.php:392
 #: ../include/list-table.php:13
 #: ../include/languages-form.php:14
 msgid "Languages"
 msgstr "Sprachen"
 
-#: ../include/admin.php:303
+#: ../include/admin.php:309
 #, fuzzy
 msgid "Enter a valid WorPress locale"
 msgstr "Das WordPress Locale ist ungültig"
 
-#: ../include/admin.php:304
+#: ../include/admin.php:310
 msgid "The language code must be 2 characters long"
 msgstr "Der Sprachcode muss 2 Buchstaben lang sein"
 
-#: ../include/admin.php:305
+#: ../include/admin.php:311
 msgid "The language code must be unique"
 msgstr "Eine andere Sprache hat dem selben Sprachcode"
 
-#: ../include/admin.php:306
+#: ../include/admin.php:312
 msgid "The language must have a name"
 msgstr "Die Sprache muss einen Namen haben"
 
-#: ../include/admin.php:374
+#: ../include/admin.php:380
 msgid "Show all languages"
 msgstr "Zeigen alle Sprachen"
 
-#: ../include/admin.php:601
+#: ../include/admin.php:607
 msgid "Theme locations and languages"
 msgstr "Anordnung im Theme und Sprachen"
 
-#: ../include/admin.php:606
+#: ../include/admin.php:612
 #, php-format
 msgid "Please go to the %slanguages page%s to set theme locations and languages"
 msgstr "Du solltest zu der %sSprachen Seite%s gehen, um Anordnung im Theme und Sprachen zu definieren."
 
-#: ../include/admin.php:618
+#: ../include/admin.php:624
 msgid "The widget is displayed for:"
 msgstr "Zeigen das Widget für :"
 
-#: ../include/admin.php:621
+#: ../include/admin.php:627
 msgid "All languages"
 msgstr "Alle Sprachen"
 
@@ -110,25 +109,25 @@ msgstr "Sprache für die Seite :"
 msgid "Post's language:"
 msgstr "Sprache für die Artikel :"
 
-#: ../include/term-translations.php:6
-#: ../include/term-translations.php:10
+#: ../include/term-translations.php:5
+#: ../include/term-translations.php:9
 msgid "Translations"
 msgstr "Übersetzungen"
 
-#: ../include/term-translations.php:16
+#: ../include/term-translations.php:14
 msgid "Translation"
 msgstr "Übersetzung"
 
-#: ../include/term-translations.php:16
-#: ../include/term-translations.php:77
+#: ../include/term-translations.php:14
+#: ../include/term-translations.php:75
 #: ../include/list-table.php:32
-#: ../include/post-translations.php:7
-#: ../include/post-translations.php:29
+#: ../include/post-translations.php:6
+#: ../include/post-translations.php:28
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: ../include/term-translations.php:63
-#: ../include/post-translations.php:34
+#: ../include/term-translations.php:61
+#: ../include/post-translations.php:33
 msgid "Add new"
 msgstr "Hinzufügen"
 
@@ -229,21 +228,28 @@ msgstr "/language/ in Permalinks entfernen. Zum Beispiel :"
 msgid "Hide URL language information for default language"
 msgstr "URL Informationen für die Standardsprache verstecken"
 
-#: ../include/post-translations.php:2
+#: ../include/post-translations.php:1
 msgid "ID of pages in other languages:"
 msgstr "ID für die Seiten in andere Sprache :"
 
-#: ../include/post-translations.php:2
+#: ../include/post-translations.php:1
 msgid "ID of posts in other languages:"
 msgstr "ID für die Artikel in andere Sprache :"
 
-#: ../include/post-translations.php:6
+#: ../include/post-translations.php:5
 msgid "Page ID"
 msgstr "ID für die Seite"
 
-#: ../include/post-translations.php:6
+#: ../include/post-translations.php:5
 msgid "Post ID"
 msgstr "ID für die Artikel"
+
+#: ../include/personal-options.php:3
+msgid "Admin language"
+msgstr "Adminsprache"
+
+#~ msgid "Title:"
+#~ msgstr "Titre :"
 
 #, fuzzy
 #~ msgid "The front page default language is : "
@@ -252,6 +258,4 @@ msgstr "ID für die Artikel"
 #~ msgstr "durch den Browser Einstellung definiert"
 #~ msgid "otherwise: "
 #~ msgstr "sonst :"
-#~ msgid "Title:"
-#~ msgstr "Titre :"
 

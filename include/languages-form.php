@@ -1,4 +1,5 @@
-<?php // displays the Languages admin panel 
+<?php 
+// displays the Languages admin panel 
 
 // I don't use the custom taxonomy form provide by Wordpress because I want to modify the labels below the fields...
 // It seems that there is currently (3.2.1) no filter to do this
@@ -7,7 +8,6 @@
 // name -> language name (used only for display)
 // slug -> language code (ideally 2-letters ISO 639-1 language code but I currently use it only as slug so it doesn't matter)
 // description -> WordPress Locale for the language. Here if something wrong is used, the .mo files will not be loaded...
-
 ?>
 <div class="wrap">
 <?php screen_icon('options-general'); ?>
@@ -30,9 +30,9 @@ if (isset($_GET['error'])) {?>
 <div class="col-wrap">
 
 <div class="form-wrap">
-<h3><?php echo $action=='edit' ? _e('Edit language','polylang') :	_e('Add new language','polylang'); ?></h3>
+<h3><?php echo $action=='edit' ? _e('Edit language','polylang') :	_e('Add new language','polylang'); ?></h3><?php
 
-<?php // displays the add (or edit) language form
+// displays the add (or edit) language form
  
 // adds noheader=true in the action url to allow using wp_redirect when processing the form ?>
 <form id="add-lang" method="post" action="admin.php?page=mlang&amp;noheader=true" class="validate">
@@ -64,10 +64,7 @@ else { ?>
 	<p><?php _e('2-letters ISO 639-1 language code (for example: en)', 'polylang');?></p>
 </div>
 
-<?php if ($action=='edit')
-	submit_button(__('Update'), 'button'); // since WP 3.1
-else			
-	submit_button(__('Add new language', 'polylang'), 'button'); // since WP 3.1?>
+<?php submit_button( $action == 'edit' ? __('Update') : __('Add new language', 'polylang'), 'button'); // since WP 3.1 ?>
 
 </form>
 </div> <!-- form-wrap -->
@@ -163,7 +160,7 @@ if (!empty($posts) || !empty($terms) && $options['default_lang']) {
 	if (!empty($terms))
 		echo '<input type="hidden" name="terms" value="'.esc_attr($terms).'" />';?>
 
-	<tr>
+	<tr><?php
 		<th></th>
 		<td>
 			<label style="color: red"><?php

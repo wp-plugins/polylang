@@ -3,7 +3,7 @@ Contributors: Chouby
 Tags: bilingual, multilingual, language, i18n, l10n, international, translate, translation, widget
 Requires at least: 3.1
 Tested up to: 3.2.1
-Stable tag: 0.4
+Stable tag: 0.4.1
 
 Adds multilingual support to WordPress.
 
@@ -106,7 +106,13 @@ You can look at the following forum topics:
 
 == Changelog ==
 
-= 0.4 =
+= 0.4.1 (2011-11-16) =
+
+* Bug correction: flags shows even when you set doesn't to show
+* Bug correction: custom taxonomies do not work
+* Bug correction: some users get the fatal error: call to undefined function wp_get_current_user() in /wp-includes/user.php on line 227
+
+= 0.4 (2011-11-10) =
 
 * Add a documentation (in English only)
 * Add the possibility to hide the url language information for the default language
@@ -126,9 +132,7 @@ You can look at the following forum topics:
 * Bug correction: the widget filter does not allow to come back to 'all languages' once a language has been set
 * Other minor bug corrections
 
-release: November 10th, 2011
-
-= 0.3.2 =
+= 0.3.2 (2011-10-20) =
 
 * Bug correction: authors pages are not filtered by language
 * Bug correction: language pages use the archive template
@@ -136,26 +140,20 @@ release: November 10th, 2011
 * Bug correction: "Add new" translation for pages creates a post instead of a page
 * Bug correction: the search query does not look into pages
 
-release: October 20th, 2011
-
-= 0.3.1 =
+= 0.3.1 (2011-10-16) =
 
 * Bug correction: the widget settings cannot be saved when activating Polylang
 * Bug correction: the archives widget does not display any links
 * Bug correction: ajax form for translations not working in the 'Categories' and 'Post tags' admin panels 
 
-release: October 16th, 2011
-
-= 0.3 =
+= 0.3 (2011-10-07) =
 
 * Add language filter for widgets
 * Improved performance for filtering pages by language
 * Improved security
 * Minor bug correction with versions management
 
-release: October 7th, 2011
-
-= 0.2 =
+= 0.2 (2011-10-05) =
 
 * Add language filter for nav menus 
 * Add German translation
@@ -165,9 +163,5 @@ release: October 7th, 2011
 * Improved performance for filtering terms by language
 * Bugs correction
 
-release: October 5th, 2011
-
-= 0.1 =
+= 0.1 (2011-09-22) =
 * Initial release
-
-release: September 22nd, 2011

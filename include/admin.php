@@ -1,5 +1,7 @@
 <?php
 
+require_once( ABSPATH . WPINC . '/pluggable.php' ); 	// to ensure that 'get_current_user_id' is defined
+
 require_once(INC_DIR.'/list-table.php');
 
 class Polylang_Admin extends Polylang_Base {
@@ -647,7 +649,8 @@ class Polylang_Admin extends Polylang_Base {
 
 	// returns the locale based on user preference
 	function get_locale($locale) {
-		return get_user_meta(get_current_user_id(), 'user_lang', 'true');
+		$loc = get_user_meta(get_current_user_id(), 'user_lang', 'true');
+		return $loc ? $loc : $locale; 
 	}
 
 	// updates language user preference

@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.4
+Version: 0.4.1
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 */
@@ -23,10 +23,12 @@ Description: Adds multilingual capability to Wordpress
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('POLYLANG_VERSION', '0.4');
+define('POLYLANG_VERSION', '0.4.1');
 
 define('POLYLANG_DIR', dirname(__FILE__));
 define('INC_DIR', POLYLANG_DIR.'/include');
+
+require_once(ABSPATH . 'wp-admin/includes/template.php'); // to ensure that 'get_current_screen' is defined
 
 require_once(INC_DIR.'/base.php');
 require_once(INC_DIR.'/admin.php');
@@ -263,7 +265,7 @@ class Polylang extends Polylang_Base {
 		}
 
 		if (is_admin()) {
-			$screen = get_current_screen(); // since WP 3.1 // FIXME breaks a user's admin -> use pagenow instead ?
+			$screen = get_current_screen(); // since WP 3.1 
 
 			// NOTE: $screen is not defined in the tag cloud of the Edit Post panel ($pagenow set to admin-ajax.php)
 			if (isset($screen))
@@ -364,12 +366,13 @@ class Polylang extends Polylang_Base {
 
 		elseif (is_single() || is_page() && $var = get_queried_object_id())
 			$lang = $this->get_post_language($var);
-	
-		elseif ($var = get_query_var('cat'))
-			$lang = $this->get_term_language($var);
 
-		elseif ($var = get_query_var('tag_id'))
-			$lang = $this->get_term_language($var);
+		else {
+			foreach (get_taxonomies(array('show_ui'=>true)) as $taxonomy) {
+				if ($var = get_query_var(get_taxonomy($taxonomy)->query_var))
+					$lang = $this->get_term_language($var, $taxonomy);
+			}
+		}	
 
 		return (isset($lang)) ? $lang : NULL;
 	}
@@ -395,7 +398,7 @@ class Polylang extends Polylang_Base {
 		if ($this->curlang = $this->get_current_language())
 			setcookie('wordpress_polylang', $this->curlang->slug, time() + 31536000 /* 1 year */, COOKIEPATH, COOKIE_DOMAIN);			
 
-		// our override_load_textdomain has done its job. let's remove it before calling load_textdomain
+		// our override_load_textdomain filter has done its job. let's remove it before calling load_textdomain
 		remove_filter('override_load_textdomain', array(&$this, 'mofile'));
 
 		// now we can load text domains with the right language		
@@ -487,7 +490,7 @@ class Polylang extends Polylang_Base {
 		// outputs references to translated pages (if exists) in the html head section
 		foreach ($this->get_languages_list() as $language) {
 			if ($language->slug != $this->curlang->slug && $url = $this->get_translation_url($language))
-				printf("<link hreflang='%s' href='%s' rel='alternate' />\n", esc_attr($language->slug), $url);
+				printf("<link hreflang='%s' href='%s' rel='alternate' />\n", esc_attr($language->slug), esc_url($url));
 		}		
 	}
 
@@ -644,7 +647,7 @@ class Polylang extends Polylang_Base {
 				get_option('home') :
 				_get_page_link($id);
 
-		elseif ( is_category() || is_tag() ) {
+		elseif ( !is_tax ('language') && (is_category() || is_tag() || is_tax () ) ) {
 			$term = get_queried_object();
 			$lang = $this->get_term_language($term->term_id);
 			$taxonomy = $term->taxonomy;
@@ -652,7 +655,7 @@ class Polylang extends Polylang_Base {
 			if ($language->slug == $lang->slug)
 				$url = get_term_link($term, $taxonomy); // self link
 			elseif ($link_id = $this->get_translated_term($term->term_id, $language))
-				$url = get_term_link(get_term($link_id, $taxonomy), $taxonomy);			
+				$url = get_term_link(get_term($link_id, $taxonomy), $taxonomy);
 		}
 
 		// don't test if there are existing translations before creating the url as it would be very expensive in sql queries
@@ -753,35 +756,38 @@ class Polylang extends Polylang_Base {
 			'show_flags' => 0, // don't show flags
 			'hide_if_empty' => 1 // hides languages with no posts (or pages)
 		);
-
 		extract(wp_parse_args($args, $defaults));
 
 		$listlanguages = $this->get_languages_list($hide_if_empty);
 		$output = $dropdown ? '<select name="lang_choice" id="lang_choice">' : "<ul>\n";
+
 		foreach ($listlanguages as $language) {
-			$url = $this->get_translation_url($language);
-			$url = isset($url) ? $url : $this->get_home_url($language); // if the page is not translated, link to the home page
-
-			$class = 'lang-item lang-item-'.esc_attr($language->term_id);
-			if ($language->slug == $this->curlang->slug)
-				$class .= ' current-lang';
-
-			$flag = $show_flags &&
-				file_exists(POLYLANG_DIR.($file = '/local_flags/'.$language->description.'.png')) ||
-				file_exists(POLYLANG_DIR.($file = '/flags/'.$language->description.'.png')) ? 
-				'<img src="'.WP_PLUGIN_URL.'/polylang'.$file.'" alt="'.$language->name.'" />' : '';
-
-			$name = $show_names || !$show_flags ? esc_attr($language->name) : '';
-
-			$output .= $dropdown ?
-				sprintf(
+			if ($dropdown) {
+				$output .= sprintf(
 					"<option value='%s'%s>%s</option>\n",
 					esc_attr($language->slug),
 					$language->slug == $this->curlang->slug ? ' selected="selected"' : '',
-					$name // FIXME flag does not work for the dropdown list
-				) :
-				'<li class="'.$class.'"><a href="'.$url.'">'.($show_flags && $show_names ? $flag.'&nbsp;'.$name : $flag.$name)."</a></li>\n";	
-		} 
+					esc_attr($language->name) // FIXME flag does not work for the dropdown list
+				);
+			}
+			else {
+				$url = $this->get_translation_url($language);
+				$url = isset($url) ? $url : $this->get_home_url($language); // if the page is not translated, link to the home page
+
+				$class = 'lang-item lang-item-'.esc_attr($language->term_id);
+				$class .= $language->slug == $this->curlang->slug ? ' current-lang' : '';
+
+				$flag = $show_flags && (
+					file_exists(POLYLANG_DIR.($file = '/local_flags/'.$language->description.'.png')) ||
+					file_exists(POLYLANG_DIR.($file = '/flags/'.$language->description.'.png')) ) ? 
+					'<img src="'.esc_url(WP_PLUGIN_URL.'/polylang'.$file).'" alt="'.esc_attr($language->name).'" />' : '';
+
+				$name = $show_names || !$show_flags ? esc_attr($language->name) : '';
+
+				$output .= '<li class="'.$class.'"><a href="'.esc_url($url).'">'.($show_flags && $show_names ? $flag.'&nbsp;'.$name : $flag.$name)."</a></li>\n";	
+			}
+		}
+
 		$output .= $dropdown ? '</select>' : "</ul>\n";
 		echo $output;
 	}
