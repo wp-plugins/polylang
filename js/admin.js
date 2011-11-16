@@ -10,7 +10,7 @@ jQuery(document).ready(function($) {
 
 			jQuery.post(ajaxurl, data , function(response) {
 				jQuery("#post-translations").html(response);
-			});    
+			});
 		})
 
 		// ajax for term edit
@@ -24,7 +24,7 @@ jQuery(document).ready(function($) {
 
 			jQuery.post(ajaxurl, data, function(response) {
 				jQuery("#term-translations").html(response);
-			});    
+			});
 		})
 
 });
