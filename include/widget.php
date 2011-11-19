@@ -23,10 +23,19 @@ class Polylang_Widget extends WP_Widget {
 		// keep the things simple for now as we switch to the posts page
 		if ($dropdown) {
 			$url = home_url('?lang=');
+			$home_url = get_option('home');
+			$options = get_option('polylang');
+			$default = $options['hide_default'] ? $options['default_lang'] :  '';
+
 			$js = "
 				<script type='text/javascript'>
 					var d = document.getElementById('lang_choice');
-					d.onchange = function() {location.href ='$url'+this.value;}
+					d.onchange = function() {
+						if (this.value == '$default')
+							location.href = '$home_url';
+						else 
+							location.href ='$url'+this.value;
+					}
 				</script>";
 
 			echo $js;
@@ -36,7 +45,6 @@ class Polylang_Widget extends WP_Widget {
 	// updates the widget options
 	function update( $new_instance, $old_instance ) {
 		$instance = $old_instance;
-		$new_instance = wp_parse_args( (array) $new_instance, array( 'title' => '', 'show_names' => 1, 'show_flags' => 0, 'dropdown' => 0) ); // default values
 		$instance['title'] = strip_tags($new_instance['title']);
 		$instance['show_names'] = !empty($new_instance['show_names']) ? 1 : 0;
 		$instance['show_flags'] = !empty($new_instance['show_flags']) ? 1 : 0;

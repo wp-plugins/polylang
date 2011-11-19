@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.4.2
+Version: 0.4.3
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 */
@@ -23,12 +23,10 @@ Description: Adds multilingual capability to Wordpress
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('POLYLANG_VERSION', '0.4.1');
+define('POLYLANG_VERSION', '0.4.3');
 
 define('POLYLANG_DIR', dirname(__FILE__));
 define('INC_DIR', POLYLANG_DIR.'/include');
-
-require_once(ABSPATH . 'wp-admin/includes/template.php'); // to ensure that 'get_current_screen' is defined
 
 require_once(INC_DIR.'/base.php');
 require_once(INC_DIR.'/admin.php');
@@ -44,6 +42,10 @@ class Polylang extends Polylang_Base {
 		// manages plugin activation and deactivation
 		register_activation_hook( __FILE__, array(&$this, 'activate') );
 		register_deactivation_hook( __FILE__, array(&$this, 'deactivate') );
+
+		// manages plugin upgrade
+		add_filter('upgrader_pre_install', array(&$this, 'pre_upgrade'));
+		add_filter('upgrader_post_install', array(&$this, 'post_upgrade'));
 
 		// plugin and widget initialization
 		add_action('init', array(&$this, 'init'));
@@ -175,6 +177,55 @@ class Polylang extends Polylang_Base {
 		$wp_rewrite->flush_rules();
 	}
 
+	// saves the local_flags directory before upgrade
+	// FIXME cannot test before release of v0.4.3
+	function pre_upgrade() {
+		// nothing to backup
+		if (!@is_dir($flags_dir = POLYLANG_DIR . '/local_flags'))
+			return true;
+	
+		$upgrade_dirs = array(
+			WP_CONTENT_DIR . '/upgrade',
+			WP_CONTENT_DIR . '/upgrade/polylang' 
+		);
+
+		foreach ($upgrade_dirs as $dir) {	
+			if (!@is_dir($dir) && !@mkdir($dir, 0755))
+				return  new WP_Error('polylang_upgrade_error', sprintf('%s<br />%s <strong>%s</strong>',
+					__("Error: Upgrade directory doesn't exist!", 'polylang'),
+					__('Please create', 'polylang'),
+					$dir
+				));
+		}
+
+		if (!@rename($flags_dir, WP_CONTENT_DIR . '/upgrade/polylang/local_flags'))
+			return new WP_Error('polylang_backup_error', sprintf('%s<br />%s <strong>%s</strong>',
+				__('Error: Backup of local flags failed!', 'polylang'),
+				__('Please backup', 'polylang'),
+				$flags_dir
+			));
+
+		return true;
+	}
+
+	// restores the local_flags directory after upgrade
+	// FIXME cannot test before release of v0.4.3
+	function post_upgrade() {
+		// nothing to restore
+		if (!@is_dir($upgrade_dir = WP_CONTENT_DIR . '/upgrade/polylang/local_flags'))
+			return true;
+
+		if (!@rename($upgrade_dir, POLYLANG_DIR . '/local_flags'))
+			return new WP_Error('polylang_restore_error', sprintf('%s<br />%s (<strong>%s</strong>)',
+				__('Error: Restore of local flags failed!', 'polylang'),
+				__('Please restore your local flags', 'polylang'),
+				$upgrade_dir
+			));
+
+		@rmdir(WP_CONTENT_DIR . '/upgrade/polylang');
+		return true;
+	}
+
 	// some initialization
 	function init() {
 		global $wpdb;
@@ -265,16 +316,16 @@ class Polylang extends Polylang_Base {
 		}
 
 		if (is_admin()) {
-			$screen = get_current_screen(); // since WP 3.1 
 
-			// NOTE: $screen is not defined in the tag cloud of the Edit Post panel ($pagenow set to admin-ajax.php)
-			if (isset($screen))
-				// does nothing in the Categories, Post tags, Languages and Posts* admin panels
-				if ($screen->base == 'edit-tags' || $screen->base == 'toplevel_page_mlang' || $screen->base == 'edit')
-					return $clauses;
+			if (function_exists('get_current_screen'))
+				$screen = get_current_screen(); // since WP 3.1, may not be available the first time(s) get_terms is called
 
-				// *FIXME I want all categories in the dropdown list and only the ones in the right language in the inline edit
-				// It seems that I need javascript to get the post_id as inline edit data are manipulated in inline-edit-post.js
+			// does nothing in the Categories, Post tags, Languages and Posts* admin panels
+			if (!isset($screen) || $screen->base == 'edit-tags' || $screen->base == 'toplevel_page_mlang' || $screen->base == 'edit')
+				return $clauses;
+
+			// *FIXME I want all categories in the dropdown list and only the ones in the right language in the inline edit
+			// It seems that I need javascript to get the post_id as inline edit data are manipulated in inline-edit-post.js
 
 			$this->curlang = $this->get_current_language();
 		}
@@ -441,6 +492,19 @@ class Polylang extends Polylang_Base {
 				wp_redirect($url);
 				exit;
 			}	
+		}
+
+		// sets the language for posts page in case the front page displays a static page
+		if ($page_for_posts = get_option('page_for_posts') &&
+			isset($query->queried_object_id) &&
+			$this->get_post($query->queried_object_id, $this->get_post_language($page_for_posts)) == $page_for_posts
+		) {
+			$query->set('lang',$this->get_post_language($query->queried_object_id)->slug);
+			$query->queried_object_id = get_option('page_for_posts'); 
+			$query->is_page = false;
+			$query->is_home = true;
+			$query->is_posts_page = true;
+			$query->is_singular = false;
 		}
 
 		// FIXME to generalize as I probably forget things
@@ -642,6 +706,10 @@ class Polylang extends Polylang_Base {
 		if (is_single() && !is_attachment() && $id = $this->get_post(get_the_ID(), $language))
 			$url = get_permalink($id);
 
+		// page for posts
+		elseif (isset($wp_query->queried_object_id) && $wp_query->queried_object_id == ($page_for_posts = get_option('page_for_posts')))
+			$url = get_permalink($this->get_post($page_for_posts, $language));
+
 		elseif (is_page() && $id = $this->get_post(get_the_ID(), $language))
 			$url = $hide && $id == $this->get_post(get_option('page_on_front'), $language) ?
 				get_option('home') :
@@ -779,6 +847,7 @@ class Polylang extends Polylang_Base {
 
 				$flag = $show_flags && (
 					file_exists(POLYLANG_DIR.($file = '/local_flags/'.$language->description.'.png')) ||
+					file_exists(POLYLANG_DIR.($file = '/local_flags/'.$language->description.'.jpg')) ||
 					file_exists(POLYLANG_DIR.($file = '/flags/'.$language->description.'.png')) ) ? 
 					'<img src="'.esc_url(WP_PLUGIN_URL.'/polylang'.$file).'" alt="'.esc_attr($language->name).'" />' : '';
 

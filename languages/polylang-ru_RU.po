@@ -4,16 +4,18 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-11-14 21:57+0100\n"
 "PO-Revision-Date: \n"
-"Last-Translator: F. Demarle\n"
+"Last-Translator: YoYurec <yoyurec@gmail.com>\n"
 "Language-Team: \n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-KeywordsList: _e;__;_c\n"
 "X-Poedit-Basepath: .\n"
+"X-Poedit-Language: Russian\n"
+"X-Poedit-Country: RUSSIAN FEDERATION\n"
 "X-Poedit-SearchPath-0: ..\n"
 "X-Poedit-SearchPath-1: ../include\n"
 
@@ -25,98 +27,97 @@ msgstr ""
 #: ../include/list-table.php:12
 #: ../include/post-translations.php:4
 msgid "Language"
-msgstr "Sprache"
+msgstr "Язык"
 
 #: ../include/edit-term-form.php:18
 #: ../include/add-term-form.php:10
 msgid "Sets the language"
-msgstr "definiert die Sprache"
+msgstr "Устанавливает язык"
 
 #: ../include/widget.php:5
 msgid "Displays a language switcher"
-msgstr "Zeigen die Sprachenliste"
+msgstr "Показывает переключатель языков"
 
 #: ../include/widget.php:6
 msgid "Language Switcher"
-msgstr "Sprachenliste"
+msgstr "Переключатель языков"
 
 #: ../include/widget.php:50
 msgid "Display language names"
-msgstr "Zeigen die Sprachen Namen"
+msgstr "Показывать названия языков"
 
 #: ../include/widget.php:56
 msgid "Display flags"
-msgstr "Zeigen Flaggen"
+msgstr "Показывать флаги"
 
 #: ../include/widget.php:62
 msgid "Display as dropdown"
-msgstr "Als Auswahlbox darstellen"
+msgstr "Показывать как выпадающий список"
 
 #: ../include/admin.php:90
 msgid "Settings"
-msgstr "Einstellungen"
+msgstr "Настройки"
 
 #: ../include/admin.php:97
 #: ../include/admin.php:392
 #: ../include/list-table.php:13
 #: ../include/languages-form.php:14
 msgid "Languages"
-msgstr "Sprachen"
+msgstr "Языки"
 
 #: ../include/admin.php:309
-#, fuzzy
 msgid "Enter a valid WorPress locale"
-msgstr "Das WordPress Locale ist ungültig"
+msgstr "Введите корректную WordPress локаль"
 
 #: ../include/admin.php:310
 msgid "The language code must be 2 characters long"
-msgstr "Der Sprachcode muss 2 Buchstaben lang sein"
+msgstr "Код языка должен состоять из 2-х символов"
 
 #: ../include/admin.php:311
 msgid "The language code must be unique"
-msgstr "Eine andere Sprache hat dem selben Sprachcode"
+msgstr "Код языка должен быть уникальным"
 
 #: ../include/admin.php:312
 msgid "The language must have a name"
-msgstr "Die Sprache muss einen Namen haben"
+msgstr "У языка должно быть название"
 
 #: ../include/admin.php:380
 msgid "Show all languages"
-msgstr "Zeigen alle Sprachen"
+msgstr "Показать все языки"
 
 #: ../include/admin.php:607
 msgid "Theme locations and languages"
-msgstr "Anordnung im Theme und Sprachen"
+msgstr "Расположение темы и языков"
 
 #: ../include/admin.php:612
 #, php-format
 msgid "Please go to the %slanguages page%s to set theme locations and languages"
-msgstr "Du solltest zu der %sSprachen Seite%s gehen, um Anordnung im Theme und Sprachen zu definieren."
+msgstr "Перейдите на %slanguages page% для указания расположения темы и языков"
 
 #: ../include/admin.php:624
 msgid "The widget is displayed for:"
-msgstr "Zeigen das Widget für :"
+msgstr "Показывать виджет для"
 
 #: ../include/admin.php:627
 msgid "All languages"
-msgstr "Alle Sprachen"
+msgstr "Все языки"
 
 #: ../include/post-metabox.php:3
 msgid "Page's language:"
-msgstr "Sprache für die Seite :"
+msgstr "Язык страницы"
 
 #: ../include/post-metabox.php:3
 msgid "Post's language:"
-msgstr "Sprache für die Artikel :"
+msgstr "Язык записи"
 
 #: ../include/term-translations.php:5
 #: ../include/term-translations.php:9
 msgid "Translations"
-msgstr "Übersetzungen"
+msgstr "Переводы"
 
 #: ../include/term-translations.php:14
 msgid "Translation"
-msgstr "Übersetzung"
+msgstr "Перевод"
 
 #: ../include/term-translations.php:14
 #: ../include/term-translations.php:75
@@ -124,138 +125,128 @@ msgstr "Übersetzung"
 #: ../include/post-translations.php:6
 #: ../include/post-translations.php:28
 msgid "Edit"
-msgstr "Bearbeiten"
+msgstr "Редактировать"
 
 #: ../include/term-translations.php:61
 #: ../include/post-translations.php:33
 msgid "Add new"
-msgstr "Hinzufügen"
+msgstr "Добавить новый"
 
 #: ../include/list-table.php:33
 msgid "Delete"
-msgstr "Löschen"
+msgstr "Удалить"
 
 #: ../include/list-table.php:50
 #: ../include/languages-form.php:50
 msgid "Full name"
-msgstr "Name"
+msgstr "Полное название"
 
 #: ../include/list-table.php:51
 #: ../include/languages-form.php:56
-#, fuzzy
 msgid "Locale"
-msgstr "Locale"
+msgstr "Локаль"
 
 #: ../include/list-table.php:52
 msgid "Code"
-msgstr "Code"
+msgstr "Код"
 
 #: ../include/list-table.php:53
 msgid "Posts"
-msgstr "Artikel"
+msgstr "Записи"
 
 #: ../include/languages-form.php:33
 msgid "Edit language"
-msgstr "Sprache bearbeiten"
+msgstr "Редактировать язык"
 
 #: ../include/languages-form.php:33
 #: ../include/languages-form.php:70
 msgid "Add new language"
-msgstr "Neue Sprache hinzufügen"
+msgstr "Добавить новый язык"
 
 #: ../include/languages-form.php:52
 msgid "The name is how it is displayed on your site (for example: English)."
-msgstr "Dieser Name wird dann auf der Website angezeigt (beispielweise : Deutsch)"
+msgstr "Название для отображения на сайте (например: Русский)."
 
 #: ../include/languages-form.php:58
 msgid "Wordpress Locale for the language (for example: en_US). You will need to install the .mo file for this language."
-msgstr "Wordpress Locale für die Sprache (beispielweise : de_DE). Du musst die .mo Datei für diese Sprache installieren."
+msgstr "Локаль Wordpress'a для языка (например: ru_RU). Вы должны установить файлы .mo для админ.панели и используемой темы."
 
 #: ../include/languages-form.php:62
 msgid "Language code"
-msgstr "Sprachcode"
+msgstr "Код языка"
 
 #: ../include/languages-form.php:64
 msgid "2-letters ISO 639-1 language code (for example: en)"
-msgstr "2 Buchstaben ISO 639-1 Sprachcode (beispielweise : de)"
+msgstr "2х-буквенный ISO 639-1 код языка (например: ru)"
 
 #: ../include/languages-form.php:68
 msgid "Update"
-msgstr "Aktualisieren"
+msgstr "Обновить"
 
 #: ../include/languages-form.php:82
 msgid "Menus"
-msgstr "Menüs"
+msgstr "Меню"
 
 #: ../include/languages-form.php:90
 msgid "Theme location"
-msgstr "Anordnung im Theme"
+msgstr "Расположение темы"
 
 #: ../include/languages-form.php:134
 msgid "Options"
-msgstr "Einstellungen"
+msgstr "Настройки"
 
 #: ../include/languages-form.php:143
 msgid "Default language"
-msgstr "Standard Sprache"
+msgstr "Язык по-умолчанию"
 
 #: ../include/languages-form.php:172
-#, fuzzy
 msgid "There are posts, pages, categories or tags without language set. Do you want to set them all to default language ?"
-msgstr "Es gibt Artikel, Seite, Kategorien oder Schlagwörter ohne Sprache definiert. Willst du alle zu standard Sprache definieren ?"
+msgstr "Найдены записи, страницы, категории или метки без указанния какого-либо языка. Установить им язык по-умолчанию?"
 
 #: ../include/languages-form.php:180
 msgid "Detect browser language"
-msgstr "Browser Spracherkennung"
+msgstr "Определять язык в браузере"
 
 #: ../include/languages-form.php:186
 msgid "When the front page is visited, set the language according to the browser preference"
-msgstr "Wenn die Startseite besucht ist, definiert die Sprache durch den Browser Einstellung"
+msgstr "Установить язык сайта согласно настройкам браузера"
 
 #: ../include/languages-form.php:193
 msgid "URL modifications"
-msgstr "URL Veränderung"
+msgstr "Модификации URL"
 
 #: ../include/languages-form.php:199
 msgid "Keep /language/ in pretty permalinks. Example: "
-msgstr "/language/ in Permalinks behalten. Zum Beispiel :"
+msgstr "Оставить /language/ в ЧПУ. Пример: "
 
 #: ../include/languages-form.php:207
 msgid "Remove /language/ in pretty permalinks. Example: "
-msgstr "/language/ in Permalinks entfernen. Zum Beispiel :"
+msgstr "Удалить /language/ в ЧПУ. Пример: "
 
 #: ../include/languages-form.php:215
 msgid "Hide URL language information for default language"
-msgstr "URL Informationen für die Standardsprache verstecken"
+msgstr "Спрятать название языка по-умолчанию из URL"
 
 #: ../include/post-translations.php:1
 msgid "ID of pages in other languages:"
-msgstr "ID für die Seiten in andere Sprache :"
+msgstr "ID страницы на других языках:"
 
 #: ../include/post-translations.php:1
 msgid "ID of posts in other languages:"
-msgstr "ID für die Artikel in andere Sprache :"
+msgstr "ID записи на других языках:"
 
 #: ../include/post-translations.php:5
 msgid "Page ID"
-msgstr "ID für die Seite"
+msgstr "ID страницы"
 
 #: ../include/post-translations.php:5
 msgid "Post ID"
-msgstr "ID für die Artikel"
+msgstr "ID записи"
 
 #: ../include/personal-options.php:3
 msgid "Admin language"
-msgstr "Adminsprache"
+msgstr "Язык админ.панели"
 
-#~ msgid "Title:"
-#~ msgstr "Titre :"
-
-#, fuzzy
-#~ msgid "The front page default language is : "
-#~ msgstr "Die Sprache für die Startseite ist :"
-#~ msgid "set by the browser preference"
-#~ msgstr "durch den Browser Einstellung definiert"
-#~ msgid "otherwise: "
-#~ msgstr "sonst :"
+msgid "Title:"
+msgstr "Titre :"
 

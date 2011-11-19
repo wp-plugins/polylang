@@ -1,7 +1,5 @@
 <?php
 
-require_once( ABSPATH . WPINC . '/pluggable.php' ); 	// to ensure that 'get_current_user_id' is defined
-
 require_once(INC_DIR.'/list-table.php');
 
 class Polylang_Admin extends Polylang_Base {
@@ -57,7 +55,7 @@ class Polylang_Admin extends Polylang_Base {
 	}
 
 	function admin_init() {
-		// add these actions and filters here and not in the constructor to be sure all taxonomies are registered
+		// add these actions and filters here and not in the constructor to be sure that all taxonomies are registered
 		foreach (get_taxonomies(array('show_ui'=>true)) as $tax) {
 			// adds the language field in the 'Categories' and 'Post Tags' panels
 			add_action($tax.'_add_form_fields',  array(&$this, 'add_term_form'));
@@ -77,9 +75,9 @@ class Polylang_Admin extends Polylang_Base {
 
 		// manage versions
 		$options = get_option('polylang');
-		if ($options['version'] < POLYLANG_VERSION) {
+		if (version_compare($options['version'], POLYLANG_VERSION, '<')) {
 
-			if($options['version'] < '0.4')
+			if(version_compare($options['version'], '0.4', '<'))
 				$options['hide_default'] = 0; // option introduced in 0.4
 
 			$options['version'] = POLYLANG_VERSION;
@@ -144,7 +142,7 @@ class Polylang_Admin extends Polylang_Base {
 				break;
 
 			case 'delete':
-				check_admin_referer( 'delete-lang');
+				check_admin_referer('delete-lang');
 
 				if (isset($_GET['lang']) && $_GET['lang']) {
 					$lang_id = (int) $_GET['lang'];
@@ -598,13 +596,12 @@ class Polylang_Admin extends Polylang_Base {
 	}
 
 	// modifies the theme location nav menu metabox
+	// thanks to: http://wordpress.stackexchange.com/questions/2770/how-to-add-a-custom-metabox-to-the-menu-management-admin-screen
 	function nav_menu_theme_locations() {
 		// only if the theme supports nav menus and a nav menu exists
-		if ( ! current_theme_supports( 'menus' ) || !isset($_REQUEST['menu']) )
+		if ( ! current_theme_supports( 'menus' ) || ! $metabox = &$GLOBALS['wp_meta_boxes']['nav-menus']['side']['default']['nav-menu-theme-locations'] )
 			return;
 
-		// thanks to: http://wordpress.stackexchange.com/questions/2770/how-to-add-a-custom-metabox-to-the-menu-management-admin-screen
-		$metabox = &$GLOBALS['wp_meta_boxes']['nav-menus']['side']['default']['nav-menu-theme-locations'];
 		$metabox['callback'] = array(&$this,'nav_menu_language');
 		$metabox['title'] = __('Theme locations and languages', 'polylang');
 	}
@@ -649,8 +646,10 @@ class Polylang_Admin extends Polylang_Base {
 
 	// returns the locale based on user preference
 	function get_locale($locale) {
-		$loc = get_user_meta(get_current_user_id(), 'user_lang', 'true');
-		return $loc ? $loc : $locale; 
+		// get_current_user_id uses wp_get_current_user which may not be available the first time(s) get_locale is called 
+		if (function_exists('wp_get_current_user')) 
+			$loc = get_user_meta(get_current_user_id(), 'user_lang', 'true');
+		return isset($loc) && $loc ? $loc : $locale; 
 	}
 
 	// updates language user preference
