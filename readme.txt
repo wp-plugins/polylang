@@ -84,9 +84,6 @@ In comparison to these plugins, Polylang tries to keep things simple and light, 
 Not yet. It is planned for v0.5 (to be released before the end of the year)
 
 = Can I use my own flags for the language switcher ? =
-Polylang adds multilingual support to WordPress. It acts as a language filter for posts you have written in several languages. It will however not make the translation for you ! If you are looking for automatic translation, look for another plugin. Unlike some other plugins, it does not integrate professionnal translation.
-
-You write posts, pages and create categories and post tags as usual. You just have to define the language and it will be displayed only if the visitor is browsing this language. Optionaly, you can mark each post, page, category and post tag to be the translation of another one. Thus if, for example, your visitor is reading a post, he can switch (using the language switcher widget provided with the plugin) to the same post translated in another language (provided that you translated it !).
 
 Yes. You have to use PNG or JPG files and name them with the WordPress locale. For example, en_US.png. Then upload these files in the `/polylang/local_flags` directory. Don't use the `/polylang/flags` directory as your files may be overwritten when updating the plugin.
 
