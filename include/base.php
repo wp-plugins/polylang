@@ -48,13 +48,17 @@ class Polylang_Base {
 	}
 
 	// returns the language of a term
-	function get_term_language($term_id) {
-		return $this->get_language(get_metadata('term', $term_id, '_language', true));
+	function get_term_language($value, $taxonomy = '') {
+		if (is_numeric($value))
+			$term_id = $value;
+		elseif (is_string($value) && $taxonomy)
+			$term_id = get_term_by('slug', $value , $taxonomy)->term_id;
+		return $term_id ? $this->get_language(get_metadata('term', $term_id, '_language', true)) : null;
 	}
 
-	// returns the id of the translation of a term (category or post_tag)
+	// returns the id of the translation of a term (category, post tag or custom taxonomy)
 	function get_translated_term($term_id, $language) {
-		return get_metadata('term', $term_id, '_lang-'.$language->slug, true); 
+		return get_metadata('term', $term_id, '_lang-'.$language->slug, true); // since WP 2.9
 	}
 
 } //class Polylang_Base
