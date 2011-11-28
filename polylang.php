@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.4.3
+Version: 0.4.4
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 */
@@ -23,7 +23,7 @@ Description: Adds multilingual capability to Wordpress
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('POLYLANG_VERSION', '0.4.3');
+define('POLYLANG_VERSION', '0.4.4');
 
 define('POLYLANG_DIR', dirname(__FILE__));
 define('INC_DIR', POLYLANG_DIR.'/include');
@@ -178,7 +178,6 @@ class Polylang extends Polylang_Base {
 	}
 
 	// saves the local_flags directory before upgrade
-	// FIXME cannot test before release of v0.4.3
 	function pre_upgrade() {
 		// nothing to backup
 		if (!@is_dir($flags_dir = POLYLANG_DIR . '/local_flags'))
@@ -191,10 +190,10 @@ class Polylang extends Polylang_Base {
 
 		foreach ($upgrade_dirs as $dir) {	
 			if (!@is_dir($dir) && !@mkdir($dir, 0755))
-				return  new WP_Error('polylang_upgrade_error', sprintf('%s<br />%s <strong>%s</strong>',
+				return new WP_Error('polylang_upgrade_error', sprintf('%s<br />%s <strong>%s</strong>',
 					__("Error: Upgrade directory doesn't exist!", 'polylang'),
 					__('Please create', 'polylang'),
-					$dir
+					esc_attr($dir)
 				));
 		}
 
@@ -202,14 +201,13 @@ class Polylang extends Polylang_Base {
 			return new WP_Error('polylang_backup_error', sprintf('%s<br />%s <strong>%s</strong>',
 				__('Error: Backup of local flags failed!', 'polylang'),
 				__('Please backup', 'polylang'),
-				$flags_dir
+				esc_attr($flags_dir)
 			));
 
 		return true;
 	}
 
 	// restores the local_flags directory after upgrade
-	// FIXME cannot test before release of v0.4.3
 	function post_upgrade() {
 		// nothing to restore
 		if (!@is_dir($upgrade_dir = WP_CONTENT_DIR . '/upgrade/polylang/local_flags'))
@@ -219,7 +217,7 @@ class Polylang extends Polylang_Base {
 			return new WP_Error('polylang_restore_error', sprintf('%s<br />%s (<strong>%s</strong>)',
 				__('Error: Restore of local flags failed!', 'polylang'),
 				__('Please restore your local flags', 'polylang'),
-				$upgrade_dir
+				esc_attr($upgrade_dir)
 			));
 
 		@rmdir(WP_CONTENT_DIR . '/upgrade/polylang');
@@ -395,6 +393,7 @@ class Polylang extends Polylang_Base {
 		if (is_404() || is_attachment())
 			return $this->get_preferred_language();
 
+
 		if (is_admin()) {
 			if (isset($post_ID)) 
 				$lang = $this->get_post_language($post_ID);
@@ -495,7 +494,7 @@ class Polylang extends Polylang_Base {
 		}
 
 		// sets the language for posts page in case the front page displays a static page
-		if ($page_for_posts = get_option('page_for_posts') &&
+		if (($page_for_posts = get_option('page_for_posts')) &&
 			isset($query->queried_object_id) &&
 			$this->get_post($query->queried_object_id, $this->get_post_language($page_for_posts)) == $page_for_posts
 		) {

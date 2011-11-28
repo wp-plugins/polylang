@@ -84,7 +84,7 @@ if (current_theme_supports( 'menus' )) { ?>
 
 <table class="wp-list-table widefat fixed tags" cellspacing="0" style="width: auto">
 	<thead><tr>
-		<th><?php _e('Theme location','Polylang') ?></th><?php
+		<th><?php _e('Theme location','polylang') ?></th><?php
 		foreach ($listlanguages as $language) {
 			echo '<th>' . esc_attr($language->name) . '</th>';
 		} ?>
@@ -187,23 +187,23 @@ if (!empty($posts) || !empty($terms) && $options['default_lang']) {
 </tr>
 
 <tr>
-	<th><?php _e('URL modifications', 'Polylang') ?></th>
+	<th><?php _e('URL modifications', 'polylang') ?></th>
 	<td scope="row">
 		<label><?php
 			printf(
-				'<input name="rewrite" type="radio" value="0" %s /> %s', 
+				'<input name="rewrite" type="radio" value="0" %s /> %s %s', 
 				$options['rewrite'] ? '' : 'checked="checked"',
-				 __('Keep /language/ in pretty permalinks. Example: ', 'polylang')
+				 __('Keep /language/ in pretty permalinks. Example:', 'polylang'),
+				'<code>'.home_url('language/en/').'</code>'
 			);?>
-			<code><?php echo home_url('language/en/'); ?></code>
 		</label>
 		<label><?php
 			printf(
-				'<input name="rewrite" type="radio" value="1" %s /> %s', 
+				'<input name="rewrite" type="radio" value="1" %s /> %s %s', 
 				$options['rewrite'] ? 'checked="checked"' : '',
-				__('Remove /language/ in pretty permalinks. Example: ', 'polylang')
+				__('Remove /language/ in pretty permalinks. Example:', 'polylang'),
+				'<code>'.home_url('en/').'</code>'
 			);?>
-			<code><?php echo home_url('en/'); ?></code>
 		</label>
 		<label><?php
 			printf(

@@ -3,7 +3,7 @@ Contributors: Chouby
 Tags: bilingual, language, i18n, international, l10n, localization, multilingual, translate, translation, widget
 Requires at least: 3.1
 Tested up to: 3.3
-Stable tag: 0.4.3
+Stable tag: 0.4.4
 
 Polylang adds multilingual support to WordPress. You set a language for each post and it will be displayed only when browsing this language.
 
@@ -30,7 +30,7 @@ The plugin admin interface is currently available in:
 * English
 * French
 * German
-* Russian contributed by [yoyurec](http://wordpress.org/support/profile/yoyurec)
+* Russian contributed by [yoyurec](http://yoyurec.in.ua)
 
 Other translators are welcome ! [Contact me](http://www.flabellina.com/polylang-contact/). I am especially looking for someone who could replace me for the German translation which I did probably very bad...
 
@@ -48,7 +48,7 @@ Don't hesitate to [give your feedback](http://wordpress.org/tags/polylang?forum_
 
 == Upgrade Notice ==
 
-Your custom flags in 'polylang/local_flags' directory will be removed when automatically upgrading from v0.4, v0.4.1, v0.4.2. So either do a manual upgrade or backup your custom flags. This problem should be solved when upgrading from v0.4.3 to a higher version.
+Your custom flags in 'polylang/local_flags' directory will be removed when automatically upgrading from v0.4, v0.4.1, v0.4.2. So either do a manual upgrade or backup your custom flags. This problem is solved when upgrading from v0.4.3 to a higher version.
 
 == Installation ==
 
@@ -92,6 +92,11 @@ Yes. You have to use PNG or JPG files and name them with the WordPress locale. F
 There are many sources. I included some of the [famfamfam](http://www.famfamfam.com) flags which I renamed.
 
 == Changelog ==
+
+= 0.4.4 (2011-11-28) = 
+
+* Bug correction: When using a static front page, the translated home page displays posts instead of the translated page
+* Bug correction: Automatic language setting of existing categories and post tags does not work correctly
 
 = 0.4.3 (2011-11-19) =
 

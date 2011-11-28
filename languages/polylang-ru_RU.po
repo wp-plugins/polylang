@@ -2,251 +2,349 @@ msgid ""
 msgstr ""
 "Project-Id-Version: polylang\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-14 21:57+0100\n"
+"POT-Creation-Date: 2011-11-22 09:49+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: YoYurec <yoyurec@gmail.com>\n"
 "Language-Team: \n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
-"X-Poedit-SourceCharset: utf-8\n"
-"X-Poedit-KeywordsList: _e;__;_c\n"
-"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Poedit-Language: Russian\n"
 "X-Poedit-Country: RUSSIAN FEDERATION\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2\n"
+"X-Poedit-Basepath: .\n"
+"X-Textdomain-Support: yes\n"
 "X-Poedit-SearchPath-0: ..\n"
-"X-Poedit-SearchPath-1: ../include\n"
 
-#: ../include/edit-term-form.php:6
-#: ../include/admin.php:348
-#: ../include/admin.php:502
-#: ../include/term-translations.php:14
-#: ../include/add-term-form.php:3
-#: ../include/list-table.php:12
-#: ../include/post-translations.php:4
+#@ polylang
+#: polylang.php:194
+msgid "Error: Upgrade directory doesn't exist!"
+msgstr "Ошибка: Отсутствует папка для обновления!"
+
+#@ polylang
+#: polylang.php:195
+msgid "Please create"
+msgstr "Пожалуйста, создайте"
+
+#@ polylang
+#: polylang.php:202
+msgid "Error: Backup of local flags failed!"
+msgstr "Ошибка: Не удалось создать резервную копию пользовательских иконок-флагов!"
+
+#@ polylang
+#: polylang.php:203
+msgid "Please backup"
+msgstr "Пожалуйста, сделайте резервную копию"
+
+#@ polylang
+#: polylang.php:218
+msgid "Error: Restore of local flags failed!"
+msgstr "Ошибка: Не удалось восстановить пользовательские иконки-флаги из резервной копиии!"
+
+#@ polylang
+#: polylang.php:219
+msgid "Please restore your local flags"
+msgstr "Пожалуйста, создайте резервную копию пользовательских иконок-флагов!"
+
+#@ polylang
+#: include/add-term-form.php:3
+#: include/admin.php:349
+#: include/admin.php:503
+#: include/edit-term-form.php:6
+#: include/list-table.php:12
+#: include/post-translations.php:4
+#: include/term-translations.php:14
 msgid "Language"
 msgstr "Язык"
 
-#: ../include/edit-term-form.php:18
-#: ../include/add-term-form.php:10
+#@ polylang
+#: include/add-term-form.php:10
+#: include/edit-term-form.php:18
 msgid "Sets the language"
 msgstr "Устанавливает язык"
 
-#: ../include/widget.php:5
+#@ polylang
+#: include/widget.php:5
 msgid "Displays a language switcher"
 msgstr "Показывает переключатель языков"
 
-#: ../include/widget.php:6
+#@ polylang
+#: include/widget.php:6
 msgid "Language Switcher"
 msgstr "Переключатель языков"
 
-#: ../include/widget.php:50
+#@ polylang
+#: include/widget.php:64
+msgid "Title:"
+msgstr "Название:"
+
+#@ polylang
+#: include/widget.php:70
 msgid "Display language names"
 msgstr "Показывать названия языков"
 
-#: ../include/widget.php:56
+#@ polylang
+#: include/widget.php:76
 msgid "Display flags"
 msgstr "Показывать флаги"
 
-#: ../include/widget.php:62
+#@ polylang
+#: include/widget.php:82
 msgid "Display as dropdown"
 msgstr "Показывать как выпадающий список"
 
-#: ../include/admin.php:90
+#@ default
+#: include/admin.php:90
 msgid "Settings"
 msgstr "Настройки"
 
-#: ../include/admin.php:97
-#: ../include/admin.php:392
-#: ../include/list-table.php:13
-#: ../include/languages-form.php:14
+#@ polylang
+#: include/admin.php:97
+#: include/admin.php:393
+#: include/languages-form.php:14
+#: include/list-table.php:13
 msgid "Languages"
 msgstr "Языки"
 
-#: ../include/admin.php:309
+#@ polylang
+#: include/admin.php:310
 msgid "Enter a valid WorPress locale"
 msgstr "Введите корректную WordPress локаль"
 
-#: ../include/admin.php:310
+#@ polylang
+#: include/admin.php:311
 msgid "The language code must be 2 characters long"
 msgstr "Код языка должен состоять из 2-х символов"
 
-#: ../include/admin.php:311
+#@ polylang
+#: include/admin.php:312
 msgid "The language code must be unique"
 msgstr "Код языка должен быть уникальным"
 
-#: ../include/admin.php:312
+#@ polylang
+#: include/admin.php:313
 msgid "The language must have a name"
 msgstr "У языка должно быть название"
 
-#: ../include/admin.php:380
+#@ polylang
+#: include/admin.php:381
 msgid "Show all languages"
 msgstr "Показать все языки"
 
-#: ../include/admin.php:607
+#@ polylang
+#: include/admin.php:607
 msgid "Theme locations and languages"
 msgstr "Расположение темы и языков"
 
-#: ../include/admin.php:612
+#@ polylang
+#: include/admin.php:612
 #, php-format
 msgid "Please go to the %slanguages page%s to set theme locations and languages"
-msgstr "Перейдите на %slanguages page% для указания расположения темы и языков"
+msgstr "Перейдите на %slanguages page%s для указания расположения темы и языков"
 
-#: ../include/admin.php:624
+#@ polylang
+#: include/admin.php:624
 msgid "The widget is displayed for:"
 msgstr "Показывать виджет для"
 
-#: ../include/admin.php:627
+#@ polylang
+#: include/admin.php:627
 msgid "All languages"
 msgstr "Все языки"
 
-#: ../include/post-metabox.php:3
+#@ polylang
+#: include/post-metabox.php:3
 msgid "Page's language:"
 msgstr "Язык страницы"
 
-#: ../include/post-metabox.php:3
+#@ polylang
+#: include/post-metabox.php:3
 msgid "Post's language:"
 msgstr "Язык записи"
 
-#: ../include/term-translations.php:5
-#: ../include/term-translations.php:9
+#@ polylang
+#: include/term-translations.php:5
+#: include/term-translations.php:9
 msgid "Translations"
 msgstr "Переводы"
 
-#: ../include/term-translations.php:14
+#@ polylang
+#: include/term-translations.php:14
 msgid "Translation"
 msgstr "Перевод"
 
-#: ../include/term-translations.php:14
-#: ../include/term-translations.php:75
-#: ../include/list-table.php:32
-#: ../include/post-translations.php:6
-#: ../include/post-translations.php:28
+#@ polylang
+#: include/list-table.php:32
+#: include/post-translations.php:6
+#: include/post-translations.php:28
+#: include/term-translations.php:14
+#: include/term-translations.php:75
 msgid "Edit"
 msgstr "Редактировать"
 
-#: ../include/term-translations.php:61
-#: ../include/post-translations.php:33
+#@ polylang
+#: include/post-translations.php:33
+#: include/term-translations.php:61
 msgid "Add new"
 msgstr "Добавить новый"
 
-#: ../include/list-table.php:33
+#@ polylang
+#: include/list-table.php:33
 msgid "Delete"
 msgstr "Удалить"
 
-#: ../include/list-table.php:50
-#: ../include/languages-form.php:50
+#@ polylang
+#: include/languages-form.php:50
+#: include/list-table.php:50
 msgid "Full name"
 msgstr "Полное название"
 
-#: ../include/list-table.php:51
-#: ../include/languages-form.php:56
+#@ polylang
+#: include/languages-form.php:56
+#: include/list-table.php:51
 msgid "Locale"
 msgstr "Локаль"
 
-#: ../include/list-table.php:52
+#@ polylang
+#: include/list-table.php:52
 msgid "Code"
 msgstr "Код"
 
-#: ../include/list-table.php:53
+#@ polylang
+#: include/list-table.php:53
 msgid "Posts"
 msgstr "Записи"
 
-#: ../include/languages-form.php:33
+#@ default
+#: include/calendar.php:88
+#: include/calendar.php:96
+#, php-format
+msgid "View posts for %1$s %2$s"
+msgstr "Показать записи для %1$s %2$s"
+
+#@ polylang
+#: include/languages-form.php:33
 msgid "Edit language"
 msgstr "Редактировать язык"
 
-#: ../include/languages-form.php:33
-#: ../include/languages-form.php:70
+#@ polylang
+#: include/languages-form.php:33
+#: include/languages-form.php:67
 msgid "Add new language"
 msgstr "Добавить новый язык"
 
-#: ../include/languages-form.php:52
+#@ polylang
+#: include/languages-form.php:52
 msgid "The name is how it is displayed on your site (for example: English)."
 msgstr "Название для отображения на сайте (например: Русский)."
 
-#: ../include/languages-form.php:58
+#@ polylang
+#: include/languages-form.php:58
 msgid "Wordpress Locale for the language (for example: en_US). You will need to install the .mo file for this language."
 msgstr "Локаль Wordpress'a для языка (например: ru_RU). Вы должны установить файлы .mo для админ.панели и используемой темы."
 
-#: ../include/languages-form.php:62
+#@ polylang
+#: include/languages-form.php:62
 msgid "Language code"
 msgstr "Код языка"
 
-#: ../include/languages-form.php:64
+#@ polylang
+#: include/languages-form.php:64
 msgid "2-letters ISO 639-1 language code (for example: en)"
 msgstr "2х-буквенный ISO 639-1 код языка (например: ru)"
 
-#: ../include/languages-form.php:68
+#@ default
+#: include/languages-form.php:67
 msgid "Update"
 msgstr "Обновить"
 
-#: ../include/languages-form.php:82
+#@ polylang
+#: include/languages-form.php:79
 msgid "Menus"
 msgstr "Меню"
 
-#: ../include/languages-form.php:90
+#@ polylang
+#: include/languages-form.php:87
 msgid "Theme location"
 msgstr "Расположение темы"
 
-#: ../include/languages-form.php:134
+#@ polylang
+#: include/languages-form.php:131
 msgid "Options"
 msgstr "Настройки"
 
-#: ../include/languages-form.php:143
+#@ polylang
+#: include/languages-form.php:140
 msgid "Default language"
 msgstr "Язык по-умолчанию"
 
-#: ../include/languages-form.php:172
+#@ polylang
+#: include/languages-form.php:169
 msgid "There are posts, pages, categories or tags without language set. Do you want to set them all to default language ?"
 msgstr "Найдены записи, страницы, категории или метки без указанния какого-либо языка. Установить им язык по-умолчанию?"
 
-#: ../include/languages-form.php:180
+#@ polylang
+#: include/languages-form.php:177
 msgid "Detect browser language"
 msgstr "Определять язык в браузере"
 
-#: ../include/languages-form.php:186
+#@ polylang
+#: include/languages-form.php:183
 msgid "When the front page is visited, set the language according to the browser preference"
 msgstr "Установить язык сайта согласно настройкам браузера"
 
-#: ../include/languages-form.php:193
+#@ polylang
+#: include/languages-form.php:190
 msgid "URL modifications"
 msgstr "Модификации URL"
 
-#: ../include/languages-form.php:199
-msgid "Keep /language/ in pretty permalinks. Example: "
-msgstr "Оставить /language/ в ЧПУ. Пример: "
+#@ polylang
+#: include/languages-form.php:196
+msgid "Keep /language/ in pretty permalinks. Example:"
+msgstr "Оставить /language/ в ЧПУ. Пример:"
 
-#: ../include/languages-form.php:207
-msgid "Remove /language/ in pretty permalinks. Example: "
-msgstr "Удалить /language/ в ЧПУ. Пример: "
+#@ polylang
+#: include/languages-form.php:204
+msgid "Remove /language/ in pretty permalinks. Example:"
+msgstr "Удалить /language/ в ЧПУ. Пример:"
 
-#: ../include/languages-form.php:215
+#@ polylang
+#: include/languages-form.php:212
 msgid "Hide URL language information for default language"
 msgstr "Спрятать название языка по-умолчанию из URL"
 
-#: ../include/post-translations.php:1
+#@ polylang
+#: include/post-translations.php:1
 msgid "ID of pages in other languages:"
 msgstr "ID страницы на других языках:"
 
-#: ../include/post-translations.php:1
+#@ polylang
+#: include/post-translations.php:1
 msgid "ID of posts in other languages:"
 msgstr "ID записи на других языках:"
 
-#: ../include/post-translations.php:5
+#@ polylang
+#: include/post-translations.php:5
 msgid "Page ID"
 msgstr "ID страницы"
 
-#: ../include/post-translations.php:5
+#@ polylang
+#: include/post-translations.php:5
 msgid "Post ID"
 msgstr "ID записи"
 
-#: ../include/personal-options.php:3
+#@ polylang
+#: include/personal-options.php:3
 msgid "Admin language"
 msgstr "Язык админ.панели"
 
-msgid "Title:"
-msgstr "Titre :"
+#@ default
+#. translators: Calendar caption: 1: month name, 2: 4-digit year
+#: include/calendar.php:62
+#, php-format
+msgctxt "calendar caption"
+msgid "%1$s %2$s"
+msgstr "%1$s %2$s"
 

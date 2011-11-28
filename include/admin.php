@@ -266,8 +266,9 @@ class Polylang_Admin extends Polylang_Base {
 						}
 					}
 					if(isset($_POST['terms'])) {
+						$lang_id = $this->get_language($options['default_lang'])->term_id; // slug is stored in the option and I want the id for the meta
 						foreach(explode(',', $_POST['terms']) as $term_id) {
-							update_metadata('term', $term_id, '_language', $options['default_lang'] );
+							update_metadata('term', $term_id, '_language', $lang_id );
 						}
 					}
 				}

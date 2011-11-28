@@ -61,7 +61,7 @@ class Polylang_Widget extends WP_Widget {
 		$id = $this->get_field_id('title');
 		$name = $this->get_field_name('title');
 		$title = sprintf('<p><label for="%s">%s</label><input class="widefat" id="%s" name="%s" type="text" value="%s" /></p>',
-			$id, __('Title:'), $id, $name, esc_attr($instance['title']));
+			$id, __('Title:', 'polylang'), $id, $name, esc_attr($instance['title']));
 
 		// language names checkbox
 		$id = $this->get_field_id('show_names');
