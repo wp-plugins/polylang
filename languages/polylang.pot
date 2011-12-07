@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: polylang\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-22 09:45+0100\n"
+"POT-Creation-Date: 2011-12-05 20:52+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: F. Demarle\n"
 "Language-Team: \n"
@@ -17,176 +17,192 @@ msgstr ""
 "X-Poedit-SearchPath-0: ..\n"
 "X-Poedit-SearchPath-1: ../include\n"
 
-#: ../polylang.php:194
+#: ../polylang.php:169
 msgid "Error: Upgrade directory doesn't exist!"
 msgstr ""
 
-#: ../polylang.php:195
+#: ../polylang.php:170
 msgid "Please create"
 msgstr ""
 
-#: ../polylang.php:202
+#: ../polylang.php:177
 msgid "Error: Backup of local flags failed!"
 msgstr ""
 
-#: ../polylang.php:203
+#: ../polylang.php:178
 msgid "Please backup"
 msgstr ""
 
-#: ../polylang.php:218
+#: ../polylang.php:193
 msgid "Error: Restore of local flags failed!"
 msgstr ""
 
-#: ../polylang.php:219
+#: ../polylang.php:194
 msgid "Please restore your local flags"
 msgstr ""
 
 #: ../include/edit-term-form.php:6
-#: ../include/admin.php:349
-#: ../include/admin.php:503
-#: ../include/term-translations.php:14
-#: ../include/add-term-form.php:3
+#: ../include/term-translations.php:15
+#: ../include/admin-filters.php:91
+#: ../include/admin-filters.php:327
+#: ../include/add-term-form.php:5
 #: ../include/list-table.php:12
-#: ../include/post-translations.php:4
 msgid "Language"
 msgstr ""
 
-#: ../include/edit-term-form.php:18
-#: ../include/add-term-form.php:10
+#: ../include/edit-term-form.php:19
+#: ../include/add-term-form.php:13
 msgid "Sets the language"
-msgstr ""
-
-#: ../include/widget.php:5
-msgid "Displays a language switcher"
 msgstr ""
 
 #: ../include/widget.php:6
 msgid "Language Switcher"
 msgstr ""
 
-#: ../include/widget.php:64
+#: ../include/widget.php:6
+msgid "Displays a language switcher"
+msgstr ""
+
+#: ../include/widget.php:62
 msgid "Title:"
 msgstr ""
 
-#: ../include/widget.php:70
-msgid "Display language names"
+#: ../include/widget.php:65
+#: ../include/admin.php:236
+msgid "Displays language names"
 msgstr ""
 
-#: ../include/widget.php:76
-msgid "Display flags"
+#: ../include/widget.php:66
+#: ../include/admin.php:237
+msgid "Displays flags"
 msgstr ""
 
-#: ../include/widget.php:82
-msgid "Display as dropdown"
+#: ../include/widget.php:67
+msgid "Displays as dropdown"
 msgstr ""
 
-#: ../include/admin.php:90
+#: ../include/widget.php:68
+#: ../include/admin.php:238
+msgid "Forces link to front page"
+msgstr ""
+
+#: ../include/admin.php:21
+#: ../include/admin.php:209
 msgid "Settings"
 msgstr ""
 
-#: ../include/admin.php:97
-#: ../include/admin.php:393
+#: ../include/admin.php:28
+#: ../include/admin.php:207
+#: ../include/admin-filters.php:135
 #: ../include/list-table.php:13
-#: ../include/languages-form.php:14
 msgid "Languages"
 msgstr ""
 
-#: ../include/admin.php:310
+#: ../include/admin.php:208
+msgid "Menus"
+msgstr ""
+
+#: ../include/admin.php:225
 msgid "Enter a valid WorPress locale"
 msgstr ""
 
-#: ../include/admin.php:311
+#: ../include/admin.php:226
 msgid "The language code must be 2 characters long"
 msgstr ""
 
-#: ../include/admin.php:312
+#: ../include/admin.php:227
 msgid "The language code must be unique"
 msgstr ""
 
-#: ../include/admin.php:313
+#: ../include/admin.php:228
 msgid "The language must have a name"
 msgstr ""
 
-#: ../include/admin.php:381
+#: ../include/admin.php:235
+msgid "Displays a language switcher at the end of the menu"
+msgstr ""
+
+#: ../include/post-metabox.php:5
+msgid "Page's language:"
+msgstr ""
+
+#: ../include/post-metabox.php:5
+msgid "Post's language:"
+msgstr ""
+
+#: ../include/term-translations.php:6
+#: ../include/term-translations.php:11
+msgid "Translations"
+msgstr ""
+
+#: ../include/term-translations.php:15
+msgid "Translation"
+msgstr ""
+
+#: ../include/term-translations.php:15
+#: ../include/term-translations.php:76
+#: ../include/list-table.php:33
+msgid "Edit"
+msgstr ""
+
+#: ../include/term-translations.php:62
+msgid "Add new"
+msgstr ""
+
+#: ../include/admin-filters.php:123
 msgid "Show all languages"
 msgstr ""
 
-#: ../include/admin.php:607
+#: ../include/admin-filters.php:400
 msgid "Theme locations and languages"
 msgstr ""
 
-#: ../include/admin.php:612
+#: ../include/admin-filters.php:405
 #, php-format
 msgid "Please go to the %slanguages page%s to set theme locations and languages"
 msgstr ""
 
-#: ../include/admin.php:624
+#: ../include/admin-filters.php:416
 msgid "The widget is displayed for:"
 msgstr ""
 
-#: ../include/admin.php:627
+#: ../include/admin-filters.php:417
 msgid "All languages"
 msgstr ""
 
-#: ../include/post-metabox.php:3
-msgid "Page's language:"
-msgstr ""
-
-#: ../include/post-metabox.php:3
-msgid "Post's language:"
-msgstr ""
-
-#: ../include/term-translations.php:5
-#: ../include/term-translations.php:9
-msgid "Translations"
-msgstr ""
-
-#: ../include/term-translations.php:14
-msgid "Translation"
-msgstr ""
-
-#: ../include/term-translations.php:14
-#: ../include/term-translations.php:75
-#: ../include/list-table.php:32
-#: ../include/post-translations.php:6
-#: ../include/post-translations.php:28
-msgid "Edit"
-msgstr ""
-
-#: ../include/term-translations.php:61
-#: ../include/post-translations.php:33
-msgid "Add new"
-msgstr ""
-
-#: ../include/list-table.php:33
+#: ../include/list-table.php:34
 msgid "Delete"
 msgstr ""
 
-#: ../include/list-table.php:50
-#: ../include/languages-form.php:50
+#: ../include/list-table.php:52
+#: ../include/languages-form.php:66
 msgid "Full name"
 msgstr ""
 
-#: ../include/list-table.php:51
-#: ../include/languages-form.php:56
+#: ../include/list-table.php:53
+#: ../include/languages-form.php:72
 msgid "Locale"
 msgstr ""
 
-#: ../include/list-table.php:52
+#: ../include/list-table.php:54
 msgid "Code"
 msgstr ""
 
-#: ../include/list-table.php:53
+#: ../include/list-table.php:55
+msgid "Flag"
+msgstr ""
+
+#: ../include/list-table.php:56
 msgid "Posts"
 msgstr ""
 
-#: ../include/calendar.php:62
+#: ../include/calendar.php:99
 #, php-format
 msgid "%1$s %2$s"
 msgstr ""
 
-#: ../include/calendar.php:88
-#: ../include/calendar.php:96
+#: ../include/calendar.php:125
+#: ../include/calendar.php:133
 #, php-format
 msgid "View posts for %1$s %2$s"
 msgstr ""
@@ -196,71 +212,71 @@ msgid "Edit language"
 msgstr ""
 
 #: ../include/languages-form.php:33
-#: ../include/languages-form.php:67
+#: ../include/languages-form.php:83
 msgid "Add new language"
 msgstr ""
 
-#: ../include/languages-form.php:52
-msgid "The name is how it is displayed on your site (for example: English)."
-msgstr ""
-
-#: ../include/languages-form.php:58
-msgid "Wordpress Locale for the language (for example: en_US). You will need to install the .mo file for this language."
+#: ../include/languages-form.php:54
+msgid "Choose a language"
 msgstr ""
 
 #: ../include/languages-form.php:62
+msgid "You can choose a language in the list or directly edit it below."
+msgstr ""
+
+#: ../include/languages-form.php:68
+msgid "The name is how it is displayed on your site (for example: English)."
+msgstr ""
+
+#: ../include/languages-form.php:74
+msgid "Wordpress Locale for the language (for example: en_US). You will need to install the .mo file for this language."
+msgstr ""
+
+#: ../include/languages-form.php:78
 msgid "Language code"
 msgstr ""
 
-#: ../include/languages-form.php:64
+#: ../include/languages-form.php:80
 msgid "2-letters ISO 639-1 language code (for example: en)"
 msgstr ""
 
-#: ../include/languages-form.php:67
+#: ../include/languages-form.php:83
 msgid "Update"
 msgstr ""
 
-#: ../include/languages-form.php:79
-msgid "Menus"
-msgstr ""
-
-#: ../include/languages-form.php:87
-msgid "Theme location"
-msgstr ""
-
 #: ../include/languages-form.php:131
-msgid "Options"
+msgid "Language switcher"
 msgstr ""
 
-#: ../include/languages-form.php:140
+#: ../include/languages-form.php:158
 msgid "Default language"
 msgstr ""
 
-#: ../include/languages-form.php:169
+#: ../include/languages-form.php:187
 msgid "There are posts, pages, categories or tags without language set. Do you want to set them all to default language ?"
 msgstr ""
 
-#: ../include/languages-form.php:177
+#: ../include/languages-form.php:195
 msgid "Detect browser language"
 msgstr ""
 
-#: ../include/languages-form.php:183
+#: ../include/languages-form.php:201
 msgid "When the front page is visited, set the language according to the browser preference"
 msgstr ""
 
-#: ../include/languages-form.php:190
+#: ../include/languages-form.php:208
 msgid "URL modifications"
 msgstr ""
 
-#: ../include/languages-form.php:196
+#: ../include/languages-form.php:214
 msgid "Keep /language/ in pretty permalinks. Example:"
 msgstr ""
 
-#: ../include/languages-form.php:204
+#: ../include/languages-form.php:222
 msgid "Remove /language/ in pretty permalinks. Example:"
 msgstr ""
 
-#: ../include/languages-form.php:212
+#: ../include/languages-form.php:230
 msgid "Hide URL language information for default language"
 msgstr ""
 
@@ -280,7 +296,7 @@ msgstr ""
 msgid "Post ID"
 msgstr ""
 
-#: ../include/personal-options.php:3
+#: ../include/personal-options.php:5
 msgid "Admin language"
 msgstr ""
 
