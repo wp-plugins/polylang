@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: bilingual, language, i18n, international, l10n, localization, multilingual, multisite, translate, translation, widget
 Requires at least: 3.1
 Tested up to: 3.3
-Stable tag: 0.5
+Stable tag: 0.5.1
 
 Polylang adds multilingual support to WordPress. You set a language for each post and it will be displayed only when browsing this language.
 
@@ -35,14 +35,14 @@ The plugin admin interface is currently available in:
 
 * English
 * French
-* German
+* German contributed by [Christian Ries](http://www.singbyfoot.lu)
 * Russian contributed by [yoyurec](http://yoyurec.in.ua)
 
 Other translators are welcome !
 
 = Notes =
 
-* The tests have been made with WordPress from version 3.1 up to 3.3 RC1. The plugin does not work with WordPress 3.0.5 and older.
+* The tests have been made with WordPress from version 3.1 up to 3.3. The plugin does not work with WordPress 3.0.5 and older.
 * Your server must run PHP5
 * You must deactivate other multilingual plugins before activating Polylang, otherwise, you may get unexpected results !
 * Unlike some other plugins, if you deactivate Polylang, your blog will go on working as smoothly as possible. All your posts, pages, category and post tags would be accessible (without language filter of course...).
@@ -97,6 +97,15 @@ Yes. You have to use PNG or JPG files and name them with the WordPress locale. F
 
 == Changelog ==
 
+= 0.5.1 (2011-12-18) =
+
+* Improved German translation contributed by [Christian Ries](http://www.singbyfoot.lu)
+* Bug correction: Translated homepage not recognized as home page when it displays posts
+* Bug correction: Predefined language list does not work on IE8
+* Bug correction: On some installations, "Add New" post doesn't keep intended language
+* Bug correction: Fatal error when Polylang is used together with the plugin Tabbed Widgets
+* Bug correction: Language Switcher points sometimes to wrong places
+
 = 0.5 (2011-12-07) =
 
 * Add multisite support
@@ -122,7 +131,7 @@ Yes. You have to use PNG or JPG files and name them with the WordPress locale. F
 
 = 0.4.3 (2011-11-19) =
 
-* Add Russian translation contributed by [yoyurec](http://wordpress.org/support/profile/yoyurec)
+* Add Russian translation contributed by [yoyurec](http://yoyurec.in.ua)
 * Bug correction: Impossible to suppress the language name in the language switcher widget settings
 * Bug correction: Post's page does not work when using a static front page
 * Bug correction: Flags in local_flags directory are removed after an automatic upgrade (now works for an upgrade from 0.4.3+ to a higher version)

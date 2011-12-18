@@ -232,6 +232,12 @@ class Polylang_Core extends Polylang_base {
 			}	
 		}
 
+		// sets is_home on translated home page when it displays posts
+		if (!$this->page_on_front && $query->is_tax && count($query->query) == 1) {
+			$query->is_home = true;
+			$query->is_tax = false;
+		}
+
 		// sets the language for posts page in case the front page displays a static page
 		if ($this->page_for_posts) {
 			// If permalinks are used, WordPress does set and use $query->queried_object_id and sets $query->query_vars['page_id'] to 0
@@ -264,7 +270,9 @@ class Polylang_Core extends Polylang_base {
 		// filters recent posts to the current language
 		// FIXME if $qvars['post_type'] == 'nav_menu_item', setting lang breaks custom menus.
 		// since to get nav_menu_items, get_post is used and no language is linked to nav_menu_items
-		if ($query->is_home && $this->curlang && !isset($qvars['post_type'])) 
+//		if ($query->is_home && $this->curlang && !isset($qvars['post_type']))
+// FIXME generalize to all non visible post types 
+		if ($query->is_home && $this->curlang && (!isset($qvars['post_type']) || $qvars['post_type'] != 'nav_menu_item'))
 			$query->set('lang', $this->curlang->slug);
 
 		// remove pages query when the language is set unless we do a search
@@ -462,7 +470,7 @@ class Polylang_Core extends Polylang_base {
 		$hide = $this->options['default_lang'] == $language->slug && $this->options['hide_default'];
 
 		// is_single is set to 1 for attachment but no language is set
-		if (is_single() && !is_attachment() && $id = $this->get_post(get_the_ID(), $language))
+		if (is_single() && !is_attachment() && $id = $this->get_post($wp_query->queried_object_id, $language))
 			$url = get_permalink($id);
 
 		// page for posts
@@ -472,7 +480,7 @@ class Polylang_Core extends Polylang_base {
 		) 
 			$url = get_permalink($this->get_post($this->page_for_posts, $language));
 
-		elseif (is_page() && $id = $this->get_post(get_the_ID(), $language))
+		elseif (is_page() && $id = $this->get_post($wp_query->queried_object_id, $language))
 			$url = $hide && $id == $this->get_post($this->page_on_front, $language) ?
 				$this->home :
 				_get_page_link($id);

@@ -26,6 +26,10 @@ class Polylang_Widget_Calendar extends WP_Widget_Calendar {
 	function get_calendar($initial = true, $echo = true) {
 		global $wpdb, $m, $monthnum, $year, $wp_locale, $posts;
 		global $polylang; #added#
+
+		if (!isset($polylang)) #added#
+			return; #added#
+
 		$lang = $polylang->get_current_language()->term_taxonomy_id; #added#
 
 		$cache = array();

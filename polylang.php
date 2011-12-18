@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.5
+Version: 0.5.1
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 */
@@ -23,7 +23,7 @@ Description: Adds multilingual capability to Wordpress
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('POLYLANG_VERSION', '0.5');
+define('POLYLANG_VERSION', '0.5.1');
 
 define('POLYLANG_DIR', dirname(__FILE__));
 define('PLL_INC', POLYLANG_DIR.'/include');

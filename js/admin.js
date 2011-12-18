@@ -36,7 +36,7 @@ jQuery(document).ready(function($) {
 						jQuery('#post-translations').html(this.data); // translations fields
 						break;
 					case 'taxonomy':
-						tax = this.data;
+						var tax = this.data;
 						jQuery('#' + tax + 'checklist').html(this.supplemental.all);
 						jQuery('#' + tax + 'checklist-pop').html(this.supplemental.populars);
 						jQuery('#new' + tax + '_parent').replaceWith(this.supplemental.dropdown);
@@ -101,10 +101,8 @@ jQuery(document).ready(function($) {
 	// languages form
 	jQuery('#lang_list').change(function() {
 		value = jQuery(this).attr('value');
-		slug = value.substr(0, 2);
-		locale = value.substr(3, 5);
-		jQuery('input[name="slug"]').val(slug);
-		jQuery('input[name="description"]').val(locale);
+		jQuery('input[name="slug"]').val(value.substr(0, 2));
+		jQuery('input[name="description"]').val(value.substr(3, 5));
 		jQuery('input[name="name"]').val($("select option:selected").text());
 	});
 

@@ -11,7 +11,7 @@
 			printf(
 				"<option value='%s'%s>%s</option>\n",
 				esc_attr($language->term_id),
-				$language == $lang ? ' selected="selected"' : '',
+				$language->slug == $lang->slug ? ' selected="selected"' : '',
 				esc_html($language->name)
 			);
 		} ?>
