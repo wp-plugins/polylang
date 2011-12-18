@@ -19,6 +19,7 @@ class Polylang_List_Table extends WP_List_Table {
 		switch($column_name){
 			case 'description':
 			case 'slug':
+			case 'flag':
 			case 'count':
 				return $item[$column_name];
 			default:
@@ -46,10 +47,12 @@ class Polylang_List_Table extends WP_List_Table {
 
   function get_columns(){
 		$columns = array(
-			'cb'        => '<input type="checkbox" />', //Render a checkbox instead of text
+// FIXME checkboxes are useles for now
+//			'cb'        => '<input type="checkbox" />', //Render a checkbox instead of text 
 			'name'     => __('Full name', 'polylang'),
 			'description'    => __('Locale', 'polylang'),
 			'slug'  => __('Code', 'polylang'),
+			'flag' => __('Flag', 'polylang'),
 			'count'  => __('Posts', 'polylang')
 		);
 		return $columns;
