@@ -1,5 +1,6 @@
 <?php
-// filters posts and terms by language, rewrites links to include the language, etc... 
+// filters posts and terms by language, rewrites links to include the language, etc...
+// used only for frontend
 class Polylang_Core extends Polylang_base {
 	private $curlang; // current language
 	private $default_locale;
@@ -27,7 +28,7 @@ class Polylang_Core extends Polylang_base {
 		add_action('wp', array(&$this, 'load_textdomains'));
 
 		// filters posts according to the language
-		add_filter('pre_get_posts', array(&$this, 'pre_get_posts')); 
+		add_filter('pre_get_posts', array(&$this, 'pre_get_posts'));
 
 		// filters categories and post tags by language
 		add_filter('terms_clauses', array(&$this, 'terms_clauses'), 10, 3);
@@ -49,23 +50,23 @@ class Polylang_Core extends Polylang_base {
 		// filters the pages according to the current language in wp_list_pages
 		add_filter('wp_list_pages_excludes', array(&$this, 'wp_list_pages_excludes'));
 
-		// filters the comments according to the current language 
+		// filters the comments according to the current language
 		add_filter('comments_clauses', array(&$this, 'comments_clauses'), 10, 2);
 
-		// rewrites feed links to filter them by language 
+		// rewrites feed links to filter them by language
 		add_filter('feed_link', array(&$this, 'feed_link'), 10, 2);
 
-		// rewrites archives links to filter them by language 
+		// rewrites archives links to filter them by language
 		add_filter('getarchives_join', array(&$this, 'posts_join'));
 		add_filter('getarchives_where', array(&$this, 'posts_where'));
 
-		// rewrites author and date links to filter them by language 
+		// rewrites author and date links to filter them by language
 		add_filter('author_link', array(&$this, 'archive_link'));
 		add_filter('year_link', array(&$this, 'archive_link'));
 		add_filter('month_link', array(&$this, 'archive_link'));
 		add_filter('day_link', array(&$this, 'archive_link'));
 
-		// rewrites next and previous post links to filter them by language 
+		// rewrites next and previous post links to filter them by language
 		add_filter('get_previous_post_join', array(&$this, 'posts_join'));
 		add_filter('get_next_post_join', array(&$this, 'posts_join'));
 		add_filter('get_previous_post_where', array(&$this, 'posts_where'));
@@ -79,6 +80,10 @@ class Polylang_Core extends Polylang_base {
 
 		// filters the widgets according to the current language			
 		add_filter('widget_display_callback', array(&$this, 'widget_display_callback'), 10, 3);
+
+		// strings translation
+		add_filter('widget_title', array(&$this, 'widget_title'));
+		add_filter('bloginfo', array(&$this,'bloginfo'), 10, 2);
 
 		// modifies the home url
 		add_filter('home_url', array(&$this, 'home_url'));
@@ -99,7 +104,7 @@ class Polylang_Core extends Polylang_base {
 			return $this->get_language($_COOKIE['wordpress_polylang']);
 
 		// sets the browsing language according to the browser preferences
-		// code adapted from http://www.thefutureoftheweb.com/blog/use-accept-language-header 
+		// code adapted from http://www.thefutureoftheweb.com/blog/use-accept-language-header
 		if ($this->options['browser']) {
 			$accept_langs = array();
 
@@ -113,7 +118,7 @@ class Polylang_Core extends Polylang_base {
 					// set default to 1 for any without q factor
 					foreach ($accept_langs as $accept_lang => $val) {
 						if ($val === '') $accept_langs[$accept_lang] = 1;
-					}					  
+					}					
 					arsort($accept_langs, SORT_NUMERIC); // sort list based on value	
 				}
 			}
@@ -163,7 +168,7 @@ class Polylang_Core extends Polylang_base {
 
 	// save the default locale before we start any language manipulation
 	function init() {
-		$this->default_locale = get_locale(); 
+		$this->default_locale = get_locale();
 	}
 
 	// returns the locale based on current language
@@ -179,7 +184,7 @@ class Polylang_Core extends Polylang_base {
 		return true; // prevents WP loading text domains as we will load them all later
 	}
 
-	// NOTE: I believe there are two ways for a plugin to force the WP language 
+	// NOTE: I believe there are two ways for a plugin to force the WP language
 	// as done by xili_language and here: load text domains and reinitialize wp_locale with the action 'wp'
 	// as done by qtranslate: define the locale with the action 'plugins_loaded', but in this case, the language must be specified in the url.	
 	function load_textdomains() {	
@@ -195,8 +200,16 @@ class Polylang_Core extends Polylang_base {
 		foreach ($this->list_textdomains as $textdomain)
 			load_textdomain( $textdomain['domain'], str_replace($this->default_locale, $new_locale, $textdomain['mo']));
 
+		// and finally load local strings
+		global $l10n;
+		$mo = new MO();
+		$reader = new POMO_StringReader(base64_decode(get_option('polylang_mo'.$this->curlang->term_id)));
+		$mo->import_from_reader($reader);
+		$l10n['polylang_string'] = &$mo;	
+
+		// reinitializes wp_locale for weekdays and months
 		global $wp_locale;
-		$wp_locale->init(); // reinitializes wp_locale for weekdays and months
+		$wp_locale->init();
 	}
 
 	// filters posts according to the language
@@ -210,7 +223,7 @@ class Polylang_Core extends Polylang_base {
 			return;
 
 		if (empty($query->query)) {
-			if ( $this->options['hide_default'] && isset($_COOKIE['wordpress_polylang']) )
+			if ($this->options['hide_default'] && isset($_COOKIE['wordpress_polylang']))
 				$this->curlang = $this->get_language($this->options['default_lang']);
 			else
 				$this->curlang = $this->get_preferred_language(); // sets the language according to browser preference or default language
@@ -249,7 +262,7 @@ class Polylang_Core extends Polylang_base {
 
 			if (isset($page_id) && $page_id && $this->get_post($page_id, $this->get_post_language($this->page_for_posts)) == $this->page_for_posts) {
 				$query->set('lang',$this->get_post_language($page_id)->slug);
-				$query->queried_object_id = $this->page_for_posts; 
+				$query->queried_object_id = $this->page_for_posts;
 				$query->query_vars['page_id'] = $this->page_for_posts; // FIXME the trick works but breaks .current-menu-item and .current_page_item
 				$query->is_page = false;
 				$query->is_home = true;
@@ -267,12 +280,9 @@ class Polylang_Core extends Polylang_base {
 			isset($qvars['author']) && $qvars['author']))
 				$query->set('lang', $this->options['default_lang']);
 
-		// filters recent posts to the current language
-		// FIXME if $qvars['post_type'] == 'nav_menu_item', setting lang breaks custom menus.
-		// since to get nav_menu_items, get_post is used and no language is linked to nav_menu_items
-//		if ($query->is_home && $this->curlang && !isset($qvars['post_type']))
-// FIXME generalize to all non visible post types 
-		if ($query->is_home && $this->curlang && (!isset($qvars['post_type']) || $qvars['post_type'] != 'nav_menu_item'))
+		// allow filtering recent posts by the current language
+		// take care not to break queries for non visible post types such as nav_menu_items, attachments...
+		if ($query->is_home && $this->curlang && (!isset($qvars['post_type']) || !in_array($qvars['post_type'], get_post_types(array('show_ui' => false)))))
 			$query->set('lang', $this->curlang->slug);
 
 		// remove pages query when the language is set unless we do a search
@@ -320,7 +330,7 @@ class Polylang_Core extends Polylang_base {
 	function wp_head() {
 		// modifies the canonical link to the homepage
 		if (is_singular()) {
-			global $wp_the_query; 
+			global $wp_the_query;
 			if ($id = $wp_the_query->get_queried_object_id()) {
 				if (is_page())
 					$link = _get_page_link($id); // ignores page_on_front unlike get_permalink
@@ -352,7 +362,7 @@ class Polylang_Core extends Polylang_base {
 			// modifies the search form since filtering get_search_form won't work if the template uses searchform.php
 			// don't use directly e[0] just in case there is somewhere else an element named 's'
 			// check before if the hidden input has not already been introduced by get_search_form
-			if (!$this->search_form_filter) {  
+			if (!$this->search_form_filter) {
 				$lang = esc_js($this->curlang->slug);
 				$js .= "e = document.getElementsByName('s');
 				for (i = 0; i < e.length; i++) {
@@ -384,20 +394,9 @@ class Polylang_Core extends Polylang_base {
 	// excludes pages which are not in the current language for wp_list_pages
 	// useful for the pages widget
 	function wp_list_pages_excludes($pages) {
-		if (isset($this->curlang)) {
-			$q = array(
-				'numberposts'=>-1,
-				'post_type' => 'page',
-				'fields' => 'ids',
-				'tax_query' => array(array(
-					'taxonomy'=>'language',
-					'fields' => 'id',
-					'terms'=>$this->curlang->term_id,
-					'operator'=>'NOT IN'
-				))
-			);
-			$pages = array_merge($pages, get_posts($q));
-		}	
+		if (isset($this->curlang))
+			$pages = array_merge($pages, $this->exclude_pages($this->curlang->term_id));
+
 		return $pages;
 	}
 
@@ -412,19 +411,22 @@ class Polylang_Core extends Polylang_base {
 		return $clauses;
 	}
 
+	// adds language information to a link when using pretty permalinks
+	function add_language_to_link($url) {
+		$base = $this->options['rewrite'] ? '/' : '/language/';
+		$slug = $this->options['default_lang'] == $this->curlang->slug && $this->options['hide_default'] ? '' : $base.$this->curlang->slug;
+		return esc_url(str_replace($this->home, $this->home.$slug, $url));
+	}
+
 	// Modifies the feed link to add the language parameter
 	function feed_link($url, $feed) {
 		global $wp_rewrite;
 
 		if ($this->curlang) {
-			if ($wp_rewrite->using_permalinks()) {
-				$base = $this->options['rewrite'] ? '/' : '/language/';
-				$slug = $this->options['default_lang'] == $this->curlang->slug && $this->options['hide_default'] ? '' : $base.$this->curlang->slug;
-				$url = esc_url(str_replace($this->home, $this->home.$slug, $url));
-			}
+			if ($wp_rewrite->using_permalinks())
+				$url = $this->add_language_to_link($url);
 			elseif ($feed)
 				$url = esc_url(home_url('?lang='.$this->curlang->slug.'&feed='.$feed));
-
 		}			
 		return $url;
 	}
@@ -449,21 +451,18 @@ class Polylang_Core extends Polylang_base {
 
 	// modifies the author and date links to add the language parameter
 	function archive_link($link) {
-		if ($this->curlang) {
-			global $wp_rewrite;
+		global $wp_rewrite;
 
-			if ($wp_rewrite->using_permalinks()) {
-				$base = $this->options['rewrite'] ? '/' : '/language/';
-				$slug = $this->options['default_lang'] == $this->curlang->slug && $this->options['hide_default'] ? '' : $base.$this->curlang->slug;
-				$link = esc_url(str_replace($this->home, $this->home.$slug, $link));
-			}
+		if ($this->curlang) {
+			if ($wp_rewrite->using_permalinks()) 
+				$link = $this->add_language_to_link($link);
 			else
 				$link = esc_url(str_replace($this->home.'/?', $this->home.'/?lang='.$this->curlang->slug.'&amp;', $link));
 		}
 		return $link;
 	}
 
-	// returns the url of the translation (if exists) of the current page 
+	// returns the url of the translation (if exists) of the current page
 	function get_translation_url($language) {
 		global $wp_query, $wp_rewrite;
 		$qvars = $wp_query->query;
@@ -474,10 +473,7 @@ class Polylang_Core extends Polylang_base {
 			$url = get_permalink($id);
 
 		// page for posts
-		elseif (get_option('show_on_front') == 'page' && // necessary for twentyeleven
-			isset($wp_query->queried_object_id) && 
-			$wp_query->queried_object_id == $this->page_for_posts
-		) 
+		elseif (get_option('show_on_front') == 'page' && isset($wp_query->queried_object_id) && $wp_query->queried_object_id == $this->page_for_posts)
 			$url = get_permalink($this->get_post($this->page_for_posts, $language));
 
 		elseif (is_page() && $id = $this->get_post($wp_query->queried_object_id, $language))
@@ -529,7 +525,7 @@ class Polylang_Core extends Polylang_base {
 	function wp_nav_menu_args($args) {
 		if (!$args['menu'] && $args['theme_location'] && $this->curlang) {
 			$menu_lang = get_option('polylang_nav_menus');
-			$args['menu'] = $menu_lang[$args['theme_location']][$this->curlang->slug]; 
+			$args['menu'] = $menu_lang[$args['theme_location']][$this->curlang->slug];
 		}
 		return $args;
 	}
@@ -547,13 +543,13 @@ class Polylang_Core extends Polylang_base {
 	// adds the language switcher at the end of the menu
 	function wp_nav_menu_items($items, $args) {
 		$menu_lang = get_option('polylang_nav_menus');
-		return $menu_lang[$args->theme_location]['switcher'] ? 
+		return $menu_lang[$args->theme_location]['switcher'] ?
 			$items . $this->the_languages(array(
 				'menu' => 1,
 				'show_names' => $menu_lang[$args->theme_location]['show_names'],
 				'show_flags' => $menu_lang[$args->theme_location]['show_flags'],
 				'force_home' => $menu_lang[$args->theme_location]['force_home'],
-				'echo' => 0)) : 
+				'echo' => 0)) :
 			$items;
 	}
 
@@ -606,18 +602,26 @@ class Polylang_Core extends Polylang_base {
 		return $menu;
 	}
 
+	// translates widget titles
+	function widget_title($title) {
+		return __($title, 'polylang_string');
+	}
+
+	// translates site title and tagline
+	function bloginfo($output, $show) {
+		return in_array($show, array('', 'name', 'description')) ? __($output, 'polylang_string') : $output;
+	}
+
 	// acts as is_front_page but knows about translated front page
 	function is_front_page() {
-		if ('page' == get_option('show_on_front') &&
-			get_option('page_on_front') &&
-			is_page($this->get_post(get_option('page_on_front'), $this->get_current_language()))
-		)
+		if ('posts' == get_option('show_on_front') && is_home())
 			return true;
-
+		elseif ('page' == get_option('show_on_front') && $this->page_on_front && is_page($this->get_post($this->page_on_front, $this->get_current_language())))
+			return true;
 		elseif(is_tax('language'))
 			return true;
-	
-		return is_front_page();
+		else
+			return false;
 	}
 
 	// filters the home url to get the right language
@@ -659,7 +663,7 @@ class Polylang_Core extends Polylang_base {
 			$output = isset($url) ? $url : $this->home;
 		}
 		return $output;
-	} 
+	}
 
 	// displays the language switcher
 	function the_languages($args = '') {
@@ -671,6 +675,8 @@ class Polylang_Core extends Polylang_base {
 			'show_flags' => 0, // don't show flags
 			'show_names' => 1, // show language names
 			'force_home' => 0, // tries to find a translation (available only if display != dropdown)
+			'hide_if_no_translation' => 0, // don't hide the link if there is no translation
+			'hide_current' => 0, // don't hide current language 
 		);
 		extract(wp_parse_args($args, $defaults));
 
@@ -679,15 +685,23 @@ class Polylang_Core extends Polylang_base {
 
 		foreach ($listlanguages as $language) {
 			if ($dropdown) {
-				$output .= sprintf(
-					"<option value='%s'%s>%s</option>\n",
+				$output .= sprintf("<option value='%s'%s>%s</option>\n",
 					esc_attr($language->slug),
 					$language->term_id == $this->curlang->term_id ? ' selected="selected"' : '',
 					esc_html($language->name)
 				);
 			}
 			else {
+				// hide current language
+				if ($this->curlang->term_id == $language->term_id && $hide_current)
+					continue;
+				
 				$url = $force_home ? null : $this->get_translation_url($language);
+
+				// hide if no translation exists 
+				if (!isset($url) && $hide_if_no_translation)
+					continue;
+
 				$url = isset($url) ? $url : $this->get_home_url($language); // if the page is not translated, link to the home page
 
 				$class = 'lang-item lang-item-'.esc_attr($language->term_id);
@@ -701,10 +715,7 @@ class Polylang_Core extends Polylang_base {
 			}
 		}
 
-		if ($dropdown)
-			$output = "<select name='lang_choice' id='lang_choice'>\n" . $output . "</select>\n";
-		elseif (!$menu)
-			$output = "<ul>\n" . $output . "</ul>\n";
+		$output = $dropdown ? "<select name='lang_choice' id='lang_choice'>\n" . $output . "</select>\n" : $output;
 
 		if ($echo)
 			echo $output;

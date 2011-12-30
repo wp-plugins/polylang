@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.5.1
+Version: 0.6dev15
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 */
@@ -23,7 +23,7 @@ Description: Adds multilingual capability to Wordpress
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('POLYLANG_VERSION', '0.5.1');
+define('POLYLANG_VERSION', '0.6dev15');
 
 define('POLYLANG_DIR', dirname(__FILE__));
 define('PLL_INC', POLYLANG_DIR.'/include');
@@ -152,50 +152,26 @@ class Polylang extends Polylang_Base {
 		$wp_rewrite->flush_rules();
 	}
 
-	// saves the local_flags directory before upgrade
+	// move local_flags directory used up to v0.5.1 to wp-content/polylang
 	function pre_upgrade() {
-		// nothing to backup
+		// nothing to move
 		if (!@is_dir($flags_dir = POLYLANG_DIR . '/local_flags'))
 			return true;
-	
-		$upgrade_dirs = array(
-			WP_CONTENT_DIR . '/upgrade',
-			WP_CONTENT_DIR . '/upgrade/polylang' 
-		);
 
-		foreach ($upgrade_dirs as $dir) {	
-			if (!@is_dir($dir) && !@mkdir($dir, 0755))
-				return new WP_Error('polylang_upgrade_error', sprintf('%s<br />%s <strong>%s</strong>',
-					__("Error: Upgrade directory doesn't exist!", 'polylang'),
-					__('Please create', 'polylang'),
-					esc_html($dir)
-				));
-		}
-
-		if (!@rename($flags_dir, WP_CONTENT_DIR . '/upgrade/polylang/local_flags'))
-			return new WP_Error('polylang_backup_error', sprintf('%s<br />%s <strong>%s</strong>',
-				__('Error: Backup of local flags failed!', 'polylang'),
-				__('Please backup', 'polylang'),
-				esc_html($flags_dir)
-			));
-
-		return true;
-	}
-
-	// restores the local_flags directory after upgrade
-	function post_upgrade() {
-		// nothing to restore
-		if (!@is_dir($upgrade_dir = WP_CONTENT_DIR . '/upgrade/polylang/local_flags'))
+		// check if the directory is empty or not
+		$contents = @scandir($flags_dir);
+		if (is_array($contents) && $files = array_diff($contents, array(".", "..", ".DS_Store", "_notes", "Thumbs.db")) && empty($files))
 			return true;
 
-		if (!@rename($upgrade_dir, POLYLANG_DIR . '/local_flags'))
-			return new WP_Error('polylang_restore_error', sprintf('%s<br />%s (<strong>%s</strong>)',
-				__('Error: Restore of local flags failed!', 'polylang'),
-				__('Please restore your local flags', 'polylang'),
-				esc_html($upgrade_dir)
+		// move the directory
+		$new_dir = WP_CONTENT_DIR . '/polylang';
+		if (!@rename($flags_dir, $new_dir))
+			return new WP_Error('polylang_upgrade_error', sprintf('%s<br />%s <strong>%s</strong>',
+				__('Error: Failed to move your custom flags to new directory', 'polylang'),
+				__('Please move your custom flags to', 'polylang'),
+				esc_html($new_dir)
 			));
 
-		@rmdir(WP_CONTENT_DIR . '/upgrade/polylang');
 		return true;
 	}
 
@@ -228,13 +204,28 @@ class Polylang extends Polylang_Base {
 			if (version_compare($options['version'], '0.4', '<'))
 				$options['hide_default'] = 0; // option introduced in 0.4
 
-			// translation model changed in 0.5
-			// FIXME will not delete old data before 0.6 (just in case...)
+			// translation model changed in V0.5
 			if (version_compare($options['version'], '0.5', '<')) {
 				$ids = get_posts(array('numberposts'=>-1, 'fields' => 'ids', 'post_type'=>'any', 'post_status'=>'any'));
 				$this->upgrade_translations('post', $ids);
 				$ids = get_terms(get_taxonomies(array('show_ui'=>true)), array('get'=>'all', 'fields'=>'ids'));
 				$this->upgrade_translations('term', $ids);	
+			}
+
+			// translation model changed in V0.5
+			// deleting the old one has been delayed in V0.6 (just in case...) 
+			if (version_compare($options['version'], '0.6', '<')) {
+				$ids = get_posts(array('numberposts'=> -1, 'fields' => 'ids', 'post_type'=>'any', 'post_status'=>'any'));
+				foreach ($ids as $id) {
+					foreach ($languages as $lang)
+						delete_post_meta($id, '_lang-'.$lang->slug);
+				}
+
+				$ids = get_terms(get_taxonomies(array('show_ui'=>true)), array('get'=>'all', 'fields'=>'ids'));
+				foreach ($ids as $id) {
+					foreach ($languages as $lang)
+						delete_metadata('term', $id, '_lang-'.$lang->slug);
+				}
 			}
 
 			$options['version'] = POLYLANG_VERSION;

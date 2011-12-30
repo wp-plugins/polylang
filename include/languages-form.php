@@ -36,7 +36,8 @@ if (isset($_GET['error'])) {?>
 				// The term fields are used as follows :
 				// name -> language name (used only for display)
 				// slug -> language code (ideally 2-letters ISO 639-1 language code but I currently use it only as slug so it doesn't matter)
-				// description -> WordPress Locale for the language. Here if something wrong is used, the .mo files will not be loaded...
+				// description -> WordPress locale for the language. Here if something wrong is used, the .mo files will not be loaded...
+				// term_group -> order
 
 				// adds noheader=true in the action url to allow using wp_redirect when processing the form ?>
 				<form id="add-lang" method="post" action="admin.php?page=mlang&amp;noheader=true" class="validate">
@@ -79,6 +80,12 @@ if (isset($_GET['error'])) {?>
 					<label for="slug"><?php _e('Language code', 'polylang');?></label>
 					<input name="slug" id="slug" type="text" value="<?php if ($action=='edit') echo esc_attr($edit_lang->slug);?>" size="2" maxlength="2"/>
 					<p><?php _e('2-letters ISO 639-1 language code (for example: en)', 'polylang');?></p>
+				</div>
+
+				<div class="form-field">
+					<label for="term_group"><?php _e('Order', 'polylang');?></label>
+					<input name="term_group" id="term_group" type="text" value="<?php if ($action=='edit') echo esc_attr($edit_lang->term_group);?>" />
+					<p><?php _e('Position of the language in the language switcher', 'polylang');?></p>
 				</div>
 
 				<?php submit_button( $action == 'edit' ? __('Update') : __('Add new language', 'polylang'), 'button'); // since WP 3.1 ?>
@@ -131,6 +138,18 @@ case 'menus': ?>
 
 	</form>
 </div><!-- form-wrap --><?php
+break;
+
+// string translations tab
+case 'strings':
+
+	$paged = isset($_GET['paged']) ? '&paged='.$_GET['paged'] : ''; ?>	
+	<form id="string-translation" method="post" action="admin.php?page=mlang&tab=strings<?php echo $paged?>" class="validate">
+	<?php wp_nonce_field('string-translation', '_wpnonce_string-translation');?>
+	<input type="hidden" name="action" value="string-translation" /><?php
+	$string_table->display();
+	submit_button(); // since WP 3.1 ?>
+	</form><?php
 break;
 
 // settings tab

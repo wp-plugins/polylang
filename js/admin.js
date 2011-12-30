@@ -32,15 +32,18 @@ jQuery(document).ready(function($) {
 			var res = wpAjax.parseAjaxResponse(response, 'ajax-response');
 			$.each(res.responses, function() {
 				switch(this.what) {
-					case 'translations':
-						jQuery('#post-translations').html(this.data); // translations fields
+					case 'translations': // translations fields
+						jQuery('#post-translations').html(this.data);
 						break;
-					case 'taxonomy':
+					case 'taxonomy': // categories metabox for posts
 						var tax = this.data;
 						jQuery('#' + tax + 'checklist').html(this.supplemental.all);
 						jQuery('#' + tax + 'checklist-pop').html(this.supplemental.populars);
 						jQuery('#new' + tax + '_parent').replaceWith(this.supplemental.dropdown);
 						jQuery('#' + tax + '-lang').val(jQuery('#post_lang_choice').attr('value')); // hidden field
+						break;
+					case 'pages': // parent dropdown list for pages
+						jQuery('#parent_id').replaceWith(this.data);
 						break;
 					default:
 						break;
@@ -99,10 +102,11 @@ jQuery(document).ready(function($) {
 	});
 
 	// languages form
+	// fills the fields based on dropdown list choice
 	jQuery('#lang_list').change(function() {
-		value = jQuery(this).attr('value');
-		jQuery('input[name="slug"]').val(value.substr(0, 2));
-		jQuery('input[name="description"]').val(value.substr(3, 5));
+		value = jQuery(this).attr('value').split('-');
+		jQuery('input[name="slug"]').val(value[0]);
+		jQuery('input[name="description"]').val(value[1]);
 		jQuery('input[name="name"]').val($("select option:selected").text());
 	});
 

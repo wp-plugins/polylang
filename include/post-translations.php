@@ -15,7 +15,7 @@
 			<tr>
 			<td><?php echo esc_html($language->name);?></td><?php
 			printf(
-				'<td><input name="tr_lang[%1$s]" id="tr_lang_%1$s" class="tags-input" type="text" value="%2$s" size="6"/></td>',
+				'<td><input name="post_tr_lang[%1$s]" id="tr_lang_%1$s" class="tags-input" type="text" value="%2$s" size="6"/></td>',
 				esc_attr($language->slug),
 				esc_attr($value)
 			);

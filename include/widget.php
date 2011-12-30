@@ -19,28 +19,35 @@ class Polylang_Widget extends WP_Widget {
 
 		$title = apply_filters('widget_title', $title, $instance, $this->id_base);
 
+						
 		echo "$before_widget\n";
 		if ($title)
 			echo $before_title . $title . $after_title;
+		if (!$dropdown)
+			echo "<ul>\n";
 		$polylang->the_languages($instance);
+		if (!$dropdown)
+			echo "</ul>\n";
 		echo "$after_widget\n";
 
 		// javascript to switch the language when using a dropdown list
-		// keep the things simple for now as we switch to the posts page
-		if ($dropdown) {
-			$url = home_url('?lang=');
-			$home_url = get_option('home');
-			$options = get_option('polylang');
-			$default = $options['hide_default'] ? esc_js($options['default_lang']) :  '';
+		if ($dropdown) {			
+			foreach ($polylang->get_languages_list() as $language) {
+				$url = $force_home ? $polylang->get_home_url($language) : $polylang->get_translation_url($language);
+				$urls[] = '"'.esc_js($language->slug).'":"'.esc_url($url).'"';
+			}
+
+			$urls = implode(',', $urls);
 
 			$js = "
 				<script type='text/javascript'>
+					var urls = {{$urls}};
 					var d = document.getElementById('lang_choice');
 					d.onchange = function() {
-						if (this.value == '$default')
-							location.href = '$home_url';
-						else 
-							location.href ='$url'+this.value;
+						for (var i in urls) {
+							if (this.value == i)
+								location.href = urls[i];
+						}
 					}
 				</script>";
 

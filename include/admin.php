@@ -1,7 +1,7 @@
 <?php
 
-require_once(PLL_INC.'/list-table.php');
 require_once(PLL_INC.'/admin-filters.php');
+require_once(PLL_INC.'/list-table.php');
 
 // setups the Polylang admin panel and calls for other admin related classes
 class Polylang_Admin extends Polylang_Base {
@@ -57,14 +57,15 @@ class Polylang_Admin extends Polylang_Base {
 	function languages_page() {
 		global $wp_rewrite;
 		$options = get_option('polylang');
-
 		$listlanguages = $this->get_languages_list();
-		$list_table = new Polylang_List_Table();
 
 		// for nav menus form
 		$locations = get_registered_nav_menus();
 		$menus = wp_get_nav_menus();
 		$menu_lang = get_option('polylang_nav_menus');
+
+		// for widgets
+		$widget_lang = get_option('polylang_widgets');
 
 		$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 
@@ -74,13 +75,15 @@ class Polylang_Admin extends Polylang_Base {
 				$error = $this->validate_lang();
 
 				if ($error == 0) {
-					wp_insert_term($_POST['name'],'language',array('slug'=>$_POST['slug'], 'description'=>$_POST['description']));
+					wp_insert_term($_POST['name'],'language',array('slug'=>$_POST['slug'], 'description'=>$_POST['description'], 'term_group'=>$_POST['term_group']));
 					$wp_rewrite->flush_rules(); // refresh rewrite rules
 
 					if (!isset($options['default_lang'])) { // if this is the first language created, set it as default language
 						$options['default_lang'] = $_POST['slug'];
 						update_option('polylang', $options);
 					}
+					if (!$this->download_mo($_POST['description']))
+						$error = 5;
 				}
 
 				wp_redirect('admin.php?page=mlang'. ($error ? '&error='.$error : '') ); // to refresh the page (possible thanks to the $_GET['noheader']=true)
@@ -111,6 +114,13 @@ class Polylang_Admin extends Polylang_Base {
 						unset($menu_lang[$location][$lang_slug]);
 					}
 					update_option('polylang_nav_menus', $menu_lang);
+
+					// delete language option in widgets
+					foreach ($widget_lang as $key=>$lang) {
+						if ($lang == $lang_slug)
+							unset ($widget_lang[$key]);
+					}
+					update_option('polylang_widgets', $widget_lang);
 
 					// delete the language itself
 					wp_delete_term($lang_id, 'language');
@@ -162,6 +172,13 @@ class Polylang_Admin extends Polylang_Base {
 						}
 						update_option('polylang_nav_menus', $menu_lang);
 
+						// update language option in widgets
+						foreach ($widget_lang as $key=>$lang) {
+							if ($lang == $old_slug)
+								$widget_lang[$key] = $_POST['slug'];
+						}
+						update_option('polylang_widgets', $widget_lang);
+
 						// update the default language option if necessary
 						if ($options['default_lang'] == $old_slug) {
 							$options['default_lang'] = $_POST['slug'];
@@ -170,7 +187,8 @@ class Polylang_Admin extends Polylang_Base {
 					}
 
 					// and finally update the language itself
-					wp_update_term($lang_id, 'language', array('name'=>$_POST['name'], 'slug'=>$_POST['slug'], 'description'=>$_POST['description']));
+					$args = array('name'=>$_POST['name'], 'slug'=>$_POST['slug'], 'description'=>$_POST['description'], 'term_group'=>$_POST['term_group']);
+					wp_update_term($lang_id, 'language', $args);
 					$wp_rewrite->flush_rules(); // refresh rewrite rules
 				}
 
@@ -187,6 +205,22 @@ class Polylang_Admin extends Polylang_Base {
 						$menu_lang[$location][$key] = isset($menu_lang[$location][$key]) ? 1 : 0;
 
 				update_option('polylang_nav_menus', $menu_lang);
+				break;
+
+			case 'string-translation':
+				check_admin_referer( 'string-translation', '_wpnonce_string-translation' );
+
+				$mo = new MO();
+				foreach ($listlanguages as $language) {
+					$reader = new POMO_StringReader(base64_decode(get_option('polylang_mo'.$language->term_id)));
+					$mo->import_from_reader($reader);
+
+					foreach ($_POST['string'] as $key=>$string)
+						$mo->add_entry($mo->make_entry($string, $_POST['translation'][$language->name][$key]));
+
+					update_option('polylang_mo'.$language->term_id, base64_encode($mo->export()));
+				}
+
 				break;
 
 			case 'options':
@@ -225,10 +259,11 @@ class Polylang_Admin extends Polylang_Base {
 		$tabs = array(
 			'lang' => __('Languages','polylang'),
 			'menus' => __('Menus','polylang'),
+			'strings' => __('Strings translation','polylang'),
 			'settings' => __('Settings', 'polylang')
 		);
 		if (!current_theme_supports( 'menus' ))
-			unset($tabs['menus']); // don't display the menu tab if the active them does not support nav menus
+			unset($tabs['menus']); // don't display the menu tab if the active theme does not support nav menus
 
 		$active_tab = isset($_GET['tab']) && $_GET['tab'] ? $_GET['tab'] : 'lang';
 
@@ -239,12 +274,15 @@ class Polylang_Admin extends Polylang_Base {
 				foreach ($listlanguages as $lang)
 					$data[] = array_merge( (array) $lang, array('flag' => $this->get_flag($lang)) ) ;
 
+				$list_table = new Polylang_List_Table();
 				$list_table->prepare_items($data);
 
+				// error messages for data validation
 				$errors[1] = __('Enter a valid WorPress locale', 'polylang');
 				$errors[2] = __('The language code must be 2 characters long', 'polylang');
 				$errors[3] = __('The language code must be unique', 'polylang');
 				$errors[4] = __('The language must have a name', 'polylang');
+				$errors[5] = __('The language was created, but the WordPress language file was not downloaded. Please install it manually.', 'polylang');
 				break;
 
 			case 'menus':
@@ -261,6 +299,51 @@ class Polylang_Admin extends Polylang_Base {
 				foreach ($locations as $key=>$location)				
 					$menu_lang[$key] = wp_parse_args($menu_lang[$key], array('switcher'=> 0, 'show_names'=>1, 'show_flags'=>0, 'force_home'=>0));
 
+				break;
+
+			case 'strings':
+				global $wp_registered_widgets;
+
+				// WP strings
+				$data = array();
+				$data[] = array('name'=>__('Site Title'), 'string'=>get_option('blogname'));
+				$data[] = array('name'=>__('Tagline'), 'string'=>get_option('blogdescription'));
+
+				// widgets titles
+				$sidebars = wp_get_sidebars_widgets();
+				foreach ($sidebars as $sidebar => $widgets) {
+					if ($sidebar == 'wp_inactive_widgets')
+						continue;
+
+					foreach ($widgets as $widget) {
+						if (!isset($wp_registered_widgets[$widget]))
+							continue;
+
+						$widget_settings = $wp_registered_widgets[$widget]['callback'][0]->get_settings();
+						$number = $wp_registered_widgets[$widget]['params'][0]['number'];
+						$title = $widget_settings[$number]['title'];
+						if(isset($title) && $title)
+							$data[] = array('name'=>__('Widget title'), 'string'=>$title);
+					}
+				}
+
+				// allow plugins to add their own strings
+				$data = apply_filters('pll_strings_for_translation', $data);
+			
+				// load translations
+				$mo = new MO();
+				foreach ($listlanguages as $language) {
+					$reader = new POMO_StringReader(base64_decode(get_option('polylang_mo'.$language->term_id)));
+					$mo->import_from_reader($reader);
+
+					foreach ($data as $key=>$row) {
+						$data[$key]['translations'][$language->name] = $mo->translate($data[$key]['string']);
+						$data[$key]['row'] = $key; // store the row number for convenience
+					}
+				}
+
+				$string_table = new Polylang_String_Table();
+				$string_table->prepare_items($data);
 				break;
 
 			case 'settings':
@@ -316,6 +399,62 @@ class Polylang_Admin extends Polylang_Base {
 			$error = 4;
 		
 		return isset($error) ? $error : 0;			
+	}
+
+	// downloads mofiles
+	function download_mo($locale) {
+		global $wp_version;
+		$mofile = WP_LANG_DIR."/$locale.mo";
+
+		// does file exists ?
+		if (file_exists($mofile) || $locale == 'en_US')
+			return true;
+
+		// does language directory exists ?
+		if(!is_dir(WP_LANG_DIR)) {
+			if(!@mkdir(WP_LANG_DIR))
+				return false;
+		}
+
+		// will first look in tags/ (most languages) then in branches/ (only Greek ?)
+		$base = 'http://svn.automattic.com/wordpress-i18n/'.$locale;
+		$bases = array($base.'/tags/', $base.'/branches/'); 
+
+		foreach ($bases as $base) {
+			// get all the versions available in the subdirectory
+			$resp = wp_remote_get($base);
+			if (is_wp_error($resp) || 200 != $resp['response']['code'])
+				continue;
+
+			preg_match_all('#>([0-9\.]+)\/#', $resp['body'], $matches);
+			if (empty($matches[1]))
+				continue;
+
+			rsort($matches[1]);
+			$versions = $matches[1];
+			
+			// will not try to download a too recent mofile
+			foreach ($versions as $key=>$version) {
+				if (version_compare($version, $wp_version, '>'))
+					unset($versions[$key]);
+			}
+			$versions = array_splice($versions, 0, 5); // reduce the number of versions to test to 5
+
+			// try to download the file
+			foreach ($versions as $version) {
+				$resp = wp_remote_get($base."$version/messages/$locale.mo", array('timeout' => 30, 'stream' => true, 'filename' => $mofile));
+				if (is_wp_error($resp) || 200 != $resp['response']['code'])
+					continue;
+
+				// try to download ms and continents-cities files if exist (will not return false if failed)
+				foreach (array("ms-$locale.mo", "continent-cities-$locale.mo") as $file)
+					wp_remote_get($base."$version/messages/$file", array('timeout' => 30, 'stream' => true, 'filename' => WP_LANG_DIR."/$file"));
+
+				return true;
+			}
+		}
+		// we did not succeeded to download a file :(
+		return false;
 	}
 
 } // class Polylang_Admin

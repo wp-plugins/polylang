@@ -25,20 +25,15 @@ class Polylang_Uninstall {
 
 		$languages = get_terms('language', array('hide_empty'=>false));
 
+		// delete posts translations
 		$ids = get_posts(array('numberposts'=> -1, 'fields' => 'ids', 'post_type'=>'any', 'post_status'=>'any'));
-		foreach ($ids as $id) {
-			foreach ($languages as $lang)
-				delete_post_meta($id, '_lang-'.$lang->slug); //FIXME before 0.5
+		foreach ($ids as $id)
+			delete_post_meta($id, '_translations');
 
-			delete_post_meta($id, '_translations'); // V0.5+
-		}
-
+		// delete terms translations
 		$ids = get_terms(get_taxonomies(array('show_ui'=>true)), array('get'=>'all', 'fields'=>'ids'));
 		foreach ($ids as $id) {
-			foreach ($languages as $lang)
-				delete_metadata('term', $id, '_lang-'.$lang->slug); //FIXME before 0.5
-
-			delete_metadata('term', $id, '_translations'); // V0.5+
+			delete_metadata('term', $id, '_translations');
 			delete_metadata('term', $id, '_language');
 		}
 
