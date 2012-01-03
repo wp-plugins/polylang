@@ -36,16 +36,17 @@ class Polylang_Uninstall {
 			delete_metadata('term', $id, '_translations');
 			delete_metadata('term', $id, '_language');
 		}
-
-		// finally delete languages
-		foreach ($languages as $lang)
-			wp_delete_term($lang->term_id, 'language');
+		
+		foreach ($languages as $lang) {
+			delete_option('polylang_mo'.$lang->term_id); // delete the string translations
+			wp_delete_term($lang->term_id, 'language'); // finally delete languages
+		}
 
 		// delete the termmeta table only if it is empty as other plugins may use it
 		$table = $wpdb->termmeta;
 		$count = $wpdb->get_var("SELECT COUNT(*) FROM $table;");
 		if (!$count) {
-			$wpdb->query("DROP TABLE $table;");
+			$wpdb->query($wpdb->prepare("DROP TABLE $table;"));
 			unset($wpdb->termmeta);
 		}
 

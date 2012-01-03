@@ -37,7 +37,7 @@ else {
 				$translations = $this->get_terms_not_translated($taxonomy, $language, $lang);
 				if (!empty($translations)) { ?>
 					<td>
-						<select name="term_tr_lang[<?php echo esc_attr($language->slug);?>]" id="tr_lang_<?php echo esc_attr($language->slug);?>">
+						<?php printf('<select name="term_tr_lang[%1$s]" id="tr_lang_%1$s">', esc_attr($language->slug)); ?>
 							<option value="0"></option><?php
 							foreach ($translations as $translation)
 								printf('<option value="%s">%s</option>', esc_attr($translation->term_id), esc_html($translation->name));?>

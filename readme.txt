@@ -6,13 +6,9 @@ Requires at least: 3.1
 Tested up to: 3.3
 Stable tag: 0.5.1
 
-Polylang adds multilingual support to WordPress. You set a language for each post and it will be displayed only when browsing this language.
+Polylang adds multilingual and translation support to WordPress.
 
 == Description ==
-
-You write posts, pages and create categories and post tags as usual, and then define the language for each of them. The translation is optional. A language switcher widget is provided with the plugin. The plugin does not integrate automatic or professional translation. You have to do the work yourself.
-
-= Announcement = 
 
 A [development version of Polylang v0.6 is available for download](http://downloads.wordpress.org/plugin/polylang.zip). **I recommend to use it for tests only**. [Feedback and bug reports](http://wordpress.org/tags/polylang?forum_id=10) will be much appreciated. The current stable version is still the 0.5.1. 
 
@@ -21,6 +17,8 @@ A [development version of Polylang v0.6 is available for download](http://downlo
 Your custom flags in 'polylang/local_flags' directory will be removed when automatically upgrading from v0.4, v0.4.1, v0.4.2. So either do a manual upgrade or backup your custom flags. This problem is solved when upgrading from v0.4.3+ to a higher version. It's always safer to do a database backup before any upgrade.
 
 = Features =
+
+You write posts, pages and create categories and post tags as usual, and then define the language for each of them. The translation is optional. The plugin does not integrate automatic or professional translation.
 
 * You can create as many languages as you want
 * You can translate posts, pages, categories, post tags, menus

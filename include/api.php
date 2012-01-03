@@ -24,4 +24,20 @@ function pll_is_front_page() {
 	return isset($polylang) ? $polylang->is_front_page() : null;
 }
 
+// register strings for translation in the "strings translation" panel
+function pll_register_string($name, $string) {
+	global $polylang;
+	if ($polylang)
+		$polylang->register_string($name, $string);
+}
+
+// translates string
+function pll__($string) {
+	return __($string, 'pll_string');
+}
+
+// echoes translated string
+function pll_e($string) {
+	_e($string, 'pll_string');
+}
 ?>

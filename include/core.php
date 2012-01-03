@@ -205,7 +205,7 @@ class Polylang_Core extends Polylang_base {
 		$mo = new MO();
 		$reader = new POMO_StringReader(base64_decode(get_option('polylang_mo'.$this->curlang->term_id)));
 		$mo->import_from_reader($reader);
-		$l10n['polylang_string'] = &$mo;	
+		$l10n['pll_string'] = &$mo;	
 
 		// reinitializes wp_locale for weekdays and months
 		global $wp_locale;
@@ -405,7 +405,7 @@ class Polylang_Core extends Polylang_base {
 		// first test if wp_posts.ID already available in the query
 		if ($this->curlang && strpos($clauses['join'], '.ID')) {
 			global $wpdb;
-			$clauses['join'] .= " INNER JOIN $wpdb->term_relationships AS tr ON tr.object_id = ID";
+			$clauses['join'] .= $wpdb->prepare(" INNER JOIN $wpdb->term_relationships AS tr ON tr.object_id = ID");
 			$clauses['where'] .= $wpdb->prepare(" AND tr.term_taxonomy_id = %d", $this->curlang->term_taxonomy_id);
 		}
 		return $clauses;
@@ -435,7 +435,7 @@ class Polylang_Core extends Polylang_base {
 	function posts_join($sql) {
 		if ($this->curlang) {
 			global $wpdb;
-			$sql .= " INNER JOIN $wpdb->term_relationships ON object_id = ID";
+			$sql .= $wpdb->prepare(" INNER JOIN $wpdb->term_relationships ON object_id = ID");
 		}
 		return $sql;
 	}
@@ -604,12 +604,12 @@ class Polylang_Core extends Polylang_base {
 
 	// translates widget titles
 	function widget_title($title) {
-		return __($title, 'polylang_string');
+		return __($title, 'pll_string');
 	}
 
 	// translates site title and tagline
 	function bloginfo($output, $show) {
-		return in_array($show, array('', 'name', 'description')) ? __($output, 'polylang_string') : $output;
+		return in_array($show, array('', 'name', 'description')) ? __($output, 'pll_string') : $output;
 	}
 
 	// acts as is_front_page but knows about translated front page

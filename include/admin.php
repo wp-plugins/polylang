@@ -122,6 +122,9 @@ class Polylang_Admin extends Polylang_Base {
 					}
 					update_option('polylang_widgets', $widget_lang);
 
+					// delete the string translations
+					delete_option('polylang_mo'.$lang_id);
+
 					// delete the language itself
 					wp_delete_term($lang_id, 'language');
 					$wp_rewrite->flush_rules(); // refresh rewrite rules
@@ -218,9 +221,9 @@ class Polylang_Admin extends Polylang_Base {
 					foreach ($_POST['string'] as $key=>$string)
 						$mo->add_entry($mo->make_entry($string, $_POST['translation'][$language->name][$key]));
 
+					// use base64_encode to store binary mo data in database text field
 					update_option('polylang_mo'.$language->term_id, base64_encode($mo->export()));
 				}
-
 				break;
 
 			case 'options':
@@ -305,9 +308,8 @@ class Polylang_Admin extends Polylang_Base {
 				global $wp_registered_widgets;
 
 				// WP strings
-				$data = array();
-				$data[] = array('name'=>__('Site Title'), 'string'=>get_option('blogname'));
-				$data[] = array('name'=>__('Tagline'), 'string'=>get_option('blogdescription'));
+				$this->register_string(__('Site Title'), get_option('blogname'));
+				$this->register_string(__('Tagline'), get_option('blogdescription'));
 
 				// widgets titles
 				$sidebars = wp_get_sidebars_widgets();
@@ -323,12 +325,11 @@ class Polylang_Admin extends Polylang_Base {
 						$number = $wp_registered_widgets[$widget]['params'][0]['number'];
 						$title = $widget_settings[$number]['title'];
 						if(isset($title) && $title)
-							$data[] = array('name'=>__('Widget title'), 'string'=>$title);
+							$this->register_string(__('Widget title'), $title);
 					}
 				}
 
-				// allow plugins to add their own strings
-				$data = apply_filters('pll_strings_for_translation', $data);
+				$data = &$this->strings;
 			
 				// load translations
 				$mo = new MO();

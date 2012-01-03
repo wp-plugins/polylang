@@ -78,10 +78,10 @@ class Polylang_List_Table extends WP_List_Table {
 		$this->_column_headers = array($columns, $hidden, $sortable);
 
 		function usort_reorder($a,$b){
-			$orderby = (!empty($_REQUEST['orderby'])) ? $_REQUEST['orderby'] : 'name'; //If no sort, default to title
-			$order = (!empty($_REQUEST['order'])) ? $_REQUEST['order'] : 'asc'; //If no order, default to asc
-			$result = strcmp($a[$orderby], $b[$orderby]); //Determine sort order
-			return ($order==='asc') ? $result : -$result; //Send final sort direction to usort
+			$orderby = (!empty($_REQUEST['orderby'])) ? $_REQUEST['orderby'] : 'name'; // if no sort, default to name
+			$order = (!empty($_REQUEST['order'])) ? $_REQUEST['order'] : 'asc'; // if no order, default to asc
+			$result = strcmp($a[$orderby], $b[$orderby]); // determine sort order
+			return ($order==='asc') ? $result : -$result; // send final sort direction to usort
 		}
 		usort($data, 'usort_reorder');
                
@@ -101,7 +101,7 @@ class Polylang_List_Table extends WP_List_Table {
 class Polylang_String_Table extends WP_List_Table {
 	function __construct() {             
 		parent::__construct( array(
-			'singular' => __('String translations','polylang'),
+			'singular' => __('Strings translation','polylang'),
 			'plural' => __('Strings translations','polylang'),
 			'ajax'=> false)
 		);        
@@ -122,12 +122,18 @@ class Polylang_String_Table extends WP_List_Table {
 	}
 
   function get_columns(){
-		$columns = array(
+		return array(
 			'name' => __('Name', 'polylang'),
 			'string' => __('String', 'polylang'),
 			'translations' => __('Translations', 'polylang'),
 		);
-		return $columns;
+	}
+
+	function get_sortable_columns() {
+		return array(
+			'name' => array('name',false),
+			'string' => array('string',false),
+		);
 	}
     
 	function prepare_items($data = array()) {
@@ -137,7 +143,17 @@ class Polylang_String_Table extends WP_List_Table {
 		$sortable = $this->get_sortable_columns();
         
 		$this->_column_headers = array($columns, $hidden, $sortable);
-               
+
+		function usort_reorder($a,$b){		
+			$orderby = $_REQUEST['orderby'];
+			$order = (!empty($_REQUEST['order'])) ? $_REQUEST['order'] : 'asc'; // if no order, default to asc
+			$result = strcmp($a[$orderby], $b[$orderby]); // determine sort order
+
+			return ($order==='asc') ? $result : -$result; // send final sort direction to usort
+		}
+		if (!empty($_REQUEST['orderby'])) // no sort by default
+			usort($data, 'usort_reorder');
+
 		$current_page = $this->get_pagenum();
 		$total_items = count($data);
 		$data = array_slice($data,(($current_page-1)*$per_page),$per_page);

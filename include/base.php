@@ -1,8 +1,9 @@
 <?php
 
-// setups basic functions
+// setups basic functions used for admin and frontend
 abstract class Polylang_Base {
-
+	var $strings; // strings to translate
+		
 	// returns the query variables of the referer
 	function get_referer_vars() {
 		$qvars = array();
@@ -45,7 +46,7 @@ abstract class Polylang_Base {
 			update_metadata($type, $id, '_translations', $tr);
 
 			foreach($translations as $key=>$p)
-				update_metadata($type, $p, '_translations', $tr);
+				update_metadata($type, (int) $p, '_translations', $tr);
 		}
 	}
 
@@ -57,7 +58,7 @@ abstract class Polylang_Base {
 			unset($translations[$slug]);
 			$tr = serialize($translations);
 			foreach($translations as $key=>$p)
-				update_metadata($type, $p, '_translations', $tr);
+				update_metadata($type, (int) $p, '_translations', $tr);
 			delete_metadata($type, $id, '_translations');
 		}
 	}
@@ -69,7 +70,7 @@ abstract class Polylang_Base {
 	function get_translation($type, $id, $lang) {
 		$translations = unserialize(get_metadata($type, $id, '_translations', true));
 		$slug = $this->get_language($lang)->slug;
-		return isset($translations[$slug]) ? $translations[$slug] : '';
+		return isset($translations[$slug]) ? (int) $translations[$slug] : '';
 	}
 
 	// returns the language of a post
@@ -128,9 +129,9 @@ abstract class Polylang_Base {
 	function _terms_clauses($clauses, $lang, $display_all = false) {
 		global $wpdb;
 		if (isset($lang) && !is_wp_error($lang)) {
-			$clauses['join'] .= " LEFT JOIN $wpdb->termmeta AS tm ON t.term_id = tm.term_id";
+			$clauses['join'] .= $wpdb->prepare(" LEFT JOIN $wpdb->termmeta AS tm ON t.term_id = tm.term_id");
 			$where_lang = $wpdb->prepare("tm.meta_key = '_language' AND tm.meta_value = %d", $lang->term_id); // add terms in the right language
-			$where_all = "t.term_id NOT IN (SELECT term_id FROM $wpdb->termmeta WHERE meta_key IN ('_language'))";	// add terms with no language set
+			$where_all = $wpdb->prepare("t.term_id NOT IN (SELECT term_id FROM $wpdb->termmeta WHERE meta_key IN ('_language'))");	// add terms with no language set
 			$clauses['where'] .= $display_all ? " AND (($where_lang) OR ($where_all))" : " AND $where_lang";
 		}
 		return $clauses;
@@ -150,6 +151,12 @@ abstract class Polylang_Base {
 			))
 		);
 		return get_posts($q);
+	}
+
+	// register strings for translation
+	// FIXME here because pll_register_string uses polylang object, but used only on admin side
+	function register_string($name, $string) {
+		$this->strings[] = array('name'=> $name, 'string' => $string);
 	}
 
 } //class Polylang_Base

@@ -2,12 +2,12 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.6dev15
+Version: 0.6dev18
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 */
 
-/*  Copyright 2011 F. Demarle
+/*  Copyright 2011-2012 F. Demarle
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as 
@@ -23,7 +23,7 @@ Description: Adds multilingual capability to Wordpress
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('POLYLANG_VERSION', '0.6dev15');
+define('POLYLANG_VERSION', '0.6dev18');
 
 define('POLYLANG_DIR', dirname(__FILE__));
 define('PLL_INC', POLYLANG_DIR.'/include');
@@ -152,26 +152,26 @@ class Polylang extends Polylang_Base {
 		$wp_rewrite->flush_rules();
 	}
 
-	// move local_flags directory used up to v0.5.1 to wp-content/polylang
-	function pre_upgrade() {
-		// nothing to move
-		if (!@is_dir($flags_dir = POLYLANG_DIR . '/local_flags'))
+	// restores the local_flags directory (used up to 0.5.1) after upgrade
+	function post_upgrade() {
+		// nothing to restore
+		if (!@is_dir($upgrade_dir = WP_CONTENT_DIR . '/upgrade/polylang/local_flags'))
 			return true;
 
-		// check if the directory is empty or not
-		$contents = @scandir($flags_dir);
+		// don't move if teh directory is empty
+		$contents = @scandir($upgrade_dir);
 		if (is_array($contents) && $files = array_diff($contents, array(".", "..", ".DS_Store", "_notes", "Thumbs.db")) && empty($files))
 			return true;
 
-		// move the directory
+		// move the directory to wp-content
 		$new_dir = WP_CONTENT_DIR . '/polylang';
-		if (!@rename($flags_dir, $new_dir))
-			return new WP_Error('polylang_upgrade_error', sprintf('%s<br />%s <strong>%s</strong>',
-				__('Error: Failed to move your custom flags to new directory', 'polylang'),
-				__('Please move your custom flags to', 'polylang'),
-				esc_html($new_dir)
+		if (!@rename($upgrade_dir, $new_dir))
+			return new WP_Error('polylang_restore_error', sprintf('%s<br />%s',
+				__('Error: Restore of local flags failed!', 'polylang'),
+				sprintf(__('Please move your local flags from %s to %s', 'polylang'), esc_html($upgrade_dir), '<strong>'.esc_html($new_dir).'</strong>')		
 			));
 
+		@rmdir(WP_CONTENT_DIR . '/upgrade/polylang');
 		return true;
 	}
 
@@ -322,5 +322,4 @@ class Polylang extends Polylang_Base {
 
 if (class_exists("Polylang"))
 	new Polylang();
-
 ?>
