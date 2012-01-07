@@ -12,11 +12,11 @@ Polylang adds multilingual content management support to WordPress.
 
 = Upgrade Notice =
 
-Your custom flags in 'wp-content/plugins/polylang/local_flags' directory should move to 'wp-content/polylang'. People using the function 'pll_the_language' should be aware that it does not display the 'ul' tag anymore. I wrote about the reasons for these changes in the [forum](http://wordpress.org/support/topic/development-of-polylang-version-06)
+Your custom flags in 'wp-content/plugins/polylang/local_flags' directory should move to 'wp-content/polylang'. People using the function 'pll_the_language' should be aware that it does not display the 'ul' tag anymore. I wrote about the reasons for these changes in the [forum](http://wordpress.org/support/topic/development-of-polylang-version-06). 
 
 = Features  =
 
-You write posts, pages and create categories and post tags as usual, and then define the language for each of them. The translation is optional.
+You write posts, pages and create categories and post tags as usual, and then define the language for each of them. The translation is optional. The plugin does not integrate automatic or professional translation.
 
 * You can create as many languages as you want
 * WordPress languages files are automatically downloaded and updated (new in 0.6)
@@ -49,7 +49,6 @@ Other translators are welcome !
 * Your server must run PHP5
 * You must deactivate other multilingual plugins before activating Polylang, otherwise, you may get unexpected results !
 * Unlike some other plugins, if you deactivate Polylang, your blog will go on working as smoothly as possible. All your posts, pages, category and post tags would be accessible (without language filter of course...).
-* The plugin does not integrate automatic or professional translation.
 
 = Feedback or ideas =
 
@@ -111,6 +110,7 @@ Yes. You have to use PNG or JPG files and name them with the WordPress locale. F
 * Improve the dropdown language switcher widget (sends now to translated page or home page based on options)
 * Move custom flags from polylang/local_flags to wp_content/polylang
 * Add two options to "pll_the_languages" ('hide_if_no_translation' and 'hide_current'). *The function does not output ul tag anymore*
+* Improve API
 * Bug correction: Twenty eleven custom Header problem with v0.5.1
 * Bug correction: front-page.php not loaded for translated front page
 
