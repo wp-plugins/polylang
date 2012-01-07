@@ -1,19 +1,24 @@
 #term-translations table {
-	width: 100%;
+	width: 97%;
 }
 
 #term-translations th {
-	padding: 0px;
-	font-weight: bold;
-	text-align: left;
+  padding: 8px 10px;
 }
 
 #term-translations td {
-	padding: 0px;
+  font-size: 12px;
+  line-height: 26px;
+  margin-bottom: 9px;
+  padding: 4px 10px;
 }
 
-#term-translations select {
-	width: 15em;
+.tr-language-column {
+	width: 35%;
+}
+
+.tr-edit-column {
+	width: 15%;
 }
 
 #post-translations table {
@@ -26,3 +31,24 @@
 #post-translations td {
 	font-size: 11px;
 }
+
+.stringstranslations .column-name {
+	width: 10%;
+}
+
+.stringstranslations .column-string {
+	width: 36%;
+}
+
+.translation label {
+	display: inline-block;
+	width: 23%;
+}
+
+.translation input {
+	width: 72%;
+}
+
+.column-term_group, .column-flag, .column-count {
+	width : 10%;
+} 
