@@ -78,8 +78,8 @@ class Polylang_Admin_Filters extends Polylang_Base {
 
 	// setup js scripts & css styles
 	function admin_enqueue_scripts() {
-		wp_enqueue_script('polylang_admin', WP_PLUGIN_URL .'/polylang/js/admin.js');
-		wp_enqueue_style('polylang_admin', WP_PLUGIN_URL .'/polylang/css/admin.css');
+		wp_enqueue_script('polylang_admin', POLYLANG_URL .'/js/admin.js');
+		wp_enqueue_style('polylang_admin', POLYLANG_URL .'/css/admin.css');
 		
 		// style languages columns in edit and edit-tags
 		foreach ($this->get_languages_list() as $language)
@@ -119,7 +119,7 @@ class Polylang_Admin_Filters extends Polylang_Base {
 			printf('<a title="%1$s" href="%2$s"><img src="%3$s"></a>',
 				esc_attr(get_post($id)->post_title),
 				esc_url(get_edit_post_link($id, true )),
-				esc_url(WP_PLUGIN_URL.'/polylang/img/edit.png')
+				esc_url(POLYLANG_URL.'/img/edit.png')
 			);
 
 		// link to add a new translation
@@ -127,7 +127,7 @@ class Polylang_Admin_Filters extends Polylang_Base {
 			printf('<a title="%1$s" href="%2$s"><img src="%3$s"></a>',
 				__('Add new translation', 'polylang'),
  				esc_url(admin_url('post-new.php?post_type=' . $post_type . '&from_post=' . $post_id . '&new_lang=' . $language->slug)),
- 				esc_url(WP_PLUGIN_URL.'/polylang/img/add.png')
+ 				esc_url(POLYLANG_URL.'/img/add.png')
 			);
 	}
 
@@ -314,7 +314,7 @@ class Polylang_Admin_Filters extends Polylang_Base {
 			return;
 
 		// save language and translations
-		wp_set_post_terms($post_id, $_POST['post_lang_choice'], 'language' );
+		$this->set_post_language($post_id, $_POST['post_lang_choice']);
 		$this->save_translations('post', $post_id, $_POST['post_tr_lang']);
 
 		// synchronise terms and metas in translations
@@ -473,7 +473,7 @@ class Polylang_Admin_Filters extends Polylang_Base {
 			printf('<a title="%1$s" href="%2$s"><img src="%3$s"></a>',
 				esc_attr(get_term($id, $taxonomy)->name),
 				esc_url(get_edit_term_link($id, $taxonomy, $post_type)),
-				esc_url(WP_PLUGIN_URL.'/polylang/img/edit.png')
+				esc_url(POLYLANG_URL.'/img/edit.png')
 			);
 
 		// link to add a new translation
@@ -481,7 +481,7 @@ class Polylang_Admin_Filters extends Polylang_Base {
 			printf('<a title="%1$s" href="%2$s"><img src="%3$s"></a>',
 				__('Add new translation', 'polylang'),
 				esc_url(admin_url(sprintf('edit-tags.php?taxonomy=%1$s&from_tag=%2$d&new_lang=%3$s', $taxonomy, $term_id, $language->slug))),
- 				esc_url(WP_PLUGIN_URL.'/polylang/img/add.png')
+ 				esc_url(POLYLANG_URL.'/img/add.png')
 			);
 	}
 
@@ -496,7 +496,7 @@ class Polylang_Admin_Filters extends Polylang_Base {
 			return;
 
 		if (isset($_POST['term_lang_choice']) && $_POST['term_lang_choice'])
-			$this->update_term_language($term_id, $_POST['term_lang_choice']);
+			$this->set_term_language($term_id, $_POST['term_lang_choice']);
 		else
 			$this->delete_term_language($term_id);
 

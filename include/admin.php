@@ -14,6 +14,10 @@ class Polylang_Admin extends Polylang_Base {
 
 		// adds the link to the languages panel in the wordpress admin menu
 		add_action('admin_menu', array(&$this, 'add_menus'));
+
+		// ugrades languages files after a core upgrade (timing is important)
+		// FIXME private action ? is there a better way to do this ?
+		add_action( '_core_updated_successfully', array(&$this, 'upgrade_languages'), 1); // since WP 3.3
 	}
 
 	// adds a 'settings' link in the plugins table
@@ -105,14 +109,16 @@ class Polylang_Admin extends Polylang_Base {
 					// update the language slug in categories & post tags meta
 					$terms= get_terms(get_taxonomies(array('show_ui'=>true)), array('get'=>'all', 'fields'=>'ids'));
 					$this->delete_translations('term', $terms, $lang_slug);
-					
-					foreach ($terms as $id)
-						$this->delete_term_language($id); // delete language of this term
+
+					// FIXME should find something more efficient (with a sql query ?)					
+					foreach ($terms as $id) {
+						if ($this->get_term_language($id)->term_id == $lang_id)
+							$this->delete_term_language($id); // delete language of this term
+					}
 
 					// delete menus locations
-					foreach ($locations as $location => $description) {
+					foreach ($locations as $location => $description)
 						unset($menu_lang[$location][$lang_slug]);
-					}
 					update_option('polylang_nav_menus', $menu_lang);
 
 					// delete language option in widgets
@@ -218,9 +224,11 @@ class Polylang_Admin extends Polylang_Base {
 					$reader = new POMO_StringReader(base64_decode(get_option('polylang_mo'.$language->term_id)));
 					$mo->import_from_reader($reader);
 
-					foreach ($_POST['string'] as $key=>$string)
-						$mo->add_entry($mo->make_entry($string, $_POST['translation'][$language->name][$key]));
-
+					foreach ($_POST['string'] as $key=>$string) {
+						$string = stripslashes($string);
+						$mo->add_entry($mo->make_entry($string, stripslashes($_POST['translation'][$language->name][$key])));
+					}
+					// FIXME should I clean the mo object to remove unused strings ?
 					// use base64_encode to store binary mo data in database text field
 					update_option('polylang_mo'.$language->term_id, base64_encode($mo->export()));
 				}
@@ -243,12 +251,12 @@ class Polylang_Admin extends Polylang_Base {
 				if (isset($_POST['fill_languages'])) {
 					if(isset($_POST['posts'])) {
 						foreach(explode(',', $_POST['posts']) as $post_id) {
-							wp_set_post_terms($post_id, $options['default_lang'], 'language' );
+							$this->set_post_language($post_id, $options['default_lang']);
 						}
 					}
 					if(isset($_POST['terms'])) {
 						foreach(explode(',', $_POST['terms']) as $term_id) {
-							$this->update_term_language($term_id, $this->get_language($options['default_lang']));
+							$this->set_term_language($term_id, $options['default_lang']);
 						}
 					}
 				}
@@ -403,12 +411,12 @@ class Polylang_Admin extends Polylang_Base {
 	}
 
 	// downloads mofiles
-	function download_mo($locale) {
+	function download_mo($locale, $upgrade = false) {
 		global $wp_version;
 		$mofile = WP_LANG_DIR."/$locale.mo";
 
 		// does file exists ?
-		if (file_exists($mofile) || $locale == 'en_US')
+		if ((file_exists($mofile) && !$upgrade) || $locale == 'en_US')
 			return true;
 
 		// does language directory exists ?
@@ -433,12 +441,17 @@ class Polylang_Admin extends Polylang_Base {
 
 			rsort($matches[1]);
 			$versions = $matches[1];
-			
-			// will not try to download a too recent mofile
+
+			$newest = $upgrade ? $upgrade : $wp_version;
 			foreach ($versions as $key=>$version) {
-				if (version_compare($version, $wp_version, '>'))
+				// will not try to download a too recent mofile
+				if (version_compare($version, $newest, '>'))
+					unset($versions[$key]);
+				// will not download an older version if we are upgrading
+				if ($upgrade && version_compare($version, $wp_version, '<='))
 					unset($versions[$key]);
 			}
+			
 			$versions = array_splice($versions, 0, 5); // reduce the number of versions to test to 5
 
 			// try to download the file
@@ -456,6 +469,13 @@ class Polylang_Admin extends Polylang_Base {
 		}
 		// we did not succeeded to download a file :(
 		return false;
+	}
+
+	// ugrades languages files after a core upgrade
+	function upgrade_languages($version) {
+		apply_filters('update_feedback', __('Upgrading language files&#8230;', 'polylang'));
+		foreach ($this->get_languages_list() as $language)
+			$this->download_mo($language->description, $version);
 	}
 
 } // class Polylang_Admin

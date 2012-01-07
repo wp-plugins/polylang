@@ -31,12 +31,12 @@ function pll_register_string($name, $string) {
 		$polylang->register_string($name, $string);
 }
 
-// translates string
+// translates string (previously registered with pll_register_string)
 function pll__($string) {
 	return __($string, 'pll_string');
 }
 
-// echoes translated string
+// echoes translated string (previously registered with pll_register_string)
 function pll_e($string) {
 	_e($string, 'pll_string');
 }

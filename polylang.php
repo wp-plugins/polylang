@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.6dev18
+Version: 0.6
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 */
@@ -23,10 +23,18 @@ Description: Adds multilingual capability to Wordpress
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('POLYLANG_VERSION', '0.6dev18');
+define('POLYLANG_VERSION', '0.6');
 
-define('POLYLANG_DIR', dirname(__FILE__));
+define('POLYLANG_DIR', dirname(__FILE__)); // our directory
 define('PLL_INC', POLYLANG_DIR.'/include');
+
+define('POLYLANG_URL', WP_PLUGIN_URL.'/'.basename(POLYLANG_DIR)); // our url
+
+if (!defined('PLL_LOCAL_DIR'))
+	define('PLL_LOCAL_DIR', WP_CONTENT_DIR.'/polylang'); // default directory to store user data such as custom flags
+
+if (!defined('PLL_LOCAL_URL'))
+	define('PLL_LOCAL_URL', WP_CONTENT_URL.'/polylang'); // default url to access user data such as custom flags
 
 if (!defined('PLL_DISPLAY_ALL'))
 	define('PLL_DISPLAY_ALL', false); // diplaying posts & terms with undefined language is disabled by default
@@ -39,14 +47,13 @@ require_once(PLL_INC.'/calendar.php');
 class Polylang extends Polylang_Base {
 
 	function __construct() {
-		global $polylang;
+		global $polylang; // globalize the variable to access it in the API
 
 		// manages plugin activation and deactivation
 		register_activation_hook( __FILE__, array(&$this, 'activate') );
 		register_deactivation_hook( __FILE__, array(&$this, 'deactivate') );
 
 		// manages plugin upgrade
-		add_filter('upgrader_pre_install', array(&$this, 'pre_upgrade'));
 		add_filter('upgrader_post_install', array(&$this, 'post_upgrade'));
 		add_action('admin_init',  array(&$this, 'admin_init'));
 
@@ -57,15 +64,18 @@ class Polylang extends Polylang_Base {
 		// rewrite rules
 		add_filter('rewrite_rules_array', array(&$this, 'rewrite_rules_array' ));
 
+		// separate admin and frontend
 		if (is_admin()) {
 			require_once(PLL_INC.'/admin.php');
-			new Polylang_Admin();
+			$polylang = new Polylang_Admin();
 		}
 		else {
 			require_once(PLL_INC.'/core.php');
-			require_once(PLL_INC.'/api.php');
 			$polylang = new Polylang_Core();
 		}
+
+		// loads the API
+		require_once(PLL_INC.'/api.php');
 	}
 
 	// plugin activation for multisite
@@ -152,23 +162,22 @@ class Polylang extends Polylang_Base {
 		$wp_rewrite->flush_rules();
 	}
 
-	// restores the local_flags directory (used up to 0.5.1) after upgrade
+	// restores the local_flags directory after upgrade from version 0.5.1 or older
 	function post_upgrade() {
 		// nothing to restore
 		if (!@is_dir($upgrade_dir = WP_CONTENT_DIR . '/upgrade/polylang/local_flags'))
 			return true;
 
-		// don't move if teh directory is empty
+		// don't move if the directory is empty
 		$contents = @scandir($upgrade_dir);
 		if (is_array($contents) && $files = array_diff($contents, array(".", "..", ".DS_Store", "_notes", "Thumbs.db")) && empty($files))
 			return true;
 
 		// move the directory to wp-content
-		$new_dir = WP_CONTENT_DIR . '/polylang';
-		if (!@rename($upgrade_dir, $new_dir))
+		if (!@rename($upgrade_dir, PLL_LOCAL_DIR))
 			return new WP_Error('polylang_restore_error', sprintf('%s<br />%s',
 				__('Error: Restore of local flags failed!', 'polylang'),
-				sprintf(__('Please move your local flags from %s to %s', 'polylang'), esc_html($upgrade_dir), '<strong>'.esc_html($new_dir).'</strong>')		
+				sprintf(__('Please move your local flags from %s to %s', 'polylang'), esc_html($upgrade_dir), '<strong>'.esc_html(PLL_LOCAL_DIR).'</strong>')		
 			));
 
 		@rmdir(WP_CONTENT_DIR . '/upgrade/polylang');
@@ -215,15 +224,17 @@ class Polylang extends Polylang_Base {
 			// translation model changed in V0.5
 			// deleting the old one has been delayed in V0.6 (just in case...) 
 			if (version_compare($options['version'], '0.6', '<')) {
+				$listlanguages = $this->get_languages_list();
+
 				$ids = get_posts(array('numberposts'=> -1, 'fields' => 'ids', 'post_type'=>'any', 'post_status'=>'any'));
 				foreach ($ids as $id) {
-					foreach ($languages as $lang)
+					foreach ($listlanguages as $lang)
 						delete_post_meta($id, '_lang-'.$lang->slug);
 				}
 
 				$ids = get_terms(get_taxonomies(array('show_ui'=>true)), array('get'=>'all', 'fields'=>'ids'));
 				foreach ($ids as $id) {
-					foreach ($languages as $lang)
+					foreach ($listlanguages as $lang)
 						delete_metadata('term', $id, '_lang-'.$lang->slug);
 				}
 			}

@@ -26,7 +26,7 @@ class Polylang_Uninstall {
 		$languages = get_terms('language', array('hide_empty'=>false));
 
 		// delete posts translations
-		$ids = get_posts(array('numberposts'=> -1, 'fields' => 'ids', 'post_type'=>'any', 'post_status'=>'any'));
+		$ids = get_posts(array('numberposts'=> -1, 'fields' => 'ids', 'meta_key'=>'_translations', 'post_type'=>'any', 'post_status'=>'any'));
 		foreach ($ids as $id)
 			delete_post_meta($id, '_translations');
 

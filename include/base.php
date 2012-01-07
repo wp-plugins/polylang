@@ -23,7 +23,7 @@ abstract class Polylang_Base {
 	}
 
 	// returns the language by its id or its slug
-	// Note: it seems that the first option is better for performance (3.2.1)
+	// Note: it seems that a numeric value is better for performance (3.2.1)
 	function get_language($value) {
 		if (is_object($value))
 			return $value;
@@ -36,6 +36,9 @@ abstract class Polylang_Base {
 
 	// saves translations for posts or terms
 	// the underscore in '_lang' hides the post meta in the Custom Fields metabox in the Edit Post screen
+	// $type: either 'post' or 'term'
+	// $id: post id or term id
+	// $translations: an associative array of translations with language code as key and translation id as value
 	function save_translations($type, $id, $translations) {
 		$lang = call_user_func(array(&$this, 'get_'.$type.'_language'), $id);
 		if (!$lang)
@@ -73,6 +76,11 @@ abstract class Polylang_Base {
 		return isset($translations[$slug]) ? (int) $translations[$slug] : '';
 	}
 
+	// store the post language in the database
+	function set_post_language($post_id, $lang) {
+		wp_set_post_terms($post_id, $this->get_language($lang)->slug, 'language' );
+	}
+
 	// returns the language of a post
 	function get_post_language($post_id) {
 		$lang = get_the_terms($post_id, 'language' );
@@ -86,7 +94,7 @@ abstract class Polylang_Base {
 	}
 
 	// store the term language in the database
-	function update_term_language($term_id, $lang) {
+	function set_term_language($term_id, $lang) {
 		update_metadata('term', $term_id, '_language', $this->get_language($lang)->term_id);
 	}
 
@@ -114,13 +122,13 @@ abstract class Polylang_Base {
 	// $lang: object
 	function get_flag($lang) {
 		if (file_exists(POLYLANG_DIR.($file = '/flags/'.$lang->description.'.png')))
-			$url = WP_PLUGIN_URL.'/polylang'.$file;
+			$url = POLYLANG_URL.$file;
 
 		// overwrite with custom flags
-		if ( !is_admin() && ( // never use custom flags on admin side
-			file_exists(WP_CONTENT_DIR.($file = '/polylang/'.$lang->description.'.png')) ||
-			file_exists(WP_CONTENT_DIR.($file = '/polylang/'.$lang->description.'.jpg')) ))
-			$url = WP_CONTENT_URL.$file;
+		if (!is_admin() && ( // never use custom flags on admin side
+			file_exists(PLL_LOCAL_DIR.($file = '/'.$lang->description.'.png')) ||
+			file_exists(PLL_LOCAL_DIR.($file = '/'.$lang->description.'.jpg')) ))
+			$url = PLL_LOCAL_URL.$file;
 
 		return isset($url) ? '<img src="'.esc_url($url).'" alt="'.esc_attr($lang->name).'" />' : '';
 	}
@@ -154,7 +162,6 @@ abstract class Polylang_Base {
 	}
 
 	// register strings for translation
-	// FIXME here because pll_register_string uses polylang object, but used only on admin side
 	function register_string($name, $string) {
 		$this->strings[] = array('name'=> $name, 'string' => $string);
 	}
