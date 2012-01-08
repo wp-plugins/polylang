@@ -170,7 +170,7 @@ class Polylang extends Polylang_Base {
 
 		// don't move if the directory is empty
 		$contents = @scandir($upgrade_dir);
-		if (is_array($contents) && $files = array_diff($contents, array(".", "..", ".DS_Store", "_notes", "Thumbs.db")) && empty($files))
+		if (is_array($contents) && ($files = array_diff($contents, array(".", "..", ".DS_Store", "_notes", "Thumbs.db"))) && empty($files))
 			return true;
 
 		// move the directory to wp-content
