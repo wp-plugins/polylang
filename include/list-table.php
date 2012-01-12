@@ -112,8 +112,7 @@ class Polylang_String_Table extends WP_List_Table {
 	}
 
 	function column_translations($item){
-		$out = sprintf('<input type="hidden" name="string[%1$s]" value="%2$s" />', esc_attr($item['row']), esc_html($item['string']));
-
+		$out = '';
 		foreach($item['translations'] as $key=>$translation)
 			$out .= sprintf('<div class="translation"><label for="%1$s-%2$s">%3$s</label><input name="translation[%1$s][%2$s]" id="%1$s-%2$s" value="%4$s" /></div>',
 				esc_attr($key), esc_attr($item['row']), esc_html($key), esc_html($translation));

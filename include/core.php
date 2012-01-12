@@ -142,7 +142,7 @@ class Polylang_Core extends Polylang_base {
 			}
 		} // options['browser']
 
-		// return default if there is no preferences in the browser or preferences does not match our languages or it is requested not to use the browser preference 
+		// return default if there is no preferences in the browser or preferences does not match our languages or it is requested not to use the browser preference
 		return isset($pref_lang) ? $pref_lang : $this->get_language($this->options['default_lang']);
 	}
 
@@ -191,7 +191,7 @@ class Polylang_Core extends Polylang_base {
 	// as done by xili_language and here: load text domains and reinitialize wp_locale with the action 'wp'
 	// as done by qtranslate: define the locale with the action 'plugins_loaded', but in this case, the language must be specified in the url.	
 	function load_textdomains() {	
-		// sets the current language 
+		// sets the current language
 		if (!($this->curlang = $this->get_current_language()))
 			return; // something went wrong
 
@@ -424,22 +424,26 @@ class Polylang_Core extends Polylang_base {
 
 	// Modifies the feed link to add the language parameter
 	function feed_link($url, $feed) {
-		return $GLOBALS['wp_rewrite']->using_permalinks() ? $this->add_language_to_link($url) : esc_url(home_url('?lang='.$this->curlang->slug.'&feed='.$feed));
+		global $wp_rewrite;
+		return $wp_rewrite->using_permalinks() ? $this->add_language_to_link($url) : esc_url(home_url('?lang='.$this->curlang->slug.'&feed='.$feed));
 	}
 
 	// modifies the sql request for wp_get_archives an get_adjacent_post to filter by the current language
 	function posts_join($sql) {
-		return $sql .  $GLOBALS['wpdb']->prepare(" INNER JOIN $wpdb->term_relationships ON object_id = ID");
+		global $wpdb;
+		return $sql .  $wpdb->prepare(" INNER JOIN $wpdb->term_relationships ON object_id = ID");
 	}
 
 	// modifies the sql request for wp_get_archives and get_adjacent_post to filter by the current language
 	function posts_where($sql) {
-		return $sql . $GLOBALS['wpdb']->prepare(" AND term_taxonomy_id = %d", $this->curlang->term_taxonomy_id);
+		global $wpdb;
+		return $sql . $wpdb->prepare(" AND term_taxonomy_id = %d", $this->curlang->term_taxonomy_id);
 	}
 
 	// modifies the author and date links to add the language parameter
 	function archive_link($link) {
-		return $GLOBALS['wp_rewrite']->using_permalinks() ?
+		global $wp_rewrite;
+		return $wp_rewrite->using_permalinks() ?
 			$this->add_language_to_link($link) :
 			esc_url(str_replace($this->home.'/?', $this->home.'/?lang='.$this->curlang->slug.'&amp;', $link));
 	}
@@ -595,7 +599,7 @@ class Polylang_Core extends Polylang_base {
 			return true;
 		elseif ('page' == get_option('show_on_front') && $this->page_on_front && is_page($this->get_post($this->page_on_front, $this->get_current_language())))
 			return true;
-		elseif(is_tax('language'))
+		elseif(is_tax('language') && !is_archive())
 			return true;
 		else
 			return false;
@@ -658,7 +662,7 @@ class Polylang_Core extends Polylang_base {
 			'show_names' => 1, // show language names
 			'force_home' => 0, // tries to find a translation (available only if display != dropdown)
 			'hide_if_no_translation' => 0, // don't hide the link if there is no translation
-			'hide_current' => 0, // don't hide current language 
+			'hide_current' => 0, // don't hide current language
 		);
 		extract(wp_parse_args($args, $defaults));
 
@@ -680,7 +684,7 @@ class Polylang_Core extends Polylang_base {
 				
 				$url = $force_home ? null : $this->get_translation_url($language);
 
-				// hide if no translation exists 
+				// hide if no translation exists
 				if (!isset($url) && $hide_if_no_translation)
 					continue;
 

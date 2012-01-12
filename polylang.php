@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.6
+Version: 0.6.1
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 */
@@ -23,7 +23,7 @@ Description: Adds multilingual capability to Wordpress
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('POLYLANG_VERSION', '0.6');
+define('POLYLANG_VERSION', '0.6.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
 define('PLL_INC', POLYLANG_DIR.'/include');
@@ -170,7 +170,7 @@ class Polylang extends Polylang_Base {
 
 		// don't move if the directory is empty
 		$contents = @scandir($upgrade_dir);
-		if (is_array($contents) && $files = array_diff($contents, array(".", "..", ".DS_Store", "_notes", "Thumbs.db")) && empty($files))
+		if (is_array($contents) && ($files = array_diff($contents, array(".", "..", ".DS_Store", "_notes", "Thumbs.db"))) && empty($files))
 			return true;
 
 		// move the directory to wp-content
@@ -281,7 +281,9 @@ class Polylang extends Polylang_Base {
 		$options = get_option('polylang');
 		$newrules = array();
 
-		$listlanguages = $this->get_languages_list();
+		// don't modify the rules if there is no languages created
+		if (!($listlanguages = $this->get_languages_list()))
+			return $rules;
 
 		// modifies the rules created by WordPress when '/language/' is removed in permalinks
 		if ($options['rewrite']) {					

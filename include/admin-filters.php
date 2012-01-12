@@ -2,12 +2,29 @@
 
 // all modifications of the WordPress admin ui
 class Polylang_Admin_Filters extends Polylang_Base {
+	private $options;
+
 	function __construct() {
+
+		// init options often needed
+		$this->options = get_option('polylang');
+
 		// additionnal filters and actions
 		add_action('admin_init',  array(&$this, 'admin_init'));
-
 		// setup js scripts andd css styles
 		add_action('admin_enqueue_scripts', array(&$this,'admin_enqueue_scripts'));
+
+		// filter admin language for users
+		add_filter('locale', array(&$this, 'get_locale'));
+
+		// refresh rewrite rules if the 'page_on_front' option is modified
+		add_action('update_option', array(&$this, 'update_option'));
+	}
+
+	// add these actions and filters here and not in the constructor to be sure that all taxonomies are registered
+	function admin_init() {
+		if (!$this->get_languages_list())
+			return;
 
 		// add the language and translations columns (as well as a filter by language) in 'All Posts' an 'All Pages' panels
 		add_filter('manage_posts_columns',  array(&$this, 'add_post_column'), 10, 2);
@@ -35,6 +52,21 @@ class Polylang_Admin_Filters extends Polylang_Base {
 		// filters categories and post tags by language
 		add_filter('terms_clauses', array(&$this, 'terms_clauses'), 10, 3);
 
+		foreach (get_taxonomies(array('show_ui'=>true)) as $tax) {
+			// adds the language field in the 'Categories' and 'Post Tags' panels
+			add_action($tax.'_add_form_fields',  array(&$this, 'add_term_form'));
+
+			// adds the language field and translations tables in the 'Edit Category' and 'Edit Tag' panels
+			add_action($tax.'_edit_form_fields',  array(&$this, 'edit_term_form'));
+
+			// adds the language column in the 'Categories' and 'Post Tags' tables
+			add_filter('manage_edit-'.$tax.'_columns', array(&$this, 'add_term_column'));
+		  add_action('manage_'.$tax.'_custom_column', array(&$this, 'term_column'), 10, 3);
+
+			// adds action related to languages when deleting categories and post tags
+			add_action('delete_'.$tax, array(&$this, 'delete_term'));
+		}
+
 		// adds actions related to languages when saving categories and post tags
 		add_action('created_term', array(&$this, 'save_term'), 10, 3);
 		add_action('edited_term', array(&$this, 'save_term'), 10, 3);
@@ -50,30 +82,8 @@ class Polylang_Admin_Filters extends Polylang_Base {
 		add_filter('widget_update_callback', array(&$this, 'widget_update_callback'), 10, 4);
 
 		// language management for users
-		add_filter('locale', array(&$this, 'get_locale'));
 		add_action('personal_options_update', array(&$this, 'personal_options_update'));
 		add_action('personal_options', array(&$this, 'personal_options'));
-
-		// refresh rewrite rules if the 'page_on_front' option is modified
-		add_action('update_option', array(&$this, 'update_option'));
-	}
-
-	// add these actions and filters here and not in the constructor to be sure that all taxonomies are registered
-	function admin_init() {
-		foreach (get_taxonomies(array('show_ui'=>true)) as $tax) {
-			// adds the language field in the 'Categories' and 'Post Tags' panels
-			add_action($tax.'_add_form_fields',  array(&$this, 'add_term_form'));
-
-			// adds the language field and translations tables in the 'Edit Category' and 'Edit Tag' panels
-			add_action($tax.'_edit_form_fields',  array(&$this, 'edit_term_form'));
-
-			// adds the language column in the 'Categories' and 'Post Tags' tables
-			add_filter('manage_edit-'.$tax.'_columns', array(&$this, 'add_term_column'));
-		  add_action('manage_'.$tax.'_custom_column', array(&$this, 'term_column'), 10, 3);
-
-			// adds action related to languages when deleting categories and post tags
-			add_action('delete_'.$tax, array(&$this, 'delete_term'));
-		}
 	}
 
 	// setup js scripts & css styles
@@ -160,8 +170,9 @@ class Polylang_Admin_Filters extends Polylang_Base {
 
 	// adds the Languages box in the 'Edit Post' and 'Edit Page' panels (as well as in custom post types panels
 	function add_meta_boxes() {
-		foreach(get_post_types( array( 'show_ui' => true ) ) as $ptype)
-			add_meta_box('ml_box', __('Languages','polylang'), array(&$this,'post_language'), $ptype, 'side','high');
+		if ($this->get_languages_list())
+			foreach(get_post_types( array( 'show_ui' => true ) ) as $ptype)
+				add_meta_box('ml_box', __('Languages','polylang'), array(&$this,'post_language'), $ptype, 'side','high');
 	}
 
 	// the Languages metabox in the 'Edit Post' and 'Edit Page' panels
@@ -173,10 +184,8 @@ class Polylang_Admin_Filters extends Polylang_Base {
 		if (isset($_GET['new_lang']))
 			$lang = $this->get_language($_GET['new_lang']);
 
-		if (!isset($lang)) {
-			$options = get_option('polylang');
-			$lang = $this->get_language($options['default_lang']);
-		}
+		if (!isset($lang))
+			$lang = $this->get_language($this->options['default_lang']);
 
 		$listlanguages = $this->get_languages_list();
 
@@ -249,7 +258,7 @@ class Polylang_Admin_Filters extends Polylang_Base {
 	// filters the pages by language in the parent dropdown list in the page attributes metabox
 	function page_attributes_dropdown_pages_args($dropdown_args, $post) {
 		$lang = isset($_POST['lang']) ? $this->get_language($_POST['lang']) : $this->get_post_language($post->ID); // ajax or not ?
-		$pages = implode(',', $this->exclude_pages($lang));
+		$pages = implode(',', $this->exclude_pages($lang->term_id));
 		$dropdown_args['exclude'] = isset($dropdown_args['exclude']) ? $dropdown_args['exclude'].','.$pages : $pages;
 		return $dropdown_args;
 	}
@@ -284,6 +293,14 @@ class Polylang_Admin_Filters extends Polylang_Base {
 		if ($id = wp_is_post_revision($post_id))
 			$post_id = $id;
 
+		// save language
+		if (isset($_POST['post_lang_choice']))
+			$this->set_post_language($post_id, $_POST['post_lang_choice']);
+		elseif (isset($_GET['new_lang']))
+			$this->set_post_language($post_id, $_GET['new_lang']);
+		else
+			$this->set_post_language($post_id, $this->options['default_lang']);
+
 		// the hook is called when the post is created
 		// let's use it to initialize some things when using "Add new" (translation)
 		if (isset($_GET['from_post']) && isset($_GET['new_lang'])) {
@@ -313,8 +330,7 @@ class Polylang_Admin_Filters extends Polylang_Base {
 		if (!isset($_POST['post_lang_choice']))
 			return;
 
-		// save language and translations
-		$this->set_post_language($post_id, $_POST['post_lang_choice']);
+		// save translations
 		$this->save_translations('post', $post_id, $_POST['post_tr_lang']);
 
 		// synchronise terms and metas in translations
@@ -343,10 +359,10 @@ class Polylang_Admin_Filters extends Polylang_Base {
 				wp_set_object_terms($tr_id, $newterms, $tax); // replace terms in translation
 			}
 
-			// copy metas and allow plugins to do the same
+			// synchronize metas and allow plugins to do the same
 			$metas = apply_filters('pll_copy_metas', array('_wp_page_template', '_thumbnail_id'));
 			foreach ($metas as $meta) {
-				if ($value = get_post_meta($_GET['from_post'], $meta, true))
+				if ($value = get_post_meta($post_id, $meta, true))
 					update_post_meta($tr_id, $meta, get_post_meta($post_id, $meta, true));
 				else
 					delete_post_meta($tr_id, $meta);
@@ -355,7 +371,7 @@ class Polylang_Admin_Filters extends Polylang_Base {
 			// post parent
 			if ($parent_id = wp_get_post_parent_id($post_id));
 				$post_parent = $this->get_translation('post', $parent_id, $lang);
-
+	
 			global $wpdb;
 			$wpdb->update($wpdb->posts, array('post_parent'=> isset($post_parent) ? $post_parent : 0), array( 'ID' => $tr_id ));
 		}
@@ -394,7 +410,6 @@ class Polylang_Admin_Filters extends Polylang_Base {
 			return $clauses;
 
 		global $post_ID;
-		$options = get_option('polylang');
 
 		// ajax response for changing the language in the post metabox
 		if (isset($_POST['lang']))
@@ -413,7 +428,7 @@ class Polylang_Admin_Filters extends Polylang_Base {
 
 		// for a new post
 		elseif ($screen->base == 'post' && !PLL_DISPLAY_ALL)
-			$lang = $this->get_language($options['default_lang']);
+			$lang = $this->get_language($this->options['default_lang']);
 
 		// adds our clauses to filter by current language
 		return isset($lang) ? $this->_terms_clauses($clauses, $lang) : $clauses;
@@ -425,10 +440,8 @@ class Polylang_Admin_Filters extends Polylang_Base {
 
 		if (isset($_GET['new_lang']))
 			$lang = $this->get_language($_GET['new_lang']);
-		else {
-			$options = get_option('polylang');
-			$lang = $this->get_language($options['default_lang']);
-		}
+		else
+			$lang = $this->get_language($this->options['default_lang']);
 
 		$listlanguages = $this->get_languages_list();
 
@@ -510,7 +523,7 @@ class Polylang_Admin_Filters extends Polylang_Base {
 			
 		// synchronize translations of this term in all posts
 
-		// get all posts associated to this term 
+		// get all posts associated to this term
 		$posts = get_posts(array(
 			'numberposts'=>-1,
 			'post_type' => 'any',
@@ -528,7 +541,7 @@ class Polylang_Admin_Filters extends Polylang_Base {
 			if ($translated_term = $this->get_term($term_id, $language)) {
 				foreach ($posts as $post_id) {				
 					if ($translated_post = $this->get_post($post_id, $language))
-						wp_set_object_terms($translated_post, $translated_term, $taxonomy, true); 
+						wp_set_object_terms($translated_post, $translated_term, $taxonomy, true);
 				}
 			}
 		}

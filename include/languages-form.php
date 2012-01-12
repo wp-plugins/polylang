@@ -144,7 +144,7 @@ break;
 case 'strings':
 
 	$paged = isset($_GET['paged']) ? '&paged='.$_GET['paged'] : '';?>	
-	<form id="string-translation" method="post" action="<?php echo esc_url(admin_url('admin.php?page=mlang&tab=strings'.$paged))?>" class="validate">
+	<form id="string-translation" method="post" action="<?php echo esc_url(admin_url('admin.php?page=mlang&tab=strings'.$paged.'&noheader=true'))?>" class="validate">
 	<?php wp_nonce_field('string-translation', '_wpnonce_string-translation');?>
 	<input type="hidden" name="action" value="string-translation" /><?php
 	$string_table->display();

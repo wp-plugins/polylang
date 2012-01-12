@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: bilingual, language, i18n, international, l10n, localization, multilingual, multisite, translate, translation, widget
 Requires at least: 3.1
 Tested up to: 3.3.1
-Stable tag: 0.6
+Stable tag: 0.6.1
 
 Polylang adds multilingual content management support to WordPress.
 
@@ -12,7 +12,7 @@ Polylang adds multilingual content management support to WordPress.
 
 = Upgrade Notice =
 
-Your custom flags in 'wp-content/plugins/polylang/local_flags' directory should move to 'wp-content/polylang'. People using the function 'pll_the_language' should be aware that it does not display the 'ul' tag anymore. I wrote about the reasons for these changes in the [forum](http://wordpress.org/support/topic/development-of-polylang-version-06). 
+When upgrading from 0.5.1 or older, your custom flags in 'wp-content/plugins/polylang/local_flags' directory should move to 'wp-content/polylang'. People using the function 'pll_the_language' should be aware that it does not display the 'ul' tag anymore. I wrote about the reasons for these changes in the [forum](http://wordpress.org/support/topic/development-of-polylang-version-06). 
 
 = Features  =
 
@@ -40,12 +40,14 @@ The plugin admin interface is currently available in:
 * German contributed by [Christian Ries](http://www.singbyfoot.lu)
 * Russian contributed by [yoyurec](http://yoyurec.in.ua)
 * Greek contributed by [theodotos](http://www.ubuntucy.org)
+* Dutch contributed by [AlbertGn](http://wordpress.org/support/profile/albertgn)
 
 Other translators are welcome !
 
 = Notes =
 
 * The tests have been made with WordPress 3.3.1.
+* User strings (site title, widget titles) translation is active in WP 3.3 and newer only.
 * Your server must run PHP5
 * You must deactivate other multilingual plugins before activating Polylang, otherwise, you may get unexpected results !
 * Unlike some other plugins, if you deactivate Polylang, your blog will go on working as smoothly as possible. All your posts, pages, category and post tags would be accessible (without language filter of course...).
@@ -56,7 +58,7 @@ Don't hesitate to [give your feedback](http://wordpress.org/tags/polylang?forum_
 
 == Upgrade Notice ==
 
-Your custom flags in 'wp-content/plugins/polylang/local_flags' directory shhould move to 'wp-content/polylang'. People using the function 'pll_the_language' should be aware that it does not display the ul tag anymore.
+When upgrading from 0.5.1 or older, your custom flags in 'wp-content/plugins/polylang/local_flags' directory should move to 'wp-content/polylang'. People using the function 'pll_the_language' should be aware that it does not display the ul tag anymore.
 
 == Installation ==
 
@@ -82,7 +84,7 @@ In comparison to these plugins, Polylang tries to keep things simple and light, 
 
 = Where to find help ? =
 
-* Read the [documentation](http://plugins.svn.wordpress.org/polylang/trunk/doc/documentation-en.pdf) supplied whith the plugin (in the doc directory) and search the [support forum](http://wordpress.org/tags/polylang?forum_id=10) first. You will most probably find your answer here.
+* Read the [documentation](http://plugins.svn.wordpress.org/polylang/trunk/doc/documentation-en.pdf) supplied whith the plugin (in the doc directory) and search the [support forum](http://wordpress.org/tags/polylang?forum_id=10) first. I know that searching in the WordPress forum is not very convenient, but please give it a try. You can use generic search engines such as Google too as the WordPress forum SEO is very good. You will most probably find your answer here.
 * If you still have a problem, open a new thread in the [support forum](http://wordpress.org/tags/polylang?forum_id=10).
 
 = Is Polylang compatible with multisite ? =
@@ -91,13 +93,25 @@ Yes. Since v0.5
 
 = Can I use my own flags for the language switcher ? =
 
-Yes. You have to use PNG or JPG files and name them with the WordPress locale. For example, en_US.png. Then upload these files in the `wp-content/polylang` directory. Don't use the `/polylang/flags` directory as your files would be removed when updating the plugin.
+Yes. You have to use PNG or JPG files and name them with the WordPress locale corresponding to the language. For example, en_US.png for English. Then upload these files in the `wp-content/polylang` directory. Don't use the `/polylang/flags` directory as your files would be removed when updating the plugin.
 
 == Screenshots ==
 
 1. The Polylang languages admin panel (v0.5) in WordPress 3.3
 
 == Changelog ==
+
+= 0.6.1 (2012-01-12) =
+
+* Add Dutch translation contributed by [AlbertGn](http://wordpress.org/support/profile/albertgn)
+* Disable everything except the languages management panel while no language has been created
+* Bug correction: can't have the same featured image in translated posts
+* Bug correction: parent page dropdown does appear only after the page has been saved
+* Bug correction: archives widget not working anymore
+* Bug correction: string translations does not work for WP < 3.3
+* Bug correction: fix fatal error in string translations caused by widgets using the old API
+* Bug correction: the strings translation panel is unable to translate strings with special characters
+* Bug correction: Polylang "is_front_page" returns true on archives pages
 
 = 0.6 (2012-01-07) =
 
@@ -117,11 +131,11 @@ Yes. You have to use PNG or JPG files and name them with the WordPress locale. F
 = 0.5.1 (2011-12-18) =
 
 * Improved German translation contributed by [Christian Ries](http://www.singbyfoot.lu)
-* Bug correction: Translated homepage not recognized as home page when it displays posts
-* Bug correction: Predefined language list does not work on IE8
-* Bug correction: On some installations, "Add New" post doesn't keep intended language
-* Bug correction: Fatal error when Polylang is used together with the plugin Tabbed Widgets
-* Bug correction: Language Switcher points sometimes to wrong places
+* Bug correction: translated homepage not recognized as home page when it displays posts
+* Bug correction: predefined language list does not work on IE8
+* Bug correction: on some installations, "Add New" post doesn't keep intended language
+* Bug correction: fatal error when Polylang is used together with the plugin Tabbed Widgets
+* Bug correction: language Switcher points sometimes to wrong places
 
 = 0.5 (2011-12-07) =
 
@@ -135,11 +149,11 @@ Yes. You have to use PNG or JPG files and name them with the WordPress locale. F
 * Optimized the calendar widget (less code and sql queries executed)
 * Added the possibility to display posts and terms with no language set (see the documentation to know how to enable this functionnality)
 * Started the creation of a small API for theme and plugin programmers
-* Bug correction: When using a static front page, the page for posts does not work when using the default permalink settings
-* Bug correction: The search form does not work if a static front page is used
-* Bug correction: Quick edit breaks translations
-* Bug correction: Categories and post tags translations don't work for more than 2 languages
-* Bug correction: The output of wp_page_menu is not correct for non default languages
+* Bug correction: when using a static front page, the page for posts does not work when using the default permalink settings
+* Bug correction: the search form does not work if a static front page is used
+* Bug correction: quick edit breaks translations
+* Bug correction: categories and post tags translations don't work for more than 2 languages
+* Bug correction: the output of wp_page_menu is not correct for non default languages
 
 = 0.4.4 (2011-11-28) =
 
@@ -149,10 +163,10 @@ Yes. You have to use PNG or JPG files and name them with the WordPress locale. F
 = 0.4.3 (2011-11-19) =
 
 * Add Russian translation contributed by [yoyurec](http://yoyurec.in.ua)
-* Bug correction: Impossible to suppress the language name in the language switcher widget settings
-* Bug correction: Post's page does not work when using a static front page
-* Bug correction: Flags in local_flags directory are removed after an automatic upgrade (now works for an upgrade from 0.4.3+ to a higher version)
-* Bug correction: Switching to default language displays a 404 Error when hiding the default language in url and displaying the language switcher as dropdown
+* Bug correction: impossible to suppress the language name in the language switcher widget settings
+* Bug correction: post's page does not work when using a static front page
+* Bug correction: flags in local_flags directory are removed after an automatic upgrade (now works for an upgrade from 0.4.3+ to a higher version)
+* Bug correction: switching to default language displays a 404 Error when hiding the default language in url and displaying the language switcher as dropdown
 * Other minor bug corrections
 * Tests done with WordPress 3.3 beta 3
 
@@ -179,7 +193,7 @@ Yes. You have to use PNG or JPG files and name them with the WordPress locale. F
 * Add support for calendar widget
 * Improve performance: less sql queries
 * Improve data validation when creating or updating languages
-* Bug correction: 'wp_list_pages' page order is ignored when plugin is enabled
+* Bug correction: 'wp_list_pages' page order is ignored when the plugin is enabled
 * Bug correction: when using 'edit' or 'add new' (translation) for posts, the categories appear in the wrong language
 * Bug correction: pages are not included in language post count
 * Bug correction: the language switcher does not display languages if there are only pages

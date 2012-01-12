@@ -11,13 +11,15 @@ if(!class_exists('WP_Widget_Calendar')){
 class Polylang_Widget_Calendar extends WP_Widget_Calendar {
 
 	function widget( $args, $instance ) {
+		global $polylang; #added#
+
 		extract($args);
 		$title = apply_filters('widget_title', empty($instance['title']) ? '&nbsp;' : $instance['title'], $instance, $this->id_base);
 		echo $before_widget;
 		if ( $title )
 			echo $before_title . $title . $after_title;
 		echo '<div id="calendar_wrap">';
-		$this->get_calendar(); #modified#
+		isset($polylang) && $polylang->get_languages_list() ? $this->get_calendar() : get_calendar(); #modified#
 		echo '</div>';
 		echo $after_widget;
 	}
@@ -26,9 +28,6 @@ class Polylang_Widget_Calendar extends WP_Widget_Calendar {
 	function get_calendar($initial = true, $echo = true) {
 		global $wpdb, $m, $monthnum, $year, $wp_locale, $posts;
 		global $polylang; #added#
-
-		if (!isset($polylang)) #added#
-			return; #added#
 
 		$lang = $polylang->get_current_language()->term_taxonomy_id; #added#
 

@@ -9,9 +9,7 @@ class Polylang_Widget extends WP_Widget {
 	// displays the widget
 	function widget($args, $instance) {
 		global $polylang;
-
-		// prevents the function to be called from admin side where $polylang is not defined
-		if (!isset($polylang))
+		if (!(isset($polylang) && $polylang->get_languages_list()))
 			return; 
 
 		extract($args);
