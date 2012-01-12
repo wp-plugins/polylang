@@ -9,27 +9,26 @@
 	<tbody>
 	<?php foreach ($listlanguages as $language) {
 		if ($language != $lang) { 
-			$value = $this->get_translated_post($post_ID, $language); 
+			$value = $this->get_translation('post', $post_ID, $language); 
 			if (isset($_GET['from_post']))
 				$value = $this->get_post($_GET['from_post'], $language); ?>			
 			<tr>
-			<td><?php echo esc_attr($language->name);?></td><?php
+			<td><?php echo esc_html($language->name);?></td><?php
 			printf(
-				'<td><input name="%s" id="%s" class="tags-input" type="text" value="%s" size="6"/></td>',
-				esc_attr($language->slug),
+				'<td><input name="post_tr_lang[%1$s]" id="tr_lang_%1$s" class="tags-input" type="text" value="%2$s" size="6"/></td>',
 				esc_attr($language->slug),
 				esc_attr($value)
 			);
 			if ($lang) {				
 				$link = $value ? 
 					sprintf(
-						'<a href="%s">%s</a>',
-						esc_url(admin_url('post.php?action=edit&amp;post=' . $value)),
+						'<a href="%1$s">%2$s</a>',
+						esc_url(admin_url('post.php?action=edit&post=' . $value)),
 						__('Edit','polylang')
 					) :
 					sprintf(
-						'<a href="%s">%s</a>',
-						esc_url(admin_url('post-new.php?post_type=' . $post_type . '&amp;from_post=' . $post_ID . '&amp;new_lang=' . $language->slug)),
+						'<a href="%1$s">%2$s</a>',
+						esc_url(admin_url('post-new.php?post_type=' . $post_type . '&from_post=' . $post_ID . '&new_lang=' . $language->slug)),
 						__('Add new','polylang')
 					);?>
 				<td><?php echo $link ?><td><?php

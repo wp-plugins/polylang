@@ -1,4 +1,6 @@
-<?php // allows each user to choose the admin language ?>
+<?php
+// allows each user to choose the admin language in the Profile panel
+?>
 <tr>
 	<th><label for='user_lang'><?php _e('Admin language', 'polylang');?></label></th>
 	<td>
@@ -10,7 +12,7 @@
 					"<option value='%s'%s>%s</option>\n",
 					esc_attr($language->description),
 					get_user_meta($profileuser->ID, 'user_lang', true) == $language->description ? ' selected="selected"' : '',
-					esc_attr($language->name)
+					esc_html($language->name)
 				);
 			} ?>
 		</select>
