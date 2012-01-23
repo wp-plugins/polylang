@@ -10,6 +10,10 @@ Polylang adds multilingual content management support to WordPress.
 
 == Description ==
 
+= Announcement =
+
+[A development version of Polylang 0.7 is available](http://wordpress.org/support/topic/development-of-polylang-version-07).
+
 = Upgrade Notice =
 
 When upgrading from 0.5.1 or older, your custom flags in 'wp-content/plugins/polylang/local_flags' directory should move to 'wp-content/polylang'. People using the function 'pll_the_language' should be aware that it does not display the 'ul' tag anymore. I wrote about the reasons for these changes in the [forum](http://wordpress.org/support/topic/development-of-polylang-version-06). 
