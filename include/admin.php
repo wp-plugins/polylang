@@ -61,7 +61,6 @@ class Polylang_Admin extends Polylang_Base {
 	function languages_page() {
 		global $wp_rewrite;
 		$options = get_option('polylang');
-//		$listlanguages = $this->get_languages_list();
 
 		// for nav menus form
 		$locations = get_registered_nav_menus();
@@ -79,7 +78,8 @@ class Polylang_Admin extends Polylang_Base {
 				$error = $this->validate_lang();
 
 				if ($error == 0) {
-					wp_insert_term($_POST['name'],'language',array('slug'=>$_POST['slug'], 'description'=>$_POST['description'], 'term_group'=>$_POST['term_group']));
+					$r = wp_insert_term($_POST['name'],'language',array('slug'=>$_POST['slug'], 'description'=>$_POST['description'], 'term_group'=>$_POST['term_group']));
+					update_metadata('term', $r['term_id'], '_rtl', $_POST['rtl']);
 
 					if (!isset($options['default_lang'])) { // if this is the first language created, set it as default language
 						$options['default_lang'] = $_POST['slug'];
@@ -112,7 +112,7 @@ class Polylang_Admin extends Polylang_Base {
 					$terms= get_terms(get_taxonomies(array('show_ui'=>true)), array('get'=>'all', 'fields'=>'ids'));
 					$this->delete_translations('term', $terms, $lang_slug);
 
-					// FIXME should find something more efficient (with a sql query ?)					
+					// FIXME should find something more efficient (with a sql query ?)
 					foreach ($terms as $id) {
 						if ($this->get_term_language($id)->term_id == $lang_id)
 							$this->delete_term_language($id); // delete language of this term
@@ -134,10 +134,11 @@ class Polylang_Admin extends Polylang_Base {
 					delete_option('polylang_mo'.$lang_id);
 
 					// delete the language itself
+					delete_metadata('term', $lang_id, '_rtl');
 					wp_delete_term($lang_id, 'language');
 
 					// oops ! we deleted the default language...
-					if ($options['default_lang'] == $lang_slug)	{				
+					if ($options['default_lang'] == $lang_slug)	{
 						if ($listlanguages = $this->get_languages_list())
 							$options['default_lang'] = $listlanguages[0]->slug; // arbitrary choice...
 						else
@@ -152,8 +153,10 @@ class Polylang_Admin extends Polylang_Base {
 				break;
 
 			case 'edit':
-				if (isset($_GET['lang']) && $_GET['lang'])
+				if (isset($_GET['lang']) && $_GET['lang']) {
 					$edit_lang = $this->get_language((int) $_GET['lang']);
+					$rtl = get_metadata('term', $edit_lang->term_id, '_rtl', true);
+				}
 				break;
 
 			case 'update':
@@ -195,12 +198,14 @@ class Polylang_Admin extends Polylang_Base {
 						if ($options['default_lang'] == $old_slug) {
 							$options['default_lang'] = $_POST['slug'];
 							update_option('polylang', $options);
-						}						
+						}
 					}
 
 					// and finally update the language itself
 					$args = array('name'=>$_POST['name'], 'slug'=>$_POST['slug'], 'description'=>$_POST['description'], 'term_group'=>$_POST['term_group']);
 					wp_update_term($lang_id, 'language', $args);
+					update_metadata('term', $lang_id, '_rtl', $_POST['rtl']);
+
 					$wp_rewrite->flush_rules(); // refresh rewrite rules
 				}
 
@@ -212,8 +217,8 @@ class Polylang_Admin extends Polylang_Base {
 				check_admin_referer( 'nav-menus-lang', '_wpnonce_nav-menus-lang' );
 
 				$menu_lang = $_POST['menu-lang'];
-				foreach ($locations as $location => $description) 
-					foreach (array('switcher', 'show_names', 'show_flags', 'force_home') as $key)
+				foreach ($locations as $location => $description)
+					foreach ($this->get_switcher_options('menu') as $key => $str)
 						$menu_lang[$location][$key] = isset($menu_lang[$location][$key]) ? 1 : 0;
 
 				update_option('polylang_nav_menus', $menu_lang);
@@ -240,7 +245,7 @@ class Polylang_Admin extends Polylang_Base {
 						require_once(PLL_INC . '/mo.php');
 						update_option('polylang_mo'.$language->term_id, base64_encode(pll_mo_export($mo)));
 					}
-					else					
+					else
 						update_option('polylang_mo'.$language->term_id, base64_encode($mo->export())); // MO::export since WP 3.3
 				}
 
@@ -256,6 +261,7 @@ class Polylang_Admin extends Polylang_Base {
 				$options['browser'] = isset($_POST['browser']) ? 1 : 0;
 				$options['rewrite'] = $_POST['rewrite'];
 				$options['hide_default'] = isset($_POST['hide_default']) ? 1 : 0;
+				$options['force_lang'] = isset($_POST['force_lang']) ? 1 : 0;
 				update_option('polylang', $options);
 
 				// refresh refresh permalink structure and rewrite rules in case rewrite or hide_default options have been modified
@@ -290,7 +296,7 @@ class Polylang_Admin extends Polylang_Base {
 				$tabs['menus'] = __('Menus','polylang'); // don't display the menu tab if the active theme does not support nav menus
 
 			$tabs += array('strings' => __('Strings translation','polylang'), 'settings' => __('Settings', 'polylang'));
-		} 
+		}
 
 		$active_tab = isset($_GET['tab']) && $_GET['tab'] ? $_GET['tab'] : 'lang';
 
@@ -304,6 +310,8 @@ class Polylang_Admin extends Polylang_Base {
 				$list_table = new Polylang_List_Table();
 				$list_table->prepare_items($data);
 
+				$rtl = 0;
+
 				// error messages for data validation
 				$errors[1] = __('Enter a valid WorPress locale', 'polylang');
 				$errors[2] = __('The language code must be 2 characters long', 'polylang');
@@ -313,19 +321,11 @@ class Polylang_Admin extends Polylang_Base {
 				break;
 
 			case 'menus':
-				// prepare the list of options for the language switcher
-				// FIXME do not include the dropdown yet as I need to create a better script (only available for the widget now)
-				$menu_options = array(
-					'switcher' => __('Displays a language switcher at the end of the menu', 'polylang'),
-					'show_names' => __('Displays language names', 'polylang'),
-					'show_flags' => __('Displays flags', 'polylang'),
-					'force_home' => __('Forces link to front page', 'polylang')
-				);
-
 				// default values
-				foreach ($locations as $key=>$location)				
-					$menu_lang[$key] = wp_parse_args($menu_lang[$key], array('switcher'=> 0, 'show_names'=>1, 'show_flags'=>0, 'force_home'=>0));
-
+				foreach ($locations as $key=>$location) {
+					if (isset($menu_lang[$key]))
+						$menu_lang[$key] = wp_parse_args($menu_lang[$key], $this->get_switcher_options('menu', 'default'));
+				}
 				break;
 
 			case 'strings':
@@ -399,8 +399,8 @@ class Polylang_Admin extends Polylang_Base {
 		// validate name
 		if ($_POST['name'] == '')
 			$error = 4;
-		
-		return isset($error) ? $error : 0;			
+
+		return isset($error) ? $error : 0;
 	}
 
 	// downloads mofiles
@@ -420,7 +420,7 @@ class Polylang_Admin extends Polylang_Base {
 
 		// will first look in tags/ (most languages) then in branches/ (only Greek ?)
 		$base = 'http://svn.automattic.com/wordpress-i18n/'.$locale;
-		$bases = array($base.'/tags/', $base.'/branches/'); 
+		$bases = array($base.'/tags/', $base.'/branches/');
 
 		foreach ($bases as $base) {
 			// get all the versions available in the subdirectory
@@ -444,7 +444,7 @@ class Polylang_Admin extends Polylang_Base {
 				if ($upgrade && version_compare($version, $wp_version, '<='))
 					unset($versions[$key]);
 			}
-			
+
 			$versions = array_splice($versions, 0, 5); // reduce the number of versions to test to 5
 
 			// try to download the file
@@ -456,6 +456,11 @@ class Polylang_Admin extends Polylang_Base {
 				// try to download ms and continents-cities files if exist (will not return false if failed)
 				foreach (array("ms-$locale.mo", "continent-cities-$locale.mo") as $file)
 					wp_remote_get($base."$version/messages/$file", array('timeout' => 30, 'stream' => true, 'filename' => WP_LANG_DIR."/$file"));
+
+				// try to download theme files if exist (will not return false if failed)
+				// FIXME not updated when the theme is updated outside a core update
+				foreach (array("twentyten/$locale.mo", "twentyeleven/$locale.mo") as $file)
+					wp_remote_get($base."$version/messages/$file", array('timeout' => 30, 'stream' => true, 'filename' => get_theme_root()."/$file"));
 
 				return true;
 			}
@@ -470,7 +475,22 @@ class Polylang_Admin extends Polylang_Base {
 		foreach ($this->get_languages_list() as $language)
 			$this->download_mo($language->description, $version);
 	}
- 
+
+	// returns options available for the language switcher (menu or widget)
+	// FIXME do not include the dropdown in menu yet since I need to work on js
+	function get_switcher_options($type = 'widget', $key ='string') {
+		$options = array (
+			'show_names' => array('string' => __('Displays language names', 'polylang'), 'default' => 1),
+			'show_flags' => array('string' => __('Displays flags', 'polylang'), 'default' => 0),
+			'force_home' => array('string' => __('Forces link to front page', 'polylang'), 'default' => 0),
+			'hide_current' => array('string' => __('Hides the current language', 'polylang'), 'default' => 0),
+		);
+		$menu_options = array('switcher' => array('string' => __('Displays a language switcher at the end of the menu', 'polylang'), 'default' => 0));
+		$widget_options = array('dropdown' => array('string' => __('Displays as dropdown', 'polylang'), 'default' => 0));
+		$options = ($type == 'menu') ? array_merge($menu_options, $options) : array_merge($options, $widget_options);
+		return array_map(create_function('$v', "return \$v['$key'];"), $options);
+	}
+
 	function &get_strings() {
 		global $wp_registered_widgets;
 
@@ -481,7 +501,7 @@ class Polylang_Admin extends Polylang_Base {
 		// widgets titles
 		$sidebars = wp_get_sidebars_widgets();
 		foreach ($sidebars as $sidebar => $widgets) {
-			if ($sidebar == 'wp_inactive_widgets')
+			if ($sidebar == 'wp_inactive_widgets' || !isset($widgets))
 				continue;
 
 			foreach ($widgets as $widget) {
@@ -495,7 +515,7 @@ class Polylang_Admin extends Polylang_Base {
 				$number = $wp_registered_widgets[$widget]['params'][0]['number'];
 				$title = $widget_settings[$number]['title'];
 				if(isset($title) && $title)
-					$this->register_string(__('Widget title'), $title);
+					$this->register_string(__('Widget title', 'polylang'), $title);
 			}
 		}
 		return $this->strings;

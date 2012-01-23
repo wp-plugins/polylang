@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.6.1
+Version: 0.7dev12
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 */
@@ -23,7 +23,8 @@ Description: Adds multilingual capability to Wordpress
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('POLYLANG_VERSION', '0.6.1');
+define('POLYLANG_VERSION', '0.7dev12');
+define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
 define('PLL_INC', POLYLANG_DIR.'/include');
@@ -80,7 +81,11 @@ class Polylang extends Polylang_Base {
 
 	// plugin activation for multisite
 	function activate() {
-		global $wpdb;
+		global $wp_version, $wpdb;
+
+		if (version_compare($wp_version, PLL_MIN_WP_VERSION , '<')) 
+			die (sprintf('<p style = "font-family: sans-serif; font-size: 12px; color: #333; margin: -5px">%s</p>',
+				sprintf(__('You are using WordPress %s. Polylang requires at least WordPress %s.'), $wp_version, PLL_MIN_WP_VERSION)));
 
 		// check if it is a network activation - if so, run the activation function for each blog
 		if (is_multisite() && isset($_GET['networkwide']) && ($_GET['networkwide'] == 1)) {
@@ -128,6 +133,7 @@ class Polylang extends Polylang_Base {
 			$options['browser'] = 1; // default language for the front page is set by browser preference
 			$options['rewrite'] = 0; // do not remove /language/ in permalinks
 			$options['hide_default'] = 0; // do not remove URL language information for default language
+			$options['force_lang'] = 0; // do not add URL language information when useless
 		}
 		$options['version'] = POLYLANG_VERSION;
 		update_option('polylang', $options);
@@ -239,6 +245,9 @@ class Polylang extends Polylang_Base {
 				}
 			}
 
+			if (version_compare($options['version'], '0.7dev12', '<'))
+				$options['force_lang'] = 0; // option introduced in 0.7
+
 			$options['version'] = POLYLANG_VERSION;
 			update_option('polylang', $options);
 		}
@@ -314,7 +323,7 @@ class Polylang extends Polylang_Base {
 
 		// rewrite rules for archives filtered by language
 		foreach ($rules as $key => $rule) {
-			$is_archive = strpos($rule, 'author_name=') || strpos($rule, 'year=') && !(
+			$is_archive = strpos($rule, 'post_format=') || strpos($rule, 'author_name=') || strpos($rule, 'year=') && !(
 				strpos($rule, 'p=') ||
 				strpos($rule, 'name=') ||
 				strpos($rule, 'page=') ||
@@ -328,6 +337,18 @@ class Polylang extends Polylang_Base {
 				unset($rules[$key]); // now useless
 			}
 		}
+
+		// optionally add the language information to all urls
+		if ($options['force_lang']) {
+			foreach ($rules as $key => $rule) {
+				foreach ($listlanguages as $language) {
+					$slug = $options['default_lang'] == $language->slug && $options['hide_default'] ? '' : $base.$language->slug . '/';
+					$newrules[$slug.$key] = $rules[$key];
+				}
+				unset($rules[$key]); // now useless
+			}
+		}
+
 		return $newrules + $rules;
 	}
 

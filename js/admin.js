@@ -31,7 +31,7 @@ jQuery(document).ready(function($) {
 		jQuery.post(ajaxurl, data , function(response) {
 			var res = wpAjax.parseAjaxResponse(response, 'ajax-response');
 			$.each(res.responses, function() {
-				switch(this.what) {
+				switch (this.what) {
 					case 'translations': // translations fields
 						jQuery('#post-translations').html(this.data);
 						break;
@@ -49,6 +49,15 @@ jQuery(document).ready(function($) {
 						break;
 				}
 			});
+
+			// modifies the language in the tag cloud	
+			jQuery('.polylang-tagcloud-link').each(function() {
+				var id = $(this).attr('id');
+				pll_tagbox(id, 0); 			
+			});
+
+			// modifies the language in the tags suggestion input
+			pll_suggest();
 		});
 	});
 
@@ -56,9 +65,22 @@ jQuery(document).ready(function($) {
 	jQuery('a.tagcloud-link').addClass('polylang-tagcloud-link');
 	jQuery('a.tagcloud-link').removeClass('tagcloud-link');
 
-	// now copy paste WP code and just add the language in the $_POST variable
+	// copy paste WP code and just call our pll_tagbox instead of tagbox.get
 	jQuery('.polylang-tagcloud-link').click( function() {
 		var id = $(this).attr('id');
+		pll_tagbox(id, 1);		
+
+		$(this).unbind().click(function(){
+			$(this).siblings('.the-tagcloud').toggle();
+			return false;
+		});
+		return false;
+	});
+
+	// now copy paste WP code
+	// add the language in the $_POST variable
+	// add an if else condition to allow modifying the tags outputed when switching the language
+	function pll_tagbox(id, a) {
 		var tax = id.substr(id.indexOf('-')+1);
 
 		var data = {
@@ -77,15 +99,47 @@ jQuery(document).ready(function($) {
 				return false;
 			});
 
-			$('#'+id).after(r);
+			if (a == 1)
+				$('#'+id).after(r);
+			else {
+				v = $('.the-tagcloud').css('display');
+				$('.the-tagcloud').replaceWith(r);
+				$('.the-tagcloud').css('display', v);
+			}
 		});
+	}
 
-		$(this).unbind().click(function(){
-			$(this).siblings('.the-tagcloud').toggle();
-			return false;
+	// replace WP class by our own
+	jQuery('input.newtag').addClass('polylang-newtag');
+	jQuery('input.newtag').removeClass('newtag');
+	pll_suggest();
+
+	// now copy paste WP code
+	// add the language in the $_GET variable
+	// add the unbind function to allow calling the function when the language is modified
+	function pll_suggest() {
+		ajaxtag = $('div.ajaxtag');
+		$('input.polylang-newtag', ajaxtag).unbind().blur(function() {
+			if ( this.value == '' )
+				$(this).parent().siblings('.taghint').css('visibility', '');
+		}).focus(function(){
+			$(this).parent().siblings('.taghint').css('visibility', 'hidden');
+		}).keyup(function(e){
+			if ( 13 == e.which ) {
+				tagBox.flushTags( $(this).closest('.tagsdiv') );
+				return false;
+			}
+		}).keypress(function(e){
+			if ( 13 == e.which ) {
+				e.preventDefault();
+				return false;
+			}
+		}).each(function(){
+			var lang = jQuery('#post_lang_choice').attr('value');
+			var tax = $(this).closest('div.tagsdiv').attr('id');
+			$(this).suggest( ajaxurl + '?action=polylang-ajax-tag-search&lang=' + lang + '&tax=' + tax, { delay: 500, minchars: 2, multiple: true, multipleSep: "," } );
 		});
-		return false;
-	});
+	}
 
 	// ajax for term edit
 	jQuery('#term_lang_choice').change(function() {
@@ -97,7 +151,19 @@ jQuery(document).ready(function($) {
 		}
 
 		jQuery.post(ajaxurl, data, function(response) {
-			jQuery("#term-translations").html(response);
+			var res = wpAjax.parseAjaxResponse(response, 'ajax-response');
+			$.each(res.responses, function() {
+				switch (this.what) {
+					case 'translations': // translations fields
+						jQuery("#term-translations").html(this.data);
+						break;
+					case 'parent': // parent dropdown list for hierarchical taxonomies
+						jQuery('#parent').replaceWith(this.data);
+						break;
+					default:
+						break;
+				}
+			});
 		});
 	});
 
@@ -107,6 +173,7 @@ jQuery(document).ready(function($) {
 		value = jQuery(this).attr('value').split('-');
 		jQuery('input[name="slug"]').val(value[0]);
 		jQuery('input[name="description"]').val(value[1]);
+		jQuery('input[name="rtl"]').val([value[2]]);
 		jQuery('input[name="name"]').val($("select option:selected").text());
 	});
 

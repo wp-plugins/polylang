@@ -7,14 +7,16 @@ function pll_the_languages($args = '') {
 }
 
 // among the post and its translations, returns the id of the post which is in the language represented by $slug
-function pll_get_post($post_id, $slug) {
+function pll_get_post($post_id, $slug = '') {
 	global $polylang;
+	$slug = $slug ? $slug : reset(explode('_', get_locale()));
 	return isset($polylang) ? $polylang->get_post($post_id, $slug) : null;
 }
 
 // among the term and its translations, returns the id of the term which is in the language represented by $slug
-function pll_get_term($term_id, $slug) {
+function pll_get_term($term_id, $slug = '') {
 	global $polylang;
+	$slug = $slug ? $slug : reset(explode('_', get_locale()));
 	return isset($polylang) ? $polylang->get_term($term_id, $slug) : null;	
 }
 

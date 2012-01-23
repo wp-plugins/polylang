@@ -22,6 +22,26 @@ abstract class Polylang_Base {
 		return get_terms('language', array('hide_empty'=>$hide_empty, 'orderby'=>'term_group' ));
 	}
 
+	// retrieves the dropdown list of the languages
+	function dropdown_languages($args) {
+		$defaults = array('name' => 'lang_choice', 'class' => '', 'show_option_none' => false, 'show_option_all' => false,
+			'hide_empty' => false, 'value' => 'slug', 'selected' => '');
+		extract(wp_parse_args($args, $defaults));
+
+		$out = sprintf('<select name="%1$s" id="%1$s"%2$s>'."\n", esc_attr($name), $class ? ' class="'.esc_attr($class).'"' : '');
+		$out .= $show_option_none ? "<option value='0'></option>\n" : '';
+		$out .= $show_option_all ? "<option value='0'>".__('All languages', 'polylang')."</option>\n" : '';
+		foreach ($this->get_languages_list($hide_empty) as $language) {
+			$out .= sprintf("<option value='%s'%s>%s</option>\n",
+				esc_attr($language->$value),
+				$language->$value == $selected ? ' selected="selected"' : '',
+				esc_html($language->name)
+			);
+		}
+		$out .= "</select>\n";
+		return $out;		
+	}
+
 	// returns the language by its id or its slug
 	// Note: it seems that a numeric value is better for performance (3.2.1)
 	function get_language($value) {
@@ -130,7 +150,8 @@ abstract class Polylang_Base {
 			file_exists(PLL_LOCAL_DIR.($file = '/'.$lang->description.'.jpg')) ))
 			$url = PLL_LOCAL_URL.$file;
 
-		return isset($url) ? '<img src="'.esc_url($url).'" alt="'.esc_attr($lang->name).'" />' : '';
+		$title = apply_filters('pll_flag_title', $lang->name, $lang->slug, $lang->description);
+		return isset($url) ? '<img src="'.esc_url($url).'" title="'.esc_attr($title).'" alt="'.esc_attr($lang->name).'" />' : '';
 	}
 
 	// adds terms clauses to get_terms - used in both frontend and admin

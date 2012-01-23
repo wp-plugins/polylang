@@ -18,7 +18,7 @@ else {
 			echo '<th class="tr-edit-column">'.__('Edit', 'polylang').'</th>';?>
 	</tr></thead>
 	<tbody>
-		<?php foreach ($listlanguages as $language) {
+		<?php foreach ($this->get_languages_list() as $language) {
 			if ($language == $lang)
 				continue;
 

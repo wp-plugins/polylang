@@ -7,9 +7,11 @@
 	</tr></thead>
 
 	<tbody>
-	<?php foreach ($listlanguages as $language) {
-		if ($language != $lang) { 
-			$value = $this->get_translation('post', $post_ID, $language); 
+	<?php foreach ($this->get_languages_list() as $language) {
+		if ($language != $lang) {
+			$value = $this->get_translation('post', $post_ID, $language);
+			if (!$value || $value == $post_ID) // $value == $post_ID happens if the post has been (auto)saved before changing the language
+				$value = '';
 			if (isset($_GET['from_post']))
 				$value = $this->get_post($_GET['from_post'], $language); ?>			
 			<tr>
@@ -20,7 +22,7 @@
 				esc_attr($value)
 			);
 			if ($lang) {				
-				$link = $value ? 
+				$link = $value ?
 					sprintf(
 						'<a href="%1$s">%2$s</a>',
 						esc_url(admin_url('post.php?action=edit&post=' . $value)),
@@ -34,7 +36,7 @@
 				<td><?php echo $link ?><td><?php
 			}?>
 			</tr><?php
-		} 
+		}
 	}	?>
 	</tbody>
 </table>
