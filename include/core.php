@@ -257,7 +257,8 @@ class Polylang_Core extends Polylang_base {
 		}
 
 		// sets is_home on translated home page when it displays posts
-		if (!$this->page_on_front && $query->is_tax && count($query->query) == 1) {
+		// is_home must be true on page 2, 3... too
+		if (!$this->page_on_front && $query->is_tax && (count($query->query) == 1 || (is_paged() && count($query->query) == 2))) {
 			$query->is_home = true;
 			$query->is_tax = false;
 		}
@@ -286,10 +287,11 @@ class Polylang_Core extends Polylang_base {
 		// sets the language in case we hide the default language
 		if ($this->options['hide_default'] && !isset($qvars['lang']) && (
 			(count($query->query) == 1 && isset($qvars['paged']) && $qvars['paged']) ||
-			isset($qvars['m']) && $qvars['m'] ||
+			(isset($qvars['m']) && $qvars['m']) ||
 			(count($query->query) == 1 && isset($qvars['feed']) && $qvars['feed']) ||
-			isset($qvars['author']) && $qvars['author']))
-				$query->set('lang', $this->options['default_lang']);
+			(isset($qvars['author']) && $qvars['author']) ||
+			(isset($qvars['post_type']) && $qvars['post_type']) ))
+			$query->set('lang', $this->options['default_lang']);
 
 		// allow filtering recent posts by the current language
 		// take care not to break queries for non visible post types such as nav_menu_items, attachments...
@@ -410,8 +412,8 @@ class Polylang_Core extends Polylang_base {
 		// first test if wp_posts.ID already available in the query
 		if (strpos($clauses['join'], '.ID')) {
 			global $wpdb;
-			$clauses['join'] .= $wpdb->prepare(" INNER JOIN $wpdb->term_relationships AS tr ON tr.object_id = ID");
-			$clauses['where'] .= $wpdb->prepare(" AND tr.term_taxonomy_id = %d", $this->curlang->term_taxonomy_id);
+			$clauses['join'] .= $wpdb->prepare(" INNER JOIN $wpdb->term_relationships AS pll_tr ON pll_tr.object_id = ID");
+			$clauses['where'] .= $wpdb->prepare(" AND pll_tr.term_taxonomy_id = %d", $this->curlang->term_taxonomy_id);
 		}
 		return $clauses;
 	}
@@ -419,13 +421,13 @@ class Polylang_Core extends Polylang_base {
 	// modifies the sql request for wp_get_archives an get_adjacent_post to filter by the current language
 	function posts_join($sql) {
 		global $wpdb;
-		return $sql .  $wpdb->prepare(" INNER JOIN $wpdb->term_relationships ON object_id = ID");
+		return $sql . $wpdb->prepare(" INNER JOIN $wpdb->term_relationships AS pll_tr ON pll_tr.object_id = ID");
 	}
 
 	// modifies the sql request for wp_get_archives and get_adjacent_post to filter by the current language
 	function posts_where($sql) {
 		global $wpdb;
-		return $sql . $wpdb->prepare(" AND term_taxonomy_id = %d", $this->curlang->term_taxonomy_id);
+		return $sql . $wpdb->prepare(" AND pll_tr.term_taxonomy_id = %d", $this->curlang->term_taxonomy_id);
 	}
 
 	// adds language information to a link when using pretty permalinks
@@ -437,7 +439,7 @@ class Polylang_Core extends Polylang_base {
 			return esc_url(str_replace($this->home, $this->home.$slug, $url));
 		}
 		else
-			return esc_url(str_replace($this->home.'/?', $this->home.'/?lang='.$lang->slug.'&amp;', $link));
+			return esc_url(str_replace($this->home.'/?', $this->home.'/?lang='.$lang->slug.'&amp;', $url));
 	}
 
 	// modifies post & page links

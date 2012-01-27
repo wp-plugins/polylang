@@ -10,458 +10,462 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Poedit-Language: \n"
-"X-Poedit-Country: \n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2\n"
 "X-Poedit-Basepath: .\n"
-"X-Poedit-Bookmarks: \n"
+"X-Textdomain-Support: yes\n"
 "X-Poedit-SearchPath-0: ..\n"
-"X-Textdomain-Support: yes"
 
-#: polylang.php:185
 #@ polylang
+#: polylang.php:185
 msgid "Error: Restore of local flags failed!"
 msgstr "Fout: Herstel van lokale vlaggen mislukt!"
 
+#@ polylang
 #: polylang.php:186
 #, php-format
-#@ polylang
 msgid "Please move your local flags from %s to %s"
 msgstr "Verplaats je lokale vlaggen van %s naar %s"
 
+#@ polylang
+#: include/add-term-form.php:5
 #: include/admin-filters.php:512
 #: include/admin-filters.php:529
+#: include/edit-term-form.php:6
 #: include/list-table.php:12
 #: include/post-translations.php:4
 #: include/term-translations.php:15
-#@ polylang
 msgid "Language"
 msgstr "Taal"
 
+#@ polylang
+#: include/add-term-form.php:17
 #: include/admin-filters.php:514
 #: include/admin-filters.php:532
-#@ polylang
+#: include/edit-term-form.php:19
 msgid "Sets the language"
 msgstr "Stelt de taal in"
 
-#: include/widget.php:6
 #@ polylang
+#: include/widget.php:6
 msgid "Language Switcher"
 msgstr "Taalschakelaar"
 
-#: include/widget.php:6
 #@ polylang
+#: include/widget.php:6
 msgid "Displays a language switcher"
 msgstr "Toon een taalschakelaar"
 
-#: include/widget.php:71
 #@ polylang
+#: include/widget.php:71
 msgid "Title:"
 msgstr "Titel:"
 
-#: include/admin.php:482
 #@ polylang
+#: include/admin.php:483
 msgid "Displays language names"
 msgstr "Toon namen van talen"
 
-#: include/admin.php:483
 #@ polylang
+#: include/admin.php:484
 msgid "Displays flags"
 msgstr "Toon vlaggen"
 
-#: include/admin.php:488
 #@ polylang
+#: include/admin.php:489
 msgid "Displays as dropdown"
 msgstr "Toon als dropdown"
 
-#: include/admin.php:484
 #@ polylang
+#: include/admin.php:485
 msgid "Forces link to front page"
 msgstr "Forceer link naar startpagina"
 
-#: include/admin.php:25
-#: include/admin.php:298
 #@ default
 #@ polylang
+#: include/admin.php:25
+#: include/admin.php:298
 msgid "Settings"
 msgstr "Instellingen"
 
+#@ polylang
 #: include/admin-filters.php:185
 #: include/admin.php:32
 #: include/admin.php:291
 #: include/list-table.php:13
-#@ polylang
 msgid "Languages"
 msgstr "Talen"
 
-#: include/admin.php:296
 #@ polylang
+#: include/admin.php:296
 msgid "Menus"
 msgstr "Menu's"
 
+#@ polylang
 #: include/admin.php:298
 #: include/list-table.php:104
-#@ polylang
 msgid "Strings translation"
 msgstr "Tekstvertaling"
 
-#: include/admin.php:316
 #@ polylang
+#: include/admin.php:316
 msgid "Enter a valid WorPress locale"
 msgstr "Voer een geldige Wordpress lokaal in"
 
-#: include/admin.php:317
 #@ polylang
+#: include/admin.php:317
 msgid "The language code must be 2 characters long"
 msgstr "De taalcode moet uit 2 karakters bestaan"
 
-#: include/admin.php:318
 #@ polylang
+#: include/admin.php:318
 msgid "The language code must be unique"
 msgstr "De taalcode moet uniek zijn"
 
-#: include/admin.php:319
 #@ polylang
+#: include/admin.php:319
 msgid "The language must have a name"
 msgstr "De taal moet een naam hebben"
 
-#: include/admin.php:320
 #@ polylang
+#: include/admin.php:320
 msgid "The language was created, but the WordPress language file was not downloaded. Please install it manually."
 msgstr "De taal was gecreëerd, maar het Wordpress taalbestand was niet gedownload. Handmatige installatie is noodzakelijk."
 
-#: include/admin.php:487
 #@ polylang
+#: include/admin.php:488
 msgid "Displays a language switcher at the end of the menu"
 msgstr "Toon een taalschakelaar aan het einde van het menu"
 
-#: include/admin.php:497
 #@ default
+#: include/admin.php:498
 msgid "Site Title"
 msgstr ""
 
-#: include/admin.php:498
 #@ default
+#: include/admin.php:499
 msgid "Tagline"
 msgstr ""
 
-#: include/admin.php:517
 #@ polylang
+#: include/admin.php:518
 msgid "Widget title"
-msgstr ""
+msgstr "Widget titel"
 
-#: include/admin-filters.php:202
 #@ polylang
+#: include/admin-filters.php:202
+#: include/post-metabox.php:5
 msgid "Page's language:"
 msgstr "Taal van de pagina:"
 
-#: include/admin-filters.php:202
 #@ polylang
+#: include/admin-filters.php:202
+#: include/post-metabox.php:5
 msgid "Post's language:"
 msgstr "Taal van de post:"
 
+#@ polylang
 #: include/list-table.php:127
 #: include/term-translations.php:6
 #: include/term-translations.php:11
-#@ polylang
 msgid "Translations"
 msgstr "Vertalingen"
 
-#: include/term-translations.php:16
 #@ polylang
+#: include/term-translations.php:16
 msgid "Translation"
 msgstr "Vertaling"
 
+#@ polylang
 #: include/list-table.php:26
 #: include/post-translations.php:6
 #: include/post-translations.php:29
 #: include/term-translations.php:18
 #: include/term-translations.php:65
-#@ polylang
 msgid "Edit"
 msgstr "Wijzig"
 
-#: include/term-translations.php:48
 #@ polylang
+#: include/term-translations.php:48
 msgid "No untranslated term"
 msgstr "Geen onvertaalde term"
 
+#@ polylang
 #: include/post-translations.php:34
 #: include/term-translations.php:54
-#@ polylang
 msgid "Add new"
 msgstr "Voeg nieuwe toe"
 
+#@ polylang
 #: include/admin-filters.php:148
 #: include/admin-filters.php:575
-#@ polylang
 msgid "Add new translation"
 msgstr "Voeg nieuwe vertaling toe"
 
-#: include/admin-filters.php:172
 #@ polylang
+#: include/admin-filters.php:172
 msgid "Show all languages"
 msgstr "Toon alle talen"
 
-#: include/admin-filters.php:262
 #@ default
+#: include/admin-filters.php:262
 msgid "(no parent)"
 msgstr ""
 
-#: include/admin-filters.php:714
 #@ polylang
+#: include/admin-filters.php:714
 msgid "Theme locations and languages"
 msgstr "Lokaties en talen van het thema"
 
+#@ polylang
 #: include/admin-filters.php:719
 #, php-format
-#@ polylang
 msgid "Please go to the %slanguages page%s to set theme locations and languages"
 msgstr "Ga naar de %stalen pagina%s om lokaties en talen van het thema in te stellen"
 
-#: include/admin-filters.php:730
 #@ polylang
+#: include/admin-filters.php:730
 msgid "The widget is displayed for:"
 msgstr "Het widget wordt getoond voor:"
 
-#: include/base.php:33
 #@ polylang
+#: include/base.php:33
 msgid "All languages"
 msgstr "Alle talen"
 
-#: include/list-table.php:27
 #@ polylang
+#: include/list-table.php:27
 msgid "Delete"
 msgstr "Verwijder"
 
+#@ polylang
 #: include/languages-form.php:67
 #: include/list-table.php:45
-#@ polylang
 msgid "Full name"
 msgstr "Volledige naam"
 
+#@ polylang
 #: include/languages-form.php:73
 #: include/list-table.php:46
-#@ polylang
 msgid "Locale"
 msgstr "Locale"
 
-#: include/list-table.php:47
 #@ polylang
+#: include/list-table.php:47
 msgid "Code"
 msgstr "Taalcode"
 
+#@ polylang
 #: include/languages-form.php:93
 #: include/list-table.php:48
-#@ polylang
 msgid "Order"
 msgstr "Volgorde"
 
-#: include/list-table.php:49
 #@ polylang
+#: include/list-table.php:49
 msgid "Flag"
 msgstr "Vlag"
 
-#: include/list-table.php:50
 #@ polylang
+#: include/list-table.php:50
 msgid "Posts"
 msgstr "Berichten"
 
-#: include/list-table.php:105
 #@ polylang
+#: include/list-table.php:105
 msgid "Strings translations"
 msgstr "Tekstvertalingen"
 
-#: include/list-table.php:125
 #@ polylang
+#: include/list-table.php:125
 msgid "Name"
 msgstr "Naam"
 
-#: include/list-table.php:126
 #@ polylang
+#: include/list-table.php:126
 msgid "String"
 msgstr "Tekst"
 
+#@ default
 #: include/calendar.php:132
 #: include/calendar.php:140
 #, php-format
-#@ default
 msgid "View posts for %1$s %2$s"
 msgstr ""
 
-#: include/languages-form.php:33
 #@ polylang
+#: include/languages-form.php:33
 msgid "Edit language"
 msgstr "Wijzig taal"
 
+#@ polylang
 #: include/languages-form.php:33
 #: include/languages-form.php:98
-#@ polylang
 msgid "Add new language"
 msgstr "Voeg nieuwe taal toe"
 
-#: include/languages-form.php:55
 #@ polylang
+#: include/languages-form.php:55
 msgid "Choose a language"
 msgstr "Kies een taal"
 
-#: include/languages-form.php:63
 #@ polylang
+#: include/languages-form.php:63
 msgid "You can choose a language in the list or directly edit it below."
 msgstr "Kies een taal uit de lijst of vul deze direct hieronder in."
 
-#: include/languages-form.php:69
 #@ polylang
+#: include/languages-form.php:69
 msgid "The name is how it is displayed on your site (for example: English)."
 msgstr "De naam geeft aan hoe het op je site getoond wordt (b.v.: Nederlands)."
 
-#: include/languages-form.php:76
 #@ polylang
+#: include/languages-form.php:76
 msgid "Wordpress Locale for the language (for example: en_US). You will need to install the .mo file for this language."
 msgstr "Wordpress Locale voor de taal (bv.: nl_NL). Installeer het .mo bestand voor deze taal."
 
-#: include/languages-form.php:80
 #@ polylang
+#: include/languages-form.php:80
 msgid "Language code"
 msgstr "Taalcode"
 
-#: include/languages-form.php:82
 #@ polylang
+#: include/languages-form.php:82
 msgid "2-letters ISO 639-1 language code (for example: en)"
 msgstr "2-karakter ISO 639-1 taalcode (bv.: nl)"
 
-#: include/languages-form.php:95
 #@ polylang
+#: include/languages-form.php:95
 msgid "Position of the language in the language switcher"
 msgstr "Positionering van de taal in de taalschakelaar"
 
-#: include/languages-form.php:98
 #@ default
+#: include/languages-form.php:98
 msgid "Update"
 msgstr ""
 
-#: include/languages-form.php:134
 #@ polylang
+#: include/languages-form.php:134
 msgid "Language switcher"
 msgstr "Taalschakelaar"
 
-#: include/languages-form.php:173
 #@ polylang
+#: include/languages-form.php:173
 msgid "Default language"
 msgstr "Standaardtaal"
 
-#: include/languages-form.php:191
 #@ polylang
+#: include/languages-form.php:191
 msgid "There are posts, pages, categories or tags without language set. Do you want to set them all to default language ?"
 msgstr "Er zijn berichten, pagina's, categorieën of tags zonder taalinstelling. Deze allemaal instellen op de standaardtaal?"
 
-#: include/languages-form.php:199
 #@ polylang
+#: include/languages-form.php:199
 msgid "Detect browser language"
 msgstr "Bepaal de taal van de browser"
 
-#: include/languages-form.php:205
 #@ polylang
+#: include/languages-form.php:205
 msgid "When the front page is visited, set the language according to the browser preference"
 msgstr "Wanneer de startpagina bezocht is, stel dan de taal in op basis van de voorkeur van de browser"
 
-#: include/languages-form.php:212
 #@ polylang
+#: include/languages-form.php:212
 msgid "URL modifications"
 msgstr "URL aanpassingen"
 
-#: include/languages-form.php:218
 #@ polylang
+#: include/languages-form.php:218
 msgid "Keep /language/ in pretty permalinks. Example:"
 msgstr "Behoud /taal/ in pretty permalinks. Voorbeeld:"
 
-#: include/languages-form.php:226
 #@ polylang
+#: include/languages-form.php:226
 msgid "Remove /language/ in pretty permalinks. Example:"
 msgstr "Verwijder /taal/ in pretty permalinks. Voorbeeld:"
 
-#: include/languages-form.php:234
 #@ polylang
+#: include/languages-form.php:234
 msgid "Hide URL language information for default language"
 msgstr "Verberg URL taalinformatie voor de standaardtaal"
 
-#: include/post-translations.php:1
 #@ polylang
+#: include/post-translations.php:1
 msgid "ID of pages in other languages:"
 msgstr "ID's van pagina's in andere talen:"
 
-#: include/post-translations.php:1
 #@ polylang
+#: include/post-translations.php:1
 msgid "ID of posts in other languages:"
 msgstr "ID's van berichten in andere talen:"
 
-#: include/post-translations.php:5
 #@ polylang
+#: include/post-translations.php:5
 msgid "Page ID"
 msgstr "Pagina ID"
 
-#: include/post-translations.php:5
 #@ polylang
+#: include/post-translations.php:5
 msgid "Post ID"
 msgstr "Bericht ID"
 
-#: include/admin-filters.php:761
 #@ polylang
+#: include/admin-filters.php:761
+#: include/personal-options.php:5
 msgid "Admin language"
 msgstr "Admin taal"
 
-#: include/admin.php:473
 #@ polylang
+#: include/admin.php:474
 msgid "Upgrading language files&#8230;"
 msgstr "Aanpassen taalbestanden&#8230;"
 
-#. translators: Calendar caption: 1: month name, 2: 4-digit year 
+#@ default
+#. translators: Calendar caption: 1: month name, 2: 4-digit year
 #: include/calendar.php:106
 #, php-format
-#@ default
 msgctxt "calendar caption"
 msgid "%1$s %2$s"
 msgstr ""
 
-#: include/admin-filters.php:697
 #@ default
+#: include/admin-filters.php:697
 msgid "None"
 msgstr ""
 
-#: include/admin.php:485
 #@ polylang
+#: include/admin.php:486
 msgid "Hides the current language"
-msgstr ""
+msgstr "Verberg huidige taal"
 
+#@ polylang
 #: include/languages-form.php:86
-#@ polylang
 msgid "Text direction"
-msgstr ""
+msgstr "Tekstrichting"
 
+#@ polylang
 #: include/languages-form.php:87
-#@ polylang
 msgid "left to right"
-msgstr ""
+msgstr "van links naar rechts"
 
+#@ polylang
 #: include/languages-form.php:88
-#@ polylang
 msgid "right to left"
-msgstr ""
+msgstr "van rechts naar links"
 
+#@ polylang
 #: include/languages-form.php:89
-#@ polylang
 msgid "Choose the text direction for the language"
-msgstr ""
+msgstr "Kies de tekstrichting voor de taal"
 
-#: include/languages-form.php:241
 #@ polylang
+#: include/languages-form.php:241
 msgid "Add language information to all URL including posts, pages, categories and post tags (not recommended)"
-msgstr ""
+msgstr "Voeg taalinformatie toe aan alle URL's, inclusief berichten, pagina's, categorieën en berichten tages (niet aanbevolen)"
 
+#@ default
 #: polylang.php:88
 #, php-format
-#@ default
 msgid "You are using WordPress %s. Polylang requires at least WordPress %s."
 msgstr ""
 
