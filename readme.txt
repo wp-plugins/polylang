@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: bilingual, language, i18n, international, l10n, localization, multilanguage, multilingual, multisite, translate, translation
 Requires at least: 3.1
 Tested up to: 3.3.1
-Stable tag: 0.6.1
+Stable tag: 0.7
 
 Polylang adds multilingual content management support to WordPress.
 
