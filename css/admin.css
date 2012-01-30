@@ -32,6 +32,11 @@
 	font-size: 11px;
 }
 
+.form-field input.tog {
+	width: auto;
+	margin-right: 2px;
+}
+
 .stringstranslations .column-name {
 	width: 10%;
 }
@@ -51,4 +56,17 @@
 
 .column-term_group, .column-flag, .column-count {
 	width : 10%;
-} 
+}
+
+.pll_icon_add, .pll_icon_edit {
+	display: block;
+	width: 16px;
+	height: 16px;
+	background-image: url("icons.png");
+}
+
+.pll_icon_edit {background-position: 0px -24px;}
+.pll_icon_add {background-position: 16px -24px;}
+
+.pll_icon_edit:hover {background-position: 0px -40px;}
+.pll_icon_add:hover {background-position: 16px -40px;}

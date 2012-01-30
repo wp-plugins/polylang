@@ -136,18 +136,13 @@ class Polylang_Admin_Filters extends Polylang_Base {
 
 		// link to edit post (or a translation)
 		if ($id = $this->get_post($post_id, $language))
-			printf('<a title="%1$s" href="%2$s"><img src="%3$s"></a>',
-				esc_attr(get_post($id)->post_title),
-				esc_url(get_edit_post_link($id, true )),
-				esc_url(POLYLANG_URL.'/img/edit.png')
-			);
+			printf('<a class="pll_icon_edit" title="%1$s" href="%2$s"></a>', esc_attr(get_post($id)->post_title), esc_url(get_edit_post_link($id, true )));
 
 		// link to add a new translation
 		else
-			printf('<a title="%1$s" href="%2$s"><img src="%3$s"></a>',
+			printf('<a class="pll_icon_add" title="%1$s" href="%2$s"></a>',
 				__('Add new translation', 'polylang'),
- 				esc_url(admin_url('post-new.php?post_type=' . $post_type . '&from_post=' . $post_id . '&new_lang=' . $language->slug)),
- 				esc_url(POLYLANG_URL.'/img/add.png')
+ 				esc_url(admin_url('post-new.php?post_type=' . $post_type . '&from_post=' . $post_id . '&new_lang=' . $language->slug))
 			);
 	}
 
@@ -470,6 +465,10 @@ class Polylang_Admin_Filters extends Polylang_Base {
 		if (isset($_POST['action']) && $_POST['action'] != 'post_lang_choice' && $_POST['action'] != 'term_lang_choice' && $_POST['action'] != 'get-tagcloud')
 			return $clauses;
 
+		// I only want to filter the parent dropdown list when editing a term in a hierarchical taxonomy
+		if (isset($_POST['action']) && $_POST['action'] == 'term_lang_choice' && !isset($args['class']))
+			return $clauses;
+		
 		global $post_ID;
 
 		// ajax response for changing the language in the post metabox (or in the edit-tags panels)
@@ -563,18 +562,16 @@ class Polylang_Admin_Filters extends Polylang_Base {
 
 		// link to edit term (or a translation)
 		if ($id = $this->get_term($term_id, $language))
-			printf('<a title="%1$s" href="%2$s"><img src="%3$s"></a>',
+			printf('<a class="pll_icon_edit" title="%1$s" href="%2$s"></a>',
 				esc_attr(get_term($id, $taxonomy)->name),
-				esc_url(get_edit_term_link($id, $taxonomy, $post_type)),
-				esc_url(POLYLANG_URL.'/img/edit.png')
+				esc_url(get_edit_term_link($id, $taxonomy, $post_type))
 			);
 
 		// link to add a new translation
 		else
-			printf('<a title="%1$s" href="%2$s"><img src="%3$s"></a>',
+			printf('<a class="pll_icon_add" title="%1$s" href="%2$s"></a>',
 				__('Add new translation', 'polylang'),
-				esc_url(admin_url(sprintf('edit-tags.php?taxonomy=%1$s&from_tag=%2$d&new_lang=%3$s', $taxonomy, $term_id, $language->slug))),
- 				esc_url(POLYLANG_URL.'/img/add.png')
+				esc_url(admin_url(sprintf('edit-tags.php?taxonomy=%1$s&from_tag=%2$d&new_lang=%3$s', $taxonomy, $term_id, $language->slug)))
 			);
 	}
 

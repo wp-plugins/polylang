@@ -432,7 +432,7 @@ class Polylang_Admin extends Polylang_Base {
 			if (empty($matches[1]))
 				continue;
 
-			rsort($matches[1]);
+			rsort($matches[1]); // sort from newest to oldest
 			$versions = $matches[1];
 
 			$newest = $upgrade ? $upgrade : $wp_version;
@@ -446,21 +446,22 @@ class Polylang_Admin extends Polylang_Base {
 			}
 
 			$versions = array_splice($versions, 0, 5); // reduce the number of versions to test to 5
+			$args = array('timeout' => 30, 'stream' => true);
 
 			// try to download the file
 			foreach ($versions as $version) {
-				$resp = wp_remote_get($base."$version/messages/$locale.mo", array('timeout' => 30, 'stream' => true, 'filename' => $mofile));
+				$resp = wp_remote_get($base."$version/messages/$locale.mo", $args + array('filename' => $mofile));
 				if (is_wp_error($resp) || 200 != $resp['response']['code'])
 					continue;
 
 				// try to download ms and continents-cities files if exist (will not return false if failed)
 				foreach (array("ms-$locale.mo", "continent-cities-$locale.mo") as $file)
-					wp_remote_get($base."$version/messages/$file", array('timeout' => 30, 'stream' => true, 'filename' => WP_LANG_DIR."/$file"));
+					wp_remote_get($base."$version/messages/$file", $args + array('filename' => WP_LANG_DIR."/$file"));
 
 				// try to download theme files if exist (will not return false if failed)
 				// FIXME not updated when the theme is updated outside a core update
-				foreach (array("twentyten/$locale.mo", "twentyeleven/$locale.mo") as $file)
-					wp_remote_get($base."$version/messages/$file", array('timeout' => 30, 'stream' => true, 'filename' => get_theme_root()."/$file"));
+				foreach (array("twentyten", "twentyeleven") as $theme)
+					wp_remote_get($base."$version/messages/$theme/$locale.mo", $args + array('filename' => get_theme_root()."/$theme/languages/$locale.mo"));
 
 				return true;
 			}

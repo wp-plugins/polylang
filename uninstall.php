@@ -38,6 +38,7 @@ class Polylang_Uninstall {
 		}
 		
 		foreach ($languages as $lang) {
+			delete_metadata('term', $lang->term_id, '_rtl'); // delete rtl meta
 			delete_option('polylang_mo'.$lang->term_id); // delete the string translations
 			wp_delete_term($lang->term_id, 'language'); // finally delete languages
 		}

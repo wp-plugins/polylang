@@ -64,7 +64,7 @@ class Polylang_Core extends Polylang_base {
 				add_filter($filter.$clause, array(&$this, 'posts'.$clause));
 
 		// rewrites author and date links to filter them by language
-		foreach (array('feed_link', 'author_link', 'year_link', 'month_link', 'day_link') as $filter)
+		foreach (array('feed_link', 'author_link', 'post_type_archive_link', 'year_link', 'month_link', 'day_link') as $filter)
 			add_filter($filter, array(&$this, 'archive_link'));
 
 		// optionally rewrite posts, pages links to filter them by language
@@ -290,7 +290,7 @@ class Polylang_Core extends Polylang_base {
 			(isset($qvars['m']) && $qvars['m']) ||
 			(count($query->query) == 1 && isset($qvars['feed']) && $qvars['feed']) ||
 			(isset($qvars['author']) && $qvars['author']) ||
-			(isset($qvars['post_type']) && $qvars['post_type']) ))
+			(isset($qvars['post_type']) && $qvars['post_type'] && is_archive()) ))
 			$query->set('lang', $this->options['default_lang']);
 
 		// allow filtering recent posts by the current language
@@ -439,7 +439,7 @@ class Polylang_Core extends Polylang_base {
 			return esc_url(str_replace($this->home, $this->home.$slug, $url));
 		}
 		else
-			return esc_url(str_replace($this->home.'/?', $this->home.'/?lang='.$lang->slug.'&amp;', $url));
+			return add_query_arg( 'lang', $lang->slug, $url );
 	}
 
 	// modifies post & page links

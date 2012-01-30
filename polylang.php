@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.7dev14
+Version: 0.7
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 */
@@ -23,7 +23,7 @@ Description: Adds multilingual capability to Wordpress
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('POLYLANG_VERSION', '0.7dev14');
+define('POLYLANG_VERSION', '0.7');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
@@ -116,17 +116,15 @@ class Polylang extends Polylang_Base {
 
 		$table = $wpdb->prefix . 'termmeta';
 		
-		$tables = $wpdb->get_results("show tables like '$table'");
-		if (!count($tables))
-		  $wpdb->query("CREATE TABLE $table (
-		    meta_id bigint(20) unsigned NOT NULL auto_increment,
-		    term_id bigint(20) unsigned NOT NULL default '0',
-		    meta_key varchar(255) default NULL,
-		    meta_value longtext,
-		    PRIMARY KEY  (meta_id),
-		    KEY term_id (term_id),
-		    KEY meta_key (meta_key)
-		  ) $charset_collate;");
+		$wpdb->query("CREATE TABLE IF NOT EXISTS $table (
+			meta_id bigint(20) unsigned NOT NULL auto_increment,
+			term_id bigint(20) unsigned NOT NULL default '0',
+			meta_key varchar(255) default NULL,
+			meta_value longtext,
+			PRIMARY KEY  (meta_id),
+			KEY term_id (term_id),
+			KEY meta_key (meta_key)
+			) $charset_collate;");
 
 		// codex tells to use the init action to call register_taxonomy but I need it now for my rewrite rules
 		register_taxonomy('language', get_post_types(array('show_ui' => true)), array('label' => false, 'query_var'=>'lang')); 
@@ -246,7 +244,7 @@ class Polylang extends Polylang_Base {
 				}
 			}
 
-			if (version_compare($options['version'], '0.7dev14', '<'))
+			if (version_compare($options['version'], '0.7', '<'))
 				$options['force_lang'] = 0; // option introduced in 0.7
 
 			$options['version'] = POLYLANG_VERSION;

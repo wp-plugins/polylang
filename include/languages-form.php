@@ -84,8 +84,10 @@ if (isset($_GET['error'])) {?>
 
 				<div class="form-field">
 					<legend><?php _e('Text direction', 'polylang');?></legend><?php
-					printf('<label> <input name="rtl" type="radio" value="0" %s /> %s</label>', $rtl ? '' : 'checked="checked"', __('left to right', 'polylang'));
-					printf('<label> <input name="rtl" type="radio" value="1" %s /> %s</label>', $rtl ? 'checked="checked"' : '', __('right to left', 'polylang'));?>
+					printf('<label><input name="rtl" type="radio" class="tog" value="0" %s /> %s</label>',
+						$rtl ? '' : 'checked="checked"', __('left to right', 'polylang'));
+					printf('<label><input name="rtl" type="radio" class="tog" value="1" %s /> %s</label>',
+						$rtl ? 'checked="checked"' : '', __('right to left', 'polylang'));?>
 					<p><?php _e('Choose the text direction for the language', 'polylang');?></p>
 				</div>
 

@@ -1,7 +1,7 @@
 === Polylang ===
 Contributors: Chouby
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CCWWYUUQV8F4E
-Tags: bilingual, language, i18n, international, l10n, localization, multilingual, multisite, translate, translation, widget
+Tags: bilingual, language, i18n, international, l10n, localization, multilanguage, multilingual, multisite, translate, translation
 Requires at least: 3.1
 Tested up to: 3.3.1
 Stable tag: 0.6.1
@@ -12,26 +12,21 @@ Polylang adds multilingual content management support to WordPress.
 
 = Upgrade Notice =
 
-When upgrading from 0.5.1 or older, your custom flags in 'wp-content/plugins/polylang/local_flags' directory should move to 'wp-content/polylang'. People using the function 'pll_the_language' should be aware that it does not display the 'ul' tag anymore. I wrote about the reasons for these changes in the [forum](http://wordpress.org/support/topic/development-of-polylang-version-06). 
+When upgrading from 0.5.1 or older, your custom flags in 'wp-content/plugins/polylang/local_flags' directory should move to 'wp-content/polylang'. People using the function 'pll_the_language' should be aware that it does not display the 'ul' tag anymore. I wrote about the reasons for these changes in the [forum](http://wordpress.org/support/topic/development-of-polylang-version-06).
 
 = Features  =
 
 You write posts, pages and create categories and post tags as usual, and then define the language for each of them. The translation is optional. The plugin does not integrate automatic or professional translation.
 
-* You can create as many languages as you want
-* WordPress languages files are automatically downloaded and updated (new in 0.6)
-* You can translate posts, pages, categories, post tags, menus
-* RSS feed available for each language
+* You can have as many languages as you want. RTL languages are now supported. WordPress languages files are automatically downloaded and updated.
+* You can translate posts, pages, categories, post tags, menus, widgets... Custom post types, custom taxonomies and post formats, RSS feeds and all default WordPress widgets are supported.
+* Categories, post tags as well as some other metas are automatically copied when adding a new post or page translation
 * Support for Search form (see the FAQ in the documentation)
-* Support for pretty permalinks
-* Support for static page (in the right language) used as front page
-* All WordPress default widgets (archives, categories, pages, recent comments, recent posts, tag cloud and calendar) are automatically in the right language
-* Language switcher provided as a widget or in the nav menu
-* All widgets can be displayed or not, depending on the language (new in 0.3)
-* Each user can set the WordPress admin language in its profile (new in 0.4)
-* Support for custom post types and custom taxonomies (new in 0.4)
-* Support for multisite (new in 0.5)
-* Categories, post tags as well as some other metas are automatically copied when adding a new post or page translation (new in 0.6)
+* Support for multisite, pretty permalinks and static page used as front page
+* A language switcher is provided as a widget or in the nav menu
+* As a bonus, each user can set the WordPress admin language in its profile
+
+Unlike some other similar plugins, if you deactivate Polylang, your blog will go on working as smoothly as possible. All your posts, pages, category and post tags would be accessible - without language filter of course - provided that you do not check the option: "Add language information to all URL including posts, pages, categories and post tags".
 
 The plugin admin interface is currently available in:
 
@@ -41,16 +36,9 @@ The plugin admin interface is currently available in:
 * Russian contributed by [yoyurec](http://yoyurec.in.ua)
 * Greek contributed by [theodotos](http://www.ubuntucy.org)
 * Dutch contributed by [AlbertGn](http://wordpress.org/support/profile/albertgn)
+* Hebrew contributed by [ArielK](http://www.arielk.net)
 
 Other translators are welcome !
-
-= Notes =
-
-* The tests have been made with WordPress 3.3.1.
-* User strings (site title, widget titles) translation is active in WP 3.3 and newer only.
-* Your server must run PHP5
-* You must deactivate other multilingual plugins before activating Polylang, otherwise, you may get unexpected results !
-* Unlike some other plugins, if you deactivate Polylang, your blog will go on working as smoothly as possible. All your posts, pages, category and post tags would be accessible (without language filter of course...).
 
 = Feedback or ideas =
 
@@ -62,34 +50,27 @@ When upgrading from 0.5.1 or older, your custom flags in 'wp-content/plugins/pol
 
 == Installation ==
 
+1. Make sure you are using WordPress 3.1 or later and that your server is running PHP5 (if you are using WordPress 3.2 or newer, it does !)
+1. If you tried other multilingual plugins, deactivate them before activating Polylang, otherwise, you may get unexpected results !
 1. Download the plugin
 1. Extract all the files.
 1. Upload everything (keeping the directory structure) to the `/wp-content/plugins/` directory.
 1. Activate the plugin through the 'Plugins' menu in WordPress.
-1. Add the 'language switcher' Widget to let your visitors switch the language.
 1. Go to the languages settings page and create the languages you need
-1. Take care that your theme must come with the corresponding .mo files. If your theme is not internationalized yet, please refer to the [codex](http://codex.wordpress.org/I18n_for_WordPress_Developers#I18n_for_theme_and_plugin_developers) or ask the theme author to internationalize it.
+1. Add the 'language switcher' Widget to let your visitors switch the language.
+1. Take care that your theme must come with the corresponding .mo files (Polylang downloads them for Twenty Ten and Twenty Eleven). If your theme is not internationalized yet, please refer to the [codex](http://codex.wordpress.org/I18n_for_WordPress_Developers#I18n_for_theme_and_plugin_developers) or ask the theme author to internationalize it.
 
 == Frequently Asked Questions ==
 
-= Why using Polylang and not other well established equivalent plugins ? =
-
-WPML: I tested only the last non-commercial version (2.0.4.1) with WP 3.0.5. The plugin looks quite complete. It's however very heavy (almost 30000 lines of code !). The fact that it has turned commercial is probably adapted to companies or very active bloggers but not well adapted to small blogs.
-
-Xili language: I tested the version 2.2.0. It looks too complex. For example you need to install 3 different plugins to manage post tags translation. If managing post translations is quite easy (and inspired Polylang...), the way to manage categories and post tags translations is not enough user friendly in my opinion. As WPML it's very heavy (about 12000 lines of code).
-
-qtranslate: I tested the version 2.5.23. As claimed by its author, it's probably the best existing plugin... when using it. However, you must know that it is very difficult to come back to a clean site if you deactivate it (as, for example, one post in the database contains all translations). Moreover, it modifies urls so again, if you deactivate it, all links to your internal urls would be broken (not good for SEO).
-
-In comparison to these plugins, Polylang tries to keep things simple and light, and does not mess your blog if you deactivate it. But it is still very young so be indulgent ;-)
-
 = Where to find help ? =
 
-* Read the [documentation](http://plugins.svn.wordpress.org/polylang/trunk/doc/documentation-en.pdf) supplied whith the plugin (in the doc directory) and search the [support forum](http://wordpress.org/tags/polylang?forum_id=10) first. I know that searching in the WordPress forum is not very convenient, but please give it a try. You can use generic search engines such as Google too as the WordPress forum SEO is very good. You will most probably find your answer here.
+* Read the [documentation](http://plugins.svn.wordpress.org/polylang/trunk/doc/documentation-en.pdf) supplied whith the plugin (in the doc directory). It includes guidelines to start working with Polylang, a much bigger FAQ than here and the API documentation for programmers.
+* Search the [support forum](http://wordpress.org/tags/polylang?forum_id=10). I know that searching in the WordPress forum is not very convenient, but please give it a try. You can use generic search engines such as Google too as the WordPress forum SEO is very good. You will most probably find your answer here.
 * If you still have a problem, open a new thread in the [support forum](http://wordpress.org/tags/polylang?forum_id=10).
 
 = Is Polylang compatible with multisite ? =
 
-Yes. Since v0.5
+Yes. Since v0.5. You can either activate it at network level or at site level.
 
 = Can I use my own flags for the language switcher ? =
 
@@ -100,6 +81,30 @@ Yes. You have to use PNG or JPG files and name them with the WordPress locale co
 1. The Polylang languages admin panel (v0.5) in WordPress 3.3
 
 == Changelog ==
+
+= 0.7 (2012-01-30) =
+
+* Add Hebrew translation contributed by [ArielK](http://www.arielk.net)
+* Add support for RTL languages for both frontend and admin
+* Twenty Ten and Twenty Eleven languages files are now automatically downloaded when creating a new langage
+* Improve filtering tags by language in the edit post panel
+* Category parent dropdown list is now filtered by language
+* Category parents are now synchronized between translations
+* Add the possibility to have the language information in all URL
+* Add support for post formats
+* Add option allowing not to show the current language in the language switcher (for both menu and widget)
+* Add a title attribute (and the possibility to personalize it with a filter) to flags
+* pll_get_post and pll_get_term second parameter is now optional and defaults to current language
+* Add pll_the_language_link filter allowing to filter translation links outputed by the language switcher
+* The option PLL_DISPLAY_ALL is no longer supported
+* Bug correction: Autosave reset to default language
+* Bug correction: blog info not translated in feeds
+* Bug correction: post comments feed always in default language
+* Bug correction: undefined index notice when setting up a custom menu widget
+* Bug correction: rewrite rules are not correctly reset when deactivating the plugin
+* Bug correction: is_home not correctly set on pages 2, 3...
+* Bug correction: avoid naming conflicts (in sql queries) with other themes / plugins
+* Bug correction: bad language detection and url rewriting of custom post types archives
 
 = 0.6.1 (2012-01-12) =
 
