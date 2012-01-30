@@ -78,7 +78,7 @@ Yes. You have to use PNG or JPG files and name them with the WordPress locale co
 
 == Screenshots ==
 
-1. The Polylang languages admin panel (v0.5) in WordPress 3.3
+1. The Polylang languages admin panel in WordPress 3.3.1
 
 == Changelog ==
 
