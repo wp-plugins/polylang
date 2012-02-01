@@ -12,7 +12,7 @@ Polylang adds multilingual content management support to WordPress.
 
 = Upgrade Notice =
 
-When upgrading from 0.5.1 or older, your custom flags in 'wp-content/plugins/polylang/local_flags' directory should move to 'wp-content/polylang'. People using the function 'pll_the_language' should be aware that it does not display the 'ul' tag anymore. I wrote about the reasons for these changes in the [forum](http://wordpress.org/support/topic/development-of-polylang-version-06).
+When upgrading from 0.5.1 or older, your custom flags in 'wp-content/plugins/polylang/local_flags' directory should move to 'wp-content/polylang'. People using the function 'pll_the_language' should be aware that it does not display the 'ul' tag anymore. I wrote about the reasons for these changes in the [forum](http://wordpress.org/support/topic/development-of-polylang-version-06). When upgrading from 0.6.1 or older, people using RTL languages must edit these languages and set the text direction to RTL in order for Polylang to work properly (the RTL property of the language is not set automatically when upgrading).
 
 = Features  =
 
@@ -46,7 +46,7 @@ Don't hesitate to [give your feedback](http://wordpress.org/tags/polylang?forum_
 
 == Upgrade Notice ==
 
-When upgrading from 0.5.1 or older, your custom flags in 'wp-content/plugins/polylang/local_flags' directory should move to 'wp-content/polylang'. People using the function 'pll_the_language' should be aware that it does not display the ul tag anymore.
+When upgrading from 0.5.1 or older, your custom flags in 'wp-content/plugins/polylang/local_flags' directory should move to 'wp-content/polylang'. People using the function 'pll_the_language' should be aware that it does not display the ul tag anymore. When upgrading from 0.6.1 or older, people using RTL languages must edit these languages and set the text direction to RTL in order for Polylang to work properly (the RTL property of the language is not set automatically when upgrading).
 
 == Installation ==
 
