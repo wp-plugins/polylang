@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.7.0.3
+Version: 0.7.0.4
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 */
@@ -23,7 +23,7 @@ Description: Adds multilingual capability to Wordpress
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('POLYLANG_VERSION', '0.7.0.3');
+define('POLYLANG_VERSION', '0.7.0.4');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
@@ -293,10 +293,18 @@ class Polylang extends Polylang_Base {
 		$newrules = array();
 
 		// don't modify the rules if there is no languages created
-		// sort in reverse order in case the language information is hidden for default language
-		// thanks to brbrbr http://wordpress.org/support/topic/plugin-polylang-rewrite-rules-not-correct
-		if (!($listlanguages = $this->get_languages_list(array('order' => 'DESC'))))
+		if (!($listlanguages = $this->get_languages_list()))
 			return $rules;
+
+		// put the default language at the end in case the language information is hidden for default language
+		// thanks to brbrbr http://wordpress.org/support/topic/plugin-polylang-rewrite-rules-not-correct
+		foreach ($listlanguages as $key => $language) {
+			if ($options['default_lang'] == $language->slug) {
+				unset ($listlanguages[$key]);
+				break;
+			}
+		}
+		$listlanguages[] = $language;
 
 		// modifies the rules created by WordPress when '/language/' is removed in permalinks
 		if ($options['rewrite']) {					
