@@ -132,7 +132,7 @@ class Polylang_Core extends Polylang_base {
 			}
 
 			// looks through sorted list and use first one that matches our language list
-			$listlanguages = $this->get_languages_list(array('hide_empty' => true)); // hides languages with no post
+			$listlanguages = $this->get_languages_list(true); // hides languages with no post
 			foreach ($accept_langs as $accept_lang => $val) {
 				foreach ($listlanguages as $language) {
 					if (strpos($accept_lang, $language->slug) === 0 && !isset($pref_lang)) {
@@ -249,7 +249,7 @@ class Polylang_Core extends Polylang_base {
 				if ($this->page_on_front && $link_id = $this->get_post($this->page_on_front, $this->curlang))
 					$url = _get_page_link($link_id);
 				else
-					$url = home_url('?lang='.$this->curlang->slug);
+					$url = $this->add_language_to_link(home_url(), $this->curlang);
 
 				wp_redirect($url);
 				exit;
@@ -677,7 +677,7 @@ class Polylang_Core extends Polylang_base {
 		else {
 			$output = '';
 
-			foreach ($this->get_languages_list(array('hide_empty' => $hide_if_empty)) as $language) {
+			foreach ($this->get_languages_list($hide_if_empty) as $language) {
 				// hide current language
 				if ($this->curlang->term_id == $language->term_id && $hide_current)
 					continue;
