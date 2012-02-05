@@ -98,8 +98,8 @@ class Polylang_Admin_Filters extends Polylang_Base {
 
 	// setup js scripts & css styles
 	function admin_enqueue_scripts() {
-		wp_enqueue_script('polylang_admin', POLYLANG_URL .'/js/admin.js', array('jquery', 'wp-ajax-response'));
-		wp_enqueue_style('polylang_admin', POLYLANG_URL .'/css/admin.css');
+		wp_enqueue_script('polylang_admin', POLYLANG_URL .'/js/admin.js', array('jquery', 'wp-ajax-response'), POLYLANG_VERSION);
+		wp_enqueue_style('polylang_admin', POLYLANG_URL .'/css/admin.css', array(), POLYLANG_VERSION);
 
 		// style languages columns in edit and edit-tags
 		foreach ($this->get_languages_list() as $language)
@@ -414,7 +414,7 @@ class Polylang_Admin_Filters extends Polylang_Base {
 			($format = get_post_format($post_id)) ? set_post_format($tr_id, $format) : set_post_format($tr_id, '');
 
 			// synchronize metas and allow plugins to do the same
-			$metas = apply_filters('pll_copy_metas', array('_wp_page_template', '_thumbnail_id'));
+			$metas = apply_filters('pll_copy_post_metas', array('_wp_page_template', '_thumbnail_id'));
 			foreach ($metas as $meta) {
 				if ($value = get_post_meta($post_id, $meta, true))
 					update_post_meta($tr_id, $meta, get_post_meta($post_id, $meta, true));

@@ -18,8 +18,8 @@ abstract class Polylang_Base {
 	}
 
 	// returns the list of available languages
-	function get_languages_list($hide_empty = false) {
-		return get_terms('language', array('hide_empty'=>$hide_empty, 'orderby'=>'term_group' ));
+	function get_languages_list($args = array()) {
+		return get_terms('language', wp_parse_args($args, array('orderby' => 'term_group', 'hide_empty' => 'false')));
 	}
 
 	// retrieves the dropdown list of the languages
@@ -31,7 +31,7 @@ abstract class Polylang_Base {
 		$out = sprintf('<select name="%1$s" id="%1$s"%2$s>'."\n", esc_attr($name), $class ? ' class="'.esc_attr($class).'"' : '');
 		$out .= $show_option_none ? "<option value='0'></option>\n" : '';
 		$out .= $show_option_all ? "<option value='0'>".__('All languages', 'polylang')."</option>\n" : '';
-		foreach ($this->get_languages_list($hide_empty) as $language) {
+		foreach ($this->get_languages_list(array('hide_empty' => $hide_empty)) as $language) {
 			$out .= sprintf("<option value='%s'%s>%s</option>\n",
 				esc_attr($language->$value),
 				$language->$value == $selected ? ' selected="selected"' : '',
