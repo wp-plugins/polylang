@@ -58,6 +58,10 @@
 	width : 10%;
 }
 
+th[class*='column-language_'] {
+	width: 24px;
+}
+
 .pll_icon_add, .pll_icon_edit {
 	display: block;
 	width: 16px;

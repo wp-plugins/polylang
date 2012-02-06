@@ -5,7 +5,6 @@ class Polylang_Admin_Filters extends Polylang_Base {
 	private $options;
 
 	function __construct() {
-
 		// init options often needed
 		$this->options = get_option('polylang');
 
@@ -100,13 +99,6 @@ class Polylang_Admin_Filters extends Polylang_Base {
 	function admin_enqueue_scripts() {
 		wp_enqueue_script('polylang_admin', POLYLANG_URL .'/js/admin.js', array('jquery', 'wp-ajax-response'), POLYLANG_VERSION);
 		wp_enqueue_style('polylang_admin', POLYLANG_URL .'/css/admin.css', array(), POLYLANG_VERSION);
-
-		// style languages columns in edit and edit-tags
-		foreach ($this->get_languages_list() as $language)
-			$classes[] = '.column-language_'.esc_attr($language->slug);
-
-		if (isset($classes))
-			echo '<style type="text/css">'.implode(',', $classes).' { width: 24px; }</style>';
 	}
 
 	// adds the language and translations columns (before the date column) in the posts and pages list table
@@ -199,7 +191,6 @@ class Polylang_Admin_Filters extends Polylang_Base {
 		);
 		include(PLL_INC.'/post-translations.php'); // allowing to determine the linked posts
 		echo "</div>\n";
-
 	}
 
 	// ajax response for changing the language in the post metabox
@@ -468,7 +459,7 @@ class Polylang_Admin_Filters extends Polylang_Base {
 		// I only want to filter the parent dropdown list when editing a term in a hierarchical taxonomy
 		if (isset($_POST['action']) && $_POST['action'] == 'term_lang_choice' && !isset($args['class']))
 			return $clauses;
-		
+
 		global $post_ID;
 
 		// ajax response for changing the language in the post metabox (or in the edit-tags panels)

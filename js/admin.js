@@ -295,10 +295,11 @@ jQuery(document).ready(function($) {
 	// fills the fields based on dropdown list choice
 	jQuery('#lang_list').change(function() {
 		value = jQuery(this).attr('value').split('-');
+		selected = $("select option:selected").text().split(' - ');
 		jQuery('input[name="slug"]').val(value[0]);
 		jQuery('input[name="description"]').val(value[1]);
 		jQuery('input[name="rtl"]').val([value[2]]);
-		jQuery('input[name="name"]').val($("select option:selected").text());
+		jQuery('input[name="name"]').val(selected[0]);
 	});
 
 });
