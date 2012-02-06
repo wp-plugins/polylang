@@ -385,15 +385,15 @@ class Polylang_Admin extends Polylang_Base {
 	function validate_lang($lang = null) {
 		// validate locale
 		$loc = $_POST['description'];
-		if ( !preg_match('#^[a-z]{2}$#', $loc) && !preg_match('#^[a-z]{2}_[A-Z]{2}$#', $loc) )
+		if ( !preg_match('#^[a-z]{2,3}$#', $loc) && !preg_match('#^[a-z]{2,3}_[A-Z]{2,3}$#', $loc) )
 			$error = 1;
 
 		// validate slug length
-		if (strlen($_POST['slug']) != 2)
+		if (!preg_match('#^[a-z]{2,3}$#', $_POST['slug']))
 			$error = 2;
 
 		// validate slug is unique
-		if ($this->get_language($_POST['slug']) != null && isset($lang) && $lang->slug != $_POST['slug'])
+		if ($this->get_language($_POST['slug']) != null && ( $lang === null || (isset($lang) && $lang->slug != $_POST['slug'])))
 			$error = 3;
 
 		// validate name

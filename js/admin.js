@@ -1,3 +1,183 @@
+var pll_tagBox;
+
+// mainly copy paste of WP code
+(function($){
+
+pll_tagBox = {
+	clean : function(tags) {
+		return tags.replace(/\s*,\s*/g, ',').replace(/,+/g, ',').replace(/[,\s]+$/, '').replace(/^[,\s]+/, '');
+	},
+
+	parseTags : function(el) {
+		var id = el.id, num = id.split('-check-num-')[1], taxbox = $(el).closest('.tagsdiv'), thetags = taxbox.find('.the-tags'), current_tags = thetags.val().split(','), new_tags = [];
+		delete current_tags[num];
+
+		$.each( current_tags, function(key, val) {
+			val = $.trim(val);
+			if ( val ) {
+				new_tags.push(val);
+			}
+		});
+
+		thetags.val( this.clean( new_tags.join(',') ) );
+
+		this.quickClicks(taxbox);
+		return false;
+	},
+
+	quickClicks : function(el) {
+		var thetags = $('.the-tags', el),
+			tagchecklist = $('.tagchecklist', el),
+			id = $(el).attr('id'),
+			current_tags, disabled;
+
+		if ( !thetags.length )
+			return;
+
+		disabled = thetags.prop('disabled');
+
+		current_tags = thetags.val().split(',');
+		tagchecklist.empty();
+
+		$.each( current_tags, function( key, val ) {
+			var span, xbutton;
+
+			val = $.trim( val );
+
+			if ( ! val )
+				return;
+
+			// Create a new span, and ensure the text is properly escaped.
+			span = $('<span />').text( val );
+
+			// If tags editing isn't disabled, create the X button.
+			if ( ! disabled ) {
+				xbutton = $( '<a id="' + id + '-check-num-' + key + '" class="ntdelbutton">X</a>' );
+				xbutton.click( function(){ pll_tagBox.parseTags(this); });
+				span.prepend('&nbsp;').prepend( xbutton );
+			}
+
+			// Append the span to the tag list.
+			tagchecklist.append( span );
+		});
+	},
+
+	flushTags : function(el, a, f) {
+		a = a || false;
+		var text, tags = $('.the-tags', el), newtag = $('input.newtag', el), newtags;
+
+		text = a ? $(a).text() : newtag.val();
+		tagsval = tags.val();
+		newtags = tagsval ? tagsval + ',' + text : text;
+
+		newtags = this.clean( newtags );
+		newtags = array_unique_noempty( newtags.split(',') ).join(',');
+		tags.val(newtags);
+		this.quickClicks(el);
+
+		if ( !a )
+			newtag.val('');
+		if ( 'undefined' == typeof(f) )
+			newtag.focus();
+
+		return false;
+	},
+
+	get : function(id, a) {
+		var tax = id.substr(id.indexOf('-')+1);
+
+		// add the language in the $_POST variable
+		var data = {
+			action: 'get-tagcloud',
+			lang: jQuery('#post_lang_choice').attr('value'),
+			tax: tax
+		}
+
+		$.post(ajaxurl, data, function(r, stat) {
+			if ( 0 == r || 'success' != stat )
+				r = wpAjax.broken;
+
+			r = $('<p id="tagcloud-'+tax+'" class="the-tagcloud">'+r+'</p>');
+			$('a', r).click(function(){
+				pll_tagBox.flushTags( $(this).closest('.inside').children('.tagsdiv'), this);
+				return false;
+			});
+
+			// add an if else condition to allow modifying the tags outputed when switching the language
+			if (a == 1)
+				$('#'+id).after(r);
+			else {
+				v = $('.the-tagcloud').css('display');
+				$('.the-tagcloud').replaceWith(r);
+				$('.the-tagcloud').css('display', v);
+			}
+		});
+	},
+
+	suggest : function() {
+		ajaxtag = $('div.ajaxtag');
+		// add the unbind function to allow calling the function when the language is modified
+		$('input.newtag', ajaxtag).unbind().blur(function() {
+			if ( this.value == '' )
+	            $(this).parent().siblings('.taghint').css('visibility', '');
+	    }).focus(function(){
+			$(this).parent().siblings('.taghint').css('visibility', 'hidden');
+		}).keyup(function(e){
+			if ( 13 == e.which ) {
+				pll_tagBox.flushTags( $(this).closest('.tagsdiv') );
+				return false;
+			}
+		}).keypress(function(e){
+			if ( 13 == e.which ) {
+				e.preventDefault();
+				return false;
+			}
+		}).each(function(){
+			// add the language in the $_GET variable
+			var lang = jQuery('#post_lang_choice').attr('value');
+			var tax = $(this).closest('div.tagsdiv').attr('id');
+			$(this).suggest( ajaxurl + '?action=polylang-ajax-tag-search&lang=' + lang + '&tax=' + tax, { delay: 500, minchars: 2, multiple: true, multipleSep: "," } );
+		});
+	},
+
+	init : function() {
+		var t = this, ajaxtag = $('div.ajaxtag');
+
+	    $('.tagsdiv').each( function() {
+	        pll_tagBox.quickClicks(this);
+	    });
+
+		$('input.tagadd', ajaxtag).click(function(){
+			t.flushTags( $(this).closest('.tagsdiv') );
+		});
+
+		$('div.taghint', ajaxtag).click(function(){
+			$(this).css('visibility', 'hidden').parent().siblings('.newtag').focus();
+		});
+
+		pll_tagBox.suggest();
+
+	    // save tags on post save/publish
+	    $('#post').submit(function(){
+			$('div.tagsdiv').each( function() {
+	        	pll_tagBox.flushTags(this, false, 1);
+			});
+		});
+
+		// tag cloud
+		$('a.tagcloud-link').click(function(){
+			pll_tagBox.get( $(this).attr('id'), 1 );
+			$(this).unbind().click(function(){
+				$(this).siblings('.the-tagcloud').toggle();
+				return false;
+			});
+			return false;
+		});
+	}
+};
+
+})(jQuery);
+
 jQuery(document).ready(function($) {
 
 	// collect taxonomies - code partly copied from WordPress
@@ -51,95 +231,38 @@ jQuery(document).ready(function($) {
 			});
 
 			// modifies the language in the tag cloud	
-			jQuery('.polylang-tagcloud-link').each(function() {
+			jQuery('.tagcloud-link').each(function() {
 				var id = $(this).attr('id');
-				pll_tagbox(id, 0); 			
+				pll_tagBox.get(id, 0); 			
 			});
 
 			// modifies the language in the tags suggestion input
-			pll_suggest();
+			pll_tagBox.suggest();
 		});
 	});
 
-	// replace WP class by our own
-	jQuery('a.tagcloud-link').addClass('polylang-tagcloud-link');
-	jQuery('a.tagcloud-link').removeClass('tagcloud-link');
+	// Tag box
 
-	// copy paste WP code and just call our pll_tagbox instead of tagbox.get
-	jQuery('.polylang-tagcloud-link').click( function() {
-		var id = $(this).attr('id');
-		pll_tagbox(id, 1);		
-
-		$(this).unbind().click(function(){
-			$(this).siblings('.the-tagcloud').toggle();
-			return false;
-		});
-		return false;
-	});
-
-	// now copy paste WP code
-	// add the language in the $_POST variable
-	// add an if else condition to allow modifying the tags outputed when switching the language
-	function pll_tagbox(id, a) {
-		var tax = id.substr(id.indexOf('-')+1);
-
-		var data = {
-			action: 'get-tagcloud',
-			lang: jQuery('#post_lang_choice').attr('value'),
-			tax: tax
+	// replace WP class by our own to avoid using tagBox functions
+	$('#side-sortables, #normal-sortables, #advanced-sortables').children('div.postbox').each(function(){
+		if ( this.id.indexOf('tagsdiv-') === 0 ) {
+			$(this).attr('id', 'pll-' + this.id);
 		}
-
-		$.post(ajaxurl, data, function(r, stat) {
-			if ( 0 == r || 'success' != stat )
-				r = wpAjax.broken;
-
-			r = $('<p id="tagcloud-'+tax+'" class="the-tagcloud">'+r+'</p>');
-			$('a', r).click(function(){
-				tagBox.flushTags( $(this).closest('.inside').children('.tagsdiv'), this);
+	});
+				
+	// copy paste WP code
+	// replace tagsdiv by pll-tagsdiv and tagBox by pll_tagBox
+	if ( $('#pll-tagsdiv-post_tag').length ) {
+		pll_tagBox.init();
+	} else {
+		$('#side-sortables, #normal-sortables, #advanced-sortables').children('div.postbox').each(function(){
+			if ( this.id.indexOf('pll-tagsdiv-') === 0 ) {
+				pll_tagBox.init();
 				return false;
-			});
-
-			if (a == 1)
-				$('#'+id).after(r);
-			else {
-				v = $('.the-tagcloud').css('display');
-				$('.the-tagcloud').replaceWith(r);
-				$('.the-tagcloud').css('display', v);
 			}
 		});
 	}
 
-	// replace WP class by our own
-	jQuery('input.newtag').addClass('polylang-newtag');
-	jQuery('input.newtag').removeClass('newtag');
-	pll_suggest();
-
-	// now copy paste WP code
-	// add the language in the $_GET variable
-	// add the unbind function to allow calling the function when the language is modified
-	function pll_suggest() {
-		ajaxtag = $('div.ajaxtag');
-		$('input.polylang-newtag', ajaxtag).unbind().blur(function() {
-			if ( this.value == '' )
-				$(this).parent().siblings('.taghint').css('visibility', '');
-		}).focus(function(){
-			$(this).parent().siblings('.taghint').css('visibility', 'hidden');
-		}).keyup(function(e){
-			if ( 13 == e.which ) {
-				tagBox.flushTags( $(this).closest('.tagsdiv') );
-				return false;
-			}
-		}).keypress(function(e){
-			if ( 13 == e.which ) {
-				e.preventDefault();
-				return false;
-			}
-		}).each(function(){
-			var lang = jQuery('#post_lang_choice').attr('value');
-			var tax = $(this).closest('div.tagsdiv').attr('id');
-			$(this).suggest( ajaxurl + '?action=polylang-ajax-tag-search&lang=' + lang + '&tax=' + tax, { delay: 500, minchars: 2, multiple: true, multipleSep: "," } );
-		});
-	}
 
 	// ajax for term edit
 	jQuery('#term_lang_choice').change(function() {
@@ -167,14 +290,16 @@ jQuery(document).ready(function($) {
 		});
 	});
 
+
 	// languages form
 	// fills the fields based on dropdown list choice
 	jQuery('#lang_list').change(function() {
 		value = jQuery(this).attr('value').split('-');
+		selected = $("select option:selected").text().split(' - ');
 		jQuery('input[name="slug"]').val(value[0]);
 		jQuery('input[name="description"]').val(value[1]);
 		jQuery('input[name="rtl"]').val([value[2]]);
-		jQuery('input[name="name"]').val($("select option:selected").text());
+		jQuery('input[name="name"]').val(selected[0]);
 	});
 
 });

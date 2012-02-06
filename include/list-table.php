@@ -70,7 +70,7 @@ class Polylang_List_Table extends WP_List_Table {
 */ 
     
 	function prepare_items($data = array()) {
-		$per_page = 5; // 5 languages per page
+		$per_page = 10; // 10 languages per page
 		$columns = $this->get_columns();
 		$hidden = array();
 		$sortable = $this->get_sortable_columns();

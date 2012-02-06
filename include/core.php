@@ -249,7 +249,7 @@ class Polylang_Core extends Polylang_base {
 				if ($this->page_on_front && $link_id = $this->get_post($this->page_on_front, $this->curlang))
 					$url = _get_page_link($link_id);
 				else
-					$url = home_url('?lang='.$this->curlang->slug);
+					$url = $this->add_language_to_link(home_url(), $this->curlang);
 
 				wp_redirect($url);
 				exit;

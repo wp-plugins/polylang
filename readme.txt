@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: bilingual, language, i18n, international, l10n, localization, multilanguage, multilingual, multisite, translate, translation
 Requires at least: 3.1
 Tested up to: 3.3.1
-Stable tag: 0.6.1
+Stable tag: 0.7
 
 Polylang adds multilingual content management support to WordPress.
 
@@ -78,9 +78,18 @@ Yes. You have to use PNG or JPG files and name them with the WordPress locale co
 
 == Screenshots ==
 
-1. The Polylang languages admin panel (v0.5) in WordPress 3.3
+1. The Polylang languages admin panel in WordPress 3.3.1
 
 == Changelog ==
+
+= 0.7.1 (2012-02-06) = 
+
+* Allow using ISO 639-2 (3 characters) languages codes
+* Add 5 new languages to predefined list
+* Bug correction: the filter 'pll_copy_post_metas' does not work
+* Bug correction: impossible to add a tag in the edit post panel
+* Bug correction: rewrite rules not correct
+* Bug correction: cache issue with css and js files
 
 = 0.7 (2012-01-30) =
 
