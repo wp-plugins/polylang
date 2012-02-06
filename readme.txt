@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: bilingual, language, i18n, international, l10n, localization, multilanguage, multilingual, multisite, translate, translation
 Requires at least: 3.1
 Tested up to: 3.3.1
-Stable tag: 0.7
+Stable tag: 0.7.1
 
 Polylang adds multilingual content management support to WordPress.
 
@@ -12,7 +12,7 @@ Polylang adds multilingual content management support to WordPress.
 
 = Upgrade Notice =
 
-When upgrading from 0.5.1 or older, your custom flags in 'wp-content/plugins/polylang/local_flags' directory should move to 'wp-content/polylang'. People using the function 'pll_the_language' should be aware that it does not display the 'ul' tag anymore. I wrote about the reasons for these changes in the [forum](http://wordpress.org/support/topic/development-of-polylang-version-06).
+When upgrading from 0.5.1 or older, your custom flags in 'wp-content/plugins/polylang/local_flags' directory should move to 'wp-content/polylang'. People using the function 'pll_the_language' should be aware that it does not display the 'ul' tag anymore. I wrote about the reasons for these changes in the [forum](http://wordpress.org/support/topic/development-of-polylang-version-06). When upgrading from 0.6.1 or older, people using RTL languages must edit these languages and set the text direction to RTL in order for Polylang to work properly (the RTL property of the language is not set automatically when upgrading).
 
 = Features  =
 
@@ -46,7 +46,7 @@ Don't hesitate to [give your feedback](http://wordpress.org/tags/polylang?forum_
 
 == Upgrade Notice ==
 
-When upgrading from 0.5.1 or older, your custom flags in 'wp-content/plugins/polylang/local_flags' directory should move to 'wp-content/polylang'. People using the function 'pll_the_language' should be aware that it does not display the ul tag anymore.
+When upgrading from 0.5.1 or older, your custom flags in 'wp-content/plugins/polylang/local_flags' directory should move to 'wp-content/polylang'. People using the function 'pll_the_language' should be aware that it does not display the ul tag anymore. When upgrading from 0.6.1 or older, people using RTL languages must edit these languages and set the text direction to RTL in order for Polylang to work properly (the RTL property of the language is not set automatically when upgrading).
 
 == Installation ==
 
@@ -85,6 +85,7 @@ Yes. You have to use PNG or JPG files and name them with the WordPress locale co
 = 0.7.1 (2012-02-06) = 
 
 * Allow using ISO 639-2 (3 characters) languages codes
+* The predefined languages dropdown list now displays the locale to help differentiate some languages
 * Add 5 new languages to predefined list
 * Bug correction: the filter 'pll_copy_post_metas' does not work
 * Bug correction: impossible to add a tag in the edit post panel
