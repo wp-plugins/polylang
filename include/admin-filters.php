@@ -95,10 +95,13 @@ class Polylang_Admin_Filters extends Polylang_Base {
 			$wp_locale->text_direction = get_metadata('term', $lang_id, '_rtl', true) ? 'rtl' : 'ltr';
 	}
 
-	// setup js scripts & css styles
+	// setup js scripts & css styles (only on the relevant pages)
 	function admin_enqueue_scripts() {
-		wp_enqueue_script('polylang_admin', POLYLANG_URL .'/js/admin.js', array('jquery', 'wp-ajax-response'), POLYLANG_VERSION);
-		wp_enqueue_style('polylang_admin', POLYLANG_URL .'/css/admin.css', array(), POLYLANG_VERSION);
+		$screen = get_current_screen();
+		if ($screen->base == 'settings_page_mlang' || $screen->base == 'post' || $screen->base == 'edit-tags')
+			wp_enqueue_script('polylang_admin', POLYLANG_URL .'/js/admin.js', array('jquery', 'wp-ajax-response'), POLYLANG_VERSION, true);
+		if ($screen->base == 'settings_page_mlang' || $screen->base == 'post' || $screen->base == 'edit-tags' || $screen->base == 'edit')
+			wp_enqueue_style('polylang_admin', POLYLANG_URL .'/css/admin.css', array(), POLYLANG_VERSION);
 	}
 
 	// adds the language and translations columns (before the date column) in the posts and pages list table
@@ -326,7 +329,7 @@ class Polylang_Admin_Filters extends Polylang_Base {
 	// called when a post (or page) is saved, published or updated
 	function save_post($post_id) {
 		// avoids breaking translations when using inline or bulk edit
-		if(isset($_POST['_inline_edit']) || isset($_GET['bulk_edit']))
+		if (isset($_POST['_inline_edit']) || isset($_GET['bulk_edit']))
 			return;
 
 		if ($id = wp_is_post_revision($post_id))
@@ -366,7 +369,7 @@ class Polylang_Admin_Filters extends Polylang_Base {
 			}
 		}
 
-		if (!isset($_POST['post_lang_choice']))
+		if (!isset($_POST['post_lang_choice']) || !isset($_POST['post_tr_lang']))
 			return;
 
 		// save translations after checking the translated post is in the right language

@@ -77,6 +77,7 @@ class Polylang_Core extends Polylang_base {
 		add_filter('term_link', array(&$this, 'term_link'), 10, 3);
 
 		// filters the nav menus according to the current language
+		add_filter('theme_mod_nav_menu_locations', array(&$this, 'nav_menu_locations'));
 		add_filter('wp_nav_menu_args', array(&$this, 'wp_nav_menu_args'));
 		add_filter('wp_nav_menu_items', array(&$this, 'wp_nav_menu_items'), 10, 2);
 		add_filter('wp_nav_menu_objects', array(&$this, 'wp_nav_menu_objects'), 10, 2);
@@ -149,7 +150,7 @@ class Polylang_Core extends Polylang_base {
 	// returns the current language
 	function get_current_language() {
 
-		if($this->curlang)
+		if ($this->curlang)
 			return $this->curlang;
 
 		// no language set for 404 and attachment
@@ -290,7 +291,7 @@ class Polylang_Core extends Polylang_base {
 			(isset($qvars['m']) && $qvars['m']) ||
 			(count($query->query) == 1 && isset($qvars['feed']) && $qvars['feed']) ||
 			(isset($qvars['author']) && $qvars['author']) ||
-			(isset($qvars['post_type']) && $qvars['post_type'] && is_archive()) ))
+			(isset($qvars['post_type']) && $qvars['post_type'] && is_archive() && $qvars['post_type'] != 'nav_menu_item') ))
 			$query->set('lang', $this->options['default_lang']);
 
 		// allow filtering recent posts by the current language
@@ -332,7 +333,7 @@ class Polylang_Core extends Polylang_base {
 	function terms_clauses($clauses, $taxonomies, $args) {
 		// does nothing except on taxonomies which have show_ui set to 1 (includes category and post_tags)
 		foreach ($taxonomies as $tax) {
-			if(!get_taxonomy($tax)->show_ui)
+			if (!get_taxonomy($tax)->show_ui)
 				return $clauses;
 		}
 
@@ -509,6 +510,9 @@ class Polylang_Core extends Polylang_base {
 
 				if (is_tax('post_format'))
 					$url = esc_url($base.'type/'.$qvars['post_format'].'/');
+
+				if (is_post_type_archive())
+					$url = esc_url($base.$qvars['post_type'].'/');
 			}
 			else
 				$url = $hide ? remove_query_arg('lang') : add_query_arg('lang', $language->slug);
@@ -520,7 +524,20 @@ class Polylang_Core extends Polylang_base {
 		return isset($url) ? $url : null;
 	}
 
-	// filters the nav menus according to the current language
+	// filters the nav menus according to the current language when called from get_nav_menu_locations()
+	// mainly for Artisteer generated themes
+	function nav_menu_locations($menus) {
+		if (is_array($menus)) {
+			foreach($menus as $location => $menu) {
+				$menu_lang = get_option('polylang_nav_menus');
+				if (isset($menu_lang[$location][$this->curlang->slug]))
+					$menus[$location] = $menu_lang[$location][$this->curlang->slug];
+			}
+		}
+		return $menus;
+	}
+
+	// filters the nav menus according to the current language when called from wp_nav_menus
 	function wp_nav_menu_args($args) {
 		if (!$args['menu'] && $args['theme_location']) {
 			$menu_lang = get_option('polylang_nav_menus');
@@ -530,17 +547,10 @@ class Polylang_Core extends Polylang_base {
 		return $args;
 	}
 
-	// filters the widgets according to the current language
-	function widget_display_callback($instance, $widget, $args) {
-		$widget_lang = get_option('polylang_widgets');
-		// don't display if a language filter is set and this is not the current one
-		return isset($widget_lang[$widget->id]) && $widget_lang[$widget->id] && $widget_lang[$widget->id] != $this->curlang->slug ? false : $instance;
-	}
-
 	// adds the language switcher at the end of the menu
 	function wp_nav_menu_items($items, $args) {
 		$menu_lang = get_option('polylang_nav_menus');
-		return isset($menu_lang[$args->theme_location]['switcher']) && $menu_lang[$args->theme_location]['switcher'] ?
+		return isset($args->theme_location) && isset($menu_lang[$args->theme_location]['switcher']) && $menu_lang[$args->theme_location]['switcher'] ?
 			$items . $this->the_languages(array_merge($menu_lang[$args->theme_location], array('menu' => 1, 'echo' => 0))) : $items;
 	}
 
@@ -591,6 +601,13 @@ class Polylang_Core extends Polylang_base {
 			$menu = str_replace('<li class="page_item page-item-'.$id.' current_page_item"><a href="'.$url.'">'.$title.'</a></li>', '', $menu);
 		}
 		return $menu;
+	}
+
+	// filters the widgets according to the current language
+	function widget_display_callback($instance, $widget, $args) {
+		$widget_lang = get_option('polylang_widgets');
+		// don't display if a language filter is set and this is not the current one
+		return isset($widget_lang[$widget->id]) && $widget_lang[$widget->id] && $widget_lang[$widget->id] != $this->curlang->slug ? false : $instance;
 	}
 
 	// translates widget titles

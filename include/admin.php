@@ -36,7 +36,7 @@ class Polylang_Admin extends Polylang_Base {
 	function update_translations($type, $ids, $old_slug) {
 		foreach ($ids as $id) {
 			$tr = get_metadata($type, $id, '_translations', true);
-			if($tr) {
+			if ($tr) {
 				$tr = unserialize($tr);
 				$tr[$_POST['slug']] = $tr[$old_slug];
 				unset($tr[$old_slug]);
@@ -49,7 +49,7 @@ class Polylang_Admin extends Polylang_Base {
 	function delete_translations($type, $ids, $old_slug) {
 		foreach ($ids as $id) {
 			$tr = get_metadata($type, $id, '_translations', true);
-			if($tr) {
+			if ($tr) {
 				$tr = unserialize($tr);
 				unset($tr[$old_slug]);
 				update_metadata($type, $id, '_translations', serialize($tr));
@@ -270,12 +270,12 @@ class Polylang_Admin extends Polylang_Base {
 
 				// fills existing posts & terms with default language
 				if (isset($_POST['fill_languages'])) {
-					if(isset($_POST['posts'])) {
+					if (isset($_POST['posts'])) {
 						foreach(explode(',', $_POST['posts']) as $post_id) {
 							$this->set_post_language($post_id, $options['default_lang']);
 						}
 					}
-					if(isset($_POST['terms'])) {
+					if (isset($_POST['terms'])) {
 						foreach(explode(',', $_POST['terms']) as $term_id) {
 							$this->set_term_language($term_id, $options['default_lang']);
 						}
@@ -413,8 +413,8 @@ class Polylang_Admin extends Polylang_Base {
 			return true;
 
 		// does language directory exists ?
-		if(!is_dir(WP_LANG_DIR)) {
-			if(!@mkdir(WP_LANG_DIR))
+		if (!is_dir(WP_LANG_DIR)) {
+			if (!@mkdir(WP_LANG_DIR))
 				return false;
 		}
 
@@ -515,7 +515,7 @@ class Polylang_Admin extends Polylang_Base {
 				$widget_settings = $wp_registered_widgets[$widget]['callback'][0]->get_settings();
 				$number = $wp_registered_widgets[$widget]['params'][0]['number'];
 				$title = $widget_settings[$number]['title'];
-				if(isset($title) && $title)
+				if (isset($title) && $title)
 					$this->register_string(__('Widget title', 'polylang'), $title);
 			}
 		}

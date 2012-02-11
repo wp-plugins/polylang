@@ -57,7 +57,7 @@ if (isset($_GET['error'])) {?>
 						<option value=""></option>';<?php
 						include(PLL_INC.'/languages.php');
 						foreach ($languages as $lg) {
-							printf('<option value="%1$s-%2$s-%3$s">%4$s - %2$s</option>'."\n", esc_attr($lg[0]), esc_attr($lg[1]), $lg[3] ? '1' : '0' , esc_html($lg[2]));
+							printf('<option value="%1$s-%2$s-%3$s">%4$s - %2$s</option>'."\n", esc_attr($lg[0]), esc_attr($lg[1]), isset($lg[3]) ? '1' : '0' , esc_html($lg[2]));
 						} ?>
 					</select>
 					<p><?php _e('You can choose a language in the list or directly edit it below.', 'polylang');?></p>
