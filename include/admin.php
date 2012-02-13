@@ -473,8 +473,10 @@ class Polylang_Admin extends Polylang_Base {
 	// ugrades languages files after a core upgrade
 	function upgrade_languages($version) {
 		apply_filters('update_feedback', __('Upgrading language files&#8230;', 'polylang'));
-		foreach ($this->get_languages_list() as $language)
-			$this->download_mo($language->description, $version);
+		foreach ($this->get_languages_list() as $language) {
+			if ($language->description != $_POST['locale']) // do not (re)update the language files of a localized WordPress
+				$this->download_mo($language->description, $version);
+		}
 	}
 
 	// returns options available for the language switcher (menu or widget)

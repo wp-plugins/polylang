@@ -283,15 +283,19 @@ class Polylang_Core extends Polylang_base {
 				$query->is_singular = false;
 			}
 		}
-
+	
 		// FIXME to generalize as I probably forget things
-		// sets the language in case we hide the default language
-		if ($this->options['hide_default'] && !isset($qvars['lang']) && (
-			(count($query->query) == 1 && isset($qvars['paged']) && $qvars['paged']) ||
+		$is_archive = (count($query->query) == 1 && isset($qvars['paged']) && $qvars['paged']) ||
 			(isset($qvars['m']) && $qvars['m']) ||
-			(count($query->query) == 1 && isset($qvars['feed']) && $qvars['feed']) ||
 			(isset($qvars['author']) && $qvars['author']) ||
-			(isset($qvars['post_type']) && $qvars['post_type'] && is_archive() && $qvars['post_type'] != 'nav_menu_item') ))
+			(isset($qvars['post_type']) && is_post_type_archive() && !in_array($qvars['post_type'], get_post_types(array('show_ui' => false))));
+	
+		// sets 404 when the language is not set for archives needing the language in the url
+		if (!$this->options['hide_default'] && !isset($qvars['lang']) && !$GLOBALS['wp_rewrite']->using_permalinks() && $is_archive)		
+			$query->set_404();
+
+		// sets the language in case we hide the default language
+		if ($this->options['hide_default'] && !isset($qvars['lang']) && ($is_archive || (count($query->query) == 1 && isset($qvars['feed']) && $qvars['feed']) ))
 			$query->set('lang', $this->options['default_lang']);
 
 		// allow filtering recent posts by the current language
@@ -433,8 +437,7 @@ class Polylang_Core extends Polylang_base {
 
 	// adds language information to a link when using pretty permalinks
 	function add_language_to_link($url, $lang) {
-		global $wp_rewrite;
-		if ($wp_rewrite->using_permalinks()) {
+		if ($GLOBALS['wp_rewrite']->using_permalinks()) {
 			$base = $this->options['rewrite'] ? '/' : '/language/';
 			$slug = $this->options['default_lang'] == $lang->slug && $this->options['hide_default'] ? '' : $base.$lang->slug;
 			return esc_url(str_replace($this->home, $this->home.$slug, $url));

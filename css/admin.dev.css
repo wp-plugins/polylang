@@ -76,6 +76,15 @@ th[class*='column-language_'] {
 	width: 35%;
 }
 
+div#term-translations select[id*='tr_lang_'] {
+	width: 95%;
+}
+
+tr#term-translations select[id*='tr_lang_'] {
+	width: 65%;
+}
+
+
 .tr-edit-column {
 	width: 15%;
 }
