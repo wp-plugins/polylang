@@ -247,7 +247,7 @@ class Polylang_Core extends Polylang_base {
 			// redirect to the home page in the right language
 			else {
 				if ($this->page_on_front && $link_id = $this->get_post($this->page_on_front, $this->curlang))
-					$url = _get_page_link($link_id);
+					$url = $this->add_language_to_link(_get_page_link($link_id), $this->curlang);
 				else
 					$url = $this->add_language_to_link(home_url(), $this->curlang);
 

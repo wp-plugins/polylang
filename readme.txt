@@ -97,6 +97,7 @@ Yes. You have to use PNG or JPG files and name them with the WordPress locale co
 * Bug correction: feed not filtered by language when adding language code to all urls
 * Bug correction: duplicate canonical link when used together with WordPress SEO by Yoast
 * Bug correction: the all posts admin page is messed if another plugin adds a column
+* Bug correction: 404 error on static front page when adding language code to all urls (including default language)
 
 = 0.7.1 (2012-02-06) = 
 
