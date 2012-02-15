@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.7
+Version: 0.7.2
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 */
@@ -10,8 +10,9 @@ Description: Adds multilingual capability to Wordpress
 /*  Copyright 2011-2012 F. Demarle
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2, as 
-    published by the Free Software Foundation.
+    it under the terms of the GNU General Public License, published by
+    the Free Software Foundation, either version 2 of the License, or
+    (at your option) any later version.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -23,7 +24,7 @@ Description: Adds multilingual capability to Wordpress
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('POLYLANG_VERSION', '0.7');
+define('POLYLANG_VERSION', '0.7.2');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
@@ -133,7 +134,7 @@ class Polylang extends Polylang_Base {
 		$options = get_option('polylang');
 		if (!$options) {
 			$options['browser'] = 1; // default language for the front page is set by browser preference
-			$options['rewrite'] = 0; // do not remove /language/ in permalinks
+			$options['rewrite'] = 1; // remove /language/ in permalinks (was the opposite before 0.7.2)
 			$options['hide_default'] = 0; // do not remove URL language information for default language
 			$options['force_lang'] = 0; // do not add URL language information when useless
 		}
@@ -203,7 +204,7 @@ class Polylang extends Polylang_Base {
 					$tr[$language->slug] = $meta;
 			}
 
-			if(!empty($tr)) {
+			if (!empty($tr)) {
 				$tr = serialize(array_merge(array($lang->slug => $id), $tr));
 				update_metadata($type, $id, '_translations', $tr);
 			}
@@ -247,6 +248,9 @@ class Polylang extends Polylang_Base {
 			if (version_compare($options['version'], '0.7', '<'))
 				$options['force_lang'] = 0; // option introduced in 0.7
 
+			if (version_compare($options['version'], '0.7.2', '<'))
+				$GLOBALS['wp_rewrite']->flush_rules(); // rewrite rules have been modified in 0.7.1 & 0.7.2
+
 			$options['version'] = POLYLANG_VERSION;
 			update_option('polylang', $options);
 		}
@@ -285,6 +289,8 @@ class Polylang extends Polylang_Base {
 	}
 
 	// rewrites rules if pretty permalinks are used
+	// always make sure the default language is at the end in case the language information is hidden for default language
+	// thanks to brbrbr http://wordpress.org/support/topic/plugin-polylang-rewrite-rules-not-correct
 	function rewrite_rules_array($rules) {
 		$options = get_option('polylang');
 		$newrules = array();
@@ -293,57 +299,54 @@ class Polylang extends Polylang_Base {
 		if (!($listlanguages = $this->get_languages_list()))
 			return $rules;
 
-		// modifies the rules created by WordPress when '/language/' is removed in permalinks
-		if ($options['rewrite']) {					
-			foreach ($listlanguages as $language) {
-				$slug = $options['default_lang'] == $language->slug && $options['hide_default'] ? '' : $language->slug . '/';
-				$newrules[$slug.'feed/(feed|rdf|rss|rss2|atom)/?$'] = 'index.php?lang='.$language->slug.'&feed=$matches[1]';
-				$newrules[$slug.'(feed|rdf|rss|rss2|atom)/?$'] = 'index.php?lang='.$language->slug.'&feed=$matches[1]';
-				$newrules[$slug.'page/?([0-9]{1,})/?$'] = 'index.php?lang='.$language->slug.'&paged=$matches[1]';
-				if ($slug)
-					$newrules[$slug.'?$'] = 'index.php?lang='.$language->slug;
-			}
-			unset($rules['([^/]+)/feed/(feed|rdf|rss|rss2|atom)/?$']); // => index.php?lang=$matches[1]&feed=$matches[2]
-			unset($rules['([^/]+)/(feed|rdf|rss|rss2|atom)/?$']); // => index.php?lang=$matches[1]&feed=$matches[2]
-			unset($rules['([^/]+)/page/?([0-9]{1,})/?$']); // => index.php?lang=$matches[1]&paged=$matches[2]
-			unset($rules['([^/]+)/?$']); // => index.php?lang=$matches[1]
-		}
+		$languages = array();
+		foreach ($listlanguages as $language)
+			if (!$options['hide_default'] || $options['default_lang'] != $language->slug)
+				$languages[] = $language->slug;
 
-		$base = $options['rewrite'] ? '' : 'language/';			
-
-		// rewrite rules for comments feed filtered by language
-		foreach ($listlanguages as $language) {
-			$slug = $options['default_lang'] == $language->slug && $options['hide_default'] ? '' : $base.$language->slug . '/';
-			$newrules[$slug.'comments/feed/(feed|rdf|rss|rss2|atom)/?$'] = 'index.php?lang='.$language->slug.'&feed=$matches[1]&withcomments=1';
-			$newrules[$slug.'comments/(feed|rdf|rss|rss2|atom)/?$'] = 'index.php?lang='.$language->slug.'&feed=$matches[1]&withcomments=1';
-		}
-		unset($rules['comments/feed/(feed|rdf|rss|rss2|atom)/?$']); // => index.php?&feed=$matches[1]&withcomments=1
-		unset($rules['comments/(feed|rdf|rss|rss2|atom)/?$']); // => index.php?&feed=$matches[1]&withcomments=1
-
-		// rewrite rules for archives filtered by language
+		if ($languages)	{		
+			$slug = '('.implode('|', $languages).')/';
+			$slug = $options['rewrite'] ? $slug : 'language/'.$slug;
+		}		
+		
 		foreach ($rules as $key => $rule) {
-			$is_archive = strpos($rule, 'post_format=') || strpos($rule, 'author_name=') || strpos($rule, 'post_type=') || strpos($rule, 'year=') && !(
-				strpos($rule, 'p=') ||
-				strpos($rule, 'name=') ||
-				strpos($rule, 'page=') ||
-				strpos($rule, 'cpage=') );
+			$is_archive = strpos($rule, 'post_format=') || strpos($rule, 'author_name=') || strpos($rule, 'post_type=') || strpos($rule, 'year=') && 
+				!(strpos($rule, 'p=') || strpos($rule, 'name=') || strpos($rule, 'page=') || strpos($rule, 'cpage='));
 
-			if ($is_archive) {
-				foreach ($listlanguages as $language) {
-					$slug = $options['default_lang'] == $language->slug && $options['hide_default'] ? '' : $base.$language->slug . '/';
-					$newrules[$slug.$key] = str_replace('?', '?lang='.$language->slug.'&', $rule);
-				}
-				unset($rules[$key]); // now useless
+			$is_comment_feed = strpos($rule, 'withcomments=1');
+
+			// modifies the rules created by WordPress for our taxonomy
+			if (strpos($rule, 'lang=')) {		
+				$newkey = $options['rewrite'] ? str_replace('([^/]+)/', '', $key) : str_replace('language/([^/]+)/', '', $key);
+				if (isset($slug))
+					$newrules[$slug.$newkey] = $rule;
+
+				// take care not to create the rule [?$] => index.php?lang=$matches[1] !
+				if ($options['hide_default'] && $newkey != '?$')
+					$newrules[$newkey] = str_replace('lang=$matches[1]', 'lang='.$options['default_lang'], $rule);
+
+				unset($rules[$key]);
 			}
-		}
+		
+			// special case for pages which do not accept adding the lang parameter
+			// FIXME check if it's still the case for WP3.4
+			elseif ($options['force_lang'] && strpos($rule, 'pagename')) {
+				if (isset($slug))
+	 				$newrules[$slug.$key] = str_replace(array('[4]', '[3]', '[2]', '[1]'), array('[5]', '[4]', '[3]', '[2]'), $rule); // hopefully it is sufficient !
 
-		// optionally add the language information to all urls
-		if ($options['force_lang']) {
-			foreach ($rules as $key => $rule) {
-				foreach ($listlanguages as $language) {
-					$slug = $options['default_lang'] == $language->slug && $options['hide_default'] ? '' : $base.$language->slug . '/';
-					$newrules[$slug.$key] = $rules[$key];
-				}
+				if (!$options['hide_default'])			
+					unset($rules[$key]); // now useless
+			}
+
+			// rewrite rules filtered by language
+			elseif ($is_archive || $is_comment_feed || $options['force_lang']) {
+				if (isset($slug))
+	 				$newrules[$slug.$key] = str_replace(array('[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '[1]', '?'), 
+						array('[9]', '[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '?lang=$matches[1]&'), $rule); // hopefully it is sufficient !
+
+				if ($options['hide_default'])
+					$newrules[$key] = str_replace('?', '?lang='.$options['default_lang'].'&', $rule);
+
 				unset($rules[$key]); // now useless
 			}
 		}
