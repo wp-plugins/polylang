@@ -2,19 +2,14 @@
 
 // setups basic functions used for admin and frontend
 abstract class Polylang_Base {
-	var $strings; // strings to translate
-		
-	// returns the query variables of the referer
-	function get_referer_vars() {
-		$qvars = array();
-		$referer = wp_get_referer();
-		if ($referer) {
-			$urlparts = parse_url($referer);
-			if (isset($urlparts['query'])) {
-				parse_str($urlparts['query'], $qvars);
-			}
-		}
-		return $qvars;
+	protected $options;
+	protected $home;
+	protected $strings; // strings to translate
+
+	function __construct() {
+		// init options often needed
+		$this->options = get_option('polylang');
+		$this->home = get_option('home');
 	}
 
 	// returns the list of available languages
@@ -136,6 +131,48 @@ abstract class Polylang_Base {
 	function get_term($term_id, $lang) {
 		$lang = $this->get_language($lang);		
 		return $this->get_term_language($term_id)->term_id == $lang->term_id ? $term_id : $this->get_translation('term', $term_id, $lang);
+	}
+
+	// adds language information to a link when using pretty permalinks
+	function add_language_to_link($url, $lang) {
+		if (!isset($lang)) // FIXME avoid notice when adding a page to a custom menu
+			return;
+
+		if ($GLOBALS['wp_rewrite']->using_permalinks()) {
+			$base = $this->options['rewrite'] ? '/' : '/language/';
+			$slug = $this->options['default_lang'] == $lang->slug && $this->options['hide_default'] ? '' : $base.$lang->slug;
+			return esc_url(str_replace($this->home, $this->home.$slug, $url));
+		}
+
+		// special case for pages which do not accept adding the lang parameter
+		// FIXME check if it's still the case for WP3.4
+		elseif ('_get_page_link' != current_filter())
+			return add_query_arg( 'lang', $lang->slug, $url );
+		
+		return $url;
+	}
+
+	// optionally rewrite posts, pages links to filter them by language
+	// rewrite post format (and optionally categories and post tags) archives links to filter them by language
+	function add_post_term_link_filters() {
+		if ($this->options['force_lang']) {
+			foreach (array('post_link', '_get_page_link', 'post_type_link') as $filter)
+				add_filter($filter, array(&$this, 'post_link'), 10, 2);
+		}
+
+		add_filter('term_link', array(&$this, 'term_link'), 10, 3);
+	}
+
+	// modifies post & page links
+	function post_link($link, $post) {
+		$id = '_get_page_link' == current_filter() ? $post : $post->ID;
+		return $this->add_language_to_link($link, $this->get_post_language($id));
+	}
+
+	// modifies term link
+	function term_link($link, $term, $tax) {
+		return $tax == 'post_format' || ($this->options['force_lang'] && $tax != 'language') ?
+			$this->add_language_to_link($link, $this->get_term_language($term->term_id)) : $link;
 	}
 
 	// returns the html link to the flag if exists

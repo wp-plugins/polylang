@@ -295,7 +295,10 @@ class Polylang_Admin extends Polylang_Base {
 			if (current_theme_supports('menus'))
 				$tabs['menus'] = __('Menus','polylang'); // don't display the menu tab if the active theme does not support nav menus
 
-			$tabs += array('strings' => __('Strings translation','polylang'), 'settings' => __('Settings', 'polylang'));
+			if (function_exists('base64_decode'))
+				$tabs['strings'] = __('Strings translation','polylang'); // some hosts disable the function for security reasons
+
+			$tabs['settings'] = __('Settings', 'polylang');
 		}
 
 		$active_tab = isset($_GET['tab']) && $_GET['tab'] ? $_GET['tab'] : 'lang';
@@ -455,12 +458,13 @@ class Polylang_Admin extends Polylang_Base {
 					continue;
 
 				// try to download ms and continents-cities files if exist (will not return false if failed)
-				foreach (array("ms-$locale.mo", "continent-cities-$locale.mo") as $file)
-					wp_remote_get($base."$version/messages/$file", $args + array('filename' => WP_LANG_DIR."/$file"));
+				// with new files introduced in 3.4
+				foreach (array("ms", "continent-cities", "admin", "admin-network") as $file)
+					wp_remote_get($base."$version/messages/$file-$locale.mo", $args + array('filename' => WP_LANG_DIR."/$file-$locale.mo"));
 
 				// try to download theme files if exist (will not return false if failed)
 				// FIXME not updated when the theme is updated outside a core update
-				foreach (array("twentyten", "twentyeleven") as $theme)
+				foreach (array("twentyten", "twentyeleven", "twentytwelve") as $theme)
 					wp_remote_get($base."$version/messages/$theme/$locale.mo", $args + array('filename' => get_theme_root()."/$theme/languages/$locale.mo"));
 
 				return true;

@@ -2,11 +2,9 @@
 
 // all modifications of the WordPress admin ui
 class Polylang_Admin_Filters extends Polylang_Base {
-	private $options;
 
 	function __construct() {
-		// init options often needed
-		$this->options = get_option('polylang');
+		parent::__construct();
 
 		// additionnal filters and actions
 		add_action('admin_init',  array(&$this, 'admin_init'));
@@ -93,6 +91,9 @@ class Polylang_Admin_Filters extends Polylang_Base {
 			WHERE tt.taxonomy = 'language' AND tt.description = %s LIMIT 1", get_locale())); // no function exists to get term by description
 		if ($lang_id)
 			$wp_locale->text_direction = get_metadata('term', $lang_id, '_rtl', true) ? 'rtl' : 'ltr';
+
+		//modifies posts and terms links when need
+		$this->add_post_term_link_filters();
 	}
 
 	// setup js scripts & css styles (only on the relevant pages)
@@ -104,12 +105,12 @@ class Polylang_Admin_Filters extends Polylang_Base {
 			wp_enqueue_style('polylang_admin', POLYLANG_URL .'/css/admin.css', array(), POLYLANG_VERSION);
 	}
 
-	// adds the language and translations columns (before the date column) in the posts and pages list table
+	// adds the language and translations columns (before the comments column) in the posts and pages list table
 	function add_post_column($columns, $post_type ='') {
 		if ($post_type == '' || get_post_type_object($post_type)->show_ui) {
-			foreach (array( 'date', 'comments' ) as $k) {
-				if (array_key_exists($k, $columns))
-					$end[$k] = array_pop($columns);
+			if ($n = array_search('comments', array_keys($columns))) {
+				$end = array_slice($columns, $n);
+				$columns = array_slice($columns, 0, $n);
 			}
 
 			foreach ($this->get_languages_list() as $language)
