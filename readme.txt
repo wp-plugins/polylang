@@ -37,7 +37,7 @@ The plugin admin interface is currently available in:
 * Greek contributed by [theodotos](http://www.ubuntucy.org)
 * Dutch contributed by [AlbertGn](http://wordpress.org/support/profile/albertgn)
 * Hebrew contributed by [ArielK](http://www.arielk.net)
-* Polish contributed by [PeterPAP](http://www.paciorkiewicz.pl)
+* Polish contributed by [Peter Paciorkiewicz](http://www.paciorkiewicz.pl)
 
 Other translators are welcome !
 
@@ -85,7 +85,7 @@ Yes. You have to use PNG or JPG files and name them with the WordPress locale co
 
 = 0.7.2 (2012-02-15) =
 
-* Add Polish translation contributed by [PeterPAP](http://www.paciorkiewicz.pl)
+* Add Polish translation contributed by [Peter Paciorkiewicz](http://www.paciorkiewicz.pl)
 * Add 5 new languages to predefined list
 * completely reworked rewrite rules
 * Bug correction: custom nav menus do not work in Artisteer generated themes
