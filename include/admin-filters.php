@@ -51,7 +51,7 @@ class Polylang_Admin_Filters extends Polylang_Base {
 		// filters categories and post tags by language
 		add_filter('terms_clauses', array(&$this, 'terms_clauses'), 10, 3);
 
-		foreach (get_taxonomies(array('show_ui'=>true)) as $tax) {
+		foreach ($this->taxonomies as $tax) {
 			// adds the language field in the 'Categories' and 'Post Tags' panels
 			add_action($tax.'_add_form_fields',  array(&$this, 'add_term_form'));
 
@@ -99,15 +99,22 @@ class Polylang_Admin_Filters extends Polylang_Base {
 	// setup js scripts & css styles (only on the relevant pages)
 	function admin_enqueue_scripts() {
 		$screen = get_current_screen();
+
+		// FIXME keep the script in header to be sure it is loaded before post.js otherwise a non filtered tag cloud appear in tag cloud metabox
 		if ($screen->base == 'settings_page_mlang' || $screen->base == 'post' || $screen->base == 'edit-tags')
-			wp_enqueue_script('polylang_admin', POLYLANG_URL .'/js/admin.js', array('jquery', 'wp-ajax-response'), POLYLANG_VERSION, true);
+			wp_enqueue_script('polylang_admin', POLYLANG_URL .'/js/admin.js', array('jquery', 'wp-ajax-response'), POLYLANG_VERSION);
+
 		if ($screen->base == 'settings_page_mlang' || $screen->base == 'post' || $screen->base == 'edit-tags' || $screen->base == 'edit')
 			wp_enqueue_style('polylang_admin', POLYLANG_URL .'/css/admin.css', array(), POLYLANG_VERSION);
+
+		if ($screen->base == 'settings_page_mlang') {
+			wp_enqueue_script('postbox');
+		}
 	}
 
 	// adds the language and translations columns (before the comments column) in the posts and pages list table
 	function add_post_column($columns, $post_type ='') {
-		if ($post_type == '' || get_post_type_object($post_type)->show_ui) {
+		if ($post_type == '' || in_array($post_type, $this->post_types)) {
 			if ($n = array_search('comments', array_keys($columns))) {
 				$end = array_slice($columns, $n);
 				$columns = array_slice($columns, 0, $n);
@@ -132,7 +139,11 @@ class Polylang_Admin_Filters extends Polylang_Base {
 
 		// link to edit post (or a translation)
 		if ($id = $this->get_post($post_id, $language))
-			printf('<a class="pll_icon_edit" title="%1$s" href="%2$s"></a>', esc_attr(get_post($id)->post_title), esc_url(get_edit_post_link($id, true )));
+			printf('<a class="%1$s" title="%2$s" href="%3$s"></a>',
+				$id == $post_id ? 'pll_icon_tick' : 'pll_icon_edit',
+				esc_attr(get_post($id)->post_title),
+				esc_url(get_edit_post_link($id, true ))
+			);
 
 		// link to add a new translation
 		else
@@ -172,7 +183,7 @@ class Polylang_Admin_Filters extends Polylang_Base {
 	// adds the Languages box in the 'Edit Post' and 'Edit Page' panels (as well as in custom post types panels
 	function add_meta_boxes() {
 		if ($this->get_languages_list())
-			foreach(get_post_types( array( 'show_ui' => true ) ) as $ptype)
+			foreach($this->post_types as $ptype)
 				add_meta_box('ml_box', __('Languages','polylang'), array(&$this,'post_language'), $ptype, 'side','high');
 	}
 
@@ -329,10 +340,12 @@ class Polylang_Admin_Filters extends Polylang_Base {
 
 	// called when a post (or page) is saved, published or updated
 	function save_post($post_id) {
+
 		// avoids breaking translations when using inline or bulk edit
 		if (isset($_POST['_inline_edit']) || isset($_GET['bulk_edit']))
 			return;
-
+error_log(print_r($_POST, true));
+error_log(print_r($_GET, true));
 		if ($id = wp_is_post_revision($post_id))
 			$post_id = $id;
 
@@ -349,7 +362,7 @@ class Polylang_Admin_Filters extends Polylang_Base {
 		if (isset($_GET['from_post']) && isset($_GET['new_lang'])) {
 
 			// translate terms if exist
-			foreach (get_taxonomies(array('show_ui'=>true)) as $tax) {
+			foreach ($this->taxonomies as $tax) {
 				$newterms = array();
 				$terms = get_the_terms($_GET['from_post'], $tax);
 				if (is_array($terms)) {
@@ -374,9 +387,10 @@ class Polylang_Admin_Filters extends Polylang_Base {
 			return;
 
 		// make sure we get save terms in the right language (especially tags with same name in different languages)
-		foreach (get_taxonomies(array('show_ui'=>true)) as $tax) {
+		foreach ($this->taxonomies as $tax) {
 			$terms = get_the_terms($post_id, $tax);
 			if (is_array($terms)) {
+				$newterms = array();
 				foreach ($terms as $term) {
 					if ($term_id = $this->get_term($term->term_id, $_POST['post_lang_choice']))
 						$newterms[] = (int) $term_id; // cast is important otherwise we get 'numeric' tags
@@ -400,7 +414,7 @@ class Polylang_Admin_Filters extends Polylang_Base {
 				continue;
 
 			// translatable terms
-			foreach (get_taxonomies(array('show_ui'=>true)) as $tax) {
+			foreach ($this->taxonomies as $tax) {
 				$newterms = array();
 				$terms = get_the_terms($post_id, $tax);
 				if (is_array($terms)) {
@@ -443,6 +457,8 @@ class Polylang_Admin_Filters extends Polylang_Base {
 
 	// called when a post (or page) is deleted
 	function delete_post($post_id) {
+error_log(print_r($_POST, true));
+error_log(print_r($_GET, true));
 		if ($id = wp_is_post_revision($post_id))
 			$post_id = $id;
 
@@ -451,9 +467,9 @@ class Polylang_Admin_Filters extends Polylang_Base {
 
 	// filters categories and post tags by language when needed
 	function terms_clauses($clauses, $taxonomies, $args) {
-		// does nothing except on taxonomies which have show_ui set to 1 (includes category and post_tags)
+		// does nothing except on taxonomies which are filterable
 		foreach ($taxonomies as $tax) {
-			if (!get_taxonomy($tax)->show_ui)
+			if (!in_array($tax, $this->taxonomies))
 				return $clauses;
 		}
 
@@ -501,7 +517,7 @@ class Polylang_Admin_Filters extends Polylang_Base {
 			$lang = $this->get_language($_POST['term_lang_choice']);
 
 		// for a new post (or the parent dropdown list of a new term)
-		elseif (($screen->base == 'post' || $screen->base == 'edit-tags') && !PLL_DISPLAY_ALL)
+		elseif (isset($screen) && ($screen->base == 'post' || $screen->base == 'edit-tags') && !PLL_DISPLAY_ALL)
 			$lang = $this->get_language($this->options['default_lang']);
 
 		// adds our clauses to filter by current language
@@ -572,7 +588,8 @@ class Polylang_Admin_Filters extends Polylang_Base {
 
 		// link to edit term (or a translation)
 		if ($id = $this->get_term($term_id, $language))
-			printf('<a class="pll_icon_edit" title="%1$s" href="%2$s"></a>',
+			printf('<a class="%1$s" title="%2$s" href="%3$s"></a>',
+				$id == $term_id ? 'pll_icon_tick' : 'pll_icon_edit',
 				esc_attr(get_term($id, $taxonomy)->name),
 				esc_url(get_edit_term_link($id, $taxonomy, $post_type))
 			);
@@ -596,8 +613,8 @@ class Polylang_Admin_Filters extends Polylang_Base {
 
 	// called when a category or post tag is created or edited
 	function save_term($term_id, $tt_id, $taxonomy) {
-		// does nothing except on taxonomies which have show_ui set to 1 (includes category and post_tags)
-		if (!get_taxonomy($taxonomy)->show_ui)
+		// does nothing except on taxonomies which are filterable
+		if (!in_array($taxonomy, $this->taxonomies))
 			return;
 
 		// avoids breaking translations when using inline edit

@@ -5,11 +5,21 @@ abstract class Polylang_Base {
 	protected $options;
 	protected $home;
 	protected $strings; // strings to translate
+	protected $post_types; // post types to filter by language
+	protected $taxonomies; // taxonomies to filter by language
 
 	function __construct() {
 		// init options often needed
 		$this->options = get_option('polylang');
 		$this->home = get_option('home');
+
+		add_action('init', array(&$this, 'init_base'), 999); // must come late to be sure all post types and taxonomies are registered
+	}
+
+	// init post types and taxonomies to filter by language
+	function init_base() {
+		$this->post_types = apply_filters('pll_get_post_types', get_post_types(array('show_ui' => true)));
+		$this->taxonomies = apply_filters('pll_get_taxonomies', get_taxonomies(array('show_ui'=>true)));
 	}
 
 	// returns the list of available languages
@@ -34,7 +44,7 @@ abstract class Polylang_Base {
 			);
 		}
 		$out .= "</select>\n";
-		return $out;		
+		return $out;
 	}
 
 	// returns the language by its id or its slug
@@ -104,7 +114,10 @@ abstract class Polylang_Base {
 
 	// among the post and its translations, returns the id of the post which is in $lang
 	function get_post($post_id, $lang) {
-		$lang = $this->get_language($lang);		
+		if (!$lang)
+			return '';
+
+		$lang = $this->get_language($lang);
 		return $this->get_post_language($post_id)->term_id == $lang->term_id ? $post_id : $this->get_translation('post', $post_id, $lang);
 	}
 
@@ -129,7 +142,10 @@ abstract class Polylang_Base {
 
 	// among the term and its translations, returns the id of the term which is in $lang
 	function get_term($term_id, $lang) {
-		$lang = $this->get_language($lang);		
+		if (!$lang)
+			return '';
+
+		$lang = $this->get_language($lang);
 		return $this->get_term_language($term_id)->term_id == $lang->term_id ? $term_id : $this->get_translation('term', $term_id, $lang);
 	}
 
@@ -148,7 +164,7 @@ abstract class Polylang_Base {
 		// FIXME check if it's still the case for WP3.4
 		elseif ('_get_page_link' != current_filter())
 			return add_query_arg( 'lang', $lang->slug, $url );
-		
+
 		return $url;
 	}
 
@@ -222,6 +238,23 @@ abstract class Polylang_Base {
 	// register strings for translation
 	function register_string($name, $string) {
 		$this->strings[] = array('name'=> $name, 'string' => $string);
+	}
+
+	// export a mo object in options
+	function mo_export($mo, $lang) {
+		foreach($mo->entries as $entry)
+			$strings[] = array($entry->singular, $mo->translate($entry->singular));
+		update_option('polylang_mo'.$lang->term_id, $strings);
+	}
+
+	// import a mo object from options
+	function mo_import($lang) {
+		$mo = new MO();
+		if ($strings = get_option('polylang_mo'.$lang->term_id)) {
+			foreach ($strings as $msg)
+				$mo->add_entry($mo->make_entry($msg[0], $msg[1]));
+		}
+ 		return $mo;
 	}
 
 } //class Polylang_Base

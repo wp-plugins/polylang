@@ -6,6 +6,7 @@ require_once(PLL_INC.'/list-table.php');
 // setups the Polylang admin panel and calls for other admin related classes
 class Polylang_Admin extends Polylang_Base {
 	function __construct() {
+		parent::__construct();
 		new Polylang_Admin_Filters();
 
 		// adds a 'settings' link in the plugins table
@@ -30,6 +31,16 @@ class Polylang_Admin extends Polylang_Base {
 	// adds the link to the languages panel in the wordpress admin menu
 	function add_menus() {
 		add_submenu_page('options-general.php', __('Languages', 'polylang'), __('Languages', 'polylang'), 'manage_options', 'mlang',  array(&$this, 'languages_page'));
+
+		// adds the about box the languages admin panel
+		// test of $_GET['tab'] avoids displaying the automatically generated screen options on other tabs
+		if (PLL_DISPLAY_ABOUT && (!isset($_GET['tab']) || $_GET['tab'] == 'lang'))
+			add_meta_box('pll_about_box', __('About Polylang', 'polylang'), array(&$this,'about'), 'settings_page_mlang', 'normal', 'high');
+	}
+
+	// displays the about metabox
+	function about() {
+		include(PLL_INC.'/about.php');
 	}
 
 	// used to update the translation when a language slug has been modified
@@ -109,7 +120,7 @@ class Polylang_Admin extends Polylang_Base {
 					$this->delete_translations('post', $posts, $lang_slug);
 
 					// update the language slug in categories & post tags meta
-					$terms= get_terms(get_taxonomies(array('show_ui'=>true)), array('get'=>'all', 'fields'=>'ids'));
+					$terms= get_terms($this->taxonomies, array('get'=>'all', 'fields'=>'ids'));
 					$this->delete_translations('term', $terms, $lang_slug);
 
 					// FIXME should find something more efficient (with a sql query ?)
@@ -175,7 +186,7 @@ class Polylang_Admin extends Polylang_Base {
 						$this->update_translations('post', $posts, $old_slug);
 
 						// update the language slug in categories & post tags meta
-						$terms = get_terms(get_taxonomies(array('show_ui'=>true)), array('get'=>'all', 'fields'=>'ids'));
+						$terms = get_terms($this->taxonomies, array('get'=>'all', 'fields'=>'ids'));
 						$this->update_translations('term', $terms, $old_slug);
 
 						// update menus locations
@@ -228,25 +239,15 @@ class Polylang_Admin extends Polylang_Base {
 				check_admin_referer( 'string-translation', '_wpnonce_string-translation' );
 
 				$strings = $this->get_strings();
-				$mo = new MO();
 
 				foreach ($this->get_languages_list() as $language) {
-					$reader = new POMO_StringReader(base64_decode(get_option('polylang_mo'.$language->term_id)));
-					$mo->import_from_reader($reader);
+					$mo = $this->mo_import($language);
 
 					foreach ($_POST['translation'][$language->name] as $key=>$translation) {
 						$mo->add_entry($mo->make_entry($strings[$key]['string'], stripslashes($translation)));
 					}
 					// FIXME should I clean the mo object to remove unused strings ?
-					// use base64_encode to store binary mo data in database text field
-					global $wp_version;
-					if (version_compare($wp_version, '3.3', '<')) {
-						// backward compatibility for WP < 3.3
-						require_once(PLL_INC . '/mo.php');
-						update_option('polylang_mo'.$language->term_id, base64_encode(pll_mo_export($mo)));
-					}
-					else
-						update_option('polylang_mo'.$language->term_id, base64_encode($mo->export())); // MO::export since WP 3.3
+					$this->mo_export($mo, $language);
 				}
 
 				$paged = isset($_GET['paged']) ? '&paged='.$_GET['paged'] : '';
@@ -258,10 +259,10 @@ class Polylang_Admin extends Polylang_Base {
 				check_admin_referer( 'options-lang', '_wpnonce_options-lang' );
 
 				$options['default_lang'] = $_POST['default_lang'];
-				$options['browser'] = isset($_POST['browser']) ? 1 : 0;
 				$options['rewrite'] = $_POST['rewrite'];
-				$options['hide_default'] = isset($_POST['hide_default']) ? 1 : 0;
-				$options['force_lang'] = isset($_POST['force_lang']) ? 1 : 0;
+				foreach (array('browser', 'hide_default', 'force_lang', 'redirect_lang') as $key)
+					$options[$key] = isset($_POST[$key]) ? 1 : 0;
+
 				update_option('polylang', $options);
 
 				// refresh refresh permalink structure and rewrite rules in case rewrite or hide_default options have been modified
@@ -295,9 +296,7 @@ class Polylang_Admin extends Polylang_Base {
 			if (current_theme_supports('menus'))
 				$tabs['menus'] = __('Menus','polylang'); // don't display the menu tab if the active theme does not support nav menus
 
-			if (function_exists('base64_decode'))
-				$tabs['strings'] = __('Strings translation','polylang'); // some hosts disable the function for security reasons
-
+			$tabs['strings'] = __('Strings translation','polylang');
 			$tabs['settings'] = __('Settings', 'polylang');
 		}
 
@@ -336,11 +335,8 @@ class Polylang_Admin extends Polylang_Base {
 				$data = $this->get_strings();
 
 				// load translations
-				$mo = new MO();
 				foreach ($listlanguages as $language) {
-					$reader = new POMO_StringReader(base64_decode(get_option('polylang_mo'.$language->term_id)));
-					$mo->import_from_reader($reader);
-
+					$mo = $this->mo_import($language);
 					foreach ($data as $key=>$row) {
 						$data[$key]['translations'][$language->name] = $mo->translate($data[$key]['string']);
 						$data[$key]['row'] = $key; // store the row number for convenience
@@ -368,7 +364,7 @@ class Polylang_Admin extends Polylang_Base {
 				$posts = implode(',', get_posts($q));
 
 				// detects categories & post tags without language set
-				$terms = get_terms(get_taxonomies(array('show_ui'=>true)), array('get'=>'all', 'fields'=>'ids'));
+				$terms = get_terms($this->taxonomies, array('get'=>'all', 'fields'=>'ids'));
 
 		 		foreach ($terms as $key => $term_id) {
 					if ($this->get_term_language($term_id))
@@ -520,8 +516,7 @@ class Polylang_Admin extends Polylang_Base {
 
 				$widget_settings = $wp_registered_widgets[$widget]['callback'][0]->get_settings();
 				$number = $wp_registered_widgets[$widget]['params'][0]['number'];
-				$title = $widget_settings[$number]['title'];
-				if (isset($title) && $title)
+				if (isset($widget_settings[$number]['title']) && $title = $widget_settings[$number]['title'])
 					$this->register_string(__('Widget title', 'polylang'), $title);
 			}
 		}

@@ -22,7 +22,10 @@ if (isset($_GET['error'])) {?>
 	<div id="col-right">
 		<div class="col-wrap"><?php
 			// displays the language list in a table
-			$list_table->display(); ?>
+			$list_table->display();?>
+			<div class="metabox-holder"><?php
+				do_meta_boxes('settings_page_mlang', 'normal', array());?>
+			</div>
 		</div><!-- col-wrap -->
 	</div><!-- col-right -->
 
@@ -103,7 +106,17 @@ if (isset($_GET['error'])) {?>
 			</div><!-- form-wrap -->
 		</div><!-- col-wrap -->
 	</div><!-- col-left -->
-</div><!-- col-container --><?php
+</div><!-- col-container -->
+<script type="text/javascript">
+	//<![CDATA[
+	jQuery(document).ready( function($) {
+		// close postboxes that should be closed
+		$('.if-js-closed').removeClass('if-js-closed').addClass('closed');
+		// postboxes setup
+		postboxes.add_postbox_toggles('settings_page_mlang');
+	});
+	//]]>
+</script><?php
 break;
 
 // menu tab
@@ -241,6 +254,13 @@ case 'settings': ?>
 						'<input name="force_lang" type="checkbox" value="1" %s /> %s',
 						$options['force_lang'] ? 'checked="checked"' :'',
 						__('Add language information to all URL including posts, pages, categories and post tags (not recommended)', 'polylang')
+					);?>
+				</label>
+				<label><?php
+					printf(
+						'<input name="redirect_lang" type="checkbox" value="1" %s /> %s',
+						$options['redirect_lang'] ? 'checked="checked"' :'',
+						sprintf(__('Redirect the language page (example: %s) to the homepage in the right language', 'polylang'), '<code>'.esc_html(home_url('en/')).'</code>')
 					);?>
 				</label>
 			</td>

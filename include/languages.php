@@ -36,6 +36,7 @@ $languages = array(
 	array('jv', 'jv_ID', 'Basa Jawa'),
 	array('ka', 'ka_GE', 'ქართული'),
 	array('ko', 'ko_KR', '한국어'),
+	array('ku', 'ckb', 'کوردی', 'rtl'),
 	array('lv', 'lv', 'Latviešu valoda'),
 	array('mk', 'mk_MK', 'македонски јазик'),
 	array('my', 'my_MM', 'ဗမာစာ'),

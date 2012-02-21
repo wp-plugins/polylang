@@ -8,6 +8,17 @@
 	margin-right: 2px;
 }
 
+/* about Polylang metabox */
+#pll_about_box p {
+	text-align: justify;
+}
+
+#pll_about_box input {
+	margin: 0;
+	padding: 0;
+	float: right;
+}
+
 /* strings translation table */
 .stringstranslations .column-name {
 	width: 10%;
@@ -28,10 +39,10 @@
 
 /* language columns in edit.php and edit-tags.php */ 
 th[class*='column-language_'] {
-	width: 24px;
+	width: 2em;
 }
 
-.pll_icon_add, .pll_icon_edit {
+.pll_icon_edit, .pll_icon_add, .pll_icon_tick {
 	display: block;
 	width: 16px;
 	height: 16px;
@@ -39,10 +50,12 @@ th[class*='column-language_'] {
 }
 
 .pll_icon_edit {background-position: 0px -24px;}
-.pll_icon_add {background-position: 16px -24px;}
+.pll_icon_add {background-position: 32px -24px;}
+.pll_icon_tick {background-position: 16px -24px;}
 
 .pll_icon_edit:hover {background-position: 0px -40px;}
-.pll_icon_add:hover {background-position: 16px -40px;}
+.pll_icon_add:hover {background-position: 32px -40px;}
+.pll_icon_tick:hover {background-position: 16px -40px;}
 
 /* languages metabox in post.php */
 #post-translations table {

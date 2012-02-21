@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.7.2
+Version: 0.8dev1
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 */
@@ -24,7 +24,7 @@ Description: Adds multilingual capability to Wordpress
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('POLYLANG_VERSION', '0.7.2');
+define('POLYLANG_VERSION', '0.8dev1');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
@@ -41,6 +41,9 @@ if (!defined('PLL_LOCAL_URL'))
 if (!defined('PLL_DISPLAY_ALL'))
 	define('PLL_DISPLAY_ALL', false); // diplaying posts & terms with undefined language is disabled by default
 
+if (!defined('PLL_DISPLAY_ABOUT'))
+	define('PLL_DISPLAY_ABOUT', true); // displays the "About Polylang" metabox by default
+
 require_once(PLL_INC.'/base.php');
 require_once(PLL_INC.'/widget.php');
 require_once(PLL_INC.'/calendar.php');
@@ -49,6 +52,7 @@ require_once(PLL_INC.'/calendar.php');
 class Polylang extends Polylang_Base {
 
 	function __construct() {
+		parent::__construct();
 		global $polylang; // globalize the variable to access it in the API
 
 		// manages plugin activation and deactivation
@@ -64,7 +68,7 @@ class Polylang extends Polylang_Base {
 		add_action('admin_init',  array(&$this, 'admin_init'));
 
 		// plugin and widget initialization
-		add_action('init', array(&$this, 'init'));
+		add_action('init', array(&$this, 'init'), 1000); // called just after the init in Polylang_Base
 		add_action('widgets_init', array(&$this, 'widgets_init'));
 
 		// rewrite rules
@@ -87,21 +91,24 @@ class Polylang extends Polylang_Base {
 	// plugin activation for multisite
 	function activate() {
 		global $wp_version, $wpdb;
+		$style = '<p style = "font-family: sans-serif; font-size: 12px; color: #333; margin: -5px">%s</p>';
 
 		if (version_compare($wp_version, PLL_MIN_WP_VERSION , '<')) 
-			die (sprintf('<p style = "font-family: sans-serif; font-size: 12px; color: #333; margin: -5px">%s</p>',
-				sprintf(__('You are using WordPress %s. Polylang requires at least WordPress %s.', 'polylang'), $wp_version, PLL_MIN_WP_VERSION)));
+			die (sprintf($style, sprintf(__('You are using WordPress %s. Polylang requires at least WordPress %s.', 'polylang'), $wp_version, PLL_MIN_WP_VERSION)));
 
 		// check if it is a network activation - if so, run the activation function for each blog
 		if (is_multisite() && isset($_GET['networkwide']) && ($_GET['networkwide'] == 1)) {
 			foreach ($wpdb->get_col($wpdb->prepare("SELECT blog_id FROM $wpdb->blogs")) as $blog_id) {
 				switch_to_blog($blog_id);
-				$this->_activate();
+				$r = $this->_activate();
 			}
 			restore_current_blog();
 		}
 		else
-			$this->_activate();
+			$r = $this->_activate();
+
+		if (!$r)
+			die (sprintf($style, __('For some reasons, Polylang could not create a table in your database.', 'polylang')));
 	}
 
 	// plugin activation
@@ -109,15 +116,11 @@ class Polylang extends Polylang_Base {
 		// create the termmeta table - not provided by WP by default - if it does not already exists
 		// uses exactly the same model as other meta tables to be able to use access functions provided by WP 
 		global $wpdb;
-		$charset_collate = '';  
-		if ( ! empty($wpdb->charset) )
-		  $charset_collate = "DEFAULT CHARACTER SET $wpdb->charset";
-		if ( ! empty($wpdb->collate) )
-		  $charset_collate .= " COLLATE $wpdb->collate";
-
+		$charset_collate = empty($wpdb->charset) ? '' : "DEFAULT CHARACTER SET $wpdb->charset";  
+		$charset_collate .= empty($wpdb->collate) ? '' : " COLLATE $wpdb->collate";
 		$table = $wpdb->prefix . 'termmeta';
 		
-		$wpdb->query("CREATE TABLE IF NOT EXISTS $table (
+		$r = $wpdb->query("CREATE TABLE IF NOT EXISTS $table (
 			meta_id bigint(20) unsigned NOT NULL auto_increment,
 			term_id bigint(20) unsigned NOT NULL default '0',
 			meta_key varchar(255) default NULL,
@@ -127,8 +130,11 @@ class Polylang extends Polylang_Base {
 			KEY meta_key (meta_key)
 			) $charset_collate;");
 
+		if ($r === false)
+			return false;
+
 		// codex tells to use the init action to call register_taxonomy but I need it now for my rewrite rules
-		register_taxonomy('language', get_post_types(array('show_ui' => true)), array('label' => false, 'query_var'=>'lang')); 
+		register_taxonomy('language', $this->post_types, array('label' => false, 'query_var'=>'lang')); 
 
 		// defines default values for options in case this is the first installation
 		$options = get_option('polylang');
@@ -137,6 +143,7 @@ class Polylang extends Polylang_Base {
 			$options['rewrite'] = 1; // remove /language/ in permalinks (was the opposite before 0.7.2)
 			$options['hide_default'] = 0; // do not remove URL language information for default language
 			$options['force_lang'] = 0; // do not add URL language information when useless
+			$options['redirect_lang'] = 0; // do not redirect the language page to the homepage
 		}
 		$options['version'] = POLYLANG_VERSION;
 		update_option('polylang', $options);
@@ -144,6 +151,7 @@ class Polylang extends Polylang_Base {
 		// add our rewrite rules
 		global $wp_rewrite;
 		$wp_rewrite->flush_rules();
+		return true;
 	}
 
 	// plugin deactivation for multisite
@@ -223,7 +231,7 @@ class Polylang extends Polylang_Base {
 			if (version_compare($options['version'], '0.5', '<')) {
 				$ids = get_posts(array('numberposts'=>-1, 'fields' => 'ids', 'post_type'=>'any', 'post_status'=>'any'));
 				$this->upgrade_translations('post', $ids);
-				$ids = get_terms(get_taxonomies(array('show_ui'=>true)), array('get'=>'all', 'fields'=>'ids'));
+				$ids = get_terms($this->taxonomies, array('get'=>'all', 'fields'=>'ids'));
 				$this->upgrade_translations('term', $ids);	
 			}
 
@@ -238,7 +246,7 @@ class Polylang extends Polylang_Base {
 						delete_post_meta($id, '_lang-'.$lang->slug);
 				}
 
-				$ids = get_terms(get_taxonomies(array('show_ui'=>true)), array('get'=>'all', 'fields'=>'ids'));
+				$ids = get_terms($this->taxonomies, array('get'=>'all', 'fields'=>'ids'));
 				foreach ($ids as $id) {
 					foreach ($listlanguages as $lang)
 						delete_metadata('term', $id, '_lang-'.$lang->slug);
@@ -250,6 +258,19 @@ class Polylang extends Polylang_Base {
 
 			if (version_compare($options['version'], '0.7.2', '<'))
 				$GLOBALS['wp_rewrite']->flush_rules(); // rewrite rules have been modified in 0.7.1 & 0.7.2
+
+			// string translation storage model changed and option added in 0.8
+			if (version_compare($options['version'], '0.8dev1', '<')) {
+				if (function_exists('base64_decode')) {
+					$mo = new MO();
+					foreach ($this->get_languages_list() as $language) {
+						$reader = new POMO_StringReader(base64_decode(get_option('polylang_mo'.$language->term_id)));
+						$mo->import_from_reader($reader);
+						$this->mo_export($mo, $language);
+					}
+				}
+				$options['redirect_lang'] = 0; // option introduced in 0.8
+			}
 
 			$options['version'] = POLYLANG_VERSION;
 			update_option('polylang', $options);
@@ -263,7 +284,7 @@ class Polylang extends Polylang_Base {
 
 		// registers the language taxonomy
 		// codex: use the init action to call this function
-		register_taxonomy('language', get_post_types(array('show_ui' => true)), array(
+		register_taxonomy('language', $this->post_types, array(
 			'label' => false,
 			'public' => false, // avoid displaying the 'like post tags text box' in the quick edit
 			'query_var'=>'lang',
@@ -339,7 +360,7 @@ class Polylang extends Polylang_Base {
 			}
 
 			// rewrite rules filtered by language
-			elseif ($is_archive || $is_comment_feed || $options['force_lang']) {
+			elseif ($is_archive || $is_comment_feed || ($options['force_lang'] && !strpos($rule, 'robots'))) {
 				if (isset($slug))
 	 				$newrules[$slug.$key] = str_replace(array('[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '[1]', '?'), 
 						array('[9]', '[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '?lang=$matches[1]&'), $rule); // hopefully it is sufficient !
