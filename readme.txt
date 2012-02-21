@@ -10,6 +10,10 @@ Polylang adds multilingual content management support to WordPress.
 
 == Description ==
 
+= Announcement =
+
+[A development version of Polylang 0.8 is available](http://wordpress.org/support/topic/development-of-polylang-version-08).
+
 = Upgrade Notice =
 
 When upgrading from 0.5.1 or older, your custom flags in 'wp-content/plugins/polylang/local_flags' directory should move to 'wp-content/polylang'. People using the function 'pll_the_language' should be aware that it does not display the 'ul' tag anymore. I wrote about the reasons for these changes in the [forum](http://wordpress.org/support/topic/development-of-polylang-version-06). When upgrading from 0.6.1 or older, people using RTL languages must edit these languages and set the text direction to RTL in order for Polylang to work properly (the RTL property of the language is not set automatically when upgrading).
@@ -80,6 +84,34 @@ Yes. You have to use PNG or JPG files and name them with the WordPress locale co
 == Screenshots ==
 
 1. The Polylang languages admin panel in WordPress 3.3.1
+
+== Contribute ==
+
+If you wonder how you can help Polylang, here are some ideas. As you will read, there is no need to be a PHP developper!
+
+= Help other users of Polylang =
+
+The [support forum](http://wordpress.org/tags/polylang?forum_id=10) is here so that users of the plugin can get help when they need it. However, I will not always available to answer questions. You don't need to be a developer to help out. Very often similar questions have been answered in the past. You can subscribe to the tag ['polylang'](http://wordpress.org/tags/polylang) (emails or RSS feed, see just below the topic list) to know when a new topic has been posted.
+
+= Report bugs =
+
+Don't hesitate to report bugs on the [support forum](http://wordpress.org/tags/polylang?forum_id=10).
+
+= Test new versions =
+
+You can subscribe to the tag ['polylang-dev'](http://wordpress.org/tags/polylang-dev) that I use to announce development versions and then, test the new versions and report bugs before the final release. It helps a lot!
+
+= Translate the admin interface =
+
+Polylang is already available in 8 languages. It's very easy to add a new one ! Download [poedit](http://www.poedit.net/download.php) (available for Windows, Mac OS X and Linux). Rename the file polylang.pot found in the polylang/languages directory into something like polylang-your_locale.po. Open the file with poedit and start translating (keeping strange codes such as %s, %1$s as is). Once done, just save and you will get two files polylang-your_locale.po and polylang-your_locale.mo that you can send to the author. The translation will be included with the next release.
+
+= Communicate =
+
+If you like Polylang, you can spread the world... Rating the plugin is very easy, you can write some words about the plugin, make a link to the plugin page...
+
+= What else ? =
+
+Every suggestions are welcome.
 
 == Changelog ==
 
