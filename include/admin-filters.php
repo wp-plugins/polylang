@@ -344,8 +344,7 @@ class Polylang_Admin_Filters extends Polylang_Base {
 		// avoids breaking translations when using inline or bulk edit
 		if (isset($_POST['_inline_edit']) || isset($_GET['bulk_edit']))
 			return;
-error_log(print_r($_POST, true));
-error_log(print_r($_GET, true));
+
 		if ($id = wp_is_post_revision($post_id))
 			$post_id = $id;
 
@@ -457,10 +456,11 @@ error_log(print_r($_GET, true));
 
 	// called when a post (or page) is deleted
 	function delete_post($post_id) {
-error_log(print_r($_POST, true));
-error_log(print_r($_GET, true));
-		if ($id = wp_is_post_revision($post_id))
-			$post_id = $id;
+		// don't delete translations if this is a post revision
+		// thanks to AndyDeGroo who catched this bug
+		// http://wordpress.org/support/topic/plugin-polylang-quick-edit-still-breaks-translation-linking-of-pages-in-072
+		if ($post_id != wp_is_post_revision($post_id))
+			return;
 
 		$this->delete_translation('post', $post_id);
 	}

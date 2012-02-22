@@ -515,8 +515,14 @@ class Polylang_Core extends Polylang_base {
 				if (is_tax('post_format'))
 					$url = esc_url($base.'type/'.$qvars['post_format'].'/');
 
-				if (is_post_type_archive())
-					$url = esc_url($base.$qvars['post_type'].'/');
+				if (is_post_type_archive()){
+					// custom post types can have a different slug than the post type name
+					// thanks to AndyDeGroo for pointing that out
+					// http://wordpress.org/support/topic/plugin-polylang-problems-with-custom-post-type-archive-titles?replies=6#post-2640861
+					$cpt_rewrite = get_post_type_object($qvars['post_type'])->rewrite;
+					$cpt_slug = (isset($cpt_rewrite['slug'])) ? $cpt_rewrite['slug'] : $qvars['post_type'];
+					$url = esc_url($base.$cpt_slug.'/');
+				}
 			}
 			else
 				$url = $hide ? remove_query_arg('lang') : add_query_arg('lang', $language->slug);
