@@ -16,7 +16,7 @@ printf(
 	'</a>');
 echo ' ';
 printf(__('If you wonder how you can help the project, just %sread this%s.', 'polylang'),
-	'<a href="http://wordpress.org/extend/plugins/polylang/contribute/">',
+	'<a href="http://wordpress.org/extend/plugins/polylang/other_notes/">',
 	'</a>');
 echo ' ';
 _e('Finally if you like this plugin or if it helps your business, donations to the author are greatly appreciated.', 'polylang')?>

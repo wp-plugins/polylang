@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.8dev2
+Version: 0.8dev3
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 */
@@ -24,7 +24,7 @@ Description: Adds multilingual capability to Wordpress
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('POLYLANG_VERSION', '0.8dev2');
+define('POLYLANG_VERSION', '0.8dev3');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
@@ -44,6 +44,9 @@ if (!defined('PLL_DISPLAY_ALL'))
 if (!defined('PLL_DISPLAY_ABOUT'))
 	define('PLL_DISPLAY_ABOUT', true); // displays the "About Polylang" metabox by default
 
+if (!defined('PLL_FILTER_HOME_URL'))
+	define('PLL_FILTER_HOME_URL', true); // filters the home url (to return the homepage in the right langage) by default
+
 require_once(PLL_INC.'/base.php');
 require_once(PLL_INC.'/widget.php');
 require_once(PLL_INC.'/calendar.php');
@@ -61,7 +64,7 @@ class Polylang extends Polylang_Base {
 
 		// stopping here if we are going to deactivate the plugin avoids breaking rewrite rules
 		if (isset($_GET['action']) && $_GET['action'] == 'deactivate' && isset($_GET['plugin']) && $_GET['plugin'] == 'polylang/polylang.php')
- 			return;
+			return;
 
 		// manages plugin upgrade
 		add_filter('upgrader_post_install', array(&$this, 'post_upgrade'));
@@ -191,7 +194,7 @@ class Polylang extends Polylang_Base {
 		if (!@rename($upgrade_dir, PLL_LOCAL_DIR))
 			return new WP_Error('polylang_restore_error', sprintf('%s<br />%s',
 				__('Error: Restore of local flags failed!', 'polylang'),
-				sprintf(__('Please move your local flags from %s to %s', 'polylang'), esc_html($upgrade_dir), '<strong>'.esc_html(PLL_LOCAL_DIR).'</strong>')		
+				sprintf(__('Please move your local flags from %s to %s', 'polylang'), esc_html($upgrade_dir), '<strong>'.esc_html(PLL_LOCAL_DIR).'</strong>')
 			));
 
 		@rmdir(WP_CONTENT_DIR . '/upgrade/polylang');
@@ -232,7 +235,7 @@ class Polylang extends Polylang_Base {
 				$ids = get_posts(array('numberposts'=>-1, 'fields' => 'ids', 'post_type'=>'any', 'post_status'=>'any'));
 				$this->upgrade_translations('post', $ids);
 				$ids = get_terms($this->taxonomies, array('get'=>'all', 'fields'=>'ids'));
-				$this->upgrade_translations('term', $ids);	
+				$this->upgrade_translations('term', $ids);
 			}
 
 			// translation model changed in V0.5
@@ -294,7 +297,7 @@ class Polylang extends Polylang_Base {
 		// the simple line of code is inspired by the WP No Category Base plugin: http://wordpresssupplies.com/wordpress-plugins/no-category-base/
 		global $wp_rewrite;
 		$options = get_option('polylang');
-		if ($options['rewrite'] && $wp_rewrite->extra_permastructs)	
+		if ($options['rewrite'] && $wp_rewrite->extra_permastructs)
 			$wp_rewrite->extra_permastructs['language'][0] = '%language%';
 
 		load_plugin_textdomain('polylang', false, basename(POLYLANG_DIR).'/languages'); // plugin i18n
@@ -305,8 +308,8 @@ class Polylang extends Polylang_Base {
 		register_widget('Polylang_Widget');
 
 		// overwrites the calendar widget to filter posts by language
-  	unregister_widget('WP_Widget_Calendar');
-  	register_widget('Polylang_Widget_Calendar');
+		unregister_widget('WP_Widget_Calendar');
+		register_widget('Polylang_Widget_Calendar');
 	}
 
 	// rewrites rules if pretty permalinks are used
@@ -325,10 +328,10 @@ class Polylang extends Polylang_Base {
 			if (!$options['hide_default'] || $options['default_lang'] != $language->slug)
 				$languages[] = $language->slug;
 
-		if ($languages)	{		
+		if ($languages) {
 			$slug = '('.implode('|', $languages).')/';
 			$slug = $options['rewrite'] ? $slug : 'language/'.$slug;
-		}		
+		}
 		
 		foreach ($rules as $key => $rule) {
 			$is_archive = strpos($rule, 'post_format=') || strpos($rule, 'author_name=') || strpos($rule, 'post_type=') || strpos($rule, 'year=') && 
@@ -337,7 +340,7 @@ class Polylang extends Polylang_Base {
 			$is_comment_feed = strpos($rule, 'withcomments=1');
 
 			// modifies the rules created by WordPress for our taxonomy
-			if (strpos($rule, 'lang=')) {		
+			if (strpos($rule, 'lang=')) {
 				$newkey = $options['rewrite'] ? str_replace('([^/]+)/', '', $key) : str_replace('language/([^/]+)/', '', $key);
 				if (isset($slug))
 					$newrules[$slug.$newkey] = $rule;
@@ -353,16 +356,16 @@ class Polylang extends Polylang_Base {
 			// FIXME check if it's still the case for WP3.4
 			elseif ($options['force_lang'] && strpos($rule, 'pagename')) {
 				if (isset($slug))
-	 				$newrules[$slug.$key] = str_replace(array('[4]', '[3]', '[2]', '[1]'), array('[5]', '[4]', '[3]', '[2]'), $rule); // hopefully it is sufficient !
+					$newrules[$slug.$key] = str_replace(array('[4]', '[3]', '[2]', '[1]'), array('[5]', '[4]', '[3]', '[2]'), $rule); // hopefully it is sufficient !
 
-				if (!$options['hide_default'])			
+				if (!$options['hide_default'])
 					unset($rules[$key]); // now useless
 			}
 
 			// rewrite rules filtered by language
 			elseif ($is_archive || $is_comment_feed || ($options['force_lang'] && !strpos($rule, 'robots'))) {
 				if (isset($slug))
-	 				$newrules[$slug.$key] = str_replace(array('[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '[1]', '?'), 
+					$newrules[$slug.$key] = str_replace(array('[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '[1]', '?'), 
 						array('[9]', '[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '?lang=$matches[1]&'), $rule); // hopefully it is sufficient !
 
 				if ($options['hide_default'])

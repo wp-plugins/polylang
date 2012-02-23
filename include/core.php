@@ -100,11 +100,8 @@ class Polylang_Core extends Polylang_base {
 		add_filter('body_class', array(&$this, 'body_class'));
 
 		// modifies the home url
-		add_filter('home_url', array(&$this, 'home_url'));
-
-		// allows a new value for the 'show' parameter to display the homepage url according to the current language
-		// FIXME Backward compatibility for versions < 0.5 -> replaced by a filter on home_url
-		add_filter('bloginfo_url', array(&$this, 'bloginfo_url'), 10, 2);
+		if (PLL_FILTER_HOME_URL)
+			add_filter('home_url', array(&$this, 'home_url'));
 
 		// Template tag: displays the language switcher
 		// FIXME Backward compatibility for versions < 0.5 -> replaced by pll_the_languages
@@ -258,9 +255,11 @@ class Polylang_Core extends Polylang_base {
 			// redirect to the home page in the right language
 			else {
 				if ($this->page_on_front && $link_id = $this->get_post($this->page_on_front, $this->curlang))
-					$url = $this->add_language_to_link(get_page_link($link_id), $this->curlang);
+					$url = $this->options['force_lang'] && !$this->options['redirect_lang'] && $GLOBALS['wp_rewrite']->using_permalinks() ?
+						$this->add_language_to_link($this->page_link('', $link_id), $this->curlang) :
+						$this->page_link('', $link_id);
 				else
-					$url = $this->add_language_to_link(home_url(), $this->curlang);
+					$url = $this->options['force_lang'] ? $this->add_language_to_link(home_url('/'), $this->curlang) : home_url('/');
 
 				wp_redirect($url);
 				exit;
@@ -273,7 +272,7 @@ class Polylang_Core extends Polylang_base {
 			$query->parse_query('page_id='.$this->get_post($this->page_on_front, $this->curlang));
 			return;
 		}
-	
+
 		// sets is_home on translated home page when it displays posts
 		// is_home must be true on page 2, 3... too
 		if (!$this->page_on_front && is_tax('language') && (count($query->query) == 1 || (is_paged() && count($query->query) == 2))) {
@@ -307,9 +306,9 @@ class Polylang_Core extends Polylang_base {
 			(isset($qvars['m']) && $qvars['m']) ||
 			(isset($qvars['author']) && $qvars['author']) ||
 			(isset($qvars['post_type']) && is_post_type_archive() && in_array($qvars['post_type'], $this->post_types));
-	
+
 		// sets 404 when the language is not set for archives needing the language in the url
-		if (!$this->options['hide_default'] && !isset($qvars['lang']) && !$GLOBALS['wp_rewrite']->using_permalinks() && $is_archive)		
+		if (!$this->options['hide_default'] && !isset($qvars['lang']) && !$GLOBALS['wp_rewrite']->using_permalinks() && $is_archive)
 			$query->set_404();
 
 		// sets the language in case we hide the default language
@@ -385,18 +384,18 @@ class Polylang_Core extends Polylang_base {
 
 	// modifies the page link in case the front page is not in the default language
 	function page_link($link, $id) {
-		if ($this->page_on_front && $id == $this->get_post($this->page_on_front, $this->options['default_lang']))
-			return trailingslashit($this->home);
-
 		if ($this->options['redirect_lang'] && $this->page_on_front && $id == $this->get_post($this->page_on_front, $lang = $this->get_post_language($id)))
-			return home_url($lang->slug.'/');
+			return $this->options['hide_default'] && $lang->slug == $this->options['default_lang'] ? trailingslashit($this->home) : get_term_link($lang, 'language');
+
+		if ($this->page_on_front && $this->options['hide_default'] && $id == $this->get_post($this->page_on_front, $this->options['default_lang']))
+			return trailingslashit($this->home);
 
 		return _get_page_link($id);
 	}
 
 	// prevents redirection of the homepage
 	function redirect_canonical($redirect_url, $requested_url) {
-		return $requested_url == get_page_link($this->page_on_front) ? false : $redirect_url;
+		return $requested_url == home_url('/') || $requested_url == $this->page_link('', get_option('page_on_front')) ? false : $redirect_url;
 	}
 
 	// adds some javascript workaround knowing it's not perfect...
@@ -520,7 +519,7 @@ class Polylang_Core extends Polylang_base {
 					// thanks to AndyDeGroo for pointing that out
 					// http://wordpress.org/support/topic/plugin-polylang-problems-with-custom-post-type-archive-titles?replies=6#post-2640861
 					$cpt_rewrite = get_post_type_object($qvars['post_type'])->rewrite;
-					$cpt_slug = (isset($cpt_rewrite['slug'])) ? $cpt_rewrite['slug'] : $qvars['post_type'];
+					$cpt_slug = isset($cpt_rewrite['slug']) ? $cpt_rewrite['slug'] : $qvars['post_type'];
 					$url = esc_url($base.$cpt_slug.'/');
 				}
 			}
@@ -564,21 +563,11 @@ class Polylang_Core extends Polylang_base {
 			$items . $this->the_languages(array_merge($menu_lang[$args->theme_location], array('menu' => 1, 'echo' => 0))) : $items;
 	}
 
-	// corrects the output of the function for translated home
+	// corrects the output of the function for home link
 	function wp_page_menu($menu, $args) {
-		// add current_page_item class to home page
-		// normally only the homepage has no class. note the space in <li >
-		if ($this->is_front_page() && !is_paged())
-			$menu = str_replace('<li >', '<li class="current_page_item">', $menu);
+		if ($this->options['redirect_lang']);
+			$menu = str_replace('><a href="' . home_url( '/' ) . '" title="', '><a href="' . get_page_link(get_option('page_on_front')) . '" title="', $menu);
 
-		// remove the 2nd occurrence of homepage (when translated)
-		if ($this->page_on_front) {
-			$id = $this->get_post($this->page_on_front, $this->curlang);
-			$url = _get_page_link($id);
-			$title = apply_filters('the_title', get_page($id)->post_title);
-			$menu = str_replace('<li class="page_item page-item-'.$id.'"><a href="'.$url.'">'.$title.'</a></li>', '', $menu);
-			$menu = str_replace('<li class="page_item page-item-'.$id.' current_page_item"><a href="'.$url.'">'.$title.'</a></li>', '', $menu);
-		}
 		return $menu;
 	}
 
@@ -628,40 +617,29 @@ class Polylang_Core extends Polylang_base {
 		if ( !(did_action('template_redirect') && rtrim($url,'/') == rtrim($this->home,'/')) )
 			return $url;
 
-		// don't like this but at least for WP_Widget_Categories::widget, it seems to be the only solution
-		// FIXME are there other exceptions ?
+		// modifies the home url only in themes (not in core or plugins !), not in searchform.php though.
+		$theme = get_theme_root();
 		foreach (debug_backtrace() as $trace) {
-			$exceptions = $trace['function'] == 'get_pagenum_link' ||
-				$trace['function'] == 'get_author_posts_url' ||
-				$trace['function'] == 'get_search_form' ||
-				(isset($trace['file']) && strpos($trace['file'], 'searchform.php')) ||
-				($trace['function'] == 'widget' && $trace['class'] == 'WP_Widget_Categories');
-			if ($exceptions)
-				return $url;
+			if (isset($trace['file']) && strpos($trace['file'], $theme) !== false && !strpos($trace['file'], 'searchform.php'))
+				return $this->get_home_url();
 		}
-		return $this->get_home_url($this->curlang);
+
+		return $url;
 	}
 
 	// returns the home url in the right language
-	function get_home_url($language) {
+	function get_home_url($language = '') {
+		if ($language == '')
+			$language = $this->curlang;
+
 		if ($this->options['default_lang'] == $language->slug && $this->options['hide_default'])
 			return trailingslashit($this->home);
 
-		// a static page is used as front page
+		// a static page is used as front page : /!\ don't get_page_link to avoid infinite loop
 		if ($this->page_on_front && $id = $this->get_post($this->page_on_front, $language))
-			$url = _get_page_link($id);
+			return $this->page_link('', $id);
 
-		return isset($url) ? $url : get_term_link($language, 'language');
-	}
-
-	// adds 'lang_url' as possible value to the 'show' parameter of bloginfo to display the home url in the correct language
-	// FIXME not tested
-	function bloginfo_url($output, $show) {
-		if ($show == 'lang_url') {
-			$url = $this->get_home_url($this->curlang);
-			$output = isset($url) ? $url : $this->home;
-		}
-		return $output;
+		return get_term_link($language, 'language');
 	}
 
 	// displays the language switcher

@@ -171,7 +171,7 @@ abstract class Polylang_Base {
 	// optionally rewrite posts, pages links to filter them by language
 	// rewrite post format (and optionally categories and post tags) archives links to filter them by language
 	function add_post_term_link_filters() {
-		if ($this->options['force_lang']) {
+		if ($this->options['force_lang'] && $GLOBALS['wp_rewrite']->using_permalinks()) {
 			foreach (array('post_link', '_get_page_link', 'post_type_link') as $filter)
 				add_filter($filter, array(&$this, 'post_link'), 10, 2);
 		}
@@ -181,13 +181,12 @@ abstract class Polylang_Base {
 
 	// modifies post & page links
 	function post_link($link, $post) {
-		$id = '_get_page_link' == current_filter() ? $post : $post->ID;
-		return $this->add_language_to_link($link, $this->get_post_language($id));
+		return $this->add_language_to_link($link, $this->get_post_language('_get_page_link' == current_filter() ? $post : $post->ID));
 	}
 
 	// modifies term link
 	function term_link($link, $term, $tax) {
-		return $tax == 'post_format' || ($this->options['force_lang'] && $tax != 'language') ?
+		return $tax == 'post_format' || ($this->options['force_lang'] && $GLOBALS['wp_rewrite']->using_permalinks() && $tax != 'language') ?
 			$this->add_language_to_link($link, $this->get_term_language($term->term_id)) : $link;
 	}
 
