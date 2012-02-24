@@ -416,7 +416,7 @@ msgstr "Admin taal"
 msgid "Upgrading language files&#8230;"
 msgstr "Aanpassen taalbestanden&#8230;"
 
-#. translators: Calendar caption: 1: month name, 2: 4-digit year 
+#. translators: Calendar caption: 1: month name, 2: 4-digit year
 #: include/calendar.php:106
 #, php-format
 #@ default
@@ -463,50 +463,50 @@ msgstr "Voeg taalinformatie toe aan alle URL's, inclusief berichten, pagina's, c
 #, php-format
 #@ polylang
 msgid "You are using WordPress %s. Polylang requires at least WordPress %s."
-msgstr ""
+msgstr "Je gebruikt Wordpress %s. Polylang vereist tenminste Wordpress %s."
 
 #: include/about.php:3
 #, php-format
 #@ polylang
 msgid "Polylang is provided with an extensive %sdocumentation%s (in English only). It includes information on how to set up your multilingual site and use it on a daily basis, a FAQ, as well as a documentation for programmers to adapt their plugins and themes."
-msgstr ""
+msgstr "Polylang is voorzien van uitgebreide %sdocumentatie%s (alleen in engels). Dit omvat informatie hoe een meertalige site opgezet kan worden en het gebruik op dagelijkse basis, een FAQ en ook documentatie voor ontwikkelaars voor het aanpassen van hun plugins en thema's."
 
 #: include/about.php:8
 #, php-format
 #@ polylang
 msgid "You will also find useful information in the %ssupport forum%s. However don't forget to make a search before posting a new topic."
-msgstr ""
+msgstr "Je kunt ook bruikbare information vinden in het %s support forum%s. Vergeet niet eerst een zoekopdracht uit te voeren voordat je een nieuw item post."
 
 #: include/about.php:14
 #, php-format
 #@ polylang
 msgid "Polylang is free of charge and is released under the same license as WordPress, the %sGPL%s."
-msgstr ""
+msgstr "Polylang is gratis te gebruiken en is vrijgegeven onder dezelfde licentie als Wordpress, de %sGPL%s."
 
 #: include/about.php:18
 #, php-format
 #@ polylang
 msgid "If you wonder how you can help the project, just %sread this%s."
-msgstr ""
+msgstr "Ben je benieuwd hoe je dit project kan ondersteunen, %slees dit%s."
 
 #: include/about.php:22
 #@ polylang
 msgid "Finally if you like this plugin or if it helps your business, donations to the author are greatly appreciated."
-msgstr ""
+msgstr "Tot slot, wanneer deze plugin je bevalt of wanneer het jouw bedrijfsvoering ondersteunt, donaties ten behoeve van de auteur wordt zeer gewaardeerd."
 
 #: include/admin.php:38
 #@ polylang
 msgid "About Polylang"
-msgstr ""
+msgstr "Over Polylang"
 
 #: include/languages-form.php:263
 #, php-format
 #@ polylang
 msgid "Redirect the language page (example: %s) to the homepage in the right language"
-msgstr ""
+msgstr "Herrouteer the taalpagina (bijvoorbeeld: %s) naar de startpagina van de juiste taal."
 
 #: polylang.php:111
 #@ polylang
 msgid "For some reasons, Polylang could not create a table in your database."
-msgstr ""
+msgstr "Om onbekende reden kon Polylang geen tabel in jouw database creëren."
 

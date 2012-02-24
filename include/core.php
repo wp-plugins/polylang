@@ -83,7 +83,6 @@ class Polylang_Core extends Polylang_base {
 		add_filter('theme_mod_nav_menu_locations', array(&$this, 'nav_menu_locations'));
 		add_filter('wp_nav_menu_args', array(&$this, 'wp_nav_menu_args'));
 		add_filter('wp_nav_menu_items', array(&$this, 'wp_nav_menu_items'), 10, 2);
-		add_filter('wp_page_menu', array(&$this, 'wp_page_menu'), 10, 2);
 
 		// filters the widgets according to the current language
 		add_filter('widget_display_callback', array(&$this, 'widget_display_callback'), 10, 3);
@@ -285,7 +284,7 @@ class Polylang_Core extends Polylang_base {
 		if ($this->page_for_posts) {
 			// If permalinks are used, WordPress does set and use $query->queried_object_id and sets $query->query_vars['page_id'] to 0
 			// and does set and use $query->query_vars['page_id'] if permalinks are not used :(
-			if (isset($query->queried_object_id))
+			if (isset($qvars['pagename']) && $qvars['pagename'] && isset($query->queried_object_id))
 				$page_id = $query->queried_object_id;
 			elseif (isset($qvars['page_id']))
 				$page_id = $qvars['page_id'];
@@ -403,11 +402,13 @@ class Polylang_Core extends Polylang_base {
 		// modifies the search form since filtering get_search_form won't work if the template uses searchform.php or the search form is hardcoded
 		// don't use directly e[0] just in case there is somewhere else an element named 's'
 		// check before if the hidden input has not already been introduced by get_search_form
+		// thanks to AndyDeGroo for improving the code for compatility with older browsers 
+		// http://wordpress.org/support/topic/development-of-polylang-version-08?replies=6#post-2645559
 		if (!$this->search_form_filter) {
 			$lang = esc_js($this->curlang->slug);
 			$js = "e = document.getElementsByName('s');
 			for (i = 0; i < e.length; i++) {
-				if (e[i] == '[object HTMLInputElement]') {
+				if (e[i].tagName.toUpperCase() == 'INPUT') {
 					var ih = document.createElement('input');
 					ih.type = 'hidden';
 					ih.name = 'lang';
@@ -563,14 +564,6 @@ class Polylang_Core extends Polylang_base {
 			$items . $this->the_languages(array_merge($menu_lang[$args->theme_location], array('menu' => 1, 'echo' => 0))) : $items;
 	}
 
-	// corrects the output of the function for home link
-	function wp_page_menu($menu, $args) {
-		if ($this->options['redirect_lang']);
-			$menu = str_replace('><a href="' . home_url( '/' ) . '" title="', '><a href="' . get_page_link(get_option('page_on_front')) . '" title="', $menu);
-
-		return $menu;
-	}
-
 	// filters the widgets according to the current language
 	function widget_display_callback($instance, $widget, $args) {
 		$widget_lang = get_option('polylang_widgets');
@@ -614,14 +607,19 @@ class Polylang_Core extends Polylang_base {
 
 	// filters the home url to get the right language
 	function home_url($url) {
-		if ( !(did_action('template_redirect') && rtrim($url,'/') == rtrim($this->home,'/')) )
+		if (!did_action('template_redirect') || rtrim($url,'/') != $this->home)
 			return $url;
 
-		// modifies the home url only in themes (not in core or plugins !), not in searchform.php though.
 		$theme = get_theme_root();
 		foreach (debug_backtrace() as $trace) {
-			if (isset($trace['file']) && strpos($trace['file'], $theme) !== false && !strpos($trace['file'], 'searchform.php'))
-				return $this->get_home_url();
+			$ok = $trace['function'] == 'wp_nav_menu' ||
+				// direct call from the theme
+				(isset($trace['file']) && !strpos($trace['file'], 'searchform.php') && strpos($trace['file'], $theme) !== false &&
+					in_array($trace['function'], array('home_url', 'bloginfo', 'get_bloginfo')) );
+
+			if ($ok) {
+				return $this->get_home_url($this->curlang);
+			}
 		}
 
 		return $url;

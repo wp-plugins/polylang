@@ -89,7 +89,8 @@ class Polylang_Admin extends Polylang_Base {
 				$error = $this->validate_lang();
 
 				if ($error == 0) {
-					$r = wp_insert_term($_POST['name'],'language',array('slug'=>$_POST['slug'], 'description'=>$_POST['description'], 'term_group'=>$_POST['term_group']));
+					$r = wp_insert_term($_POST['name'],'language', array('slug'=>$_POST['slug'], 'description'=>$_POST['description']));
+					wp_update_term($r['term_id'], 'language', array('term_group'=>$_POST['term_group'])); // can't set the term group directly in wp_insert_term
 					update_metadata('term', $r['term_id'], '_rtl', $_POST['rtl']);
 
 					if (!isset($options['default_lang'])) { // if this is the first language created, set it as default language
@@ -125,7 +126,7 @@ class Polylang_Admin extends Polylang_Base {
 
 					// FIXME should find something more efficient (with a sql query ?)
 					foreach ($terms as $id) {
-						if ($this->get_term_language($id)->term_id == $lang_id)
+						if (($lg = $this->get_term_language($id)) && $lg->term_id == $lang_id)
 							$this->delete_term_language($id); // delete language of this term
 					}
 

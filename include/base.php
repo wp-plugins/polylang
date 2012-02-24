@@ -241,7 +241,7 @@ abstract class Polylang_Base {
 
 	// export a mo object in options
 	function mo_export($mo, $lang) {
-		foreach($mo->entries as $entry)
+		foreach ($mo->entries as $entry)
 			$strings[] = array($entry->singular, $mo->translate($entry->singular));
 		update_option('polylang_mo'.$lang->term_id, $strings);
 	}

@@ -407,6 +407,10 @@ class Polylang_Admin_Filters extends Polylang_Base {
 
 		$this->save_translations('post', $post_id, $translations);
 
+		// STOP synchronisation if unwanted
+		if (!PLL_SYNC)
+			return;
+
 		// synchronise terms and metas in translations
 		foreach ($translations as $lang=>$tr_id) {
 			if (!$tr_id)
@@ -630,12 +634,18 @@ class Polylang_Admin_Filters extends Polylang_Base {
 			return;
 
 		// save translations after checking the translated term is in the right language (as well as cast id to int)
-		foreach ($_POST['term_tr_lang'] as $lang=>$tr_id)
-			$translations[$lang] = $this->get_term_language((int) $tr_id)->slug == $lang ? (int) $tr_id : 0;
+		foreach ($_POST['term_tr_lang'] as $lang=>$tr_id) {
+			$tr_lang = $this->get_term_language((int) $tr_id);
+			$translations[$lang] = isset($tr_lang) && $tr_lang->slug == $lang ? (int) $tr_id : 0;
+		}
 
 		$this->save_translations('term', $term_id, $translations);
 
 		// synchronize translations of this term in all posts
+
+		// STOP synchronisation if unwanted
+		if (!PLL_SYNC)
+			return;
 
 		// get all posts associated to this term
 		$posts = get_posts(array(
@@ -666,6 +676,9 @@ class Polylang_Admin_Filters extends Polylang_Base {
 		// this is the reason to use the edit_term filter and not edited_term
 		// take care that $_POST contains the only valid values for the current term
 		foreach ($_POST['term_tr_lang'] as $lang=>$tr_id) {
+			if (!$tr_id)
+				continue;
+
 			if (isset($_POST['parent']) && $_POST['parent'] != -1) // since WP 3.1
 				$term_parent = $this->get_translation('term', $_POST['parent'], $lang);
 

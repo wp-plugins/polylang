@@ -50,12 +50,12 @@ th[class*='column-language_'] {
 }
 
 .pll_icon_edit {background-position: 0px -24px;}
-.pll_icon_add {background-position: 32px -24px;}
-.pll_icon_tick {background-position: 16px -24px;}
+.pll_icon_add {background-position: -16px -24px;}
+.pll_icon_tick {background-position: -32px -24px;}
 
 .pll_icon_edit:hover {background-position: 0px -40px;}
-.pll_icon_add:hover {background-position: 32px -40px;}
-.pll_icon_tick:hover {background-position: 16px -40px;}
+.pll_icon_add:hover {background-position: -16px -40px;}
+.pll_icon_tick:hover {background-position: -32px -40px;}
 
 /* languages metabox in post.php */
 #post-translations table {

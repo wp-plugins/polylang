@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.8dev3
+Version: 0.8dev4
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 */
@@ -24,7 +24,7 @@ Description: Adds multilingual capability to Wordpress
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('POLYLANG_VERSION', '0.8dev3');
+define('POLYLANG_VERSION', '0.8dev4');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
@@ -46,6 +46,9 @@ if (!defined('PLL_DISPLAY_ABOUT'))
 
 if (!defined('PLL_FILTER_HOME_URL'))
 	define('PLL_FILTER_HOME_URL', true); // filters the home url (to return the homepage in the right langage) by default
+
+if (!defined('PLL_SYNC'))
+	define('PLL_SYNC', false); // synchronisation is enabled by default
 
 require_once(PLL_INC.'/base.php');
 require_once(PLL_INC.'/widget.php');
@@ -259,8 +262,8 @@ class Polylang extends Polylang_Base {
 			if (version_compare($options['version'], '0.7', '<'))
 				$options['force_lang'] = 0; // option introduced in 0.7
 
-			if (version_compare($options['version'], '0.7.2', '<'))
-				$GLOBALS['wp_rewrite']->flush_rules(); // rewrite rules have been modified in 0.7.1 & 0.7.2
+			if (version_compare($options['version'], '0.8', '<'))
+				$GLOBALS['wp_rewrite']->flush_rules(); // rewrite rules have been modified in 0.7.1 & 0.7.2 & 0.8
 
 			// string translation storage model changed and option added in 0.8
 			if (version_compare($options['version'], '0.8dev1', '<')) {
@@ -347,11 +350,11 @@ class Polylang extends Polylang_Base {
 
 				// take care not to create the rule [?$] => index.php?lang=$matches[1] !
 				if ($options['hide_default'] && $newkey != '?$')
-					$newrules[$newkey] = str_replace('lang=$matches[1]', 'lang='.$options['default_lang'], $rule);
+					$newrules[$newkey] = str_replace(array('lang=$matches[1]', '[2]'), array('lang='.$options['default_lang'], '[1]'), $rule);
 
 				unset($rules[$key]);
 			}
-		
+	
 			// special case for pages which do not accept adding the lang parameter
 			// FIXME check if it's still the case for WP3.4
 			elseif ($options['force_lang'] && strpos($rule, 'pagename')) {
