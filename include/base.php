@@ -108,8 +108,6 @@ abstract class Polylang_Base {
 
 	// returns the language of a post
 	function get_post_language($post_id) {
-if(!$post_id)
-	error_log(print_r(debug_backtrace(), true));
 		$lang = get_the_terms($post_id, 'language' );
 		return ($lang) ? reset($lang) : null; // there's only one language per post : first element of the array returned
 	}
