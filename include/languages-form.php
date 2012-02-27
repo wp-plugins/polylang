@@ -190,13 +190,7 @@ case 'settings': ?>
 		</tr><?php
 
 		// posts or terms without language set
-		if (!empty($posts) || !empty($terms) && $options['default_lang']) {
-
-			if (!empty($posts))
-				echo '<input type="hidden" name="posts" value="'.esc_attr($posts).'" />';
-			if (!empty($terms))
-				echo '<input type="hidden" name="terms" value="'.esc_attr($terms).'" />';?>
-
+		if ($untranslated && $options['default_lang']) {?>
 			<tr>
 				<th></th>
 				<td>

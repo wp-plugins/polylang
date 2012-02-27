@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.8dev4
+Version: 0.8dev7
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 */
@@ -24,7 +24,7 @@ Description: Adds multilingual capability to Wordpress
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('POLYLANG_VERSION', '0.8dev4');
+define('POLYLANG_VERSION', '0.8dev7');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
@@ -38,17 +38,17 @@ if (!defined('PLL_LOCAL_DIR'))
 if (!defined('PLL_LOCAL_URL'))
 	define('PLL_LOCAL_URL', WP_CONTENT_URL.'/polylang'); // default url to access user data such as custom flags
 
-if (!defined('PLL_DISPLAY_ALL'))
-	define('PLL_DISPLAY_ALL', false); // diplaying posts & terms with undefined language is disabled by default
-
 if (!defined('PLL_DISPLAY_ABOUT'))
 	define('PLL_DISPLAY_ABOUT', true); // displays the "About Polylang" metabox by default
+
+if (!defined('PLL_DISPLAY_ALL'))
+	define('PLL_DISPLAY_ALL', false); // diplaying posts & terms with undefined language is disabled by default (unsupported since 0.7)
 
 if (!defined('PLL_FILTER_HOME_URL'))
 	define('PLL_FILTER_HOME_URL', true); // filters the home url (to return the homepage in the right langage) by default
 
 if (!defined('PLL_SYNC'))
-	define('PLL_SYNC', false); // synchronisation is enabled by default
+	define('PLL_SYNC', true); // synchronisation is enabled by default
 
 require_once(PLL_INC.'/base.php');
 require_once(PLL_INC.'/widget.php');
@@ -287,9 +287,8 @@ class Polylang extends Polylang_Base {
 	function init() {
 		global $wpdb;
 		$wpdb->termmeta = $wpdb->prefix . 'termmeta'; // registers the termmeta table in wpdb
+		$options = get_option('polylang');
 
-		// registers the language taxonomy
-		// codex: use the init action to call this function
 		register_taxonomy('language', $this->post_types, array(
 			'label' => false,
 			'public' => false, // avoid displaying the 'like post tags text box' in the quick edit
@@ -321,12 +320,12 @@ class Polylang extends Polylang_Base {
 	function rewrite_rules_array($rules) {
 		$options = get_option('polylang');
 		$newrules = array();
+		$languages = array();
 
 		// don't modify the rules if there is no languages created
 		if (!($listlanguages = $this->get_languages_list()))
 			return $rules;
 
-		$languages = array();
 		foreach ($listlanguages as $language)
 			if (!$options['hide_default'] || $options['default_lang'] != $language->slug)
 				$languages[] = $language->slug;
@@ -335,28 +334,18 @@ class Polylang extends Polylang_Base {
 			$slug = '('.implode('|', $languages).')/';
 			$slug = $options['rewrite'] ? $slug : 'language/'.$slug;
 		}
-		
+
 		foreach ($rules as $key => $rule) {
-			$is_archive = strpos($rule, 'post_format=') || strpos($rule, 'author_name=') || strpos($rule, 'post_type=') || strpos($rule, 'year=') && 
-				!(strpos($rule, 'p=') || strpos($rule, 'name=') || strpos($rule, 'page=') || strpos($rule, 'cpage='));
+			// rules which *always* need the language code
+			$to_rewrite = in_array($key, array('feed/(feed|rdf|rss|rss2|atom)/?$', '(feed|rdf|rss|rss2|atom)/?$', 'page/?([0-9]{1,})/?$')) ||
+				strpos($rule, 'withcomments=1') || strpos($rule, 'post_format=') || strpos($rule, 'author_name=') || strpos($rule, 'post_type=') ||
+				strpos($rule, 'year=') && !(strpos($rule, 'p=') || strpos($rule, 'name=') || strpos($rule, 'page=') || strpos($rule, 'cpage='));
 
-			$is_comment_feed = strpos($rule, 'withcomments=1');
-
-			// modifies the rules created by WordPress for our taxonomy
-			if (strpos($rule, 'lang=')) {
-				$newkey = $options['rewrite'] ? str_replace('([^/]+)/', '', $key) : str_replace('language/([^/]+)/', '', $key);
-				if (isset($slug))
-					$newrules[$slug.$newkey] = $rule;
-
-				// take care not to create the rule [?$] => index.php?lang=$matches[1] !
-				if ($options['hide_default'] && $newkey != '?$')
-					$newrules[$newkey] = str_replace(array('lang=$matches[1]', '[2]'), array('lang='.$options['default_lang'], '[1]'), $rule);
-
+			// suppress the rules created by WordPress for our taxonomy
+			if (strpos($rule, 'lang='))
 				unset($rules[$key]);
-			}
-	
+				
 			// special case for pages which do not accept adding the lang parameter
-			// FIXME check if it's still the case for WP3.4
 			elseif ($options['force_lang'] && strpos($rule, 'pagename')) {
 				if (isset($slug))
 					$newrules[$slug.$key] = str_replace(array('[4]', '[3]', '[2]', '[1]'), array('[5]', '[4]', '[3]', '[2]'), $rule); // hopefully it is sufficient !
@@ -366,7 +355,7 @@ class Polylang extends Polylang_Base {
 			}
 
 			// rewrite rules filtered by language
-			elseif ($is_archive || $is_comment_feed || ($options['force_lang'] && !strpos($rule, 'robots'))) {
+			elseif ($to_rewrite || ($options['force_lang'] && !strpos($rule, 'robots'))) {
 				if (isset($slug))
 					$newrules[$slug.$key] = str_replace(array('[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '[1]', '?'), 
 						array('[9]', '[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '?lang=$matches[1]&'), $rule); // hopefully it is sufficient !
@@ -377,8 +366,8 @@ class Polylang extends Polylang_Base {
 				unset($rules[$key]); // now useless
 			}
 		}
-
-		return $newrules + $rules;
+		// important to put home rewrite rule before unmodified rules
+		return $newrules + array($slug.'?$' => 'index.php?lang=$matches[1]') + $rules;
 	}
 
 } // class Polylang

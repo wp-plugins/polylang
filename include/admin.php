@@ -272,16 +272,23 @@ class Polylang_Admin extends Polylang_Base {
 
 				// fills existing posts & terms with default language
 				if (isset($_POST['fill_languages'])) {
-					if (isset($_POST['posts'])) {
-						foreach(explode(',', $_POST['posts']) as $post_id) {
-							$this->set_post_language($post_id, $options['default_lang']);
-						}
-					}
-					if (isset($_POST['terms'])) {
-						foreach(explode(',', $_POST['terms']) as $term_id) {
-							$this->set_term_language($term_id, $options['default_lang']);
-						}
-					}
+					global $wpdb;
+					$untranslated = $this->get_untranslated();
+					$lang = $this->get_language($options['default_lang']);
+
+					$values = array();
+					foreach ($untranslated['posts'] as $post_id)
+						$values[] = $wpdb->prepare("(%d, %d)", $post_id, $lang->term_taxonomy_id);
+
+					if ($values)
+						$wpdb->query("INSERT INTO $wpdb->term_relationships (object_id, term_taxonomy_id) VALUES " . implode(',', $values));
+
+					$values = array();
+					foreach ($untranslated['terms'] as $term_id)
+						$values[] = $wpdb->prepare("(%d, %s, %d)", $term_id, '_language', $lang->term_id);
+
+					if ($values)
+						$wpdb->query("INSERT INTO $wpdb->termmeta (term_id, meta_key, meta_value) VALUES " . implode(',', $values));
 				}
 				break;
 
@@ -349,29 +356,8 @@ class Polylang_Admin extends Polylang_Base {
 				break;
 
 			case 'settings':
-				//FIXME rework this as it would not be efficient in case of thousands posts or terms !
 				// detects posts & pages without language set
-				$q = array(
-					'numberposts'=>-1,
-					'post_type' => 'any',
-					'post_status'=>'any',
-					'fields' => 'ids',
-					'tax_query' => array(array(
-						'taxonomy'=> 'language',
-						'terms'=> get_terms('language', array('fields'=>'ids')),
-						'operator'=>'NOT IN'
-					))
-				);
-				$posts = implode(',', get_posts($q));
-
-				// detects categories & post tags without language set
-				$terms = get_terms($this->taxonomies, array('get'=>'all', 'fields'=>'ids'));
-
-		 		foreach ($terms as $key => $term_id) {
-					if ($this->get_term_language($term_id))
-						unset($terms[$key]);
-				}
-				$terms = implode(',', $terms);
+				$untranslated = $this->get_untranslated();
 				break;
 
 			default:
@@ -401,6 +387,30 @@ class Polylang_Admin extends Polylang_Base {
 			$error = 4;
 
 		return isset($error) ? $error : 0;
+	}
+
+	// returns unstranslated posts and terms ids
+	function get_untranslated() {
+		$posts = get_posts(array(
+			'numberposts'=> -1,
+			'post_type' => $this->post_types,
+			'post_status'=> 'any',
+			'fields' => 'ids',
+			'tax_query' => array(array(
+				'taxonomy'=> 'language',
+				'terms'=> get_terms('language', array('fields'=>'ids')),
+				'operator'=> 'NOT IN'
+			))
+		));
+
+		global $wpdb;
+		$terms = get_terms($this->taxonomies, array('get'=>'all', 'fields'=>'ids'));
+		$tr_terms = $wpdb->get_col("SELECT t.term_id FROM $wpdb->terms AS t
+			LEFT JOIN $wpdb->termmeta AS tm ON t.term_id = tm.term_id
+			WHERE tm.meta_key = '_language'");
+		$terms = array_diff($terms, $tr_terms);
+
+		return empty($posts) && empty($terms) ? false : array('posts' => $posts, 'terms' => $terms);
 	}
 
 	// downloads mofiles
@@ -455,7 +465,7 @@ class Polylang_Admin extends Polylang_Base {
 					continue;
 
 				// try to download ms and continents-cities files if exist (will not return false if failed)
-				// with new files introduced in 3.4
+				// with new files introduced in WP 3.4
 				foreach (array("ms", "continent-cities", "admin", "admin-network") as $file)
 					wp_remote_get($base."$version/messages/$file-$locale.mo", $args + array('filename' => WP_LANG_DIR."/$file-$locale.mo"));
 

@@ -108,6 +108,8 @@ abstract class Polylang_Base {
 
 	// returns the language of a post
 	function get_post_language($post_id) {
+if(!$post_id)
+	error_log(print_r(debug_backtrace(), true));
 		$lang = get_the_terms($post_id, 'language' );
 		return ($lang) ? reset($lang) : null; // there's only one language per post : first element of the array returned
 	}
@@ -161,7 +163,6 @@ abstract class Polylang_Base {
 		}
 
 		// special case for pages which do not accept adding the lang parameter
-		// FIXME check if it's still the case for WP3.4
 		elseif ('_get_page_link' != current_filter())
 			return add_query_arg( 'lang', $lang->slug, $url );
 

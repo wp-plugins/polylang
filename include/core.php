@@ -253,14 +253,7 @@ class Polylang_Core extends Polylang_base {
 			}
 			// redirect to the home page in the right language
 			else {
-				if ($this->page_on_front && $link_id = $this->get_post($this->page_on_front, $this->curlang))
-					$url = $this->options['force_lang'] && !$this->options['redirect_lang'] && $GLOBALS['wp_rewrite']->using_permalinks() ?
-						$this->add_language_to_link($this->page_link('', $link_id), $this->curlang) :
-						$this->page_link('', $link_id);
-				else
-					$url = $this->options['force_lang'] ? $this->add_language_to_link(home_url('/'), $this->curlang) : home_url('/');
-
-				wp_redirect($url);
+				wp_redirect($this->get_home_url($this->curlang));
 				exit;
 			}
 		}
@@ -332,8 +325,10 @@ class Polylang_Core extends Polylang_base {
 
 		// unset the is_tax flag for authors pages and post types archives
 		// FIXME Probably I should do this for other cases
-		if (isset($qvars['lang']) && $qvars['lang'] && (is_author() || is_post_type_archive()))
+		if (isset($qvars['lang']) && $qvars['lang'] && (is_author() || is_post_type_archive())) {
 			$query->is_tax = false;
+			unset($query->queried_object);
+		}
 
 		// sets a language for theme preview
 		if (isset($_GET['preview']))
@@ -475,7 +470,7 @@ class Polylang_Core extends Polylang_base {
 			$url = get_permalink($id);
 
 		// page for posts
-		elseif (get_option('show_on_front') == 'page' && isset($wp_query->queried_object_id) &&
+		elseif (get_option('show_on_front') == 'page' && isset($wp_query->queried_object_id) && $wp_query->queried_object_id &&
 			$wp_query->queried_object_id == $this->page_for_posts && ($id = $this->get_post($this->page_for_posts, $language)))
 			$url = get_permalink($id);
 
@@ -583,7 +578,7 @@ class Polylang_Core extends Polylang_base {
 
 	// translates page for posts and page on front
 	function translate_page($value) {
-		return isset($this->curlang) ? $this->get_post($value, $this->curlang) : $value;
+		return isset($this->curlang) && $value ? $this->get_post($value, $this->curlang) : $value;
 	}
 
 	// acts as is_front_page but knows about translated front page
@@ -633,9 +628,11 @@ class Polylang_Core extends Polylang_base {
 		if ($this->options['default_lang'] == $language->slug && $this->options['hide_default'])
 			return trailingslashit($this->home);
 
-		// a static page is used as front page : /!\ don't get_page_link to avoid infinite loop
+		// a static page is used as front page : /!\ don't use get_page_link to avoid infinite loop
 		if ($this->page_on_front && $id = $this->get_post($this->page_on_front, $language))
-			return $this->page_link('', $id);
+			return $this->options['force_lang'] && !$this->options['redirect_lang'] && $GLOBALS['wp_rewrite']->using_permalinks() ?
+				$this->add_language_to_link($this->page_link('', $id), $this->curlang) :
+				$this->page_link('', $id);
 
 		return get_term_link($language, 'language');
 	}
@@ -649,6 +646,7 @@ class Polylang_Core extends Polylang_base {
 			'menu' => '0', // not for nav menu
 			'show_flags' => 0, // don't show flags
 			'show_names' => 1, // show language names
+			'display_names_as' => 'name', // valid options are slug and name
 			'force_home' => 0, // tries to find a translation (available only if display != dropdown)
 			'hide_if_no_translation' => 0, // don't hide the link if there is no translation
 			'hide_current' => 0, // don't hide current language
@@ -680,7 +678,7 @@ class Polylang_Core extends Polylang_base {
 				$class .= $menu ? ' menu-item' : '';
 
 				$flag = $show_flags ? $this->get_flag($language) : '';
-				$name = $show_names || !$show_flags ? esc_html($language->name) : '';
+				$name = $show_names || !$show_flags ? esc_html($display_names_as == 'slug' ? $language->slug : $language->name) : '';
 
 				$output .= sprintf("<li class='%s'><a hreflang='%s' href='%s'>%s</a></li>\n",
 					$class, esc_attr($language->slug), esc_url($url), $show_flags && $show_names ? $flag.'&nbsp;'.$name : $flag.$name);

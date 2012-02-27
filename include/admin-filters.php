@@ -45,7 +45,7 @@ class Polylang_Admin_Filters extends Polylang_Base {
 		// adds actions and filters related to languages when creating, saving or deleting posts and pages
 		add_filter('wp_insert_post_parent', array(&$this, 'wp_insert_post_parent'), 10, 4);
 		add_action('dbx_post_advanced', array(&$this, 'dbx_post_advanced'));
-		add_action('save_post', array(&$this, 'save_post'));
+		add_action('save_post', array(&$this, 'save_post'), 10, 2);
 		add_action('before_delete_post', array(&$this, 'delete_post'));
 
 		// filters categories and post tags by language
@@ -339,10 +339,14 @@ class Polylang_Admin_Filters extends Polylang_Base {
 	}
 
 	// called when a post (or page) is saved, published or updated
-	function save_post($post_id) {
+	function save_post($post_id, $post) {
 
 		// avoids breaking translations when using inline or bulk edit
 		if (isset($_POST['_inline_edit']) || isset($_GET['bulk_edit']))
+			return;
+
+		// does nothing except on post types which are filterable
+		if (!in_array($post->post_type, $this->post_types))
 			return;
 
 		if ($id = wp_is_post_revision($post_id))
