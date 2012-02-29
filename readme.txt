@@ -1,18 +1,14 @@
 === Polylang ===
 Contributors: Chouby
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CCWWYUUQV8F4E
-Tags: bilingual, language, i18n, international, l10n, localization, multilanguage, multilingual, multisite, translate, translation
+Tags: multilingual, bilingual, translate, translation, language, multilanguage, i18n, international, l10n, localization
 Requires at least: 3.1
 Tested up to: 3.3.1
-Stable tag: 0.7.2
+Stable tag: 0.8
 
 Polylang adds multilingual content management support to WordPress.
 
 == Description ==
-
-= Announcement =
-
-[A development version of Polylang 0.8 is available](http://wordpress.org/support/topic/development-of-polylang-version-08).
 
 = Upgrade Notice =
 
@@ -23,7 +19,7 @@ When upgrading from 0.5.1 or older, your custom flags in 'wp-content/plugins/pol
 You write posts, pages and create categories and post tags as usual, and then define the language for each of them. The translation is optional. The plugin does not integrate automatic or professional translation.
 
 * You can have as many languages as you want. RTL languages are now supported. WordPress languages files are automatically downloaded and updated.
-* You can translate posts, pages, categories, post tags, menus, widgets... Custom post types, custom taxonomies and post formats, RSS feeds and all default WordPress widgets are supported.
+* You can translate posts, pages, categories, post tags, menus, widgets... Custom post types, custom taxonomies, sticky posts and post formats, RSS feeds and all default WordPress widgets are supported.
 * Categories, post tags as well as some other metas are automatically copied when adding a new post or page translation
 * Support for Search form (see the FAQ in the documentation)
 * Support for multisite, pretty permalinks and static page used as front page
@@ -43,7 +39,9 @@ The plugin admin interface is currently available in:
 * Hebrew contributed by [ArielK](http://www.arielk.net)
 * Polish contributed by [Peter Paciorkiewicz](http://www.paciorkiewicz.pl)
 
-Other translators are welcome !
+Special thanks to [AndyDeGroo](http://wordpress.org/support/profile/andydegroo) and [RavanH](http://4visions.nl/) for their help in debugging and improving Polylang !
+
+Other [contributions](http://wordpress.org/extend/plugins/polylang/other_notes/) are welcome ! 
 
 = Feedback or ideas =
 
@@ -115,6 +113,33 @@ Every suggestions are welcome.
 
 == Changelog ==
 
+= 0.8 (2012-02-29) =
+
+* Sticky posts are now filtered by language
+* It is now possible to use the language page as home page
+* Add an "About Polylang" metabox on the languages admin page
+* Add the pll_the_languages filter allowing to filter the whole output of the language switcher
+* Add a new argument 'display_names_as' to the function pll_the_languages
+* Add pll_get_post_types & pll_get_taxonomies filters allowing to enable / disable the language filter for post types & taxonomies
+* Add ckb to predefined languages list
+* Completely reworked the string translation storage in the database
+* Some performance improvements on admin side
+* Improve compatibility with other plugins broken by the home url filter
+* Add an option to disable the home url filter
+* Add an option to disable synchronization of metas between translations
+* Bug correction: body class 'home' is not set on translated homepage
+* Bug correction: robots.txt is broken when adding the language code to all urls (including default language)
+* Bug correction: bad name for the Czech flag
+* Bug correction: bad language information in rss feed for WP < 3.4
+* Bug correction: signup broken on multisite
+* Bug correction: the translation url is set to self when using a static front page and no page for posts and there is no translation
+* Bug correction: problems with custom post type archive titles
+* Bug correction: problems with custom post type if rewrite slug is different from post_type (thanks to AndyDeGroo)
+* Bug correction: quick edit still breaks translation linking of pages (thanks to AndyDeGroo)
+* Bug correction: bad rewrite rules for feeds (introduced in 0.7.2)
+* Bug correction: the order is not saved when creating a language
+* Bug correction: the categories list is not updated when adding a new category (ajax broken)
+
 = 0.7.2 (2012-02-15) =
 
 * Add Polish translation contributed by [Peter Paciorkiewicz](http://www.paciorkiewicz.pl)
@@ -131,7 +156,7 @@ Every suggestions are welcome.
 * Bug correction: the all posts admin page is messed if another plugin adds a column
 * Bug correction: 404 error on static front page when adding language code to all urls (including default language)
 
-= 0.7.1 (2012-02-06) = 
+= 0.7.1 (2012-02-06) =
 
 * Allow using 3 characters languages codes (ISO 639-2 or 639-3)
 * The predefined languages dropdown list now displays the locale to help differentiate some languages
