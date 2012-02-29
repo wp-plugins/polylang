@@ -280,8 +280,10 @@ class Polylang_Admin extends Polylang_Base {
 					foreach ($untranslated['posts'] as $post_id)
 						$values[] = $wpdb->prepare("(%d, %d)", $post_id, $lang->term_taxonomy_id);
 
-					if ($values)
+					if ($values) {
 						$wpdb->query("INSERT INTO $wpdb->term_relationships (object_id, term_taxonomy_id) VALUES " . implode(',', $values));
+						wp_update_term_count($lang->term_taxonomy_id, 'language'); // updating term count is mandatory (thanks to AndyDeGroo)
+					}
 
 					$values = array();
 					foreach ($untranslated['terms'] as $term_id)

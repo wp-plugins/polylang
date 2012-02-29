@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.8dev7
+Version: 0.8dev8
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 */
@@ -24,7 +24,7 @@ Description: Adds multilingual capability to Wordpress
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('POLYLANG_VERSION', '0.8dev7');
+define('POLYLANG_VERSION', '0.8dev8');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
@@ -287,8 +287,9 @@ class Polylang extends Polylang_Base {
 	function init() {
 		global $wpdb;
 		$wpdb->termmeta = $wpdb->prefix . 'termmeta'; // registers the termmeta table in wpdb
-		$options = get_option('polylang');
 
+		// registers the language taxonomy
+		// codex: use the init action to call this function
 		register_taxonomy('language', $this->post_types, array(
 			'label' => false,
 			'public' => false, // avoid displaying the 'like post tags text box' in the quick edit

@@ -454,11 +454,12 @@ class Polylang_Admin_Filters extends Polylang_Base {
 			}
 
 			// post parent
-			if ($parent_id = wp_get_post_parent_id($post_id));
-				$post_parent = $this->get_translation('post', $parent_id, $lang);
-
 			global $wpdb;
-			$wpdb->update($wpdb->posts, array('post_parent'=> isset($post_parent) ? $post_parent : 0), array( 'ID' => $tr_id ));
+			$post_parent = ($parent_id = wp_get_post_parent_id($post_id)) ? $this->get_translation('post', $parent_id, $lang) : 0;
+
+			// do not udpate the translation parent if the user set a parent with no translation
+			if (!($parent_id && !$post_parent))
+				$wpdb->update($wpdb->posts, array('post_parent'=> $post_parent), array( 'ID' => $tr_id ));
 		}
 	}
 
@@ -467,7 +468,7 @@ class Polylang_Admin_Filters extends Polylang_Base {
 		// don't delete translations if this is a post revision
 		// thanks to AndyDeGroo who catched this bug
 		// http://wordpress.org/support/topic/plugin-polylang-quick-edit-still-breaks-translation-linking-of-pages-in-072
-		if ($post_id != wp_is_post_revision($post_id))
+		if (wp_is_post_revision($post_id))
 			return;
 
 		$this->delete_translation('post', $post_id);

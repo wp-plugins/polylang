@@ -85,7 +85,7 @@ abstract class Polylang_Base {
 			$slug = array_search($id, $translations);
 			unset($translations[$slug]);
 			$tr = serialize($translations);
-			foreach($translations as $key=>$p)
+			foreach($translations as $p)
 				update_metadata($type, (int) $p, '_translations', $tr);
 			delete_metadata($type, $id, '_translations');
 		}
@@ -240,6 +240,7 @@ abstract class Polylang_Base {
 
 	// export a mo object in options
 	function mo_export($mo, $lang) {
+		$strings = array();
 		foreach ($mo->entries as $entry)
 			$strings[] = array($entry->singular, $mo->translate($entry->singular));
 		update_option('polylang_mo'.$lang->term_id, $strings);
