@@ -21,7 +21,9 @@ class Polylang_Uninstall {
 	function uninstall() {
 		global $wpdb;
 		$wpdb->termmeta = $wpdb->prefix . 'termmeta'; // registers the termmeta table in wpdb
-		register_taxonomy('language', get_post_types(array('show_ui' => true)), array('label' => false, 'query_var'=>'lang')); // need to register the language taxonomy
+
+		// need to register the language taxonomy
+		register_taxonomy('language', apply_filters('pll_get_post_types', get_post_types(array('show_ui' => true))), array('label' => false, 'query_var'=>'lang'));
 
 		$languages = get_terms('language', array('hide_empty'=>false));
 
@@ -31,7 +33,7 @@ class Polylang_Uninstall {
 			delete_post_meta($id, '_translations');
 
 		// delete terms translations
-		$ids = get_terms(get_taxonomies(array('show_ui'=>true)), array('get'=>'all', 'fields'=>'ids'));
+		$ids = get_terms(apply_filters('pll_get_taxonomies', get_taxonomies(array('show_ui'=>true))), array('get'=>'all', 'fields'=>'ids'));
 		foreach ($ids as $id) {
 			delete_metadata('term', $id, '_translations');
 			delete_metadata('term', $id, '_language');
@@ -51,11 +53,11 @@ class Polylang_Uninstall {
 			unset($wpdb->termmeta);
 		}
 
-		// delete options 
+		// delete options
 		delete_option('polylang');
 		delete_option('polylang_nav_menus');
 		delete_option('polylang_widgets');
-		delete_option('polylang_widget'); // automatically created by WP
+		delete_option('widget_polylang'); // automatically created by WP
 	}
 }
 

@@ -22,7 +22,10 @@ if (isset($_GET['error'])) {?>
 	<div id="col-right">
 		<div class="col-wrap"><?php
 			// displays the language list in a table
-			$list_table->display(); ?>
+			$list_table->display();?>
+			<div class="metabox-holder"><?php
+				do_meta_boxes('settings_page_mlang', 'normal', array());?>
+			</div>
 		</div><!-- col-wrap -->
 	</div><!-- col-right -->
 
@@ -56,8 +59,8 @@ if (isset($_GET['error'])) {?>
 					<select name="lang_list" id="lang_list">
 						<option value=""></option>';<?php
 						include(PLL_INC.'/languages.php');
-						foreach ($languages as $key=>$lang) {
-							printf("<option value='%s-%s-%s'>%s</option>\n", esc_attr($key), esc_attr($lang[0]), $lang[2] ? '1' : '0' , esc_html($lang[1]));
+						foreach ($languages as $lg) {
+							printf('<option value="%1$s-%2$s-%3$s">%4$s - %2$s</option>'."\n", esc_attr($lg[0]), esc_attr($lg[1]), isset($lg[3]) ? '1' : '0' , esc_html($lg[2]));
 						} ?>
 					</select>
 					<p><?php _e('You can choose a language in the list or directly edit it below.', 'polylang');?></p>
@@ -71,14 +74,14 @@ if (isset($_GET['error'])) {?>
 
 				<div class="form-field form-required">
 					<label for="description"><?php _e('Locale', 'polylang');?></label><?php
-					printf('<input name="description" id="description" type="text" value="%s" size="5" maxlength="5" aria-required="true" />',
+					printf('<input name="description" id="description" type="text" value="%s" size="7" maxlength="7" aria-required="true" />',
 						$action=='edit' ? esc_attr($edit_lang->description) : '');?>
 					<p><?php _e('Wordpress Locale for the language (for example: en_US). You will need to install the .mo file for this language.', 'polylang');?></p>
 				</div>
 
 				<div class="form-field">
 					<label for="slug"><?php _e('Language code', 'polylang');?></label>
-					<input name="slug" id="slug" type="text" value="<?php if ($action=='edit') echo esc_attr($edit_lang->slug);?>" size="2" maxlength="2"/>
+					<input name="slug" id="slug" type="text" value="<?php if ($action=='edit') echo esc_attr($edit_lang->slug);?>" size="3" maxlength="3"/>
 					<p><?php _e('2-letters ISO 639-1 language code (for example: en)', 'polylang');?></p>
 				</div>
 
@@ -103,7 +106,17 @@ if (isset($_GET['error'])) {?>
 			</div><!-- form-wrap -->
 		</div><!-- col-wrap -->
 	</div><!-- col-left -->
-</div><!-- col-container --><?php
+</div><!-- col-container -->
+<script type="text/javascript">
+	//<![CDATA[
+	jQuery(document).ready( function($) {
+		// close postboxes that should be closed
+		$('.if-js-closed').removeClass('if-js-closed').addClass('closed');
+		// postboxes setup
+		postboxes.add_postbox_toggles('settings_page_mlang');
+	});
+	//]]>
+</script><?php
 break;
 
 // menu tab
@@ -177,13 +190,7 @@ case 'settings': ?>
 		</tr><?php
 
 		// posts or terms without language set
-		if (!empty($posts) || !empty($terms) && $options['default_lang']) {
-
-			if (!empty($posts))
-				echo '<input type="hidden" name="posts" value="'.esc_attr($posts).'" />';
-			if (!empty($terms))
-				echo '<input type="hidden" name="terms" value="'.esc_attr($terms).'" />';?>
-
+		if ($untranslated && $options['default_lang']) {?>
 			<tr>
 				<th></th>
 				<td>
@@ -241,6 +248,13 @@ case 'settings': ?>
 						'<input name="force_lang" type="checkbox" value="1" %s /> %s',
 						$options['force_lang'] ? 'checked="checked"' :'',
 						__('Add language information to all URL including posts, pages, categories and post tags (not recommended)', 'polylang')
+					);?>
+				</label>
+				<label><?php
+					printf(
+						'<input name="redirect_lang" type="checkbox" value="1" %s /> %s',
+						$options['redirect_lang'] ? 'checked="checked"' :'',
+						sprintf(__('Redirect the language page (example: %s) to the homepage in the right language', 'polylang'), '<code>'.esc_html(home_url('en/')).'</code>')
 					);?>
 				</label>
 			</td>

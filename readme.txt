@@ -4,15 +4,19 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: bilingual, language, i18n, international, l10n, localization, multilanguage, multilingual, multisite, translate, translation
 Requires at least: 3.1
 Tested up to: 3.3.1
-Stable tag: 0.6.1
+Stable tag: 0.7.2
 
 Polylang adds multilingual content management support to WordPress.
 
 == Description ==
 
+= Announcement =
+
+[A development version of Polylang 0.8 is available](http://wordpress.org/support/topic/development-of-polylang-version-08).
+
 = Upgrade Notice =
 
-When upgrading from 0.5.1 or older, your custom flags in 'wp-content/plugins/polylang/local_flags' directory should move to 'wp-content/polylang'. People using the function 'pll_the_language' should be aware that it does not display the 'ul' tag anymore. I wrote about the reasons for these changes in the [forum](http://wordpress.org/support/topic/development-of-polylang-version-06).
+When upgrading from 0.5.1 or older, your custom flags in 'wp-content/plugins/polylang/local_flags' directory should move to 'wp-content/polylang'. People using the function 'pll_the_language' should be aware that it does not display the 'ul' tag anymore. I wrote about the reasons for these changes in the [forum](http://wordpress.org/support/topic/development-of-polylang-version-06). When upgrading from 0.6.1 or older, people using RTL languages must edit these languages and set the text direction to RTL in order for Polylang to work properly (the RTL property of the language is not set automatically when upgrading).
 
 = Features  =
 
@@ -37,6 +41,7 @@ The plugin admin interface is currently available in:
 * Greek contributed by [theodotos](http://www.ubuntucy.org)
 * Dutch contributed by [AlbertGn](http://wordpress.org/support/profile/albertgn)
 * Hebrew contributed by [ArielK](http://www.arielk.net)
+* Polish contributed by [Peter Paciorkiewicz](http://www.paciorkiewicz.pl)
 
 Other translators are welcome !
 
@@ -46,7 +51,7 @@ Don't hesitate to [give your feedback](http://wordpress.org/tags/polylang?forum_
 
 == Upgrade Notice ==
 
-When upgrading from 0.5.1 or older, your custom flags in 'wp-content/plugins/polylang/local_flags' directory should move to 'wp-content/polylang'. People using the function 'pll_the_language' should be aware that it does not display the ul tag anymore.
+When upgrading from 0.5.1 or older, your custom flags in 'wp-content/plugins/polylang/local_flags' directory should move to 'wp-content/polylang'. People using the function 'pll_the_language' should be aware that it does not display the ul tag anymore. When upgrading from 0.6.1 or older, people using RTL languages must edit these languages and set the text direction to RTL in order for Polylang to work properly (the RTL property of the language is not set automatically when upgrading).
 
 == Installation ==
 
@@ -78,9 +83,63 @@ Yes. You have to use PNG or JPG files and name them with the WordPress locale co
 
 == Screenshots ==
 
-1. The Polylang languages admin panel (v0.5) in WordPress 3.3
+1. The Polylang languages admin panel in WordPress 3.3.1
+
+== Contribute ==
+
+If you wonder how you can help Polylang, here are some ideas. As you will read, there is no need to be a PHP developper!
+
+= Help other users of Polylang =
+
+The [support forum](http://wordpress.org/tags/polylang?forum_id=10) is here so that users of the plugin can get help when they need it. However, I will not always available to answer questions. You don't need to be a developer to help out. Very often similar questions have been answered in the past. You can subscribe to the tag ['polylang'](http://wordpress.org/tags/polylang) (emails or RSS feed, see just below the topic list) to know when a new topic has been posted.
+
+= Report bugs =
+
+Don't hesitate to report bugs on the [support forum](http://wordpress.org/tags/polylang?forum_id=10).
+
+= Test new versions =
+
+You can subscribe to the tag ['polylang-dev'](http://wordpress.org/tags/polylang-dev) that I use to announce development versions and then, test the new versions and report bugs before the final release. It helps a lot!
+
+= Translate the admin interface =
+
+Polylang is already available in 8 languages. It's very easy to add a new one ! Download [poedit](http://www.poedit.net/download.php) (available for Windows, Mac OS X and Linux). Rename the file polylang.pot found in the polylang/languages directory into something like polylang-your_locale.po. Open the file with poedit and start translating (keeping strange codes such as %s, %1$s as is). Once done, just save and you will get two files polylang-your_locale.po and polylang-your_locale.mo that you can send to the author. The translation will be included with the next release.
+
+= Communicate =
+
+If you like Polylang, you can spread the world... Rating the plugin is very easy, you can write some words about the plugin, make a link to the plugin page...
+
+= What else ? =
+
+Every suggestions are welcome.
 
 == Changelog ==
+
+= 0.7.2 (2012-02-15) =
+
+* Add Polish translation contributed by [Peter Paciorkiewicz](http://www.paciorkiewicz.pl)
+* Add 5 new languages to predefined list
+* completely reworked rewrite rules
+* Bug correction: custom nav menus do not work in Artisteer generated themes
+* Bug correction: having a single language causes multiple warnings while saving post/page.
+* Bug correction: custom nav menu broken on archives pages
+* Bug correction: the language switcher does not link to translated post type archive when using pretty permalinks
+* Bug correction: the tags are not saved in the right language when translated tags have the same name
+* Bug correction: bad link in post preview when adding language code to all urls
+* Bug correction: feed not filtered by language when adding language code to all urls
+* Bug correction: duplicate canonical link when used together with WordPress SEO by Yoast
+* Bug correction: the all posts admin page is messed if another plugin adds a column
+* Bug correction: 404 error on static front page when adding language code to all urls (including default language)
+
+= 0.7.1 (2012-02-06) = 
+
+* Allow using 3 characters languages codes (ISO 639-2 or 639-3)
+* The predefined languages dropdown list now displays the locale to help differentiate some languages
+* Add 5 new languages to predefined list
+* Bug correction: the filter 'pll_copy_post_metas' does not work
+* Bug correction: impossible to add a tag in the edit post panel
+* Bug correction: rewrite rules not correct
+* Bug correction: cache issue with css and js files
 
 = 0.7 (2012-01-30) =
 
