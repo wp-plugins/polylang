@@ -4,7 +4,7 @@
 abstract class Polylang_Base {
 	protected $options;
 	protected $home;
-	protected $strings; // strings to translate
+	protected $strings = array(); // strings to translate
 	protected $post_types; // post types to filter by language
 	protected $taxonomies; // taxonomies to filter by language
 
@@ -233,9 +233,11 @@ abstract class Polylang_Base {
 		return get_posts($q);
 	}
 
-	// register strings for translation
+	// register strings for translation making sure it is not duplicate
 	function register_string($name, $string) {
-		$this->strings[] = array('name'=> $name, 'string' => $string);
+		$to_register = array('name'=> $name, 'string' => $string);
+		if (!in_array($to_register, $this->strings))
+			$this->strings[] = $to_register;
 	}
 
 	// export a mo object in options

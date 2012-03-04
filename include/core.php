@@ -309,7 +309,8 @@ class Polylang_Core extends Polylang_base {
 
 		// allow filtering recent posts by the current language
 		// take care not to break queries for non visible post types such as nav_menu_items, attachments...
-		if ($query->is_home && $this->curlang && (!isset($qvars['post_type']) || in_array($qvars['post_type'], $this->post_types)))
+		if ($query->is_home && $this->curlang &&
+			(!isset($qvars['post_type']) || in_array($qvars['post_type'], $this->post_types) || array_intersect($qvars['post_type'], $this->post_types)) )
 			$query->set('lang', $this->curlang->slug);
 
 		// remove pages query when the language is set unless we do a search
