@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.8
+Version: 0.8.0.4
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 */
@@ -24,7 +24,7 @@ Description: Adds multilingual capability to Wordpress
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('POLYLANG_VERSION', '0.8');
+define('POLYLANG_VERSION', '0.8.0.4');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
@@ -74,11 +74,9 @@ class Polylang extends Polylang_Base {
 		add_action('admin_init',  array(&$this, 'admin_init'));
 
 		// plugin and widget initialization
-		add_action('init', array(&$this, 'init'), 1000); // called just after the init in Polylang_Base
+		add_action('init', array(&$this, 'init'));
 		add_action('widgets_init', array(&$this, 'widgets_init'));
-
-		// rewrite rules
-		add_filter('rewrite_rules_array', array(&$this, 'rewrite_rules_array' ));
+		add_action('wp_loaded', array(&$this, 'prepare_rewrite_rules'), 20); // after Polylang_base::add_post_types_taxonomies
 
 		// separate admin and frontend
 		if (is_admin()) {
@@ -140,7 +138,7 @@ class Polylang extends Polylang_Base {
 			return false;
 
 		// codex tells to use the init action to call register_taxonomy but I need it now for my rewrite rules
-		register_taxonomy('language', $this->post_types, array('label' => false, 'query_var'=>'lang')); 
+		register_taxonomy('language', null , array('label' => false, 'query_var'=>'lang')); 
 
 		// defines default values for options in case this is the first installation
 		$options = get_option('polylang');
@@ -155,8 +153,9 @@ class Polylang extends Polylang_Base {
 		update_option('polylang', $options);
 
 		// add our rewrite rules
-		global $wp_rewrite;
-		$wp_rewrite->flush_rules();
+		$this->add_post_types_taxonomies();
+		$this->prepare_rewrite_rules();
+		$GLOBALS['wp_rewrite']->flush_rules();
 		return true;
 	}
 
@@ -178,8 +177,7 @@ class Polylang extends Polylang_Base {
 
 	// plugin deactivation
 	function _deactivate() {
-		global $wp_rewrite;
-		$wp_rewrite->flush_rules();
+		$GLOBALS['wp_rewrite']->flush_rules();
 	}
 
 	// restores the local_flags directory after upgrade from version 0.5.1 or older
@@ -262,9 +260,6 @@ class Polylang extends Polylang_Base {
 			if (version_compare($options['version'], '0.7', '<'))
 				$options['force_lang'] = 0; // option introduced in 0.7
 
-			if (version_compare($options['version'], '0.8', '<'))
-				$GLOBALS['wp_rewrite']->flush_rules(); // rewrite rules have been modified in 0.7.1 & 0.7.2 & 0.8
-
 			// string translation storage model changed and option added in 0.8
 			if (version_compare($options['version'], '0.8dev1', '<')) {
 				if (function_exists('base64_decode')) {
@@ -278,6 +273,9 @@ class Polylang extends Polylang_Base {
 				$options['redirect_lang'] = 0; // option introduced in 0.8
 			}
 
+			if (version_compare($options['version'], '0.8.1', '<'))
+				$GLOBALS['wp_rewrite']->flush_rules(); // rewrite rules have been modified in 0.7.1 & 0.7.2 & 0.8 & 0.8.1
+
 			$options['version'] = POLYLANG_VERSION;
 			update_option('polylang', $options);
 		}
@@ -287,21 +285,17 @@ class Polylang extends Polylang_Base {
 	function init() {
 		global $wpdb;
 		$wpdb->termmeta = $wpdb->prefix . 'termmeta'; // registers the termmeta table in wpdb
+		$options = get_option('polylang');
 
 		// registers the language taxonomy
 		// codex: use the init action to call this function
-		register_taxonomy('language', $this->post_types, array(
+		// object types will be set later once all custom post types are registered
+		register_taxonomy('language', null, array(
 			'label' => false,
 			'public' => false, // avoid displaying the 'like post tags text box' in the quick edit
 			'query_var'=>'lang',
+			'rewrite' => array('slug' => $options['rewrite'] ? '' : 'language'), // http://www.myblog/en/ or http://www.myblog/language/en/ ?
 			'update_count_callback' => '_update_post_term_count'));
-
-		// optionaly removes 'language' in permalinks so that we get http://www.myblog/en/ instead of http://www.myblog/language/en/
-		// the simple line of code is inspired by the WP No Category Base plugin: http://wordpresssupplies.com/wordpress-plugins/no-category-base/
-		global $wp_rewrite;
-		$options = get_option('polylang');
-		if ($options['rewrite'] && $wp_rewrite->extra_permastructs)
-			$wp_rewrite->extra_permastructs['language'][0] = '%language%';
 
 		load_plugin_textdomain('polylang', false, basename(POLYLANG_DIR).'/languages'); // plugin i18n
 	}
@@ -315,48 +309,57 @@ class Polylang extends Polylang_Base {
 		register_widget('Polylang_Widget_Calendar');
 	}
 
-	// rewrites rules if pretty permalinks are used
+	// complete our taxonomy and add rewrite rules filters once custom post types and taxonomies are registered (normally in init)
+	function prepare_rewrite_rules() {
+		foreach ($this->post_types as $post_type)
+			register_taxonomy_for_object_type('language', $post_type);
+
+		// don't modify the rules if there is no languages created yet
+		if (!$this->get_languages_list())
+			return;
+
+		$types = array_merge(array('post', 'date', 'root', 'comments', 'search', 'author', 'page'), array_keys($GLOBALS['wp_rewrite']->extra_permastructs));
+		$types = apply_filters('pll_rewrite_rules', $types); // allow plugins to add rewrite rules to the language filter
+		foreach ($types as $type)
+			add_filter($type . '_rewrite_rules', array(&$this, 'rewrite_rules'));
+
+		add_filter('rewrite_rules_array', array(&$this, 'rewrite_rules')); // needed for post type archives
+	}
+
+	// the rewrite rules !
 	// always make sure the default language is at the end in case the language information is hidden for default language
 	// thanks to brbrbr http://wordpress.org/support/topic/plugin-polylang-rewrite-rules-not-correct
-	function rewrite_rules_array($rules) {
+	function rewrite_rules($rules) {
+
+		// suppress the rules created by WordPress for our taxonomy
+		if (($current_filter = current_filter()) == 'language_rewrite_rules')
+			return array();
+
 		$options = get_option('polylang');
+		$to_rewrite = array('date_rewrite_rules', 'root_rewrite_rules', 'comments_rewrite_rules', 'author_rewrite_rule', 'post_format_rewrite_rules');
 		$newrules = array();
-		$languages = array();
 
-		// don't modify the rules if there is no languages created
-		if (!($listlanguages = $this->get_languages_list()))
-			return $rules;
-
-		foreach ($listlanguages as $language)
+		foreach ($this->get_languages_list() as $language)
 			if (!$options['hide_default'] || $options['default_lang'] != $language->slug)
 				$languages[] = $language->slug;
 
-		if ($languages) {
-			$slug = '('.implode('|', $languages).')/';
-			$slug = $options['rewrite'] ? $slug : 'language/'.$slug;
-		}
+		if (isset($languages))
+			$slug = $options['rewrite'] ? '('.implode('|', $languages).')/' : 'language/('.implode('|', $languages).')/';
 
 		foreach ($rules as $key => $rule) {
-			// rules which *always* need the language code
-			$to_rewrite = in_array($key, array('feed/(feed|rdf|rss|rss2|atom)/?$', '(feed|rdf|rss|rss2|atom)/?$', 'page/?([0-9]{1,})/?$')) ||
-				strpos($rule, 'withcomments=1') || strpos($rule, 'post_format=') || strpos($rule, 'author_name=') || strpos($rule, 'post_type=') ||
-				strpos($rule, 'year=') && !(strpos($rule, 'p=') || strpos($rule, 'name=') || strpos($rule, 'page=') || strpos($rule, 'cpage='));
-
-			// suppress the rules created by WordPress for our taxonomy
-			if (strpos($rule, 'lang='))
-				unset($rules[$key]);
-				
 			// special case for pages which do not accept adding the lang parameter
-			elseif ($options['force_lang'] && strpos($rule, 'pagename')) {
+			if ($current_filter == 'page_rewrite_rules' && $options['force_lang']) {
 				if (isset($slug))
 					$newrules[$slug.$key] = str_replace(array('[4]', '[3]', '[2]', '[1]'), array('[5]', '[4]', '[3]', '[2]'), $rule); // hopefully it is sufficient !
 
-				if (!$options['hide_default'])
-					unset($rules[$key]); // now useless
+				if ($options['hide_default'])
+					$newrules[$key] = $rules[$key];
+
+				unset($rules[$key]); // now useless
 			}
 
 			// rewrite rules filtered by language
-			elseif ($to_rewrite || ($options['force_lang'] && !strpos($rule, 'robots'))) {
+			elseif (in_array($current_filter, $to_rewrite) || strpos($rule, 'post_type=') || ($current_filter != 'rewrite_rules_array' && $options['force_lang'])) {
 				if (isset($slug))
 					$newrules[$slug.$key] = str_replace(array('[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '[1]', '?'), 
 						array('[9]', '[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '?lang=$matches[1]&'), $rule); // hopefully it is sufficient !
@@ -365,10 +368,14 @@ class Polylang extends Polylang_Base {
 					$newrules[$key] = str_replace('?', '?lang='.$options['default_lang'].'&', $rule);
 
 				unset($rules[$key]); // now useless
-			}
+			}				
 		}
-		// important to put home rewrite rule before unmodified rules
-		return $newrules + array($slug.'?$' => 'index.php?lang=$matches[1]') + $rules;
+
+		// the home rewrite rule
+		if ($current_filter == 'root_rewrite_rules' && isset($slug))
+			$newrules[$slug.'?$'] = 'index.php?lang=$matches[1]';
+
+		return $newrules + $rules;
 	}
 
 } // class Polylang

@@ -266,8 +266,8 @@ class Polylang_Admin extends Polylang_Base {
 
 				update_option('polylang', $options);
 
-				// refresh refresh permalink structure and rewrite rules in case rewrite or hide_default options have been modified
-				$wp_rewrite->extra_permastructs['language'][0] = $options['rewrite'] ? '%language%' : '/language/%language%';
+				// refresh rewrite rules in case rewrite or hide_default options have been modified
+				// it seems useless to refresh permastruct here
 				$wp_rewrite->flush_rules();
 
 				// fills existing posts & terms with default language

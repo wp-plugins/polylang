@@ -16,6 +16,9 @@ class Polylang_Admin_Filters extends Polylang_Base {
 
 		// refresh rewrite rules if the 'page_on_front' option is modified
 		add_action('update_option', array(&$this, 'update_option'));
+
+		// remove the customize menu section as it is unusable with Polylang
+		add_action('customize_register', array(&$this, 'customize_register'), 20); // since WP 3.4
 	}
 
 	// add these actions and filters here and not in the constructor to be sure that all taxonomies are registered
@@ -760,6 +763,11 @@ class Polylang_Admin_Filters extends Polylang_Base {
 	function nav_menu_language() {
 		echo '<p class="howto">' . sprintf (__('Please go to the %slanguages page%s to set theme locations and languages', 'polylang'),
 			'<a href="' . esc_url(admin_url('options-general.php?page=mlang&tab=menus')) . '">', '</a>') . '</p>';
+	}
+
+	// remove the customize menu section as it is unusable with Polylang
+	function customize_register() {
+		$GLOBALS['customize']->remove_section('nav');
 	}
 
 	// modifies the widgets forms to add our language dropdwown list

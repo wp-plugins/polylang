@@ -13,11 +13,11 @@ abstract class Polylang_Base {
 		$this->options = get_option('polylang');
 		$this->home = get_option('home');
 
-		add_action('init', array(&$this, 'init_base'), 999); // must come late to be sure all post types and taxonomies are registered
+		add_action('wp_loaded', array(&$this, 'add_post_types_taxonomies')); // must come late to be sure that all post types and taxonomies are registered
 	}
 
 	// init post types and taxonomies to filter by language
-	function init_base() {
+	function add_post_types_taxonomies() {
 		$this->post_types = apply_filters('pll_get_post_types', get_post_types(array('show_ui' => true)));
 		$this->taxonomies = apply_filters('pll_get_taxonomies', get_taxonomies(array('show_ui'=>true)));
 	}
