@@ -6,18 +6,24 @@ function pll_the_languages($args = '') {
 	return isset($polylang) ? $polylang->the_languages($args) : '';
 }
 
-// among the post and its translations, returns the id of the post which is in the language represented by $slug
-function pll_get_post($post_id, $slug = '') {
+// returns the current language
+function pll_current_language($args = 'slug') {
 	global $polylang;
-	$slug = $slug ? $slug : reset(explode('_', get_locale()));
-	return isset($polylang) ? $polylang->get_post($post_id, $slug) : null;
+	return isset($polylang) ? $polylang->current_language($args) : false;
+}
+
+// among the post and its translations, returns the id of the post which is in the language represented by $slug
+function pll_get_post($post_id, $slug = false) {
+	global $polylang;
+	$slug = $slug ? $slug : pll_current_language();
+	return isset($polylang) && $slug ? $polylang->get_post($post_id, $slug) : null;
 }
 
 // among the term and its translations, returns the id of the term which is in the language represented by $slug
-function pll_get_term($term_id, $slug = '') {
+function pll_get_term($term_id, $slug = false) {
 	global $polylang;
-	$slug = $slug ? $slug : reset(explode('_', get_locale()));
-	return isset($polylang) ? $polylang->get_term($term_id, $slug) : null;
+	$slug = $slug ? $slug : pll_current_language();
+	return isset($polylang) && $slug ? $polylang->get_term($term_id, $slug) : null;
 }
 
 // acts as is_front_page but knows about translated front page
