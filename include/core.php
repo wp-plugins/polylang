@@ -22,6 +22,7 @@ class Polylang_Core extends Polylang_base {
 		add_action('init', array(&$this, 'init'));
 		add_filter('override_load_textdomain', array(&$this, 'mofile'), 10, 3);
 		add_action('wp', array(&$this, 'load_textdomains'));
+		add_action('login_init', array(&$this, 'load_textdomains'));
 
 		// filters posts according to the language
 		add_filter('pre_get_posts', array(&$this, 'pre_get_posts'));;
@@ -154,7 +155,7 @@ class Polylang_Core extends Polylang_base {
 			return $this->curlang;
 
 		// no language set for 404 and attachment
-		if (is_404() || is_attachment())
+		if (is_404() || is_attachment() || current_filter() == 'login_init')
 			return $this->get_preferred_language();
 
 		if ($var = get_query_var('lang'))

@@ -382,10 +382,12 @@ class Polylang_Admin_Filters extends Polylang_Base {
 			}
 
 			// copy metas and allow plugins to do the same
-			$metas = apply_filters('pll_copy_post_metas', array('_wp_page_template', '_thumbnail_id'));
-			foreach ($metas as $meta) {
-				if ($value = get_post_meta($_GET['from_post'], $meta, true))
-					update_post_meta($post_id, $meta, $value);
+			$keys = array_unique(apply_filters('pll_copy_post_metas', array('_wp_page_template', '_thumbnail_id')));
+			$metas = get_post_custom($_GET['from_post']);
+			foreach ($keys as $key) {
+				if (isset($metas[$key]))
+					foreach ($metas[$key] as $value)
+						add_post_meta($post_id, $key, $value);
 			}
 		}
 
@@ -448,12 +450,13 @@ class Polylang_Admin_Filters extends Polylang_Base {
 			($format = get_post_format($post_id)) ? set_post_format($tr_id, $format) : set_post_format($tr_id, '');
 
 			// synchronize metas and allow plugins to do the same
-			$metas = apply_filters('pll_copy_post_metas', array('_wp_page_template', '_thumbnail_id'));
-			foreach ($metas as $meta) {
-				if ($value = get_post_meta($post_id, $meta, true))
-					update_post_meta($tr_id, $meta, get_post_meta($post_id, $meta, true));
-				else
-					delete_post_meta($tr_id, $meta);
+			$keys = array_unique(apply_filters('pll_copy_post_metas', array('_wp_page_template', '_thumbnail_id')));
+			$metas = get_post_custom($post_id);
+			foreach ($keys as $key) {
+				delete_post_meta($tr_id, $key); // the synchronization process of multiple values custom fields is easier if we delete all metas first
+				if (isset($metas[$key]))
+					foreach ($metas[$key] as $value)
+						add_post_meta($tr_id, $key, $value);
 			}
 
 			// post parent
@@ -664,7 +667,7 @@ class Polylang_Admin_Filters extends Polylang_Base {
 			'tax_query' => array(array(
 				'taxonomy'=> $taxonomy,
 				'field' => 'id',
-				'terms'=> array($term_id)+array_values($translations),
+				'terms'=> array_merge(array($term_id), array_values($translations)),
 			))
 		));
 
