@@ -1,10 +1,10 @@
 === Polylang ===
 Contributors: Chouby
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CCWWYUUQV8F4E
-Tags: bilingual, language, i18n, international, l10n, localization, multilanguage, multilingual, multisite, translate, translation
+Tags: multilingual, bilingual, translate, translation, language, multilanguage, i18n, international, l10n, localization
 Requires at least: 3.1
 Tested up to: 3.3.1
-Stable tag: 0.6.1
+Stable tag: 0.8
 
 Polylang adds multilingual content management support to WordPress.
 
@@ -12,14 +12,14 @@ Polylang adds multilingual content management support to WordPress.
 
 = Upgrade Notice =
 
-When upgrading from 0.5.1 or older, your custom flags in 'wp-content/plugins/polylang/local_flags' directory should move to 'wp-content/polylang'. People using the function 'pll_the_language' should be aware that it does not display the 'ul' tag anymore. I wrote about the reasons for these changes in the [forum](http://wordpress.org/support/topic/development-of-polylang-version-06).
+When upgrading from 0.5.1 or older, your custom flags in 'wp-content/plugins/polylang/local_flags' directory should move to 'wp-content/polylang'. People using the function 'pll_the_language' should be aware that it does not display the 'ul' tag anymore. I wrote about the reasons for these changes in the [forum](http://wordpress.org/support/topic/development-of-polylang-version-06). When upgrading from 0.6.1 or older, people using RTL languages must edit these languages and set the text direction to RTL in order for Polylang to work properly (the RTL property of the language is not set automatically when upgrading).
 
 = Features  =
 
 You write posts, pages and create categories and post tags as usual, and then define the language for each of them. The translation is optional. The plugin does not integrate automatic or professional translation.
 
 * You can have as many languages as you want. RTL languages are now supported. WordPress languages files are automatically downloaded and updated.
-* You can translate posts, pages, categories, post tags, menus, widgets... Custom post types, custom taxonomies and post formats, RSS feeds and all default WordPress widgets are supported.
+* You can translate posts, pages, categories, post tags, menus, widgets... Custom post types, custom taxonomies, sticky posts and post formats, RSS feeds and all default WordPress widgets are supported.
 * Categories, post tags as well as some other metas are automatically copied when adding a new post or page translation
 * Support for Search form (see the FAQ in the documentation)
 * Support for multisite, pretty permalinks and static page used as front page
@@ -37,8 +37,12 @@ The plugin admin interface is currently available in:
 * Greek contributed by [theodotos](http://www.ubuntucy.org)
 * Dutch contributed by [AlbertGn](http://wordpress.org/support/profile/albertgn)
 * Hebrew contributed by [ArielK](http://www.arielk.net)
+* Polish contributed by [Peter Paciorkiewicz](http://www.paciorkiewicz.pl)
+* Latvian contributed by [@AndyDeGroo](http://twitter.com/AndyDeGroo)
 
-Other translators are welcome !
+Special thanks to [@AndyDeGroo](http://twitter.com/AndyDeGroo) and [RavanH](http://4visions.nl/) for their help in debugging and improving Polylang !
+
+Other [contributions](http://wordpress.org/extend/plugins/polylang/other_notes/) are welcome ! 
 
 = Feedback or ideas =
 
@@ -46,7 +50,7 @@ Don't hesitate to [give your feedback](http://wordpress.org/tags/polylang?forum_
 
 == Upgrade Notice ==
 
-When upgrading from 0.5.1 or older, your custom flags in 'wp-content/plugins/polylang/local_flags' directory should move to 'wp-content/polylang'. People using the function 'pll_the_language' should be aware that it does not display the ul tag anymore.
+When upgrading from 0.5.1 or older, your custom flags in 'wp-content/plugins/polylang/local_flags' directory should move to 'wp-content/polylang'. People using the function 'pll_the_language' should be aware that it does not display the ul tag anymore. When upgrading from 0.6.1 or older, people using RTL languages must edit these languages and set the text direction to RTL in order for Polylang to work properly (the RTL property of the language is not set automatically when upgrading).
 
 == Installation ==
 
@@ -78,9 +82,105 @@ Yes. You have to use PNG or JPG files and name them with the WordPress locale co
 
 == Screenshots ==
 
-1. The Polylang languages admin panel (v0.5) in WordPress 3.3
+1. The Polylang languages admin panel in WordPress 3.3.1
+
+== Contribute ==
+
+If you wonder how you can help Polylang, here are some ideas. As you will read, there is no need to be a PHP developper!
+
+= Help other users of Polylang =
+
+The [support forum](http://wordpress.org/tags/polylang?forum_id=10) is here so that users of the plugin can get help when they need it. However, I will not always available to answer questions. You don't need to be a developer to help out. Very often similar questions have been answered in the past. You can subscribe to the tag ['polylang'](http://wordpress.org/tags/polylang) (emails or RSS feed, see just below the topic list) to know when a new topic has been posted.
+
+= Report bugs =
+
+Don't hesitate to report bugs on the [support forum](http://wordpress.org/tags/polylang?forum_id=10).
+
+= Test new versions =
+
+You can subscribe to the tag ['polylang-dev'](http://wordpress.org/tags/polylang-dev) that I use to announce development versions and then, test the new versions and report bugs before the final release. It helps a lot!
+
+= Translate the admin interface =
+
+Polylang is already available in 9 languages. It's very easy to add a new one ! Download [poedit](http://www.poedit.net/download.php) (available for Windows, Mac OS X and Linux). Rename the file polylang.pot found in the polylang/languages directory into something like polylang-your_locale.po. Open the file with poedit and start translating (keeping strange codes such as %s, %1$s as is). Once done, just save and you will get two files polylang-your_locale.po and polylang-your_locale.mo that you can send to the author. The translation will be included with the next release.
+
+= Communicate =
+
+If you like Polylang, you can spread the word... Rating the plugin is very easy, you can write some words about the plugin, make a link to the plugin page...
+
+= What else ? =
+
+Every suggestions are welcome.
 
 == Changelog ==
+
+= 0.8.1 (2012-03-11) =
+
+* Add Latvian translation contributed by [@AndyDeGroo](http://twitter.com/AndyDeGroo)
+* It is now possible to synchronize multiple values for custom fields
+* Add new API function pll_current_language
+* Add the pll_rewrite_rules filter allowing plugins to filter rewrite rules by language
+* WP 3.4 preparation: disable the menu section in the customize theme admin panel (unusable with Polylang)
+* Bug correction: removing 'language' in permalinks does not work in WP 3.4 alpha
+* Bug correction: problems with custom post type archives when 'has_archive' is set (thanks to AndyDeGroo)
+* Bug correction: 404 error when combining %postname% permastructure with "Add language information to all URL" option
+* Bug correction: translated custom strings are duplicated if registered several times
+* Bug correction: queries with an array of post types are not correctly filtered
+* Bug correction: wp-login.php always in English
+
+= 0.8 (2012-02-29) =
+
+* Sticky posts are now filtered by language
+* It is now possible to use the language page as home page
+* Add an "About Polylang" metabox on the languages admin page
+* Add the pll_the_languages filter allowing to filter the whole output of the language switcher
+* Add a new argument 'display_names_as' to the function pll_the_languages
+* Add pll_get_post_types & pll_get_taxonomies filters allowing to enable / disable the language filter for post types & taxonomies
+* Add ckb to predefined languages list
+* Completely reworked the string translation storage in the database
+* Some performance improvements on admin side
+* Improve compatibility with other plugins broken by the home url filter
+* Add an option to disable the home url filter
+* Add an option to disable synchronization of metas between translations
+* Bug correction: body class 'home' is not set on translated homepage
+* Bug correction: robots.txt is broken when adding the language code to all urls (including default language)
+* Bug correction: bad name for the Czech flag
+* Bug correction: bad language information in rss feed for WP < 3.4
+* Bug correction: signup broken on multisite
+* Bug correction: the translation url is set to self when using a static front page and no page for posts and there is no translation
+* Bug correction: problems with custom post type archive titles
+* Bug correction: problems with custom post type if rewrite slug is different from post_type (thanks to AndyDeGroo)
+* Bug correction: quick edit still breaks translation linking of pages (thanks to AndyDeGroo)
+* Bug correction: bad rewrite rules for feeds (introduced in 0.7.2)
+* Bug correction: the order is not saved when creating a language
+* Bug correction: the categories list is not updated when adding a new category (ajax broken)
+
+= 0.7.2 (2012-02-15) =
+
+* Add Polish translation contributed by [Peter Paciorkiewicz](http://www.paciorkiewicz.pl)
+* Add 5 new languages to predefined list
+* completely reworked rewrite rules
+* WP 3.4 preparation: add new WordPress languages files to download when creating a new language 
+* Bug correction: custom nav menus do not work in Artisteer generated themes
+* Bug correction: having a single language causes multiple warnings while saving post/page.
+* Bug correction: custom nav menu broken on archives pages
+* Bug correction: the language switcher does not link to translated post type archive when using pretty permalinks
+* Bug correction: the tags are not saved in the right language when translated tags have the same name
+* Bug correction: bad link in post preview when adding language code to all urls
+* Bug correction: feed not filtered by language when adding language code to all urls
+* Bug correction: duplicate canonical link when used together with WordPress SEO by Yoast
+* Bug correction: the all posts admin page is messed if another plugin adds a column
+* Bug correction: 404 error on static front page when adding language code to all urls (including default language)
+
+= 0.7.1 (2012-02-06) =
+
+* Allow using 3 characters languages codes (ISO 639-2 or 639-3)
+* The predefined languages dropdown list now displays the locale to help differentiate some languages
+* Add 5 new languages to predefined list
+* Bug correction: the filter 'pll_copy_post_metas' does not work
+* Bug correction: impossible to add a tag in the edit post panel
+* Bug correction: rewrite rules not correct
+* Bug correction: cache issue with css and js files
 
 = 0.7 (2012-01-30) =
 
