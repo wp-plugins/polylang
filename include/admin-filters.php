@@ -14,11 +14,11 @@ class Polylang_Admin_Filters extends Polylang_Base {
 		// filter admin language for users
 		add_filter('locale', array(&$this, 'get_locale'));
 
-		// refresh rewrite rules if the 'page_on_front' option is modified
-		add_action('update_option', array(&$this, 'update_option'));
-
 		// remove the customize menu section as it is unusable with Polylang
 		add_action('customize_register', array(&$this, 'customize_register'), 20); // since WP 3.4
+
+		// refresh rewrite rules if the 'page_on_front' option is modified
+		add_action('update_option_page_on_front', array(&$this, 'update_option_page_on_front'));
 	}
 
 	// add these actions and filters here and not in the constructor to be sure that all taxonomies are registered
@@ -95,7 +95,7 @@ class Polylang_Admin_Filters extends Polylang_Base {
 		if ($lang_id)
 			$wp_locale->text_direction = get_metadata('term', $lang_id, '_rtl', true) ? 'rtl' : 'ltr';
 
-		//modifies posts and terms links when need
+		//modifies posts and terms links when needed
 		$this->add_post_term_link_filters();
 	}
 
@@ -103,7 +103,7 @@ class Polylang_Admin_Filters extends Polylang_Base {
 	function admin_enqueue_scripts() {
 		$screen = get_current_screen();
 
-		// FIXME keep the script in header to be sure it is loaded before post.js otherwise a non filtered tag cloud appear in tag cloud metabox
+		// FIXME keep the script in header to be sure it is loaded before post.js otherwise a non filtered tag cloud appears in tag cloud metabox
 		if ($screen->base == 'settings_page_mlang' || $screen->base == 'post' || $screen->base == 'edit-tags')
 			wp_enqueue_script('polylang_admin', POLYLANG_URL .'/js/admin.js', array('jquery', 'wp-ajax-response'), POLYLANG_VERSION);
 
@@ -185,9 +185,8 @@ class Polylang_Admin_Filters extends Polylang_Base {
 
 	// adds the Languages box in the 'Edit Post' and 'Edit Page' panels (as well as in custom post types panels
 	function add_meta_boxes() {
-		if ($this->get_languages_list())
-			foreach($this->post_types as $ptype)
-				add_meta_box('ml_box', __('Languages','polylang'), array(&$this,'post_language'), $ptype, 'side','high');
+		foreach($this->post_types as $ptype)
+			add_meta_box('ml_box', __('Languages','polylang'), array(&$this,'post_language'), $ptype, 'side', 'high');
 	}
 
 	// the Languages metabox in the 'Edit Post' and 'Edit Page' panels
@@ -310,7 +309,6 @@ class Polylang_Admin_Filters extends Polylang_Base {
 		echo join( $results, "\n" );
 		die;
 	}
-
 
 	// filters the pages by language in the parent dropdown list in the page attributes metabox
 	function page_attributes_dropdown_pages_args($dropdown_args, $post) {
@@ -768,9 +766,9 @@ class Polylang_Admin_Filters extends Polylang_Base {
 			'<a href="' . esc_url(admin_url('options-general.php?page=mlang&tab=menus')) . '">', '</a>') . '</p>';
 	}
 
-	// remove the customize menu section as it is unusable with Polylang
+	// FIXME remove the customize menu section as it is currently unusable with Polylang
 	function customize_register() {
-		$GLOBALS['customize']->remove_section('nav');
+		$GLOBALS['customize']->remove_section('nav'); // since WP 3.4
 	}
 
 	// modifies the widgets forms to add our language dropdwown list
@@ -817,10 +815,8 @@ class Polylang_Admin_Filters extends Polylang_Base {
 	}
 
 	// refresh rewrite rules if the 'page_on_front' option is modified
-	function update_option($option) {
-		global $wp_rewrite;
-		if ($option == 'page_on_front')
-			$wp_rewrite->flush_rules();
+	function update_option_page_on_front() {
+		$GLOBALS['wp_rewrite']->flush_rules();
 	}
 }
 

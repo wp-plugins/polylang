@@ -38,8 +38,9 @@ The plugin admin interface is currently available in:
 * Dutch contributed by [AlbertGn](http://wordpress.org/support/profile/albertgn)
 * Hebrew contributed by [ArielK](http://www.arielk.net)
 * Polish contributed by [Peter Paciorkiewicz](http://www.paciorkiewicz.pl)
+* Latvian contributed by [@AndyDeGroo](http://twitter.com/AndyDeGroo)
 
-Special thanks to [AndyDeGroo](http://wordpress.org/support/profile/andydegroo) and [RavanH](http://4visions.nl/) for their help in debugging and improving Polylang !
+Special thanks to [@AndyDeGroo](http://twitter.com/AndyDeGroo) and [RavanH](http://4visions.nl/) for their help in debugging and improving Polylang !
 
 Other [contributions](http://wordpress.org/extend/plugins/polylang/other_notes/) are welcome ! 
 
@@ -101,17 +102,31 @@ You can subscribe to the tag ['polylang-dev'](http://wordpress.org/tags/polylang
 
 = Translate the admin interface =
 
-Polylang is already available in 8 languages. It's very easy to add a new one ! Download [poedit](http://www.poedit.net/download.php) (available for Windows, Mac OS X and Linux). Rename the file polylang.pot found in the polylang/languages directory into something like polylang-your_locale.po. Open the file with poedit and start translating (keeping strange codes such as %s, %1$s as is). Once done, just save and you will get two files polylang-your_locale.po and polylang-your_locale.mo that you can send to the author. The translation will be included with the next release.
+Polylang is already available in 9 languages. It's very easy to add a new one ! Download [poedit](http://www.poedit.net/download.php) (available for Windows, Mac OS X and Linux). Rename the file polylang.pot found in the polylang/languages directory into something like polylang-your_locale.po. Open the file with poedit and start translating (keeping strange codes such as %s, %1$s as is). Once done, just save and you will get two files polylang-your_locale.po and polylang-your_locale.mo that you can send to the author. The translation will be included with the next release.
 
 = Communicate =
 
-If you like Polylang, you can spread the world... Rating the plugin is very easy, you can write some words about the plugin, make a link to the plugin page...
+If you like Polylang, you can spread the word... Rating the plugin is very easy, you can write some words about the plugin, make a link to the plugin page...
 
 = What else ? =
 
 Every suggestions are welcome.
 
 == Changelog ==
+
+= 0.8.1 (2012-03-11) =
+
+* Add Latvian translation contributed by [@AndyDeGroo](http://twitter.com/AndyDeGroo)
+* It is now possible to synchronize multiple values for custom fields
+* Add new API function pll_current_language
+* Add the pll_rewrite_rules filter allowing plugins to filter rewrite rules by language
+* WP 3.4 preparation: disable the menu section in the customize theme admin panel (unusable with Polylang)
+* Bug correction: removing 'language' in permalinks does not work in WP 3.4 alpha
+* Bug correction: problems with custom post type archives when 'has_archive' is set (thanks to AndyDeGroo)
+* Bug correction: 404 error when combining %postname% permastructure with "Add language information to all URL" option
+* Bug correction: translated custom strings are duplicated if registered several times
+* Bug correction: queries with an array of post types are not correctly filtered
+* Bug correction: wp-login.php always in English
 
 = 0.8 (2012-02-29) =
 
@@ -145,6 +160,7 @@ Every suggestions are welcome.
 * Add Polish translation contributed by [Peter Paciorkiewicz](http://www.paciorkiewicz.pl)
 * Add 5 new languages to predefined list
 * completely reworked rewrite rules
+* WP 3.4 preparation: add new WordPress languages files to download when creating a new language 
 * Bug correction: custom nav menus do not work in Artisteer generated themes
 * Bug correction: having a single language causes multiple warnings while saving post/page.
 * Bug correction: custom nav menu broken on archives pages

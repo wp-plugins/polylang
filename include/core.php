@@ -233,7 +233,7 @@ class Polylang_Core extends Polylang_base {
 
 		// detect our exclude pages query and returns to avoid conflicts
 		// this test should be sufficient
-		if (isset($qvars['tax_query'][0]) && isset($qvars['tax_query'][0]['taxonomy']) && isset($qvars['tax_query'][0]['operator']))
+		if (isset($qvars['tax_query'][0]['taxonomy']) && $qvars['tax_query'][0]['taxonomy'] == 'language' && isset($qvars['tax_query'][0]['operator']))
 			return;
 
 		// homepage is requested, let's set the language
