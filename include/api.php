@@ -26,12 +26,10 @@ function pll_get_term($term_id, $slug = false) {
 	return isset($polylang) && $slug ? $polylang->get_term($term_id, $slug) : null;
 }
 
-// acts as is_front_page but knows about translated front page
+// deprecated in 0.8.2 as it is now useless
 function pll_is_front_page() {
-	global $polylang;
-	return isset($polylang) ? $polylang->is_front_page() : is_front_page();
+	return is_front_page();
 }
-
 // returns the home url in the right language
 function pll_home_url() {
 	global $polylang;
@@ -41,7 +39,7 @@ function pll_home_url() {
 // register strings for translation in the "strings translation" panel
 function pll_register_string($name, $string) {
 	global $polylang;
-	if (isset($polylang))
+	if (isset($polylang) && is_admin())
 		$polylang->register_string($name, $string);
 }
 

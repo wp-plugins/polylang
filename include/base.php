@@ -233,13 +233,6 @@ abstract class Polylang_Base {
 		return get_posts($q);
 	}
 
-	// register strings for translation making sure it is not duplicate
-	function register_string($name, $string) {
-		$to_register = array('name'=> $name, 'string' => $string);
-		if (!in_array($to_register, $this->strings))
-			$this->strings[] = $to_register;
-	}
-
 	// export a mo object in options
 	function mo_export($mo, $lang) {
 		$strings = array();

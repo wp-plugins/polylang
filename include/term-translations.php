@@ -50,7 +50,7 @@ else {
 				// do not display the add new link in add term form ($term_id not set !!!)
 				if (isset($term_id))
 					printf('<td class="tr-edit-column"><a href="%1$s">%2$s</a></td>',
-						esc_url(admin_url(sprintf('edit-tags.php?taxonomy=%1$s&from_tag=%2$d&new_lang=%3$s', $taxonomy, $term_id, $lang->slug))),
+						esc_url(admin_url(sprintf('edit-tags.php?taxonomy=%1$s&from_tag=%2$d&new_lang=%3$s', $taxonomy, $term_id, $language->slug))),
 						__('Add new','polylang')
 					);
 			}

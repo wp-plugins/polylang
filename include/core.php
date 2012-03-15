@@ -93,12 +93,6 @@ class Polylang_Core extends Polylang_base {
 		add_filter('bloginfo', array(&$this, 'bloginfo'), 1, 2);
 		add_filter('get_bloginfo_rss', array(&$this, 'bloginfo'), 1, 2);
 
-		// loads front page template on translated front page
-		add_filter('template_include', array(&$this, 'template_include'));
-
-		// add home class to body classes on translated frontpage
-		add_filter('body_class', array(&$this, 'body_class'));
-
 		// modifies the home url
 		if (PLL_FILTER_HOME_URL)
 			add_filter('home_url', array(&$this, 'home_url'));
@@ -233,7 +227,8 @@ class Polylang_Core extends Polylang_base {
 
 		// detect our exclude pages query and returns to avoid conflicts
 		// this test should be sufficient
-		if (isset($qvars['tax_query'][0]['taxonomy']) && $qvars['tax_query'][0]['taxonomy'] == 'language' && isset($qvars['tax_query'][0]['operator']))
+		if (isset($qvars['tax_query'][0]['taxonomy']) && $qvars['tax_query'][0]['taxonomy'] == 'language' &&
+			isset($qvars['tax_query'][0]['operator']) && $qvars['tax_query'][0]['operator'] == 'NOT IN')
 			return;
 
 		// homepage is requested, let's set the language
@@ -527,7 +522,7 @@ class Polylang_Core extends Polylang_base {
 		}
 
 		elseif (is_home() || is_tax('language') )
-			$url = $hide ? $this->home : get_term_link($language, 'language');
+			$url = $this->get_home_url($language, 'language');
 
 		return isset($url) ? $url : null;
 	}
@@ -582,25 +577,6 @@ class Polylang_Core extends Polylang_base {
 	// translates page for posts and page on front
 	function translate_page($value) {
 		return isset($this->curlang) && $value ? $this->get_post($value, $this->curlang) : $value;
-	}
-
-	// acts as is_front_page but knows about translated front page
-	function is_front_page() {
-		return ('posts' == get_option('show_on_front') && is_home()) ||
-			('page' == get_option('show_on_front') && $this->page_on_front && is_page($this->get_post($this->page_on_front, $this->get_current_language()))) ||
-			(is_tax('language') && !is_archive());
-	}
-
-	// loads front page template on translated front page
-	function template_include($template) {
-		return ($this->is_front_page() && $front_page = get_front_page_template()) ? $front_page : $template;
-	}
-
-	// add home class to body classes on translated frontpage
-	function body_class($classes) {
-		if ($this->is_front_page() && !is_front_page())
-			array_unshift($classes, 'home');
-		return $classes;
 	}
 
 	// filters the home url to get the right language
