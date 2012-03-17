@@ -385,21 +385,6 @@ class Polylang_Admin extends Polylang_Admin_Base {
 		return empty($posts) && empty($terms) ? false : array('posts' => $posts, 'terms' => $terms);
 	}
 
-	// returns options available for the language switcher (menu or widget)
-	// FIXME do not include the dropdown in menu yet since I need to work on js
-	function get_switcher_options($type = 'widget', $key ='string') {
-		$options = array (
-			'show_names' => array('string' => __('Displays language names', 'polylang'), 'default' => 1),
-			'show_flags' => array('string' => __('Displays flags', 'polylang'), 'default' => 0),
-			'force_home' => array('string' => __('Forces link to front page', 'polylang'), 'default' => 0),
-			'hide_current' => array('string' => __('Hides the current language', 'polylang'), 'default' => 0),
-		);
-		$menu_options = array('switcher' => array('string' => __('Displays a language switcher at the end of the menu', 'polylang'), 'default' => 0));
-		$widget_options = array('dropdown' => array('string' => __('Displays as dropdown', 'polylang'), 'default' => 0));
-		$options = ($type == 'menu') ? array_merge($menu_options, $options) : array_merge($options, $widget_options);
-		return array_map(create_function('$v', "return \$v['$key'];"), $options);
-	}
-
 	function &get_strings() {
 		global $wp_registered_widgets;
 

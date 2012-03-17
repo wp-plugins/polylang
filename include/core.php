@@ -619,9 +619,7 @@ class Polylang_Core extends Polylang_base {
 
 		// a static page is used as front page : /!\ don't use get_page_link to avoid infinite loop
 		if ($this->page_on_front && $id = $this->get_post($this->page_on_front, $language))
-			return $this->options['force_lang'] && !$this->options['redirect_lang'] && $GLOBALS['wp_rewrite']->using_permalinks() ?
-				$this->add_language_to_link($this->page_link('', $id), $this->curlang) :
-				$this->page_link('', $id);
+			return $this->page_link('', $id);
 
 		return get_term_link($language, 'language');
 	}

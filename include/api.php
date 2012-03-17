@@ -30,6 +30,7 @@ function pll_get_term($term_id, $slug = false) {
 function pll_is_front_page() {
 	return is_front_page();
 }
+
 // returns the home url in the right language
 function pll_home_url() {
 	global $polylang;

@@ -95,21 +95,24 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		$this->add_post_term_link_filters();
 	}
 
+	function add_column($columns, $before) {
+		if ($n = array_search($before, array_keys($columns))) {
+			$end = array_slice($columns, $n);
+			$columns = array_slice($columns, 0, $n);
+		}
+
+		foreach ($this->get_languages_list() as $language)
+			$columns['language_'.$language->slug] = ($flag = $this->get_flag($language)) ? $flag : esc_html($language->slug);
+
+		if (isset($end))
+			$columns = array_merge($columns, $end);
+
+		return $columns;
+	}
+
 	// adds the language and translations columns (before the comments column) in the posts and pages list table
 	function add_post_column($columns, $post_type ='') {
-		if ($post_type == '' || in_array($post_type, $this->post_types)) {
-			if ($n = array_search('comments', array_keys($columns))) {
-				$end = array_slice($columns, $n);
-				$columns = array_slice($columns, 0, $n);
-			}
-
-			foreach ($this->get_languages_list() as $language)
-				$columns['language_'.$language->slug] = ($flag = $this->get_flag($language)) ? $flag : esc_html($language->slug);
-
-			if (isset($end))
-				$columns = array_merge($columns, $end);
-		}
-    return $columns;
+		return $post_type == '' || in_array($post_type, $this->post_types) ? $this->add_column($columns, 'comments') : $columns;
 	}
 
 	// fills the language and translations columns in the posts table
@@ -550,23 +553,12 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		echo "</tr>\n";
 	}
 
-	// adds the language column (before the posts column) in the 'Categories' or Post Tags table
+	// adds the language column (before the posts column) in the 'Categories' or 'Post Tags' table
 	function add_term_column($columns) {
-		if ($n = array_search('posts', array_keys($columns))) {
-			$end = array_slice($columns, $n);
-			$columns = array_slice($columns, 0, $n);
-		}
-
-		foreach ($this->get_languages_list() as $language)
-			$columns['language_'.$language->slug] = ($flag = $this->get_flag($language)) ? $flag : esc_html($language->slug);
-
-		if (isset($end))
-				$columns = array_merge($columns, $end);
-
-    return $columns;
+    return $this->add_column($columns, 'posts');
 	}
 
-	// fills the language column in the 'Categories' or Post Tags table
+	// fills the language column in the 'Categories' or 'Post Tags' table
 	function term_column($empty, $column, $term_id) {
 		if (false === strpos($column, 'language_') || !$this->get_term_language($term_id))
 			return;
