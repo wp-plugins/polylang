@@ -192,37 +192,48 @@ class Polylang_Core extends Polylang_base {
 	// as done by xili_language and here: load text domains and reinitialize wp_locale with the action 'wp'
 	// as done by qtranslate: define the locale with the action 'plugins_loaded', but in this case, the language must be specified in the url.
 	function load_textdomains() {
-		// sets the current language
-		if (!($this->curlang = $this->get_current_language()))
-			return; // something went wrong
-
-		// set a cookie to remember the language. check headers have not been sent to avoid ugly error
-		if (!headers_sent())
-			setcookie('wordpress_polylang', $this->curlang->slug, time() + 31536000 /* 1 year */, COOKIEPATH, COOKIE_DOMAIN);
-
-		// set all our language filters and actions
-		$this->add_language_filters();
 
 		// our override_load_textdomain filter has done its job. let's remove it before calling load_textdomain
 		remove_filter('override_load_textdomain', array(&$this, 'mofile'));
 
-		// now we can load text domains with the right language
-		$new_locale = get_locale();
-		foreach ($this->list_textdomains as $textdomain)
-			load_textdomain( $textdomain['domain'], str_replace($this->default_locale, $new_locale, $textdomain['mo']));
+		// check there is at least one language defined and sets the current language
+		if ($this->get_languages_list() && $this->curlang = $this->get_current_language()) {
 
-		// and finally load user defined strings
-		global $l10n;
-		$l10n['pll_string'] = $this->mo_import($this->curlang);
+			// set a cookie to remember the language. check headers have not been sent to avoid ugly error
+			if (!headers_sent())
+				setcookie('wordpress_polylang', $this->curlang->slug, time() + 31536000 /* 1 year */, COOKIEPATH, COOKIE_DOMAIN);
 
-		// reinitializes wp_locale for weekdays and months, as well as for text direction
-		global $wp_locale;
-		$wp_locale->init();
-		$wp_locale->text_direction = get_metadata('term', $this->curlang->term_id, '_rtl', true) ? 'rtl' : 'ltr';
+			// set all our language filters and actions
+			$this->add_language_filters();
+
+			// now we can load text domains with the right language
+			$new_locale = get_locale();
+			foreach ($this->list_textdomains as $textdomain)
+				load_textdomain( $textdomain['domain'], str_replace($this->default_locale, $new_locale, $textdomain['mo']));
+
+			// and finally load user defined strings
+			global $l10n;
+			$l10n['pll_string'] = $this->mo_import($this->curlang);
+
+			// reinitializes wp_locale for weekdays and months, as well as for text direction
+			global $wp_locale;
+			$wp_locale->init();
+			$wp_locale->text_direction = get_metadata('term', $this->curlang->term_id, '_rtl', true) ? 'rtl' : 'ltr';
+		}
+
+		else {
+			// cant't work so load the text domains with WordPress default language
+			foreach ($this->list_textdomains as $textdomain)
+				load_textdomain($textdomain['domain'], $textdomain['mo']);
+		}
 	}
 
 	// filters posts according to the language
 	function pre_get_posts($query) {
+		// don't make anything if no language has been defined yet
+		if(!$this->get_languages_list())
+			return;
+
 		$qvars = $query->query_vars;
 
 		// detect our exclude pages query and returns to avoid conflicts
@@ -591,9 +602,8 @@ class Polylang_Core extends Polylang_base {
 				(isset($trace['file']) && !strpos($trace['file'], 'searchform.php') && strpos($trace['file'], $theme) !== false &&
 					in_array($trace['function'], array('home_url', 'bloginfo', 'get_bloginfo')) );
 
-			if ($ok) {
+			if ($ok)
 				return $this->get_home_url($this->curlang);
-			}
 		}
 
 		return $url;

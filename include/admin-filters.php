@@ -147,9 +147,8 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 	function restrict_manage_posts() {
 		global $wp_query;
 		$screen = get_current_screen(); // since WP 3.1
-		$languages = $this->get_languages_list();
 
-		if (!empty($languages) && $screen->base == 'edit') {
+		if ($screen->base == 'edit') {
 			$qvars = $wp_query->query;
 			wp_dropdown_categories(array(
 				'show_option_all' => __('Show all languages', 'polylang'),
@@ -193,7 +192,6 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		global $post_ID; // obliged to use the global variable for wp_popular_terms_checklist
 		$post_ID = $_POST['post_id'];
 		$post_type = get_post_type($post_ID);
-		$listlanguages = $this->get_languages_list();
 		$lang = $this->get_language($_POST['lang']);
 
 		ob_start();
@@ -305,15 +303,18 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		return $post_parent;
 	}
 
-	// copy page template and menu order if exist when using "Add new" (translation)
+	// copy page template, menu order, comment and ping status when using "Add new" (translation)
 	// the hook was probably not intended for that but did not find a better one
 	// copy the meta '_wp_page_template' in save_post is not sufficient (the dropdown list in the metabox is not updated)
-	// We need to set $post->page_template (ans so need to wait for the availability of $post)
+	// We need to set $post->page_template (and so need to wait for the availability of $post)
 	function dbx_post_advanced() {
 		if (isset($_GET['from_post']) && isset($_GET['new_lang'])) {
 			global $post;
-			$post->menu_order = get_post($_GET['from_post'])->menu_order;
 			$post->page_template = get_post_meta($_GET['from_post'], '_wp_page_template', true);
+
+			$from_post = get_post($_GET['from_post']);
+			foreach (array('menu_order', 'comment_status', 'ping_status') as $property)
+				$post->$property = $from_post->$property;
 		}
 	}
 
@@ -551,14 +552,16 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 	// adds the language column (before the posts column) in the 'Categories' or Post Tags table
 	function add_term_column($columns) {
-		if (array_key_exists('posts', $columns))
-			$end = array_pop($columns);
+		if ($n = array_search('posts', array_keys($columns))) {
+			$end = array_slice($columns, $n);
+			$columns = array_slice($columns, 0, $n);
+		}
 
 		foreach ($this->get_languages_list() as $language)
 			$columns['language_'.$language->slug] = ($flag = $this->get_flag($language)) ? $flag : esc_html($language->slug);
 
 		if (isset($end))
-			$columns['posts'] = $end;
+				$columns = array_merge($columns, $end);
 
     return $columns;
 	}
@@ -693,8 +696,6 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		$lang = $this->get_language($_POST['lang']);
 		$term_id = isset($_POST['term_id']) ? $_POST['term_id'] : null;
 		$taxonomy = $_POST['taxonomy'];
-
-		$listlanguages = $this->get_languages_list();
 
 		ob_start();
 		if ($lang && !is_wp_error($lang))
