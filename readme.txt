@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, i18n, international, l10n, localization
 Requires at least: 3.1
 Tested up to: 3.3.1
-Stable tag: 0.8
+Stable tag: 0.8.1
 
 Polylang adds multilingual content management support to WordPress.
 
@@ -39,6 +39,7 @@ The plugin admin interface is currently available in:
 * Hebrew contributed by [ArielK](http://www.arielk.net)
 * Polish contributed by [Peter Paciorkiewicz](http://www.paciorkiewicz.pl)
 * Latvian contributed by [@AndyDeGroo](http://twitter.com/AndyDeGroo)
+* Italian contributed by [Luca Barbetti](http://wordpress.org/support/profile/lucabarbetti)
 
 Special thanks to [@AndyDeGroo](http://twitter.com/AndyDeGroo) and [RavanH](http://4visions.nl/) for their help in debugging and improving Polylang !
 
@@ -90,7 +91,7 @@ If you wonder how you can help Polylang, here are some ideas. As you will read, 
 
 = Help other users of Polylang =
 
-The [support forum](http://wordpress.org/tags/polylang?forum_id=10) is here so that users of the plugin can get help when they need it. However, I will not always available to answer questions. You don't need to be a developer to help out. Very often similar questions have been answered in the past. You can subscribe to the tag ['polylang'](http://wordpress.org/tags/polylang) (emails or RSS feed, see just below the topic list) to know when a new topic has been posted.
+The [support forum](http://wordpress.org/tags/polylang?forum_id=10) is here so that users of the plugin can get help when they need it. However, I will not always be available to answer questions. You don't need to be a developer to help out. Very often similar questions have been answered in the past. You can subscribe to the tag ['polylang'](http://wordpress.org/tags/polylang) (emails or RSS feed, see just below the topic list) to know when a new topic has been posted.
 
 = Report bugs =
 
@@ -102,7 +103,7 @@ You can subscribe to the tag ['polylang-dev'](http://wordpress.org/tags/polylang
 
 = Translate the admin interface =
 
-Polylang is already available in 9 languages. It's very easy to add a new one ! Download [poedit](http://www.poedit.net/download.php) (available for Windows, Mac OS X and Linux). Rename the file polylang.pot found in the polylang/languages directory into something like polylang-your_locale.po. Open the file with poedit and start translating (keeping strange codes such as %s, %1$s as is). Once done, just save and you will get two files polylang-your_locale.po and polylang-your_locale.mo that you can send to the author. The translation will be included with the next release.
+Polylang is already available in 10 languages. It's very easy to add a new one ! Download [poedit](http://www.poedit.net/download.php) (available for Windows, Mac OS X and Linux). Rename the file polylang.pot found in the polylang/languages directory into something like polylang-your_locale.po. Open the file with poedit and start translating (keeping strange codes such as %s, %1$s as is). Once done, just save and you will get two files polylang-your_locale.po and polylang-your_locale.mo that you can send to the author. The translation will be included with the next release.
 
 = Communicate =
 
@@ -113,6 +114,20 @@ If you like Polylang, you can spread the word... Rating the plugin is very easy,
 Every suggestions are welcome.
 
 == Changelog ==
+
+= 0.8.2 =
+
+* Add Italian translation contributed by [Luca Barbetti](http://wordpress.org/support/profile/lucabarbetti)
+* Improve performance on admin side
+* Comment status and ping status are now copied when adding a new translation
+* Deprecated API function 'pll_is_front_page' as it is now useless
+* Bug correction: Wrong translation url for taxonomies when adding the language information to all urls
+* Bug correction: "translation" of search page does not work if the site is only made of pages
+* Bug correction: wrong language permalink structure introduced in 0.8.1
+* Bug correction: wrong language set when clicking on "add new" translation in edit category and edit tags panels
+* Bug correction: site does not display if no languages are set
+* Bug correction: get_author_posts_url is 404
+* Bug correction: homepage is 404 when using a static front page and adding the language information to all urls
 
 = 0.8.1 (2012-03-11) =
 

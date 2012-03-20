@@ -93,12 +93,6 @@ class Polylang_Core extends Polylang_base {
 		add_filter('bloginfo', array(&$this, 'bloginfo'), 1, 2);
 		add_filter('get_bloginfo_rss', array(&$this, 'bloginfo'), 1, 2);
 
-		// loads front page template on translated front page
-		add_filter('template_include', array(&$this, 'template_include'));
-
-		// add home class to body classes on translated frontpage
-		add_filter('body_class', array(&$this, 'body_class'));
-
 		// modifies the home url
 		if (PLL_FILTER_HOME_URL)
 			add_filter('home_url', array(&$this, 'home_url'));
@@ -198,42 +192,54 @@ class Polylang_Core extends Polylang_base {
 	// as done by xili_language and here: load text domains and reinitialize wp_locale with the action 'wp'
 	// as done by qtranslate: define the locale with the action 'plugins_loaded', but in this case, the language must be specified in the url.
 	function load_textdomains() {
-		// sets the current language
-		if (!($this->curlang = $this->get_current_language()))
-			return; // something went wrong
-
-		// set a cookie to remember the language. check headers have not been sent to avoid ugly error
-		if (!headers_sent())
-			setcookie('wordpress_polylang', $this->curlang->slug, time() + 31536000 /* 1 year */, COOKIEPATH, COOKIE_DOMAIN);
-
-		// set all our language filters and actions
-		$this->add_language_filters();
 
 		// our override_load_textdomain filter has done its job. let's remove it before calling load_textdomain
 		remove_filter('override_load_textdomain', array(&$this, 'mofile'));
 
-		// now we can load text domains with the right language
-		$new_locale = get_locale();
-		foreach ($this->list_textdomains as $textdomain)
-			load_textdomain( $textdomain['domain'], str_replace($this->default_locale, $new_locale, $textdomain['mo']));
+		// check there is at least one language defined and sets the current language
+		if ($this->get_languages_list() && $this->curlang = $this->get_current_language()) {
 
-		// and finally load user defined strings
-		global $l10n;
-		$l10n['pll_string'] = $this->mo_import($this->curlang);
+			// set a cookie to remember the language. check headers have not been sent to avoid ugly error
+			if (!headers_sent())
+				setcookie('wordpress_polylang', $this->curlang->slug, time() + 31536000 /* 1 year */, COOKIEPATH, COOKIE_DOMAIN);
 
-		// reinitializes wp_locale for weekdays and months, as well as for text direction
-		global $wp_locale;
-		$wp_locale->init();
-		$wp_locale->text_direction = get_metadata('term', $this->curlang->term_id, '_rtl', true) ? 'rtl' : 'ltr';
+			// set all our language filters and actions
+			$this->add_language_filters();
+
+			// now we can load text domains with the right language
+			$new_locale = get_locale();
+			foreach ($this->list_textdomains as $textdomain)
+				load_textdomain( $textdomain['domain'], str_replace($this->default_locale, $new_locale, $textdomain['mo']));
+
+			// and finally load user defined strings
+			global $l10n;
+			$l10n['pll_string'] = $this->mo_import($this->curlang);
+
+			// reinitializes wp_locale for weekdays and months, as well as for text direction
+			global $wp_locale;
+			$wp_locale->init();
+			$wp_locale->text_direction = get_metadata('term', $this->curlang->term_id, '_rtl', true) ? 'rtl' : 'ltr';
+		}
+
+		else {
+			// cant't work so load the text domains with WordPress default language
+			foreach ($this->list_textdomains as $textdomain)
+				load_textdomain($textdomain['domain'], $textdomain['mo']);
+		}
 	}
 
 	// filters posts according to the language
 	function pre_get_posts($query) {
+		// don't make anything if no language has been defined yet
+		if(!$this->get_languages_list())
+			return;
+
 		$qvars = $query->query_vars;
 
 		// detect our exclude pages query and returns to avoid conflicts
 		// this test should be sufficient
-		if (isset($qvars['tax_query'][0]['taxonomy']) && $qvars['tax_query'][0]['taxonomy'] == 'language' && isset($qvars['tax_query'][0]['operator']))
+		if (isset($qvars['tax_query'][0]['taxonomy']) && $qvars['tax_query'][0]['taxonomy'] == 'language' &&
+			isset($qvars['tax_query'][0]['operator']) && $qvars['tax_query'][0]['operator'] == 'NOT IN')
 			return;
 
 		// homepage is requested, let's set the language
@@ -527,7 +533,7 @@ class Polylang_Core extends Polylang_base {
 		}
 
 		elseif (is_home() || is_tax('language') )
-			$url = $hide ? $this->home : get_term_link($language, 'language');
+			$url = $this->get_home_url($language, 'language');
 
 		return isset($url) ? $url : null;
 	}
@@ -584,25 +590,6 @@ class Polylang_Core extends Polylang_base {
 		return isset($this->curlang) && $value ? $this->get_post($value, $this->curlang) : $value;
 	}
 
-	// acts as is_front_page but knows about translated front page
-	function is_front_page() {
-		return ('posts' == get_option('show_on_front') && is_home()) ||
-			('page' == get_option('show_on_front') && $this->page_on_front && is_page($this->get_post($this->page_on_front, $this->get_current_language()))) ||
-			(is_tax('language') && !is_archive());
-	}
-
-	// loads front page template on translated front page
-	function template_include($template) {
-		return ($this->is_front_page() && $front_page = get_front_page_template()) ? $front_page : $template;
-	}
-
-	// add home class to body classes on translated frontpage
-	function body_class($classes) {
-		if ($this->is_front_page() && !is_front_page())
-			array_unshift($classes, 'home');
-		return $classes;
-	}
-
 	// filters the home url to get the right language
 	function home_url($url) {
 		if (!did_action('template_redirect') || rtrim($url,'/') != $this->home)
@@ -615,9 +602,8 @@ class Polylang_Core extends Polylang_base {
 				(isset($trace['file']) && !strpos($trace['file'], 'searchform.php') && strpos($trace['file'], $theme) !== false &&
 					in_array($trace['function'], array('home_url', 'bloginfo', 'get_bloginfo')) );
 
-			if ($ok) {
+			if ($ok)
 				return $this->get_home_url($this->curlang);
-			}
 		}
 
 		return $url;
@@ -633,9 +619,7 @@ class Polylang_Core extends Polylang_base {
 
 		// a static page is used as front page : /!\ don't use get_page_link to avoid infinite loop
 		if ($this->page_on_front && $id = $this->get_post($this->page_on_front, $language))
-			return $this->options['force_lang'] && !$this->options['redirect_lang'] && $GLOBALS['wp_rewrite']->using_permalinks() ?
-				$this->add_language_to_link($this->page_link('', $id), $this->curlang) :
-				$this->page_link('', $id);
+			return $this->page_link('', $id);
 
 		return get_term_link($language, 'language');
 	}

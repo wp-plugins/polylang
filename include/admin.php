@@ -1,41 +1,12 @@
 <?php
 
-require_once(PLL_INC.'/admin-filters.php');
 require_once(PLL_INC.'/list-table.php');
 
-// setups the Polylang admin panel and calls for other admin related classes
-class Polylang_Admin extends Polylang_Base {
+// setups the Polylang admin panel
+class Polylang_Admin extends Polylang_Admin_Base {
+
 	function __construct() {
 		parent::__construct();
-		new Polylang_Admin_Filters();
-
-		// adds a 'settings' link in the plugins table
-		$plugin_file = basename(POLYLANG_DIR).'/polylang.php';
-		add_filter('plugin_action_links_'.$plugin_file, array(&$this, 'plugin_action_links'));
-
-		// adds the link to the languages panel in the wordpress admin menu
-		add_action('admin_menu', array(&$this, 'add_menus'));
-
-		// ugrades languages files after a core upgrade (timing is important)
-		// FIXME private action ? is there a better way to do this ?
-		add_action( '_core_updated_successfully', array(&$this, 'upgrade_languages'), 1); // since WP 3.3
-	}
-
-	// adds a 'settings' link in the plugins table
-	function plugin_action_links($links) {
-		$settings_link = '<a href="admin.php?page=mlang">' . __('Settings') . '</a>';
-		array_unshift( $links, $settings_link );
-		return $links;
-	}
-
-	// adds the link to the languages panel in the wordpress admin menu
-	function add_menus() {
-		add_submenu_page('options-general.php', __('Languages', 'polylang'), __('Languages', 'polylang'), 'manage_options', 'mlang',  array(&$this, 'languages_page'));
-
-		// adds the about box the languages admin panel
-		// test of $_GET['tab'] avoids displaying the automatically generated screen options on other tabs
-		if (PLL_DISPLAY_ABOUT && (!isset($_GET['tab']) || $_GET['tab'] == 'lang'))
-			add_meta_box('pll_about_box', __('About Polylang', 'polylang'), array(&$this,'about'), 'settings_page_mlang', 'normal', 'high');
 	}
 
 	// displays the about metabox
@@ -70,7 +41,6 @@ class Polylang_Admin extends Polylang_Base {
 
 	// the languages panel
 	function languages_page() {
-		global $wp_rewrite;
 		$options = get_option('polylang');
 
 		// for nav menus form
@@ -98,7 +68,7 @@ class Polylang_Admin extends Polylang_Base {
 						update_option('polylang', $options);
 					}
 
-					$wp_rewrite->flush_rules(); // refresh rewrite rules
+					flush_rewrite_rules(); // refresh rewrite rules
 
 					if (!$this->download_mo($_POST['description']))
 						$error = 5;
@@ -157,7 +127,7 @@ class Polylang_Admin extends Polylang_Base {
 							unset($options['default_lang']);
 						update_option('polylang', $options);
 
-					$wp_rewrite->flush_rules(); // refresh rewrite rules
+						flush_rewrite_rules(); // refresh rewrite rules
 					}
 				}
 				wp_redirect('admin.php?page=mlang'); // to refresh the page (possible thanks to the $_GET['noheader']=true)
@@ -218,7 +188,7 @@ class Polylang_Admin extends Polylang_Base {
 					wp_update_term($lang_id, 'language', $args);
 					update_metadata('term', $lang_id, '_rtl', $_POST['rtl']);
 
-					$wp_rewrite->flush_rules(); // refresh rewrite rules
+					flush_rewrite_rules(); // refresh rewrite rules
 				}
 
 				wp_redirect('admin.php?page=mlang'. ($error ? '&error='.$error : '') ); // to refresh the page (possible thanks to the $_GET['noheader']=true)
@@ -268,7 +238,7 @@ class Polylang_Admin extends Polylang_Base {
 
 				// refresh rewrite rules in case rewrite or hide_default options have been modified
 				// it seems useless to refresh permastruct here
-				$wp_rewrite->flush_rules();
+				flush_rewrite_rules();
 
 				// fills existing posts & terms with default language
 				if (isset($_POST['fill_languages'])) {
@@ -413,98 +383,6 @@ class Polylang_Admin extends Polylang_Base {
 		$terms = array_diff($terms, $tr_terms);
 
 		return empty($posts) && empty($terms) ? false : array('posts' => $posts, 'terms' => $terms);
-	}
-
-	// downloads mofiles
-	function download_mo($locale, $upgrade = false) {
-		global $wp_version;
-		$mofile = WP_LANG_DIR."/$locale.mo";
-
-		// does file exists ?
-		if ((file_exists($mofile) && !$upgrade) || $locale == 'en_US')
-			return true;
-
-		// does language directory exists ?
-		if (!is_dir(WP_LANG_DIR)) {
-			if (!@mkdir(WP_LANG_DIR))
-				return false;
-		}
-
-		// will first look in tags/ (most languages) then in branches/ (only Greek ?)
-		$base = 'http://svn.automattic.com/wordpress-i18n/'.$locale;
-		$bases = array($base.'/tags/', $base.'/branches/');
-
-		foreach ($bases as $base) {
-			// get all the versions available in the subdirectory
-			$resp = wp_remote_get($base);
-			if (is_wp_error($resp) || 200 != $resp['response']['code'])
-				continue;
-
-			preg_match_all('#>([0-9\.]+)\/#', $resp['body'], $matches);
-			if (empty($matches[1]))
-				continue;
-
-			rsort($matches[1]); // sort from newest to oldest
-			$versions = $matches[1];
-
-			$newest = $upgrade ? $upgrade : $wp_version;
-			foreach ($versions as $key=>$version) {
-				// will not try to download a too recent mofile
-				if (version_compare($version, $newest, '>'))
-					unset($versions[$key]);
-				// will not download an older version if we are upgrading
-				if ($upgrade && version_compare($version, $wp_version, '<='))
-					unset($versions[$key]);
-			}
-
-			$versions = array_splice($versions, 0, 5); // reduce the number of versions to test to 5
-			$args = array('timeout' => 30, 'stream' => true);
-
-			// try to download the file
-			foreach ($versions as $version) {
-				$resp = wp_remote_get($base."$version/messages/$locale.mo", $args + array('filename' => $mofile));
-				if (is_wp_error($resp) || 200 != $resp['response']['code'])
-					continue;
-
-				// try to download ms and continents-cities files if exist (will not return false if failed)
-				// with new files introduced in WP 3.4
-				foreach (array("ms", "continent-cities", "admin", "admin-network") as $file)
-					wp_remote_get($base."$version/messages/$file-$locale.mo", $args + array('filename' => WP_LANG_DIR."/$file-$locale.mo"));
-
-				// try to download theme files if exist (will not return false if failed)
-				// FIXME not updated when the theme is updated outside a core update
-				foreach (array("twentyten", "twentyeleven", "twentytwelve") as $theme)
-					wp_remote_get($base."$version/messages/$theme/$locale.mo", $args + array('filename' => get_theme_root()."/$theme/languages/$locale.mo"));
-
-				return true;
-			}
-		}
-		// we did not succeeded to download a file :(
-		return false;
-	}
-
-	// ugrades languages files after a core upgrade
-	function upgrade_languages($version) {
-		apply_filters('update_feedback', __('Upgrading language files&#8230;', 'polylang'));
-		foreach ($this->get_languages_list() as $language) {
-			if ($language->description != $_POST['locale']) // do not (re)update the language files of a localized WordPress
-				$this->download_mo($language->description, $version);
-		}
-	}
-
-	// returns options available for the language switcher (menu or widget)
-	// FIXME do not include the dropdown in menu yet since I need to work on js
-	function get_switcher_options($type = 'widget', $key ='string') {
-		$options = array (
-			'show_names' => array('string' => __('Displays language names', 'polylang'), 'default' => 1),
-			'show_flags' => array('string' => __('Displays flags', 'polylang'), 'default' => 0),
-			'force_home' => array('string' => __('Forces link to front page', 'polylang'), 'default' => 0),
-			'hide_current' => array('string' => __('Hides the current language', 'polylang'), 'default' => 0),
-		);
-		$menu_options = array('switcher' => array('string' => __('Displays a language switcher at the end of the menu', 'polylang'), 'default' => 0));
-		$widget_options = array('dropdown' => array('string' => __('Displays as dropdown', 'polylang'), 'default' => 0));
-		$options = ($type == 'menu') ? array_merge($menu_options, $options) : array_merge($options, $widget_options);
-		return array_map(create_function('$v', "return \$v['$key'];"), $options);
 	}
 
 	function &get_strings() {
