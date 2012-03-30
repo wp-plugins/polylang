@@ -236,6 +236,10 @@ class Polylang_Core extends Polylang_base {
 
 		$qvars = $query->query_vars;
 
+		// users may want to display content in a different langage than the current one by setting it explicitely in the query
+		if ($this->curlang && isset($qvars['lang']) && $qvars['lang'])
+			return;
+
 		// detect our exclude pages query and returns to avoid conflicts
 		// this test should be sufficient
 		if (isset($qvars['tax_query'][0]['taxonomy']) && $qvars['tax_query'][0]['taxonomy'] == 'language' &&
@@ -314,9 +318,9 @@ class Polylang_Core extends Polylang_base {
 		if ($this->options['hide_default'] && !isset($qvars['lang']) && ($is_archive || (count($query->query) == 1 && isset($qvars['feed']) && $qvars['feed']) ))
 			$query->set('lang', $this->options['default_lang']);
 
-		// allow filtering recent posts by the current language
+		// allow filtering recent posts and secondary queries by the current language
 		// take care not to break queries for non visible post types such as nav_menu_items, attachments...
-		if ($query->is_home && $this->curlang && (!isset($qvars['post_type']) || in_array($qvars['post_type'], $this->post_types) ||
+		if (/*$query->is_home && */$this->curlang && (!isset($qvars['post_type']) || in_array($qvars['post_type'], $this->post_types) ||
 			 (is_array($qvars['post_type']) && array_intersect($qvars['post_type'], $this->post_types)) ))
 			$query->set('lang', $this->curlang->slug);
 
@@ -405,7 +409,7 @@ class Polylang_Core extends Polylang_base {
 		// modifies the search form since filtering get_search_form won't work if the template uses searchform.php or the search form is hardcoded
 		// don't use directly e[0] just in case there is somewhere else an element named 's'
 		// check before if the hidden input has not already been introduced by get_search_form
-		// thanks to AndyDeGroo for improving the code for compatility with older browsers 
+		// thanks to AndyDeGroo for improving the code for compatility with old browsers 
 		// http://wordpress.org/support/topic/development-of-polylang-version-08?replies=6#post-2645559
 		if (!$this->search_form_filter) {
 			$lang = esc_js($this->curlang->slug);
@@ -624,7 +628,7 @@ class Polylang_Core extends Polylang_base {
 		return get_term_link($language, 'language');
 	}
 
-	// displays the language switcher
+	// displays (or returns) the language switcher
 	function the_languages($args = '') {
 		$defaults = array(
 			'dropdown' => 0, // display as list and not as dropdown
@@ -674,10 +678,9 @@ class Polylang_Core extends Polylang_base {
 
 		$output = apply_filters('pll_the_languages', $output, $args);
 
-		if ($echo)
-			echo $output;
-		else
+		if(!$echo)
 			return $output;
+		echo $output;
 	}
 
 	// just returns the current language for API

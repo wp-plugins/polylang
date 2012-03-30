@@ -1,0 +1,379 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: polylang\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-03-27 00:39+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Patrick Hesselberg <Super-patzen@live.dk>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
+"Plural-Forms: nplurals=2: nplural=n>1\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: _e;__;_x\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: ..\n"
+"X-Poedit-SearchPath-1: ../include\n"
+
+#: ../polylang.php:92
+#, php-format
+msgid "You are using WordPress %s. Polylang requires at least WordPress %s."
+msgstr "Du bruger WordPress %s. Polylang kræver mindst WordPress %s."
+
+#: ../polylang.php:184
+msgid "Error: Restore of local flags failed!"
+msgstr "Fejl: Gendannelse af lokale flag mislykkedes!"
+
+#: ../polylang.php:185
+#, php-format
+msgid "Please move your local flags from %s to %s"
+msgstr "Flyt venligst dine lokale flag fra %s til %s"
+
+#: ../include/admin-filters.php:144
+#: ../include/admin-filters.php:573
+msgid "Add new translation"
+msgstr "Tilføj ny oversættelse"
+
+#: ../include/admin-filters.php:167
+msgid "Show all languages"
+msgstr "Vis alle sprog"
+
+#: ../include/admin-filters.php:180
+#: ../include/admin.php:32
+#: ../include/admin.php:291
+#: ../include/list-table.php:13
+msgid "Languages"
+msgstr "Sprog"
+
+#: ../include/admin-filters.php:197
+msgid "Page's language:"
+msgstr "Side's sprog:"
+
+#: ../include/admin-filters.php:197
+msgid "Post's language:"
+msgstr "Indlæg's sprog:"
+
+#: ../include/admin-filters.php:257
+msgid "(no parent)"
+msgstr "(ingen forælder)"
+
+#: ../include/admin-filters.php:511
+#: ../include/admin-filters.php:528
+#: ../include/list-table.php:12
+#: ../include/post-translations.php:4
+#: ../include/term-translations.php:15
+msgid "Language"
+msgstr "Sprog"
+
+#: ../include/admin-filters.php:513
+#: ../include/admin-filters.php:531
+msgid "Sets the language"
+msgstr "Indstiller sproget"
+
+#: ../include/admin-filters.php:694
+msgid "None"
+msgstr "Ingen"
+
+#: ../include/admin-filters.php:711
+msgid "Theme locations and languages"
+msgstr "Tema locations og sprog"
+
+#: ../include/admin-filters.php:716
+#, php-format
+msgid "Please go to the %slanguages page%s to set theme locations and languages"
+msgstr "Gå venligst til %ssprog side%s for at sætte tema locations og sprog"
+
+#: ../include/admin-filters.php:727
+msgid "The widget is displayed for:"
+msgstr "Widget vises i:"
+
+#: ../include/admin-filters.php:758
+msgid "Admin language"
+msgstr "Administrator sprog"
+
+#: ../include/admin.php:25
+#: ../include/admin.php:298
+msgid "Settings"
+msgstr "Indstillinger"
+
+#: ../include/admin.php:296
+msgid "Menus"
+msgstr "Menuer"
+
+#: ../include/admin.php:298
+#: ../include/list-table.php:104
+msgid "Strings translation"
+msgstr "Strings oversættelse"
+
+#: ../include/admin.php:316
+msgid "Enter a valid WorPress locale"
+msgstr "Indtast en gyldig Wordpress locale"
+
+#: ../include/admin.php:317
+msgid "The language code must be 2 characters long"
+msgstr "Sprogkoden skal være på 2 tegn"
+
+#: ../include/admin.php:318
+msgid "The language code must be unique"
+msgstr "Sprogkoden skal være unik"
+
+#: ../include/admin.php:319
+msgid "The language must have a name"
+msgstr "Sproget skal have et navn"
+
+#: ../include/admin.php:320
+msgid "The language was created, but the WordPress language file was not downloaded. Please install it manually."
+msgstr "Sproget var oprettet, men WordPress sprogfilen blev ikke downloadet. Du skal installere den manuelt."
+
+#: ../include/admin.php:475
+msgid "Upgrading language files&#8230;"
+msgstr "Opgradering sprogfiler files&#8230;"
+
+#: ../include/admin.php:484
+msgid "Displays language names"
+msgstr "Vis sprog navne"
+
+#: ../include/admin.php:485
+msgid "Displays flags"
+msgstr "Vis flag"
+
+#: ../include/admin.php:486
+msgid "Forces link to front page"
+msgstr "Tvinger link til forsiden"
+
+#: ../include/admin.php:487
+msgid "Hides the current language"
+msgstr "Skjuler det nuværende sprog"
+
+#: ../include/admin.php:489
+msgid "Displays a language switcher at the end of the menu"
+msgstr "Viser en sprog skifter ved enden af menuen"
+
+#: ../include/admin.php:490
+msgid "Displays as dropdown"
+msgstr "Viser som dropdown"
+
+#: ../include/admin.php:499
+msgid "Site Title"
+msgstr "Side Titel"
+
+#: ../include/admin.php:500
+msgid "Tagline"
+msgstr "Tagline"
+
+#: ../include/admin.php:519
+msgid "Widget title"
+msgstr "Widget titel"
+
+#: ../include/base.php:33
+msgid "All languages"
+msgstr "Alle sprog"
+
+#: ../include/calendar.php:106
+#, php-format
+msgid "%1$s %2$s"
+msgstr "%1$s %2$s"
+
+#: ../include/calendar.php:132
+#: ../include/calendar.php:140
+#, php-format
+msgid "View posts for %1$s %2$s"
+msgstr "Vis indlæg for %1$s %2$s"
+
+#: ../include/languages-form.php:33
+msgid "Edit language"
+msgstr "Rediger sprog"
+
+#: ../include/languages-form.php:33
+#: ../include/languages-form.php:100
+msgid "Add new language"
+msgstr "Tilføj nyt sprog"
+
+#: ../include/languages-form.php:55
+msgid "Choose a language"
+msgstr "Vælg sprog"
+
+#: ../include/languages-form.php:63
+msgid "You can choose a language in the list or directly edit it below."
+msgstr "Du kan vælge et sprog fra listen eller redigere det direkte nedenfor."
+
+#: ../include/languages-form.php:67
+#: ../include/list-table.php:45
+msgid "Full name"
+msgstr "Fulde navn"
+
+#: ../include/languages-form.php:69
+msgid "The name is how it is displayed on your site (for example: English)."
+msgstr "Navnet er hvordan det bliver vist på din side (for eksempel: Engelsk)."
+
+#: ../include/languages-form.php:73
+#: ../include/list-table.php:46
+msgid "Locale"
+msgstr "Landestandard"
+
+#: ../include/languages-form.php:76
+msgid "Wordpress Locale for the language (for example: en_US). You will need to install the .mo file for this language."
+msgstr "Wordpress Landestandarden for sproget (for eksempel: da_DK). Du skal installere .mo filen til dette sprog."
+
+#: ../include/languages-form.php:80
+msgid "Language code"
+msgstr "Sprogkode"
+
+#: ../include/languages-form.php:82
+msgid "2-letters ISO 639-1 language code (for example: en)"
+msgstr "2 bogstaver ISO 639-1 sprogkode (for eksempel: da)"
+
+#: ../include/languages-form.php:86
+msgid "Text direction"
+msgstr "Tekst retning"
+
+#: ../include/languages-form.php:88
+msgid "left to right"
+msgstr "venstre til højre"
+
+#: ../include/languages-form.php:90
+msgid "right to left"
+msgstr "højre til venstre"
+
+#: ../include/languages-form.php:91
+msgid "Choose the text direction for the language"
+msgstr "Vælg en tekstretning for sproget"
+
+#: ../include/languages-form.php:95
+#: ../include/list-table.php:48
+msgid "Order"
+msgstr "Sorter"
+
+#: ../include/languages-form.php:97
+msgid "Position of the language in the language switcher"
+msgstr "Position af sproget i sprog skifteren"
+
+#: ../include/languages-form.php:100
+msgid "Update"
+msgstr "Opdater"
+
+#: ../include/languages-form.php:136
+msgid "Language switcher"
+msgstr "Sprog skifter"
+
+#: ../include/languages-form.php:175
+msgid "Default language"
+msgstr "Standard sprog"
+
+#: ../include/languages-form.php:193
+msgid "There are posts, pages, categories or tags without language set. Do you want to set them all to default language ?"
+msgstr "Der er indlæg, sider, kategorier eller tags uden et valgt sprog. Vil du sætte dem til det standard sprog ?"
+
+#: ../include/languages-form.php:201
+msgid "Detect browser language"
+msgstr "Find browser sprog"
+
+#: ../include/languages-form.php:207
+msgid "When the front page is visited, set the language according to the browser preference"
+msgstr "Når forsiden vises, skal du indstille sprog i overensstemmelse med browseren præference"
+
+#: ../include/languages-form.php:214
+msgid "URL modifications"
+msgstr "URL ændringer"
+
+#: ../include/languages-form.php:220
+msgid "Keep /language/ in pretty permalinks. Example:"
+msgstr "Hold /sprog/ i pæne permalinks. eksempel:"
+
+#: ../include/languages-form.php:228
+msgid "Remove /language/ in pretty permalinks. Example:"
+msgstr "Fjern /sprog/ i pæne permalinks. Eksempel:"
+
+#: ../include/languages-form.php:236
+msgid "Hide URL language information for default language"
+msgstr "Skjul URL sprog information for standardsprog"
+
+#: ../include/languages-form.php:243
+msgid "Add language information to all URL including posts, pages, categories and post tags (not recommended)"
+msgstr "Tilføj sprog information til alle URL herunder indlæg, sider, kategorier og indlæg tags (anbefales ikke)"
+
+#: ../include/list-table.php:26
+#: ../include/post-translations.php:6
+#: ../include/post-translations.php:29
+#: ../include/term-translations.php:18
+#: ../include/term-translations.php:65
+msgid "Edit"
+msgstr "Rediger"
+
+#: ../include/list-table.php:27
+msgid "Delete"
+msgstr "Slet"
+
+#: ../include/list-table.php:47
+msgid "Code"
+msgstr "Kode"
+
+#: ../include/list-table.php:49
+msgid "Flag"
+msgstr "Flag"
+
+#: ../include/list-table.php:50
+msgid "Posts"
+msgstr "Indlæg"
+
+#: ../include/list-table.php:105
+msgid "Strings translations"
+msgstr "Strings oversættelser"
+
+#: ../include/list-table.php:125
+msgid "Name"
+msgstr "Navn"
+
+#: ../include/list-table.php:126
+msgid "String"
+msgstr "String"
+
+#: ../include/list-table.php:127
+#: ../include/term-translations.php:6
+#: ../include/term-translations.php:11
+msgid "Translations"
+msgstr "Oversættelser"
+
+#: ../include/post-translations.php:1
+msgid "ID of pages in other languages:"
+msgstr "ID af sider på andre sprog:"
+
+#: ../include/post-translations.php:1
+msgid "ID of posts in other languages:"
+msgstr "ID af indlæg på andre sprog:"
+
+#: ../include/post-translations.php:5
+msgid "Page ID"
+msgstr "Side  ID"
+
+#: ../include/post-translations.php:5
+msgid "Post ID"
+msgstr "Indlæg ID"
+
+#: ../include/post-translations.php:34
+#: ../include/term-translations.php:54
+msgid "Add new"
+msgstr "Opret ny"
+
+#: ../include/term-translations.php:16
+msgid "Translation"
+msgstr "Oversættelse"
+
+#: ../include/term-translations.php:48
+msgid "No untranslated term"
+msgstr "Ingen uoversatte term"
+
+#: ../include/widget.php:6
+msgid "Language Switcher"
+msgstr "Sprog Skifter"
+
+#: ../include/widget.php:6
+msgid "Displays a language switcher"
+msgstr "Viser en sprog skifter"
+
+#: ../include/widget.php:71
+msgid "Title:"
+msgstr "Titel:"
+

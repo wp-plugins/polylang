@@ -8,7 +8,7 @@
 
 	<tbody>
 	<?php foreach ($this->get_languages_list() as $language) {
-		if ($language != $lang) {
+		if ($language->term_id != $lang->term_id) {
 			$value = $this->get_translation('post', $post_ID, $language);
 			if (!$value || $value == $post_ID) // $value == $post_ID happens if the post has been (auto)saved before changing the language
 				$value = '';

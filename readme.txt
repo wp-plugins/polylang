@@ -115,7 +115,7 @@ Every suggestions are welcome.
 
 == Changelog ==
 
-= 0.8.2 =
+= 0.8.2 (2012-03-20) =
 
 * Add Italian translation contributed by [Luca Barbetti](http://wordpress.org/support/profile/lucabarbetti)
 * Improve performance on admin side

@@ -19,7 +19,7 @@ else {
 	</tr></thead>
 	<tbody>
 		<?php foreach ($this->get_languages_list() as $language) {
-			if ($language == $lang)
+			if ($language->term_id == $lang->term_id)
 				continue;
 
 			// look for any existing translation in this language
