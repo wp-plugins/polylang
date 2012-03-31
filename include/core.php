@@ -503,34 +503,35 @@ class Polylang_Core extends Polylang_base {
 		// don't test if there are existing translations before creating the url as it would be very expensive in sql queries
 		elseif (is_archive()) {
 			if ($wp_rewrite->using_permalinks()) {
-				$base = $this->options['rewrite'] ? '/' : '/language/';
-				$base = $hide ? '' : $base.$language->slug;
-				$base = $this->home.$base.'/';
+				$filters = array('author_link', 'post_type_archive_link', 'year_link', 'month_link', 'day_link');
+
+				// prevents filtering links by current language
+				remove_filter('term_link', array(&$this, 'term_link')); // for post format
+				foreach ($filters as $filter)
+					remove_filter($filter, array(&$this, 'archive_link'));
 
 				if (is_author())
-					$url = esc_url($base.'author/'.$qvars['author_name'].'/');
-
+					$url = $this->add_language_to_link(get_author_posts_url(0, $qvars['author_name']), $language);
+			
 				if (is_year())
-					$url = esc_url($base.$qvars['year'].'/');
+					$url = $this->add_language_to_link(get_year_link($qvars['year']), $language);
 
 				if (is_month())
-					$url = esc_url($base.$qvars['year'].'/'.$qvars['monthnum'].'/');
+					$url = $this->add_language_to_link(get_month_link($qvars['year'], $qvars['monthnum']), $language);
 
 				if (is_day())
-					$url = esc_url($base.$qvars['year'].'/'.$qvars['monthnum'].'/'.$qvars['day'].'/');
+					$url = $this->add_language_to_link(get_day_link($qvars['year'], $qvars['monthnum'], $qvars['day']), $language);
+
+				if (is_post_type_archive())
+					$url = $this->add_language_to_link(get_post_type_archive_link($qvars['post_type']), $language);
 
 				if (is_tax('post_format'))
-					$url = esc_url($base.'type/'.$qvars['post_format'].'/');
+					$url = $this->add_language_to_link(get_post_format_link($qvars['post_format']), $language);
 
-				if (is_post_type_archive()){
-					// custom post types can have a different slug than the post type name
-					// thanks to AndyDeGroo for pointing that out
-					// http://wordpress.org/support/topic/plugin-polylang-problems-with-custom-post-type-archive-titles
-					$cpt = get_post_type_object($qvars['post_type']);
-					// we don't need to check if there is $cpt->rewrite['slug'] because WP always sets it
-					$cpt_slug = is_string($cpt->has_archive) ? $cpt->has_archive : $cpt->rewrite['slug']; 
-					$url = esc_url($base.$cpt_slug.'/');
-				}
+				// put our language filters again
+				add_filter('term_link', array(&$this, 'term_link'), 10, 3);
+				foreach ($filters as $filter)
+					add_filter($filter, array(&$this, 'archive_link'));
 			}
 			else
 				$url = $hide ? remove_query_arg('lang') : add_query_arg('lang', $language->slug);
