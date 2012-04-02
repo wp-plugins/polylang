@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.8.2.2
+Version: 0.8.2.4
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 */
@@ -24,7 +24,7 @@ Description: Adds multilingual capability to Wordpress
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('POLYLANG_VERSION', '0.8.2.2');
+define('POLYLANG_VERSION', '0.8.2.4');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
@@ -303,8 +303,8 @@ class Polylang extends Polylang_Base {
 			'update_count_callback' => '_update_post_term_count'));
 
 		// optionaly removes 'language' in permalinks so that we get http://www.myblog/en/ instead of http://www.myblog/language/en/
-		if ($options['rewrite'])
-			add_permastruct('language', '%language%', array('with_front' => false));
+		// language information always in front of the uri ('with_front' => false)
+		add_permastruct('language', $options['rewrite'] ? '%language%' : 'language/%language%', array('with_front' => false));
 
 		load_plugin_textdomain('polylang', false, basename(POLYLANG_DIR).'/languages'); // plugin i18n
 	}
@@ -343,6 +343,7 @@ class Polylang extends Polylang_Base {
 		if (($current_filter = current_filter()) == 'language_rewrite_rules')
 			return array();
 
+		global $wp_rewrite;
 		$options = get_option('polylang');
 		$always_rewrite = in_array(str_replace('_rewrite_rules', '', $current_filter), array('date', 'root', 'comments', 'author', 'post_format'));
 		$newrules = array();
@@ -352,14 +353,14 @@ class Polylang extends Polylang_Base {
 				$languages[] = $language->slug;
 
 		if (isset($languages))
-			$slug = $options['rewrite'] ? '('.implode('|', $languages).')/' : 'language/('.implode('|', $languages).')/';
+			$slug = $options['rewrite'] ? $wp_rewrite->root.'('.implode('|', $languages).')/' : $wp_rewrite->root.'language/('.implode('|', $languages).')/';
 
 		foreach ($rules as $key => $rule) {
 			// we don't need the lang parameter for post types and taxonomies
 			// moreover adding it would create issues for pages and taxonomies
 			if ($options['force_lang'] && in_array(str_replace('_rewrite_rules', '', $current_filter), array_merge($this->post_types, $this->taxonomies))) {
 				if (isset($slug))
-					$newrules[$slug.$key] = str_replace(array('[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '[1]'),
+					$newrules[$slug.str_replace($wp_rewrite->root, '', $key)] = str_replace(array('[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '[1]'),
 						array('[9]', '[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]'), $rule); // hopefully it is sufficient !
 
 				if ($options['hide_default'])
@@ -371,7 +372,7 @@ class Polylang extends Polylang_Base {
 			// rewrite rules filtered by language
 			elseif ($always_rewrite || strpos($rule, 'post_type=') || ($current_filter != 'rewrite_rules_array' && $options['force_lang'])) {
 				if (isset($slug))
-					$newrules[$slug.$key] = str_replace(array('[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '[1]', '?'), 
+					$newrules[$slug.str_replace($wp_rewrite->root, '', $key)] = str_replace(array('[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '[1]', '?'), 
 						array('[9]', '[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '?lang=$matches[1]&'), $rule); // hopefully it is sufficient !
 
 				if ($options['hide_default'])

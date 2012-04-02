@@ -154,10 +154,11 @@ abstract class Polylang_Base {
 		if (!isset($lang)) // FIXME avoid notice when adding a page to a custom menu
 			return;
 
-		if ($GLOBALS['wp_rewrite']->using_permalinks()) {
-			$base = $this->options['rewrite'] ? '/' : '/language/';
-			$slug = $this->options['default_lang'] == $lang->slug && $this->options['hide_default'] ? '' : $base.$lang->slug;
-			return esc_url(str_replace($this->home, $this->home.$slug, $url));
+		global $wp_rewrite;
+		if ($wp_rewrite->using_permalinks()) {
+			$base = $this->options['rewrite'] ? '' : 'language/';
+			$slug = $this->options['default_lang'] == $lang->slug && $this->options['hide_default'] ? '' : $base.$lang->slug.'/';
+			return esc_url(str_replace($this->home.'/'.$wp_rewrite->root, $this->home.'/'.$wp_rewrite->root.$slug, $url));
 		}
 
 		// special case for pages which do not accept adding the lang parameter
