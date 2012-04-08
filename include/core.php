@@ -248,7 +248,9 @@ class Polylang_Core extends Polylang_base {
 
 		// homepage is requested, let's set the language
 		// second check not to break wp-signup & wp-activate
-		if (empty($query->query) && home_url('/') == trailingslashit((is_ssl() ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'])) {
+		// thank you to Gonçalo Peres for pointing out the issue with queries unknown to WP
+		// http://wordpress.org/support/topic/plugin-polylang-language-homepage-redirection-problem-and-solution-but-incomplete?replies=4#post-2729566
+		if (empty($query->query) && home_url('/') == trailingslashit((is_ssl() ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].str_replace('?'.$_SERVER['QUERY_STRING'], '', $_SERVER['REQUEST_URI']))) {
 			// find out the language
 			if ($this->options['hide_default'] && isset($_COOKIE['wordpress_polylang']))
 				$this->curlang = $this->get_language($this->options['default_lang']);
@@ -538,7 +540,7 @@ class Polylang_Core extends Polylang_base {
 		}
 
 		elseif (is_home() || is_tax('language') )
-			$url = $this->get_home_url($language, 'language');
+			$url = $this->get_home_url($language);
 
 		return isset($url) ? $url : null;
 	}
