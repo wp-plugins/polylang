@@ -13,7 +13,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		add_action('customize_register', array(&$this, 'customize_register'), 20); // since WP 3.4
 
 		// refresh rewrite rules if the 'page_on_front' option is modified
-		add_action('update_option_page_on_front', array(&$this, 'flush_rewrite_rules'));
+		add_action('update_option_page_on_front', 'flush_rewrite_rules');
 
 		// adds a 'settings' link in the plugins table
 		$plugin_file = basename(POLYLANG_DIR).'/polylang.php';
