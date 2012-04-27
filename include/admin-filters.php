@@ -111,7 +111,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 	}
 
 	// adds the language and translations columns (before the comments column) in the posts and pages list table
-	function add_post_column($columns, $post_type ='') {
+	function add_post_column($columns, $post_type = '') {
 		return $post_type == '' || in_array($post_type, $this->post_types) ? $this->add_column($columns, 'comments') : $columns;
 	}
 

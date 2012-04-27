@@ -236,7 +236,7 @@ class Polylang_Core extends Polylang_base {
 
 		$qvars = $query->query_vars;
 
-		// users may want to display content in a different langage than the current one by setting it explicitely in the query
+		// users may want to display content in a different language than the current one by setting it explicitely in the query
 		if ($this->curlang && isset($qvars['lang']) && $qvars['lang'])
 			return;
 
@@ -247,12 +247,14 @@ class Polylang_Core extends Polylang_base {
 			return;
 
 		// homepage is requested, let's set the language
-		// second check not to break wp-signup & wp-activate
-		// take care to url with or without 'www.'
-		// some PHP setups turn requests for / into /index.php in REQUEST_URI
-		// thanks to Gonçalo Peres for pointing out the issue with queries unknown to WP
-		// http://wordpress.org/support/topic/plugin-polylang-language-homepage-redirection-problem-and-solution-but-incomplete?replies=4#post-2729566
-		if (empty($query->query) && str_replace('www.', '', home_url('/')) == trailingslashit((is_ssl() ? 'https://' : 'http://').str_replace('www.', '', $_SERVER['HTTP_HOST']).str_replace(array('index.php', '?'.$_SERVER['QUERY_STRING']), array('', ''), $_SERVER['REQUEST_URI']))) {
+		if (is_home() && !$this->curlang) {
+			// special case for wp-signup.php & wp-activate.php for which WP set is_home to true
+			if (false === strpos($_SERVER['SCRIPT_NAME'], 'index.php')) {
+				$this->curlang = $this->get_preferred_language();
+				return;
+			}
+
+			// now, it should be the true homepage
 			// find out the language
 			if ($this->options['hide_default'] && isset($_COOKIE['wordpress_polylang']))
 				$this->curlang = $this->get_language($this->options['default_lang']);
@@ -643,9 +645,10 @@ class Polylang_Core extends Polylang_base {
 			'show_flags' => 0, // don't show flags
 			'show_names' => 1, // show language names
 			'display_names_as' => 'name', // valid options are slug and name
-			'force_home' => 0, // tries to find a translation (available only if display != dropdown)
+			'force_home' => 0, // tries to find a translation
 			'hide_if_no_translation' => 0, // don't hide the link if there is no translation
 			'hide_current' => 0, // don't hide current language
+			'post_id' => null, // if not null, link to translations of post defined by post_id
 		);
 		extract(wp_parse_args($args, $defaults));
 
@@ -660,7 +663,9 @@ class Polylang_Core extends Polylang_base {
 				if ($this->curlang->term_id == $language->term_id && $hide_current)
 					continue;
 
-				$url = $force_home ? null : $this->get_translation_url($language);
+				$url = $post_id !== null && ($tr_id = $this->get_post($post_id, $language)) ? get_permalink($tr_id) :
+					$post_id === null && !$force_home ?  $this->get_translation_url($language) : null;
+
 				$url = apply_filters('pll_the_language_link', $url, $language->slug, $language->description);
 
 				// hide if no translation exists

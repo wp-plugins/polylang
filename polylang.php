@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.8.3.1
+Version: 0.8.3.6
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 */
@@ -24,7 +24,7 @@ Description: Adds multilingual capability to Wordpress
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('POLYLANG_VERSION', '0.8.3.1');
+define('POLYLANG_VERSION', '0.8.3.6');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
@@ -304,7 +304,8 @@ class Polylang extends Polylang_Base {
 
 		// optionaly removes 'language' in permalinks so that we get http://www.myblog/en/ instead of http://www.myblog/language/en/
 		// language information always in front of the uri ('with_front' => false)
-		add_permastruct('language', $options['rewrite'] ? '%language%' : 'language/%language%', array('with_front' => false));
+		// the 3rd parameter structure has been modified in WP 3.4
+		add_permastruct('language', $options['rewrite'] ? '%language%' : 'language/%language%', version_compare($GLOBALS['wp_version'], '3.4' , '<') ? false : array('with_front' => false));
 
 		load_plugin_textdomain('polylang', false, basename(POLYLANG_DIR).'/languages'); // plugin i18n
 	}
