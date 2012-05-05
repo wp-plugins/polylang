@@ -19,7 +19,7 @@ class Polylang_Widget_Calendar extends WP_Widget_Calendar {
 		if ( $title )
 			echo $before_title . $title . $after_title;
 		echo '<div id="calendar_wrap">';
-		isset($polylang) && $polylang->get_languages_list() ? $this->get_calendar() : get_calendar(); #modified#
+		isset($polylang) && $polylang->get_languages_list() && $polylang->get_current_language() ? $this->get_calendar() : get_calendar(); #modified#
 		echo '</div>';
 		echo $after_widget;
 	}

@@ -18,6 +18,9 @@ class Polylang_Core extends Polylang_base {
 		$this->page_for_posts = get_option('page_for_posts');
 		$this->page_on_front = get_option('page_on_front');
 
+		// sets the language of comment
+		add_action('pre_comment_on_post', array(&$this, 'pre_comment_on_post'));
+
 		// text domain management
 		add_action('init', array(&$this, 'init'));
 		add_filter('override_load_textdomain', array(&$this, 'mofile'), 10, 3);
@@ -25,7 +28,7 @@ class Polylang_Core extends Polylang_base {
 		add_action('login_init', array(&$this, 'load_textdomains'));
 
 		// filters posts according to the language
-		add_filter('pre_get_posts', array(&$this, 'pre_get_posts'));;
+		add_filter('pre_get_posts', array(&$this, 'pre_get_posts'));
 
 		// filter sticky posts by current language
 		add_filter('option_sticky_posts', array(&$this, 'option_sticky_posts'));
@@ -165,6 +168,13 @@ class Polylang_Core extends Polylang_base {
 			}
 		}
 		return (isset($lang)) ? $lang : false;
+	}
+
+	// sets the language of comment
+	// useful to redirect to correct post comment url when adding the language to all url
+	function pre_comment_on_post($post_id) {
+		$this->curlang = $this->get_post_language($post_id);
+		$this->add_post_term_link_filters();
 	}
 
 	// save the default locale before we start any language manipulation
