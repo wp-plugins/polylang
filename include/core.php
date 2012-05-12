@@ -143,7 +143,7 @@ class Polylang_Core extends Polylang_base {
 		} // options['browser']
 
 		// return default if there is no preferences in the browser or preferences does not match our languages or it is requested not to use the browser preference
-		return isset($pref_lang) ? $pref_lang : $this->get_language($this->options['default_lang']);
+		return isset($pref_lang) && !is_wp_error($pref_lang) ? $pref_lang : $this->get_language($this->options['default_lang']);
 	}
 
 	// returns the current language
@@ -167,7 +167,7 @@ class Polylang_Core extends Polylang_base {
 					$lang = $this->get_term_language($var, $taxonomy);
 			}
 		}
-		return (isset($lang)) ? $lang : false;
+		return isset($lang) ? $lang : false;
 	}
 
 	// sets the language of comment
@@ -241,7 +241,7 @@ class Polylang_Core extends Polylang_base {
 	// filters posts according to the language
 	function pre_get_posts($query) {
 		// don't make anything if no language has been defined yet
-		if(!$this->get_languages_list())
+		if (!$this->get_languages_list())
 			return;
 
 		$qvars = $query->query_vars;

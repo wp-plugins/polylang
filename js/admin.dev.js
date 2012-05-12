@@ -191,6 +191,7 @@ jQuery(document).ready(function($) {
 		taxonomies.push(taxonomy); // store the taxonomy for future use
 
 		// add our hidden field in the new category form - for each hierarchical taxonomy
+		// FIXME is it really useful now that term language can be set based on post_lang_choice ?
 		$('#' + taxonomy + '-add-submit').before($('<input />')
 			.attr('type', 'hidden')
 			.attr('id', taxonomy + '-lang')

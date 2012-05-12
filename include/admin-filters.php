@@ -325,6 +325,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 	function save_post($post_id, $post) {
 
 		// avoids breaking translations when using inline or bulk edit
+		// FIXME should be useless now thanks to the idea of Gonçalo Peres few lines below
 		if (isset($_POST['_inline_edit']) || isset($_GET['bulk_edit']))
 			return;
 
@@ -340,6 +341,8 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 			$this->set_post_language($post_id, $_POST['post_lang_choice']);
 		elseif (isset($_GET['new_lang']))
 			$this->set_post_language($post_id, $_GET['new_lang']);
+		elseif ($this->get_post_language($post_id))
+			{} // avoids breaking the language if post is updated ouside the edit post page (thanks to Gonçalo Peres)
 		else
 			$this->set_post_language($post_id, $this->options['default_lang']);
 
@@ -603,8 +606,8 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 		if (isset($_POST['term_lang_choice']) && $_POST['term_lang_choice'])
 			$this->set_term_language($term_id, $_POST['term_lang_choice']);
-		else
-			$this->delete_term_language($term_id);
+		elseif (isset($_POST['post_lang_choice']))
+			$this->set_term_language($term_id, $_POST['post_lang_choice']);
 
 		if (!isset($_POST['term_tr_lang']))
 			return;
@@ -683,8 +686,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 	}
 
 	// ajax response for edit term form
-	function term_lang_choice()
-	{
+	function term_lang_choice() {
 		$lang = $this->get_language($_POST['lang']);
 		$term_id = isset($_POST['term_id']) ? $_POST['term_id'] : null;
 		$taxonomy = $_POST['taxonomy'];
