@@ -4,15 +4,11 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, i18n, international, l10n, localization
 Requires at least: 3.1
 Tested up to: 3.4
-Stable tag: 0.8.3
+Stable tag: 0.8.4
 
 Polylang adds multilingual content management support to WordPress.
 
 == Description ==
-
-= Upgrade Notice =
-
-When upgrading from 0.5.1 or older, your custom flags in 'wp-content/plugins/polylang/local_flags' directory should move to 'wp-content/polylang'. People using the function 'pll_the_language' should be aware that it does not display the 'ul' tag anymore. I wrote about the reasons for these changes in the [forum](http://wordpress.org/support/topic/development-of-polylang-version-06). When upgrading from 0.6.1 or older, people using RTL languages must edit these languages and set the text direction to RTL in order for Polylang to work properly (the RTL property of the language is not set automatically when upgrading).
 
 = Features  =
 
@@ -50,10 +46,6 @@ Other [contributions](http://wordpress.org/extend/plugins/polylang/other_notes/)
 = Feedback or ideas =
 
 Don't hesitate to [give your feedback](http://wordpress.org/tags/polylang?forum_id=10). It will help making the plugin better. Don't hesitate to rate the plugin too.
-
-== Upgrade Notice ==
-
-When upgrading from 0.5.1 or older, your custom flags in 'wp-content/plugins/polylang/local_flags' directory should move to 'wp-content/polylang'. People using the function 'pll_the_language' should be aware that it does not display the ul tag anymore. When upgrading from 0.6.1 or older, people using RTL languages must edit these languages and set the text direction to RTL in order for Polylang to work properly (the RTL property of the language is not set automatically when upgrading).
 
 == Installation ==
 
@@ -117,7 +109,21 @@ Every suggestions are welcome.
 
 == Changelog ==
 
-= 0.8.3 (2012-04-09) =
+= 0.8.4 (2012-05-13) =
+
+* Add a new argument 'post_id' to the function pll_the_languages to display posts translations within the loop
+* Bug correction: every posts in every languages are shown on the homepage when requesting the wrong one with or without 'www.'
+* Bug correction: every posts in every languages are shown when requesting /?p=string
+* Bug correction: the language is not correctly set for wp-signup.php and wp-activate.php
+* Bug correction: wrong home links when using permalinks with front with WP 3.3 and older
+* Bug correction: wrong redirection after posting a comment when adding the language information to all urls
+* Bug correction: term language may be lost in some situations
+* Bug correction: post language is set to default if updated outside the edit post page
+* Bug correction: javascript error in WP 3.1
+* Bug correction: can't toggle visibility of tags metabox in edit post panel
+* Tests done with WordPress 3.4 beta 4
+
+= 0.8.3 (2012-04-10) =
 
 * Add Danish translation contributed by [Compute]((http://wordpress.org/support/profile/compute)
 * Add Spanish translation contributed by Curro
@@ -127,8 +133,8 @@ Every suggestions are welcome.
 * Bug correction: wrong archives links when using permalinks with front
 * Bug correction: wrong homepage link when keeping 'language' in permalinks with front
 * Bug correction: flush_rewrite_rules notice when setting up a static front page (introduced in 0.8.2)
-* Bug correction: every post in every language are shown when hitting the homepage with a query string unknown to WP (thanks to Gonçalo Peres)
-* Bug correction: every post in every language are shown on the homepage when PHP adds index.php to the url
+* Bug correction: every posts in every languages are shown when hitting the homepage with a query string unknown to WP (thanks to Gonçalo Peres)
+* Bug correction: every posts in every languages are shown on the homepage when PHP adds index.php to the url
 * Tests done with WordPress 3.4 beta 1
 
 

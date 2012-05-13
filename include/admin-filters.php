@@ -163,10 +163,19 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		}
 	}
 
-	// adds the Languages box in the 'Edit Post' and 'Edit Page' panels (as well as in custom post types panels
-	function add_meta_boxes() {
-		foreach($this->post_types as $ptype)
-			add_meta_box('ml_box', __('Languages','polylang'), array(&$this,'post_language'), $ptype, 'side', 'high');
+	// adds the Language box in the 'Edit Post' and 'Edit Page' panels (as well as in custom post types panels)
+	function add_meta_boxes($post_type) {
+		if (in_array($post_type, $this->post_types))
+			add_meta_box('ml_box', __('Languages','polylang'), array(&$this,'post_language'), $post_type, 'side', 'high');
+
+		// replace tag metabox by our own
+		foreach (get_object_taxonomies($post_type) as $tax_name) {
+			$taxonomy = get_taxonomy($tax_name);
+			if ($taxonomy->show_ui &&  !is_taxonomy_hierarchical($tax_name)) {
+				remove_meta_box('tagsdiv-' . $tax_name, null, 'side');
+				add_meta_box('pll-tagsdiv-' . $tax_name, $taxonomy->labels->name, 'post_tags_meta_box', null, 'side', 'core', array('taxonomy' => $tax_name));
+			}
+		}
 	}
 
 	// the Languages metabox in the 'Edit Post' and 'Edit Page' panels
