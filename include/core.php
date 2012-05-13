@@ -18,6 +18,9 @@ class Polylang_Core extends Polylang_base {
 		$this->page_for_posts = get_option('page_for_posts');
 		$this->page_on_front = get_option('page_on_front');
 
+		// sets the language of comment
+		add_action('pre_comment_on_post', array(&$this, 'pre_comment_on_post'));
+
 		// text domain management
 		add_action('init', array(&$this, 'init'));
 		add_filter('override_load_textdomain', array(&$this, 'mofile'), 10, 3);
@@ -25,7 +28,7 @@ class Polylang_Core extends Polylang_base {
 		add_action('login_init', array(&$this, 'load_textdomains'));
 
 		// filters posts according to the language
-		add_filter('pre_get_posts', array(&$this, 'pre_get_posts'));;
+		add_filter('pre_get_posts', array(&$this, 'pre_get_posts'));
 
 		// filter sticky posts by current language
 		add_filter('option_sticky_posts', array(&$this, 'option_sticky_posts'));
@@ -140,7 +143,7 @@ class Polylang_Core extends Polylang_base {
 		} // options['browser']
 
 		// return default if there is no preferences in the browser or preferences does not match our languages or it is requested not to use the browser preference
-		return isset($pref_lang) ? $pref_lang : $this->get_language($this->options['default_lang']);
+		return isset($pref_lang) && !is_wp_error($pref_lang) ? $pref_lang : $this->get_language($this->options['default_lang']);
 	}
 
 	// returns the current language
@@ -164,7 +167,14 @@ class Polylang_Core extends Polylang_base {
 					$lang = $this->get_term_language($var, $taxonomy);
 			}
 		}
-		return (isset($lang)) ? $lang : false;
+		return isset($lang) ? $lang : false;
+	}
+
+	// sets the language of comment
+	// useful to redirect to correct post comment url when adding the language to all url
+	function pre_comment_on_post($post_id) {
+		$this->curlang = $this->get_post_language($post_id);
+		$this->add_post_term_link_filters();
 	}
 
 	// save the default locale before we start any language manipulation
@@ -231,12 +241,12 @@ class Polylang_Core extends Polylang_base {
 	// filters posts according to the language
 	function pre_get_posts($query) {
 		// don't make anything if no language has been defined yet
-		if(!$this->get_languages_list())
+		if (!$this->get_languages_list())
 			return;
 
 		$qvars = $query->query_vars;
 
-		// users may want to display content in a different langage than the current one by setting it explicitely in the query
+		// users may want to display content in a different language than the current one by setting it explicitely in the query
 		if ($this->curlang && isset($qvars['lang']) && $qvars['lang'])
 			return;
 
@@ -247,8 +257,14 @@ class Polylang_Core extends Polylang_base {
 			return;
 
 		// homepage is requested, let's set the language
-		// second check not to break wp-signup & wp-activate
-		if (empty($query->query) && home_url('/') == trailingslashit((is_ssl() ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'])) {
+		if (is_home() && !$this->curlang) {
+			// special case for wp-signup.php & wp-activate.php for which WP set is_home to true
+			if (false === strpos($_SERVER['SCRIPT_NAME'], 'index.php')) {
+				$this->curlang = $this->get_preferred_language();
+				return;
+			}
+
+			// now, it should be the true homepage
 			// find out the language
 			if ($this->options['hide_default'] && isset($_COOKIE['wordpress_polylang']))
 				$this->curlang = $this->get_language($this->options['default_lang']);
@@ -399,7 +415,7 @@ class Polylang_Core extends Polylang_base {
 		return _get_page_link($id);
 	}
 
-	// prevents redirection of the homepage
+	// prevents redirection of the homepage when using page on front
 	function redirect_canonical($redirect_url, $requested_url) {
 		return $requested_url == home_url('/') || $requested_url == $this->page_link('', get_option('page_on_front')) ? false : $redirect_url;
 	}
@@ -538,7 +554,7 @@ class Polylang_Core extends Polylang_base {
 		}
 
 		elseif (is_home() || is_tax('language') )
-			$url = $this->get_home_url($language, 'language');
+			$url = $this->get_home_url($language);
 
 		return isset($url) ? $url : null;
 	}
@@ -639,9 +655,10 @@ class Polylang_Core extends Polylang_base {
 			'show_flags' => 0, // don't show flags
 			'show_names' => 1, // show language names
 			'display_names_as' => 'name', // valid options are slug and name
-			'force_home' => 0, // tries to find a translation (available only if display != dropdown)
+			'force_home' => 0, // tries to find a translation
 			'hide_if_no_translation' => 0, // don't hide the link if there is no translation
 			'hide_current' => 0, // don't hide current language
+			'post_id' => null, // if not null, link to translations of post defined by post_id
 		);
 		extract(wp_parse_args($args, $defaults));
 
@@ -656,7 +673,9 @@ class Polylang_Core extends Polylang_base {
 				if ($this->curlang->term_id == $language->term_id && $hide_current)
 					continue;
 
-				$url = $force_home ? null : $this->get_translation_url($language);
+				$url = $post_id !== null && ($tr_id = $this->get_post($post_id, $language)) ? get_permalink($tr_id) :
+					$post_id === null && !$force_home ?  $this->get_translation_url($language) : null;
+
 				$url = apply_filters('pll_the_language_link', $url, $language->slug, $language->description);
 
 				// hide if no translation exists

@@ -34,7 +34,10 @@ pll_tagBox = {
 		if ( !thetags.length )
 			return;
 
-		disabled = thetags.prop('disabled');
+// FIXME: why this modification ?
+//		disabled = thetags.prop('disabled'); // 3.3
+//		disabled = thetags.attr('disabled'); // 3.1
+		disabled = thetags.attr('disabled');
 
 		current_tags = thetags.val().split(',');
 		tagchecklist.empty();
@@ -191,6 +194,7 @@ jQuery(document).ready(function($) {
 		taxonomies.push(taxonomy); // store the taxonomy for future use
 
 		// add our hidden field in the new category form - for each hierarchical taxonomy
+		// FIXME is it really useful now that term language can be set based on post_lang_choice ?
 		$('#' + taxonomy + '-add-submit').before($('<input />')
 			.attr('type', 'hidden')
 			.attr('id', taxonomy + '-lang')
@@ -244,6 +248,7 @@ jQuery(document).ready(function($) {
 	// Tag box
 
 	// replace WP class by our own to avoid using tagBox functions
+	// FIXME: useless now that I replace the metabox in the PHP code
 	$('#side-sortables, #normal-sortables, #advanced-sortables').children('div.postbox').each(function(){
 		if ( this.id.indexOf('tagsdiv-') === 0 ) {
 			$(this).attr('id', 'pll-' + this.id);

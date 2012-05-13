@@ -13,7 +13,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		add_action('customize_register', array(&$this, 'customize_register'), 20); // since WP 3.4
 
 		// refresh rewrite rules if the 'page_on_front' option is modified
-		add_action('update_option_page_on_front', array(&$this, 'flush_rewrite_rules'));
+		add_action('update_option_page_on_front', 'flush_rewrite_rules');
 
 		// adds a 'settings' link in the plugins table
 		$plugin_file = basename(POLYLANG_DIR).'/polylang.php';
@@ -111,7 +111,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 	}
 
 	// adds the language and translations columns (before the comments column) in the posts and pages list table
-	function add_post_column($columns, $post_type ='') {
+	function add_post_column($columns, $post_type = '') {
 		return $post_type == '' || in_array($post_type, $this->post_types) ? $this->add_column($columns, 'comments') : $columns;
 	}
 
@@ -163,10 +163,19 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		}
 	}
 
-	// adds the Languages box in the 'Edit Post' and 'Edit Page' panels (as well as in custom post types panels
-	function add_meta_boxes() {
-		foreach($this->post_types as $ptype)
-			add_meta_box('ml_box', __('Languages','polylang'), array(&$this,'post_language'), $ptype, 'side', 'high');
+	// adds the Language box in the 'Edit Post' and 'Edit Page' panels (as well as in custom post types panels)
+	function add_meta_boxes($post_type) {
+		if (in_array($post_type, $this->post_types))
+			add_meta_box('ml_box', __('Languages','polylang'), array(&$this,'post_language'), $post_type, 'side', 'high');
+
+		// replace tag metabox by our own
+		foreach (get_object_taxonomies($post_type) as $tax_name) {
+			$taxonomy = get_taxonomy($tax_name);
+			if ($taxonomy->show_ui &&  !is_taxonomy_hierarchical($tax_name)) {
+				remove_meta_box('tagsdiv-' . $tax_name, null, 'side');
+				add_meta_box('pll-tagsdiv-' . $tax_name, $taxonomy->labels->name, 'post_tags_meta_box', null, 'side', 'core', array('taxonomy' => $tax_name));
+			}
+		}
 	}
 
 	// the Languages metabox in the 'Edit Post' and 'Edit Page' panels
@@ -325,6 +334,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 	function save_post($post_id, $post) {
 
 		// avoids breaking translations when using inline or bulk edit
+		// FIXME should be useless now thanks to the idea of Gonçalo Peres few lines below
 		if (isset($_POST['_inline_edit']) || isset($_GET['bulk_edit']))
 			return;
 
@@ -340,6 +350,8 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 			$this->set_post_language($post_id, $_POST['post_lang_choice']);
 		elseif (isset($_GET['new_lang']))
 			$this->set_post_language($post_id, $_GET['new_lang']);
+		elseif ($this->get_post_language($post_id))
+			{} // avoids breaking the language if post is updated ouside the edit post page (thanks to Gonçalo Peres)
 		else
 			$this->set_post_language($post_id, $this->options['default_lang']);
 
@@ -603,8 +615,8 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 		if (isset($_POST['term_lang_choice']) && $_POST['term_lang_choice'])
 			$this->set_term_language($term_id, $_POST['term_lang_choice']);
-		else
-			$this->delete_term_language($term_id);
+		elseif (isset($_POST['post_lang_choice']))
+			$this->set_term_language($term_id, $_POST['post_lang_choice']);
 
 		if (!isset($_POST['term_tr_lang']))
 			return;
@@ -683,8 +695,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 	}
 
 	// ajax response for edit term form
-	function term_lang_choice()
-	{
+	function term_lang_choice() {
 		$lang = $this->get_language($_POST['lang']);
 		$term_id = isset($_POST['term_id']) ? $_POST['term_id'] : null;
 		$taxonomy = $_POST['taxonomy'];
