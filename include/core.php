@@ -256,16 +256,14 @@ class Polylang_Core extends Polylang_base {
 			isset($qvars['tax_query'][0]['operator']) && $qvars['tax_query'][0]['operator'] == 'NOT IN')
 			return;
 
-		// homepage is requested, let's set the language
-		if (is_home() && !$this->curlang) {
-			// special case for wp-signup.php & wp-activate.php for which WP set is_home to true
-			if (false === strpos($_SERVER['SCRIPT_NAME'], 'index.php')) {
-				$this->curlang = $this->get_preferred_language();
-				return;
-			}
+		// special case for wp-signup.php & wp-activate.php
+		if (is_home() && false === strpos($_SERVER['SCRIPT_NAME'], 'index.php')) {
+			$this->curlang = $this->get_preferred_language();
+			return;
+		}
 
-			// now, it should be the true homepage
-			// find out the language
+		// homepage is requested, let's set the language
+		if (!$this->curlang && ((is_home() && !$this->page_for_posts) || (empty($query->query) && is_page() && $qvars['page_id'] == $this->page_on_front))) {
 			if ($this->options['hide_default'] && isset($_COOKIE['wordpress_polylang']))
 				$this->curlang = $this->get_language($this->options['default_lang']);
 			else
