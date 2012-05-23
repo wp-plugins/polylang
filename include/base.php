@@ -142,11 +142,12 @@ abstract class Polylang_Base {
 
 	// among the term and its translations, returns the id of the term which is in $lang
 	function get_term($term_id, $lang) {
-		if (!$lang)
+		$lg = $this->get_term_language($term_id);
+		if (!$lang || !$lg || $lg == null) // FIXME should be more consistent in returned values
 			return '';
 
 		$lang = $this->get_language($lang);
-		return $this->get_term_language($term_id)->term_id == $lang->term_id ? $term_id : $this->get_translation('term', $term_id, $lang);
+		return $lg->term_id == $lang->term_id ? $term_id : $this->get_translation('term', $term_id, $lang);
 	}
 
 	// adds language information to a link when using pretty permalinks

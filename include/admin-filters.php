@@ -301,6 +301,9 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 	// filters the pages by language in the parent dropdown list in the page attributes metabox
 	function page_attributes_dropdown_pages_args($dropdown_args, $post) {
 		$lang = isset($_POST['lang']) ? $this->get_language($_POST['lang']) : $this->get_post_language($post->ID); // ajax or not ?
+		if (!$lang)
+			$lang = $this->get_language($this->options['default_lang']);
+
 		$pages = implode(',', $this->exclude_pages($lang->term_id));
 		$dropdown_args['exclude'] = isset($dropdown_args['exclude']) ? $dropdown_args['exclude'].','.$pages : $pages;
 		return $dropdown_args;
@@ -404,7 +407,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 		// save translations after checking the translated post is in the right language
 		foreach ($_POST['post_tr_lang'] as $lang=>$tr_id)
-			$translations[$lang] = $this->get_post_language((int) $tr_id)->slug == $lang ? (int) $tr_id : 0;
+			$translations[$lang] = ($tr_id && $this->get_post_language((int) $tr_id)->slug == $lang) ? (int) $tr_id : 0;
 
 		$this->save_translations('post', $post_id, $translations);
 
@@ -744,7 +747,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 	// FIXME remove the customize menu section as it is currently unusable with Polylang
 	function customize_register() {
-		$GLOBALS['customize']->remove_section('nav'); // since WP 3.4
+		$GLOBALS['wp_customize']->remove_section('nav'); // since WP 3.4
 	}
 
 	// modifies the widgets forms to add our language dropdwown list
