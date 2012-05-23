@@ -357,8 +357,8 @@ class Polylang_Core extends Polylang_base {
 		}
 
 		// sets a language for theme preview
-		if (isset($_GET['preview']))
-			$query->set('lang', $this->options['default_lang']);
+		if ($qvars['preview'])
+			$query->set('lang', $this->curlang->slug);
 
 		if (PLL_DISPLAY_ALL) {
 			// add posts with no language set
@@ -617,7 +617,10 @@ class Polylang_Core extends Polylang_base {
 		$theme = get_theme_root();
 		foreach (debug_backtrace() as $trace) {
 			$ok = $trace['function'] == 'wp_nav_menu' ||
+				// search form when using pretty permalinks
+				($trace['function'] == 'get_search_form' || (isset($trace['file']) && strpos($trace['file'], 'searchform.php'))) ||
 				// direct call from the theme
+				// FIXME is test of searchform.php necessary now ?
 				(isset($trace['file']) && !strpos($trace['file'], 'searchform.php') && strpos($trace['file'], $theme) !== false &&
 					in_array($trace['function'], array('home_url', 'bloginfo', 'get_bloginfo')) );
 
