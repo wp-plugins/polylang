@@ -36,7 +36,7 @@ The plugin admin interface is currently available in:
 * Polish contributed by [Peter Paciorkiewicz](http://www.paciorkiewicz.pl)
 * Latvian contributed by [@AndyDeGroo](http://twitter.com/AndyDeGroo)
 * Italian contributed by [Luca Barbetti](http://wordpress.org/support/profile/lucabarbetti)
-* Danish contributed by [Compute]((http://wordpress.org/support/profile/compute)
+* Danish contributed by [Compute](http://wordpress.org/support/profile/compute)
 * Spanish contributed by Curro
 
 Special thanks to [@AndyDeGroo](http://twitter.com/AndyDeGroo) and [RavanH](http://4visions.nl/) for their help in debugging and improving Polylang !
