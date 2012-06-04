@@ -60,7 +60,8 @@ class Polylang_Core extends Polylang_base {
 		add_filter('redirect_canonical', array(&$this, 'redirect_canonical'), 10, 2);
 
 		// adds javascript at the end of the document
-		add_action('wp_print_footer_scripts', array(&$this, 'wp_print_footer_scripts'));
+		// must add it *after* the admin bar rendering
+		add_action('wp_footer', array(&$this, 'wp_print_footer_scripts'), 2000);
 
 		// adds the language information in the search form
 		// low priority in case the search form is created using the same filter as described in http://codex.wordpress.org/Function_Reference/get_search_form
@@ -277,8 +278,11 @@ class Polylang_Core extends Polylang_base {
 					$query->set('lang', $this->curlang->slug);
 			}
 			// redirect to the home page in the right language
-			else {
-				wp_redirect($this->get_home_url($this->curlang));
+			// test to avoid crash if get_home_url returns something wrong
+			// FIXME why this happens? http://wordpress.org/support/topic/polylang-crashes-1
+			// FIXME should it be an option ?
+			elseif (is_string($redirect = $this->get_home_url($this->curlang))) {
+				wp_redirect($redirect);
 				exit;
 			}
 		}
@@ -422,32 +426,39 @@ class Polylang_Core extends Polylang_base {
 	function wp_print_footer_scripts() {
 		// modifies the search form since filtering get_search_form won't work if the template uses searchform.php or the search form is hardcoded
 		// don't use directly e[0] just in case there is somewhere else an element named 's'
-		// check before if the hidden input has not already been introduced by get_search_form
+		// check before if the hidden input has not already been introduced by get_search_form (FIXME: is there a way to improve this ?
 		// thanks to AndyDeGroo for improving the code for compatility with old browsers 
 		// http://wordpress.org/support/topic/development-of-polylang-version-08?replies=6#post-2645559
-		if (!$this->search_form_filter) {
-			$lang = esc_js($this->curlang->slug);
-			$js = "e = document.getElementsByName('s');
-			for (i = 0; i < e.length; i++) {
-				if (e[i].tagName.toUpperCase() == 'INPUT') {
+
+		$lang = esc_js($this->curlang->slug);
+		$js = "e = document.getElementsByName('s');
+		for (i = 0; i < e.length; i++) {
+			if (e[i].tagName.toUpperCase() == 'INPUT') {
+				s = e[i].parentNode.parentNode.children;
+				l = 0;
+				for (j = 0; j < s.length; j++) {
+					if (s[j].name == 'lang') {
+						l = 1;
+					}
+				}
+				if ( l == 0) {					
 					var ih = document.createElement('input');
 					ih.type = 'hidden';
 					ih.name = 'lang';
 					ih.value = '$lang';
 					e[i].parentNode.appendChild(ih);
 				}
-			}";
-			echo "<script type='text/javascript'>" .$js. "</script>";
-		}
+			}
+		}";
+		echo "<script type='text/javascript'>" .$js. "</script>";
 	}
 
 	// adds the language information in the search form
 	// does not work if searchform.php is used or if the search form is hardcoded in another template file
 	function get_search_form($form) {
-		if ($form) {
-			$this->search_form_filter = true;
+		if ($form)
 			$form = str_replace('</form>', '<input type="hidden" name="lang" value="'.esc_attr($this->curlang->slug).'" /></form>', $form);
-		}
+
 		return $form;
 	}
 
@@ -616,9 +627,11 @@ class Polylang_Core extends Polylang_base {
 
 		$theme = get_theme_root();
 		foreach (debug_backtrace() as $trace) {
+			// search form when using pretty permalinks
+			if (in_array($trace['function'], array ('get_search_form', 'wp_admin_bar_search_menu')) || (isset($trace['file']) && strpos($trace['file'], 'searchform.php')))
+				return $this->get_home_url($this->curlang, true);
+
 			$ok = $trace['function'] == 'wp_nav_menu' ||
-				// search form when using pretty permalinks
-				($trace['function'] == 'get_search_form' || (isset($trace['file']) && strpos($trace['file'], 'searchform.php'))) ||
 				// direct call from the theme
 				// FIXME is test of searchform.php necessary now ?
 				(isset($trace['file']) && !strpos($trace['file'], 'searchform.php') && strpos($trace['file'], $theme) !== false &&
@@ -632,7 +645,7 @@ class Polylang_Core extends Polylang_base {
 	}
 
 	// returns the home url in the right language
-	function get_home_url($language = '') {
+	function get_home_url($language = '', $search = false) {
 		if ($language == '')
 			$language = $this->curlang;
 
@@ -640,7 +653,8 @@ class Polylang_Core extends Polylang_base {
 			return trailingslashit($this->home);
 
 		// a static page is used as front page : /!\ don't use get_page_link to avoid infinite loop
-		if ($this->page_on_front && $id = $this->get_post($this->page_on_front, $language))
+		// don't use this for search form
+		if (!$search && $this->page_on_front && $id = $this->get_post($this->page_on_front, $language))
 			return $this->page_link('', $id);
 
 		return get_term_link($language, 'language');
