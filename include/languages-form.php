@@ -57,7 +57,7 @@ if (isset($_GET['error'])) {?>
 				<div class="form-field">
 					<label for="lang_list"><?php _e('Choose a language', 'polylang');?></label>
 					<select name="lang_list" id="lang_list">
-						<option value=""></option>';<?php
+						<option value=""></option><?php
 						include(PLL_INC.'/languages.php');
 						foreach ($languages as $lg) {
 							printf('<option value="%1$s-%2$s-%3$s">%4$s - %2$s</option>'."\n", esc_attr($lg[0]), esc_attr($lg[1]), isset($lg[3]) ? '1' : '0' , esc_html($lg[2]));

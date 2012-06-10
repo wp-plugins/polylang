@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, i18n, international, l10n, localization
 Requires at least: 3.1
 Tested up to: 3.4
-Stable tag: 0.8.5
+Stable tag: 0.8.7
 
 Polylang adds multilingual content management support to WordPress.
 
@@ -36,7 +36,7 @@ The plugin admin interface is currently available in:
 * Polish contributed by [Peter Paciorkiewicz](http://www.paciorkiewicz.pl)
 * Latvian contributed by [@AndyDeGroo](http://twitter.com/AndyDeGroo)
 * Italian contributed by [Luca Barbetti](http://wordpress.org/support/profile/lucabarbetti)
-* Danish contributed by [Compute]((http://wordpress.org/support/profile/compute)
+* Danish contributed by [Compute](http://wordpress.org/support/profile/compute)
 * Spanish contributed by Curro
 
 Special thanks to [@AndyDeGroo](http://twitter.com/AndyDeGroo) and [RavanH](http://4visions.nl/) for their help in debugging and improving Polylang !
@@ -108,6 +108,22 @@ If you like Polylang, you can spread the word... Rating the plugin is very easy,
 Every suggestions are welcome.
 
 == Changelog ==
+
+= 0.8.7 (2012-06-10) =
+
+* Add the possibility to load Polylang API for ajax requests on frontend
+* Add ta_LK to predefined languages list
+* Bug correction: search form is broken when using a static front page
+* Bug correction: admin bar search does not work
+* Tests done with WordPress 3.4 RC2
+
+= 0.8.6 (2012-05-23) =
+
+* Add the possibility to use a local config file to set options
+* Improve robustness (less PHP notices)
+* Bug correction: Menus not showing in preview mode
+* Bug correction: fatal error when customizing a theme in WP 3.4 beta 4
+* Bug correction: second page of search results returns 404 when using pretty permalinks
 
 = 0.8.5 (2012-05-14) =
 
