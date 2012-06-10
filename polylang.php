@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.8.6.2
+Version: 0.8.7
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 */
@@ -24,7 +24,7 @@ Description: Adds multilingual capability to Wordpress
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('POLYLANG_VERSION', '0.8.6.2');
+define('POLYLANG_VERSION', '0.8.7');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
@@ -87,7 +87,8 @@ class Polylang extends Polylang_Base {
 			require_once(PLL_INC.'/admin.php');
 			$polylang = new Polylang_Admin();
 		}
-		elseif (is_admin()) {
+		// avoid loading polylang admin filters for frontend ajax requests if 'pll_load_front' is set (thanks to g100g)
+		elseif (is_admin() && !(defined('DOING_AJAX') && isset($_REQUEST['pll_load_front']))) {
 			require_once(PLL_INC.'/admin-base.php');
 			require_once(PLL_INC.'/admin-filters.php');
 			$polylang = new Polylang_Admin_Filters();
