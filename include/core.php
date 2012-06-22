@@ -26,6 +26,7 @@ class Polylang_Core extends Polylang_base {
 		add_filter('override_load_textdomain', array(&$this, 'mofile'), 10, 3);
 		add_action('wp', array(&$this, 'load_textdomains'));
 		add_action('login_init', array(&$this, 'load_textdomains'));
+		add_action('admin_init', array(&$this, 'load_textdomains')); // Ajax thanks to g100g
 
 		// filters posts according to the language
 		add_filter('pre_get_posts', array(&$this, 'pre_get_posts'));
@@ -159,6 +160,10 @@ class Polylang_Core extends Polylang_base {
 		if ($var = get_query_var('lang'))
 			$lang = $this->get_language($var);
 
+		// Ajax thanks to g100g
+		elseif (isset($_REQUEST['pll_load_front']))
+			$lang =  isset($_REQUEST['lang']) && $_REQUEST['lang'] ? $this->get_language($_REQUEST['lang']) : $this->get_preferred_language();
+
 		elseif ((is_single() || is_page()) && ( ($var = get_queried_object_id()) || ($var = get_query_var('p')) || ($var = get_query_var('page_id')) ))
 			$lang = $this->get_post_language($var);
 
@@ -288,9 +293,9 @@ class Polylang_Core extends Polylang_base {
 		}
 
 		// redirect the language page to the homepage
-		if ($this->options['redirect_lang'] && is_tax('language') && count($query->query) == 1 && $this->page_on_front) {
-			$this->curlang = $this->get_language(get_query_var('lang'));
-			$query->parse_query('page_id='.$this->get_post($this->page_on_front, $this->curlang));
+		if ($this->options['redirect_lang'] && is_tax('language') && $this->page_on_front) {
+			$qvars['page_id'] = $this->get_post($this->page_on_front, $this->get_language(get_query_var('lang')));
+			$query->parse_query($qvars);
 			return;
 		}
 
@@ -721,9 +726,9 @@ class Polylang_Core extends Polylang_base {
 	// just returns the current language for API
 	function current_language($args) {
 		return !isset($this->curlang) ? false :
-			$args == 'name' ? $this->curlang->name :
-			$args == 'locale' ? $this->curlang->description :
-			$this->curlang->slug;
+			($args == 'name' ? $this->curlang->name :
+			($args == 'locale' ? $this->curlang->description :
+			$this->curlang->slug));
 	}
 }
 ?>

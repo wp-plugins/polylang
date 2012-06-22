@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.8.7
+Version: 0.8.7.4
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 */
@@ -24,7 +24,7 @@ Description: Adds multilingual capability to Wordpress
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('POLYLANG_VERSION', '0.8.7');
+define('POLYLANG_VERSION', '0.8.7.4');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
@@ -283,8 +283,8 @@ class Polylang extends Polylang_Base {
 				$options['redirect_lang'] = 0; // option introduced in 0.8
 			}
 
-			if (version_compare($options['version'], '0.8.2', '<'))
-				flush_rewrite_rules(); // rewrite rules have been modified in 0.7.1 & 0.7.2 & 0.8 & 0.8.1 & 0.8.2 
+			if (version_compare($options['version'], '0.8.8', '<'))
+				flush_rewrite_rules(); // rewrite rules have been modified in 0.8.8 
 
 			$options['version'] = POLYLANG_VERSION;
 			update_option('polylang', $options);
@@ -375,7 +375,7 @@ class Polylang extends Polylang_Base {
 			}
 
 			// rewrite rules filtered by language
-			elseif ($always_rewrite || strpos($rule, 'post_type=') || ($current_filter != 'rewrite_rules_array' && $options['force_lang'])) {
+			elseif ($always_rewrite || (strpos($rule, 'post_type=') && !strpos($rule, 'name=')) || ($current_filter != 'rewrite_rules_array' && $options['force_lang'])) {
 				if (isset($slug))
 					$newrules[$slug.str_replace($wp_rewrite->root, '', $key)] = str_replace(array('[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '[1]', '?'), 
 						array('[9]', '[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '?lang=$matches[1]&'), $rule); // hopefully it is sufficient !
