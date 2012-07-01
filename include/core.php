@@ -293,13 +293,6 @@ class Polylang_Core extends Polylang_base {
 		}
 
 		// redirect the language page to the homepage
-		// redirect the language page to the homepage
-		if ($this->options['redirect_lang'] && is_tax('language') && count($query->query) == 1 && $this->page_on_front) {
-			$this->curlang = $this->get_language(get_query_var('lang'));
-			$query->parse_query('page_id='.$this->get_post($this->page_on_front, $this->curlang));
-			return;
-		}
-
 		if ($this->options['redirect_lang'] && is_tax('language') && $this->page_on_front && (count($query->query) == 1 || (is_paged() && count($query->query) == 2))) {
 			$qvars['page_id'] = $this->get_post($this->page_on_front, $this->get_language(get_query_var('lang')));
 			$query->parse_query($qvars);
