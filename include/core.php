@@ -250,7 +250,7 @@ class Polylang_Core extends Polylang_base {
 		if (!$this->get_languages_list())
 			return;
 
-		$qvars = $query->query_vars;
+		$qvars = &$query->query_vars;
 
 		// users may want to display content in a different language than the current one by setting it explicitely in the query
 		if ($this->curlang && isset($qvars['lang']) && $qvars['lang'])
@@ -369,6 +369,11 @@ class Polylang_Core extends Polylang_base {
 		if ($qvars['preview'])
 			$query->set('lang', $this->curlang->slug);
 
+		// to avoid conflict with beetwen taxonomies
+		foreach ($query->tax_query->queries as $tax)
+			if (in_array($tax['taxonomy'], $this->taxonomies))
+				unset ($qvars['lang']);
+
 		if (PLL_DISPLAY_ALL) {
 			// add posts with no language set
 			$query->query_vars['tax_query'] = array(
@@ -436,7 +441,8 @@ class Polylang_Core extends Polylang_base {
 		// http://wordpress.org/support/topic/development-of-polylang-version-08?replies=6#post-2645559
 
 		$lang = esc_js($this->curlang->slug);
-		$js = "e = document.getElementsByName('s');
+		$js = "//<![CDATA[
+		e = document.getElementsByName('s');
 		for (i = 0; i < e.length; i++) {
 			if (e[i].tagName.toUpperCase() == 'INPUT') {
 				s = e[i].parentNode.parentNode.children;
@@ -454,7 +460,8 @@ class Polylang_Core extends Polylang_base {
 					e[i].parentNode.appendChild(ih);
 				}
 			}
-		}";
+		}
+		//]]>";
 		echo "<script type='text/javascript'>" .$js. "</script>";
 	}
 

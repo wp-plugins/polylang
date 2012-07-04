@@ -38,6 +38,7 @@ class Polylang_Widget extends WP_Widget {
 
 			$js = "
 				<script type='text/javascript'>
+					//<![CDATA[
 					var urls = {{$urls}};
 					var d = document.getElementById('lang_choice');
 					d.onchange = function() {
@@ -46,6 +47,7 @@ class Polylang_Widget extends WP_Widget {
 								location.href = urls[i];
 						}
 					}
+					//]]>
 				</script>";
 
 			echo $js;
