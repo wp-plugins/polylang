@@ -250,7 +250,7 @@ class Polylang_Core extends Polylang_base {
 		if (!$this->get_languages_list())
 			return;
 
-		$qvars = &$query->query_vars;
+		$qvars = $query->query_vars;
 
 		// users may want to display content in a different language than the current one by setting it explicitely in the query
 		if ($this->curlang && isset($qvars['lang']) && $qvars['lang'])
@@ -369,10 +369,11 @@ class Polylang_Core extends Polylang_base {
 		if ($qvars['preview'])
 			$query->set('lang', $this->curlang->slug);
 
-		// to avoid conflict with beetwen taxonomies
-		foreach ($query->tax_query->queries as $tax)
-			if (in_array($tax['taxonomy'], $this->taxonomies))
-				unset ($qvars['lang']);
+		// to avoid conflict beetwen taxonomies
+		if (isset($query->tax_query->queries))
+			foreach ($query->tax_query->queries as $tax)
+				if (in_array($tax['taxonomy'], $this->taxonomies))
+					unset ($query->query_vars['lang']);
 
 		if (PLL_DISPLAY_ALL) {
 			// add posts with no language set
