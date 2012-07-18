@@ -53,6 +53,7 @@ $languages = array(
 	array('sq', 'sq', 'Shqip'),
 	array('sr', 'sr_RS', 'Српски језик'),
 	array('sv', 'sv_SE', 'Svenska'),
+	array('ta', 'ta_LK', 'தமிழ்'),
 	array('th', 'th', 'ไทย'),
 	array('tr', 'tr_TR', 'Türkçe'),
 	array('ug', 'ug_CN', 'Uyƣurqə'),
