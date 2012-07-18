@@ -327,11 +327,14 @@ class Polylang_Core extends Polylang_base {
 			}
 		}
 
+		$is_post_type = isset($qvars['post_type']) && (in_array($qvars['post_type'], $this->post_types) ||
+			 (is_array($qvars['post_type']) && array_intersect($qvars['post_type'], $this->post_types)) );
+
 		// FIXME to generalize as I probably forget things
 		$is_archive = (count($query->query) == 1 && isset($qvars['paged']) && $qvars['paged']) ||
 			(isset($qvars['m']) && $qvars['m']) ||
 			(isset($qvars['author']) && $qvars['author']) ||
-			(isset($qvars['post_type']) && is_post_type_archive() && in_array($qvars['post_type'], $this->post_types));
+			(isset($qvars['post_type']) && is_post_type_archive() && $is_post_type);
 
 		// sets 404 when the language is not set for archives needing the language in the url
 		if (!$this->options['hide_default'] && !isset($qvars['lang']) && !$GLOBALS['wp_rewrite']->using_permalinks() && $is_archive)
@@ -343,8 +346,7 @@ class Polylang_Core extends Polylang_base {
 
 		// allow filtering recent posts and secondary queries by the current language
 		// take care not to break queries for non visible post types such as nav_menu_items, attachments...
-		if (/*$query->is_home && */$this->curlang && (!isset($qvars['post_type']) || in_array($qvars['post_type'], $this->post_types) ||
-			 (is_array($qvars['post_type']) && array_intersect($qvars['post_type'], $this->post_types)) ))
+		if (/*$query->is_home && */$this->curlang && (!isset($qvars['post_type']) || $is_post_type ))
 			$query->set('lang', $this->curlang->slug);
 
 		// remove pages query when the language is set unless we do a search

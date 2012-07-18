@@ -89,6 +89,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 		// language management for users
 		add_action('personal_options_update', array(&$this, 'personal_options_update'));
+		add_action('edit_user_profile_update', array(&$this, 'personal_options_update'));
 		add_action('personal_options', array(&$this, 'personal_options'));
 
 		//modifies posts and terms links when needed

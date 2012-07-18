@@ -6,7 +6,7 @@ printf(
 echo ' ';
 printf(
 	__("You will also find useful information in the %ssupport forum%s. However don't forget to make a search before posting a new topic.", 'polylang'),
-	'<a href="http://wordpress.org/tags/polylang?forum_id=10">',
+	'<a href="http://wordpress.org/support/plugin/polylang">',
 	'</a>');?>
 </p>
 <p><?php
