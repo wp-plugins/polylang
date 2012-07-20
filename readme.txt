@@ -3,8 +3,8 @@ Contributors: Chouby
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CCWWYUUQV8F4E
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, i18n, international, l10n, localization
 Requires at least: 3.1
-Tested up to: 3.4
-Stable tag: 0.8.5
+Tested up to: 3.4.1
+Stable tag: 0.8.9
 
 Polylang adds multilingual content management support to WordPress.
 
@@ -36,8 +36,9 @@ The plugin admin interface is currently available in:
 * Polish contributed by [Peter Paciorkiewicz](http://www.paciorkiewicz.pl)
 * Latvian contributed by [@AndyDeGroo](http://twitter.com/AndyDeGroo)
 * Italian contributed by [Luca Barbetti](http://wordpress.org/support/profile/lucabarbetti)
-* Danish contributed by [Compute]((http://wordpress.org/support/profile/compute)
+* Danish contributed by [Compute](http://wordpress.org/support/profile/compute)
 * Spanish contributed by Curro
+* Portuguese contributed by [Vitor Carvalho](http://vcarvalho.com/)
 
 Special thanks to [@AndyDeGroo](http://twitter.com/AndyDeGroo) and [RavanH](http://4visions.nl/) for their help in debugging and improving Polylang !
 
@@ -45,7 +46,7 @@ Other [contributions](http://wordpress.org/extend/plugins/polylang/other_notes/)
 
 = Feedback or ideas =
 
-Don't hesitate to [give your feedback](http://wordpress.org/tags/polylang?forum_id=10). It will help making the plugin better. Don't hesitate to rate the plugin too.
+Don't hesitate to [give your feedback](http://wordpress.org/support/plugin/polylang). It will help making the plugin better. Don't hesitate to rate the plugin too.
 
 == Installation ==
 
@@ -64,8 +65,8 @@ Don't hesitate to [give your feedback](http://wordpress.org/tags/polylang?forum_
 = Where to find help ? =
 
 * Read the [documentation](http://plugins.svn.wordpress.org/polylang/trunk/doc/documentation-en.pdf) supplied whith the plugin (in the doc directory). It includes guidelines to start working with Polylang, a much bigger FAQ than here and the API documentation for programmers.
-* Search the [support forum](http://wordpress.org/tags/polylang?forum_id=10). I know that searching in the WordPress forum is not very convenient, but please give it a try. You can use generic search engines such as Google too as the WordPress forum SEO is very good. You will most probably find your answer here.
-* If you still have a problem, open a new thread in the [support forum](http://wordpress.org/tags/polylang?forum_id=10).
+* Search the [support forum](http://wordpress.org/support/plugin/polylang). I know that searching in the WordPress forum is not very convenient, but please give it a try. You can use generic search engines such as Google too as the WordPress forum SEO is very good. You will most probably find your answer here.
+* If you still have a problem, open a new thread in the [support forum](http://wordpress.org/support/plugin/polylang).
 
 = Is Polylang compatible with multisite ? =
 
@@ -85,11 +86,11 @@ If you wonder how you can help Polylang, here are some ideas. As you will read, 
 
 = Help other users of Polylang =
 
-The [support forum](http://wordpress.org/tags/polylang?forum_id=10) is here so that users of the plugin can get help when they need it. However, I will not always be available to answer questions. You don't need to be a developer to help out. Very often similar questions have been answered in the past. You can subscribe to the tag ['polylang'](http://wordpress.org/tags/polylang) (emails or RSS feed, see just below the topic list) to know when a new topic has been posted.
+The [support forum]http://wordpress.org/support/plugin/polylang) is here so that users of the plugin can get help when they need it. However, I will not always be available to answer questions. You don't need to be a developer to help out. Very often similar questions have been answered in the past. You can subscribe to the tag ['polylang'](http://wordpress.org/tags/polylang) (emails or RSS feed, see just below the topic list) to know when a new topic has been posted.
 
 = Report bugs =
 
-Don't hesitate to report bugs on the [support forum](http://wordpress.org/tags/polylang?forum_id=10).
+Don't hesitate to report bugs on the [support forum](http://wordpress.org/support/plugin/polylang).
 
 = Test new versions =
 
@@ -97,7 +98,7 @@ You can subscribe to the tag ['polylang-dev'](http://wordpress.org/tags/polylang
 
 = Translate the admin interface =
 
-Polylang is already available in 12 languages. It's very easy to add a new one ! Download [poedit](http://www.poedit.net/download.php) (available for Windows, Mac OS X and Linux). Rename the file polylang.pot found in the polylang/languages directory into something like polylang-your_locale.po. Open the file with poedit and start translating (keeping strange codes such as %s, %1$s as is). Once done, just save and you will get two files polylang-your_locale.po and polylang-your_locale.mo that you can send to the author. The translation will be included with the next release.
+Polylang is already available in 13 languages. It's very easy to add a new one ! Download [poedit](http://www.poedit.net/download.php) (available for Windows, Mac OS X and Linux). Rename the file polylang.pot found in the polylang/languages directory into something like polylang-your_locale.po. Open the file with poedit and start translating (keeping strange codes such as %s, %1$s as is). Once done, just save and you will get two files polylang-your_locale.po and polylang-your_locale.mo that you can send to the author. The translation will be included with the next release.
 
 = Communicate =
 
@@ -108,6 +109,37 @@ If you like Polylang, you can spread the word... Rating the plugin is very easy,
 Every suggestions are welcome.
 
 == Changelog ==
+
+= 0.8.9 (2012-07-20) =
+
+* Add Portuguese translation contributed by [Vitor Carvalho](http://vcarvalho.com/)
+
+= 0.8.8 (2012-07-18) =
+
+* Validation improvement thanks to kg69design
+* Bug correction: custom post types rewrite rules are broken when registered with query_var=>false
+* Bug correction: user admin language not deleted when uninstalling the plugin
+* Bug correction: pll_current_language('name') returns locale instead of language name
+* Bug correction: ajax on frontend does not work
+* Bug correction: homepage pagination broken when redirecting the language page to a static front page
+* Bug correction: taxonomies conflicts on custom post types
+* Bug correction: the admin language is not updated when edited by other users
+
+= 0.8.7 (2012-06-10) =
+
+* Add the possibility to load Polylang API for ajax requests on frontend
+* Add ta_LK to predefined languages list
+* Bug correction: search form is broken when using a static front page
+* Bug correction: admin bar search does not work
+* Tests done with WordPress 3.4 RC2
+
+= 0.8.6 (2012-05-23) =
+
+* Add the possibility to use a local config file to set options
+* Improve robustness (less PHP notices)
+* Bug correction: Menus not showing in preview mode
+* Bug correction: fatal error when customizing a theme in WP 3.4 beta 4
+* Bug correction: second page of search results returns 404 when using pretty permalinks
 
 = 0.8.5 (2012-05-14) =
 
@@ -129,7 +161,7 @@ Every suggestions are welcome.
 
 = 0.8.3 (2012-04-10) =
 
-* Add Danish translation contributed by [Compute]((http://wordpress.org/support/profile/compute)
+* Add Danish translation contributed by [Compute](http://wordpress.org/support/profile/compute)
 * Add Spanish translation contributed by Curro
 * Add the possibility to add a content in a different language than the current one by setting explicitely the lang parameter in the secondary query
 * Add support of PATHINFO permalinks
