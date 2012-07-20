@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, i18n, international, l10n, localization
 Requires at least: 3.1
 Tested up to: 3.4.1
-Stable tag: 0.8.8
+Stable tag: 0.8.9
 
 Polylang adds multilingual content management support to WordPress.
 
@@ -110,9 +110,12 @@ Every suggestions are welcome.
 
 == Changelog ==
 
-= 0.8.8 (2012-07-18) =
+= 0.8.9 (2012-07-20) =
 
 * Add Portuguese translation contributed by [Vitor Carvalho](http://vcarvalho.com/)
+
+= 0.8.8 (2012-07-18) =
+
 * Validation improvement thanks to kg69design
 * Bug correction: custom post types rewrite rules are broken when registered with query_var=>false
 * Bug correction: user admin language not deleted when uninstalling the plugin
