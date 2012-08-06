@@ -145,7 +145,7 @@ class Polylang_Admin_Base extends Polylang_Base {
 	// register strings for translation making sure it is not duplicate
 	function register_string($name, $string) {
 		$to_register = array('name'=> $name, 'string' => $string);
-		if (!in_array($to_register, $this->strings))
+		if (!in_array($to_register, $this->strings) && $to_register['string'])
 			$this->strings[] = $to_register;
 	}
 } // class Polylang_Admin_Base

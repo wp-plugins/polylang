@@ -247,7 +247,7 @@ class Polylang_Core extends Polylang_base {
 	// filters posts according to the language
 	function pre_get_posts($query) {
 		// don't make anything if no language has been defined yet
-		if (!$this->get_languages_list())
+		if (!$this->get_languages_list() || !did_action('wp_loaded'))
 			return;
 
 		$qvars = $query->query_vars;
@@ -362,7 +362,7 @@ class Polylang_Core extends Polylang_base {
 
 		// unset the is_tax flag for authors pages and post types archives
 		// FIXME Probably I should do this for other cases
-		if (isset($qvars['lang']) && $qvars['lang'] && (is_author() || is_post_type_archive())) {
+		if (isset($qvars['lang']) && $qvars['lang'] && (is_author() || is_post_type_archive() || is_date())) {
 			$query->is_tax = false;
 			unset($query->queried_object);
 		}

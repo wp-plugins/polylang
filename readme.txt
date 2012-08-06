@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, i18n, international, l10n, localization
 Requires at least: 3.1
 Tested up to: 3.4.1
-Stable tag: 0.8.9
+Stable tag: 0.8.10
 
 Polylang adds multilingual content management support to WordPress.
 
@@ -39,6 +39,7 @@ The plugin admin interface is currently available in:
 * Danish contributed by [Compute](http://wordpress.org/support/profile/compute)
 * Spanish contributed by Curro
 * Portuguese contributed by [Vitor Carvalho](http://vcarvalho.com/)
+* Lithuanian contributed by [Naglis Jonaitis](http://najo.lt/)
 
 Special thanks to [@AndyDeGroo](http://twitter.com/AndyDeGroo) and [RavanH](http://4visions.nl/) for their help in debugging and improving Polylang !
 
@@ -98,7 +99,7 @@ You can subscribe to the tag ['polylang-dev'](http://wordpress.org/tags/polylang
 
 = Translate the admin interface =
 
-Polylang is already available in 13 languages. It's very easy to add a new one ! Download [poedit](http://www.poedit.net/download.php) (available for Windows, Mac OS X and Linux). Rename the file polylang.pot found in the polylang/languages directory into something like polylang-your_locale.po. Open the file with poedit and start translating (keeping strange codes such as %s, %1$s as is). Once done, just save and you will get two files polylang-your_locale.po and polylang-your_locale.mo that you can send to the author. The translation will be included with the next release.
+Polylang is already available in 14 languages. It's very easy to add a new one ! Download [poedit](http://www.poedit.net/download.php) (available for Windows, Mac OS X and Linux). Rename the file polylang.pot found in the polylang/languages directory into something like polylang-your_locale.po. Open the file with poedit and start translating (keeping strange codes such as %s, %1$s as is). Once done, just save and you will get two files polylang-your_locale.po and polylang-your_locale.mo that you can send to the author. The translation will be included with the next release.
 
 = Communicate =
 
@@ -109,6 +110,15 @@ If you like Polylang, you can spread the word... Rating the plugin is very easy,
 Every suggestions are welcome.
 
 == Changelog ==
+
+= 0.8.10 (2012-08-06) =
+
+* Add Lithuanian (lt_LT) to predefined languages list (automatic download and update of language files won't work)
+* Add Lithuanian translation contributed by [Naglis Jonaitis](http://najo.lt/)
+* Bug correction: empty string translation issue
+* Bug correction: 'wp_list_pages' does not filter custom post types
+* Bug correction: warning if posts are queried before the action 'wp_loaded' has been fired
+* Bug correction: notice in twentyten when resquesting a date archive with no posts
 
 = 0.8.9 (2012-07-20) =
 
@@ -128,7 +138,6 @@ Every suggestions are welcome.
 = 0.8.7 (2012-06-10) =
 
 * Add the possibility to load Polylang API for ajax requests on frontend
-* Add ta_LK to predefined languages list
 * Bug correction: search form is broken when using a static front page
 * Bug correction: admin bar search does not work
 * Tests done with WordPress 3.4 RC2
