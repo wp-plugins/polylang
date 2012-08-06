@@ -142,11 +142,12 @@ abstract class Polylang_Base {
 
 	// among the term and its translations, returns the id of the term which is in $lang
 	function get_term($term_id, $lang) {
-		if (!$lang)
+		$lg = $this->get_term_language($term_id);
+		if (!$lang || !$lg || $lg == null) // FIXME should be more consistent in returned values
 			return '';
 
 		$lang = $this->get_language($lang);
-		return $this->get_term_language($term_id)->term_id == $lang->term_id ? $term_id : $this->get_translation('term', $term_id, $lang);
+		return $lg->term_id == $lang->term_id ? $term_id : $this->get_translation('term', $term_id, $lang);
 	}
 
 	// adds language information to a link when using pretty permalinks
@@ -221,14 +222,14 @@ abstract class Polylang_Base {
 	// returns all page ids *not in* language defined by $lang_id
 	function exclude_pages($lang_id) {
 		$q = array(
-			'numberposts'=>-1,
-			'post_type' => 'page',
-			'fields' => 'ids',
-			'tax_query' => array(array(
-				'taxonomy'=>'language',
-				'fields' => 'id',
-				'terms'=>$lang_id,
-				'operator'=>'NOT IN'
+			'numberposts' => -1,
+			'post_type'   => array_intersect(get_post_types(array('hierarchical' => 1)), $this->post_types),
+			'fields'      => 'ids',
+			'tax_query'   => array(array(
+				'taxonomy' => 'language',
+				'fields'   => 'id',
+				'terms'    => $lang_id,
+				'operator' => 'NOT IN'
 			))
 		);
 		return get_posts($q);

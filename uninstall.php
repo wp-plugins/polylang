@@ -53,6 +53,10 @@ class Polylang_Uninstall {
 			unset($wpdb->termmeta);
 		}
 
+		// delete users options
+		foreach (get_users(array('fields' => 'ID')) as $user_id)
+			delete_user_meta($user_id, 'user_lang');
+
 		// delete options
 		delete_option('polylang');
 		delete_option('polylang_nav_menus');

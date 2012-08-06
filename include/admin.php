@@ -217,6 +217,7 @@ class Polylang_Admin extends Polylang_Admin_Base {
 					foreach ($_POST['translation'][$language->name] as $key=>$translation) {
 						$mo->add_entry($mo->make_entry($strings[$key]['string'], stripslashes($translation)));
 					}
+					$mo->add_entry($mo->make_entry('', '')); // empty string translation, just in case
 					// FIXME should I clean the mo object to remove unused strings ?
 					$this->mo_export($mo, $language);
 				}
