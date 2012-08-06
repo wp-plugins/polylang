@@ -27,6 +27,14 @@ class Polylang_Uninstall {
 
 		$languages = get_terms('language', array('hide_empty'=>false));
 
+		// delete users options
+		foreach (get_users(array('fields' => 'ID')) as $user_id) {
+			delete_user_meta($user_id, 'user_lang');
+			delete_user_meta($user_id, 'pll_filter_content');
+			foreach ($languages as $lang)
+				delete_user_meta($user_id, 'description_'.$lang->slug);
+		}
+
 		// delete posts translations
 		$ids = get_posts(array('numberposts'=> -1, 'fields' => 'ids', 'meta_key'=>'_translations', 'post_type'=>'any', 'post_status'=>'any'));
 		foreach ($ids as $id)
@@ -53,9 +61,6 @@ class Polylang_Uninstall {
 			unset($wpdb->termmeta);
 		}
 
-		// delete users options
-		foreach (get_users(array('fields' => 'ID')) as $user_id)
-			delete_user_meta($user_id, 'user_lang');
 
 		// delete options
 		delete_option('polylang');

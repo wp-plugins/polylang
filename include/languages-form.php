@@ -1,4 +1,5 @@
 <?php
+global $wp_rewrite;
 // displays the Languages admin panel
 ?>
 <div class="wrap">
@@ -24,6 +25,7 @@ if (isset($_GET['error'])) {?>
 			// displays the language list in a table
 			$list_table->display();?>
 			<div class="metabox-holder"><?php
+				wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
 				do_meta_boxes('settings_page_mlang', 'normal', array());?>
 			</div>
 		</div><!-- col-wrap -->
@@ -170,6 +172,7 @@ case 'strings':
 	<?php wp_nonce_field('string-translation', '_wpnonce_string-translation');?>
 	<input type="hidden" name="action" value="string-translation" /><?php
 	$string_table->display();
+	printf('<label><input name="clean" type="checkbox" value="1" /> %s</label>', __('Clean strings translation database', 'polylang'));
 	submit_button(); // since WP 3.1 ?>
 	</form><?php
 break;
@@ -190,7 +193,7 @@ case 'settings': ?>
 		</tr><?php
 
 		// posts or terms without language set
-		if ($untranslated && $options['default_lang']) {?>
+		if ($this->get_objects_with_no_lang() && $options['default_lang']) {?>
 			<tr>
 				<th></th>
 				<td>
@@ -222,15 +225,24 @@ case 'settings': ?>
 			<td scope="row">
 				<label><?php
 					printf(
-						'<input name="rewrite" type="radio" value="0" %s /> %s %s',
-						$options['rewrite'] ? '' : 'checked="checked"',
-						 __('Keep /language/ in pretty permalinks. Example:', 'polylang'),
-						'<code>'.esc_html(home_url('language/en/')).'</code>'
+						'<input name="force_lang" type="radio" value="0" %s /> %s',
+						$options['force_lang'] ? '' :'checked="checked"',
+						__('The language is set from content. Posts, pages, categories and tags urls are not modified.', 'polylang')
 					);?>
 				</label>
 				<label><?php
 					printf(
-						'<input name="rewrite" type="radio" value="1" %s /> %s %s',
+						'<input name="force_lang" type="radio" value="1" %s %s/> %s',
+						$wp_rewrite->using_permalinks() ? '' : 'disabled=1',
+						$options['force_lang'] ? 'checked="checked"' :'',
+						__('The language code, for example /en/, is added to all urls when using pretty permalinks.', 'polylang')
+					);?>
+				</label>
+				<br />
+				<label><?php
+					printf(
+						'<input name="rewrite" type="radio" value="1" %s %s/> %s %s',
+						$wp_rewrite->using_permalinks() ? '' : 'disabled=1',
 						$options['rewrite'] ? 'checked="checked"' : '',
 						__('Remove /language/ in pretty permalinks. Example:', 'polylang'),
 						'<code>'.esc_html(home_url('en/')).'</code>'
@@ -238,23 +250,41 @@ case 'settings': ?>
 				</label>
 				<label><?php
 					printf(
+						'<input name="rewrite" type="radio" value="0" %s %s/> %s %s',
+						$wp_rewrite->using_permalinks() ? '' : 'disabled=1',
+						$options['rewrite'] ? '' : 'checked="checked"',
+						 __('Keep /language/ in pretty permalinks. Example:', 'polylang'),
+						'<code>'.esc_html(home_url('language/en/')).'</code>'
+					);?>
+				</label>
+				<br />
+				<label><?php
+					printf(
 						'<input name="hide_default" type="checkbox" value="1" %s /> %s',
 						$options['hide_default'] ? 'checked="checked"' :'',
 						__('Hide URL language information for default language', 'polylang')
 					);?>
 				</label>
+				<br />
 				<label><?php
 					printf(
-						'<input name="force_lang" type="checkbox" value="1" %s /> %s',
-						$options['force_lang'] ? 'checked="checked"' :'',
-						__('Add language information to all URL including posts, pages, categories and post tags (not recommended)', 'polylang')
+						'<input name="redirect_lang" type="checkbox" value="1" %s %s/> %s',
+						get_option('page_on_front') ? '' : 'disabled=1',
+						$options['redirect_lang'] ? 'checked="checked"' :'',
+						sprintf(__('When using static front page, redirect the language page (example: %s) to the front page in the right language', 'polylang'), '<code>'.esc_html(home_url('en/')).'</code>')
 					);?>
 				</label>
+			</td>
+		</tr>
+
+		<tr>
+			<th><?php _e('Synchronization', 'polylang') ?></th>
+			<td scope="row">
 				<label><?php
 					printf(
-						'<input name="redirect_lang" type="checkbox" value="1" %s /> %s',
-						$options['redirect_lang'] ? 'checked="checked"' :'',
-						sprintf(__('Redirect the language page (example: %s) to the homepage in the right language', 'polylang'), '<code>'.esc_html(home_url('en/')).'</code>')
+						'<input name="sync" type="checkbox" value="1" %s /> %s',
+						$options['sync'] ? 'checked="checked"' :'',
+						__('Allow to synchronize categories, tags, featured image and other metas between translations of a post or page', 'polylang')
 					);?>
 				</label>
 			</td>

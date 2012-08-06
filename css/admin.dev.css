@@ -31,9 +31,10 @@
 .translation label {
 	display: inline-block;
 	width: 23%;
+	vertical-align: top;
 }
 
-.translation input {
+.translation input, .translation textarea {
 	width: 72%;
 }
 
@@ -69,16 +70,16 @@ th[class*='column-language_'] {
 	font-size: 11px;
 }
 
-/* language and translations in edit-tags.php */
+/* language and translations in edit-tags.php as well as media translations in upload.php */
 #term-translations table {
 	width: 97%;
 }
 
-#term-translations th {
+#term-translations th, .media-item .describe .media-translations th {
   padding: 8px 10px;
 }
 
-#term-translations td {
+#term-translations td, .media-item .describe .media-translations td {
   font-size: 12px;
   line-height: 26px;
   margin-bottom: 9px;
@@ -97,7 +98,11 @@ tr#term-translations select[id*='tr_lang_'] {
 	width: 65%;
 }
 
-
 .tr-edit-column {
 	width: 15%;
+}
+
+/* media translations in upload.php */
+.media-translations {
+	width: 460px;
 }

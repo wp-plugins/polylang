@@ -18,25 +18,26 @@ abstract class Polylang_Base {
 
 	// init post types and taxonomies to filter by language
 	function add_post_types_taxonomies() {
-		$this->post_types = apply_filters('pll_get_post_types', get_post_types(array('show_ui' => true)));
+		$this->post_types = apply_filters('pll_get_post_types', array_merge(array('attachment' => 'attachment'), get_post_types(array('show_ui' => true))));
 		$this->taxonomies = apply_filters('pll_get_taxonomies', get_taxonomies(array('show_ui'=>true)));
 	}
 
 	// returns the list of available languages
-	function get_languages_list($hide_empty = false) {
-		return get_terms('language', array('hide_empty'=>$hide_empty, 'orderby'=>'term_group' ));
+	function get_languages_list($args = array()) {
+		$defaults = array('hide_empty' => false, 'orderby'=> 'term_group');
+		$args = wp_parse_args($args, $defaults);
+		return get_terms('language', $args);
 	}
 
 	// retrieves the dropdown list of the languages
-	function dropdown_languages($args) {
-		$defaults = array('name' => 'lang_choice', 'class' => '', 'show_option_none' => false, 'show_option_all' => false,
-			'hide_empty' => false, 'value' => 'slug', 'selected' => '');
+	function dropdown_languages($args = array()) {
+		$args = apply_filters('pll_dropdown_language_args', $args);
+		$defaults = array('name' => 'lang_choice', 'class' => '', 'add_option' => false, 'hide_empty' => false, 'value' => 'slug', 'selected' => '');
 		extract(wp_parse_args($args, $defaults));
 
 		$out = sprintf('<select name="%1$s" id="%1$s"%2$s>'."\n", esc_attr($name), $class ? ' class="'.esc_attr($class).'"' : '');
-		$out .= $show_option_none ? "<option value='0'></option>\n" : '';
-		$out .= $show_option_all ? "<option value='0'>".__('All languages', 'polylang')."</option>\n" : '';
-		foreach ($this->get_languages_list($hide_empty) as $language) {
+		$out .= $add_option !== false ? "<option value='0'>$add_option</option>\n" : '';
+		foreach ($this->get_languages_list($args) as $language) {
 			$out .= sprintf("<option value='%s'%s>%s</option>\n",
 				esc_attr($language->$value),
 				$language->$value == $selected ? ' selected="selected"' : '',
@@ -50,13 +51,11 @@ abstract class Polylang_Base {
 	// returns the language by its id or its slug
 	// Note: it seems that a numeric value is better for performance (3.2.1)
 	function get_language($value) {
-		if (is_object($value))
-			return $value;
-		if (is_numeric($value) || (int) $value)
-			return get_term((int) $value, 'language');
-		elseif (is_string($value))
-			return get_term_by('slug', $value , 'language'); // seems it is not cached in 3.2.1
-		return null;
+		$lang = is_object($value) ? $value :
+			((is_numeric($value) || (int) $value) ? get_term((int) $value, 'language') :
+			(is_string($value) ? get_term_by('slug', $value , 'language') : // seems it is not cached in 3.2.1
+			false));
+		return isset($lang) && $lang && !is_wp_error($lang) ? $lang : false;
 	}
 
 	// saves translations for posts or terms
@@ -80,7 +79,7 @@ abstract class Polylang_Base {
 
 	// deletes a translation of a post or term
 	function delete_translation($type, $id) {
-		$translations = unserialize(get_metadata($type, $id, '_translations', true));
+		$translations = $this->get_translations($type, $id);
 		if (is_array($translations)) {
 			$slug = array_search($id, $translations);
 			unset($translations[$slug]);
@@ -96,34 +95,42 @@ abstract class Polylang_Base {
 	// $id: post id or term id
 	// $lang: object or slug (in the order of preference latest to avoid)
 	function get_translation($type, $id, $lang) {
-		$translations = unserialize(get_metadata($type, $id, '_translations', true));
+		$translations = $this->get_translations($type, $id);
 		$slug = $this->get_language($lang)->slug;
-		return isset($translations[$slug]) ? (int) $translations[$slug] : '';
+		return isset($translations[$slug]) ? (int) $translations[$slug] : false;
+	}
+
+	// returns an array of translations of a post or term
+	function get_translations($type, $id) {
+		return unserialize(get_metadata($type, $id, '_translations', true));
 	}
 
 	// store the post language in the database
 	function set_post_language($post_id, $lang) {
-		wp_set_post_terms($post_id, $this->get_language($lang)->slug, 'language' );
+		if ($lang)
+			wp_set_post_terms($post_id, $this->get_language($lang)->slug, 'language' );
 	}
 
 	// returns the language of a post
 	function get_post_language($post_id) {
 		$lang = get_the_terms($post_id, 'language' );
-		return ($lang) ? reset($lang) : null; // there's only one language per post : first element of the array returned
+		return ($lang) ? reset($lang) : false; // there's only one language per post : first element of the array returned
 	}
 
 	// among the post and its translations, returns the id of the post which is in $lang
 	function get_post($post_id, $lang) {
-		if (!$lang)
-			return '';
+		$post_lang = $this->get_post_language($post_id);
+		if (!$lang || !$post_lang)
+			return false;
 
 		$lang = $this->get_language($lang);
-		return $this->get_post_language($post_id)->term_id == $lang->term_id ? $post_id : $this->get_translation('post', $post_id, $lang);
+		return $post_lang->term_id == $lang->term_id ? $post_id : $this->get_translation('post', $post_id, $lang);
 	}
 
 	// store the term language in the database
 	function set_term_language($term_id, $lang) {
-		update_metadata('term', $term_id, '_language', $this->get_language($lang)->term_id);
+		if ($lang)
+			update_metadata('term', $term_id, '_language', $this->get_language($lang)->term_id);
 	}
 
 	// remove the term language in the database
@@ -137,14 +144,14 @@ abstract class Polylang_Base {
 			$term_id = $value;
 		elseif (is_string($value) && $taxonomy)
 			$term_id = get_term_by('slug', $value , $taxonomy)->term_id;
-		return $term_id ? $this->get_language(get_metadata('term', $term_id, '_language', true)) : null;
+		return $term_id ? $this->get_language(get_metadata('term', $term_id, '_language', true)) : false;
 	}
 
 	// among the term and its translations, returns the id of the term which is in $lang
 	function get_term($term_id, $lang) {
 		$lg = $this->get_term_language($term_id);
-		if (!$lang || !$lg || $lg == null) // FIXME should be more consistent in returned values
-			return '';
+		if (!$lang || !$lg)
+			return false;
 
 		$lang = $this->get_language($lang);
 		return $lg->term_id == $lang->term_id ? $term_id : $this->get_translation('term', $term_id, $lang);
@@ -153,7 +160,7 @@ abstract class Polylang_Base {
 	// adds language information to a link when using pretty permalinks
 	function add_language_to_link($url, $lang) {
 		if (!isset($lang) || !$lang) // FIXME avoid notice when adding a page to a custom menu
-			return;
+			return false;
 
 		global $wp_rewrite;
 		if ($wp_rewrite->using_permalinks()) {
@@ -207,14 +214,26 @@ abstract class Polylang_Base {
 		return isset($url) ? '<img src="'.esc_url($url).'" title="'.esc_attr($title).'" alt="'.esc_attr($lang->name).'" />' : '';
 	}
 
-	// adds terms clauses to get_terms - used in both frontend and admin
-	function _terms_clauses($clauses, $lang, $display_all = false) {
+	// adds clauses to comments query - used in both frontend and admin
+	function _comments_clauses($clauses, $lang) {
 		global $wpdb;
-		if (isset($lang) && !is_wp_error($lang)) {
+
+		// if this clause is not already added by WP
+		if (!strpos($clauses['join'], '.ID'))
+			$clauses['join'] .= " JOIN $wpdb->posts ON $wpdb->posts.ID = $wpdb->comments.comment_post_ID";
+
+		$clauses['join'] .= " INNER JOIN $wpdb->term_relationships AS pll_tr ON pll_tr.object_id = ID";
+		$clauses['where'] .= $wpdb->prepare(" AND pll_tr.term_taxonomy_id = %d", $lang->term_taxonomy_id);
+
+		return $clauses;
+	}
+
+	// adds terms clauses to get_terms - used in both frontend and admin
+	function _terms_clauses($clauses, $lang) {
+		global $wpdb;
+		if (isset($lang) && $lang) {
 			$clauses['join'] .= $wpdb->prepare(" LEFT JOIN $wpdb->termmeta AS pll_tm ON t.term_id = pll_tm.term_id");
-			$where_lang = $wpdb->prepare("pll_tm.meta_key = '_language' AND pll_tm.meta_value = %d", $lang->term_id); // add terms in the right language
-			$where_all = $wpdb->prepare("t.term_id NOT IN (SELECT term_id FROM $wpdb->termmeta WHERE meta_key IN ('_language'))");	// add terms with no language set
-			$clauses['where'] .= $display_all ? " AND (($where_lang) OR ($where_all))" : " AND $where_lang";
+			$clauses['where'] .= $wpdb->prepare(" AND pll_tm.meta_key = '_language' AND pll_tm.meta_value IN ($lang->term_id)");
 		}
 		return $clauses;
 	}

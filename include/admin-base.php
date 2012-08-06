@@ -8,14 +8,14 @@ class Polylang_Admin_Base extends Polylang_Base {
 		// filter admin language for users
 		add_filter('locale', array(&$this, 'get_locale'));
 
-		// additionnal filters and actions
+		// set user preferences
 		add_action('admin_init',  array(&$this, 'admin_init_base'));
 
 		// adds the link to the languages panel in the wordpress admin menu
 		add_action('admin_menu', array(&$this, 'add_menus'));
 
-		// setup js scripts andd css styles
-		add_action('admin_enqueue_scripts', array(&$this,'admin_enqueue_scripts'));
+		// setup js scripts and css styles
+		add_action('admin_enqueue_scripts', array(&$this, 'admin_enqueue_scripts'));
 	}
 
 	// returns the locale based on user preference
@@ -24,13 +24,25 @@ class Polylang_Admin_Base extends Polylang_Base {
 		return function_exists('wp_get_current_user') && ($loc = get_user_meta(get_current_user_id(), 'user_lang', 'true')) ? $loc : $locale;
 	}
 
-	// set text direction if the user set its own language
+	// set user preferences
 	function admin_init_base() {
+		// set text direction if the user set its own language
 		global $wpdb, $wp_locale;
 		$lang_id = $wpdb->get_var($wpdb->prepare("SELECT t.term_id FROM $wpdb->terms AS t INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id
 			WHERE tt.taxonomy = 'language' AND tt.description = %s LIMIT 1", get_locale())); // no function exists to get term by description
 		if ($lang_id)
 			$wp_locale->text_direction = get_metadata('term', $lang_id, '_rtl', true) ? 'rtl' : 'ltr';
+
+		// set user meta when choosing to filter content by language
+		if (isset($_GET['lang']) && $_GET['lang'])
+			update_user_meta(get_current_user_id(), 'pll_filter_content', $_GET['lang'] == 'all' ? '' : $_GET['lang']);
+
+		if (!$this->get_languages_list())
+			return;
+
+		// adds the languages in admin bar
+		// FIXME: OK for WP 3.2 and newer (the admin bar is not displayed on admin side for WP 3.1)
+		add_action('admin_bar_menu', array(&$this, 'admin_bar_menu'), 100); // 100 determines the position
 	}
 
 	// adds the link to the languages panel in the wordpress admin menu
@@ -47,16 +59,19 @@ class Polylang_Admin_Base extends Polylang_Base {
 	function admin_enqueue_scripts() {
 		$screen = get_current_screen();
 
-		// FIXME keep the script in header to be sure it is loaded before post.js otherwise a non filtered tag cloud appears in tag cloud metabox
-		if ($screen->base == 'settings_page_mlang' || $screen->base == 'post' || $screen->base == 'edit-tags')
-			wp_enqueue_script('polylang_admin', POLYLANG_URL .'/js/admin.js', array('jquery', 'wp-ajax-response'), POLYLANG_VERSION);
+		$scripts = array(
+			'admin' => array( array('settings_page_mlang'), array('jquery', 'wp-ajax-response', 'postbox') ),
+			'post'  => array( array('post', 'media', 'async-upload', 'edit'),  array('jquery', 'wp-ajax-response') ),
+			'term'  => array( array('edit-tags'), array('jquery', 'wp-ajax-response') ),
+			'user'  => array( array('profile', 'user-edit'), array('jquery') ),
+		);
 
-		if ($screen->base == 'settings_page_mlang' || $screen->base == 'post' || $screen->base == 'edit-tags' || $screen->base == 'edit')
+		foreach ($scripts as $script => $v)
+			if (in_array($screen->base, $v[0]))
+				wp_enqueue_script('pll_'.$script, POLYLANG_URL .'/js/'.$script.'.js', $v[1], POLYLANG_VERSION);
+			
+		if (in_array($screen->base, array('settings_page_mlang', 'post', 'edit-tags', 'edit', 'upload', 'media')))
 			wp_enqueue_style('polylang_admin', POLYLANG_URL .'/css/admin.css', array(), POLYLANG_VERSION);
-
-		if ($screen->base == 'settings_page_mlang') {
-			wp_enqueue_script('postbox');
-		}
 	}
 
 	// downloads mofiles
@@ -142,12 +157,45 @@ class Polylang_Admin_Base extends Polylang_Base {
 		return array_map(create_function('$v', "return \$v['$key'];"), $options);
 	}
 
-	// register strings for translation making sure it is not duplicate
-	function register_string($name, $string) {
-		$to_register = array('name'=> $name, 'string' => $string);
+	// register strings for translation making sure it is not duplicate or empty
+	function register_string($name, $string, $multiline = false) {
+		$to_register = array('name'=> $name, 'string' => $string, 'multiline' => $multiline);
 		if (!in_array($to_register, $this->strings) && $to_register['string'])
 			$this->strings[] = $to_register;
 	}
+
+	// adds the languages in admin bar
+	function admin_bar_menu($wp_admin_bar) {
+		$url = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+
+		$selected = isset($_GET['lang']) && $_GET['lang'] ? $_GET['lang'] : 
+			(($lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true)) ? $lg : 'all');
+
+		$wp_admin_bar->add_menu(array(
+			'id'     => 'languages',
+			'title'  => __('Languages', 'polylang'),
+			'meta'  => array('title' => __('Filters content by language', 'polylang')),
+		));
+
+		$wp_admin_bar->add_menu(array(
+			'parent' => 'languages',
+			'id'     => 'all',
+			'title'  => sprintf('<input name="all" type="radio" value="1" %s /> %s',
+				$selected == 'all' ? 'checked="checked"' : '', __('Show all languages', 'polylang')),
+			'href'   => add_query_arg('lang', 'all', $url),
+		));
+
+		foreach ($this->get_languages_list() as $lang) {
+			$wp_admin_bar->add_menu(array(
+				'parent' => 'languages',
+				'id'     => $lang->slug,
+				'title'  => sprintf('<input name="%s" type="radio" value="1" %s /> %s',
+					$lang->slug, $selected == $lang->slug ? 'checked="checked"' : '', $lang->name),
+				'href'   => add_query_arg('lang', $lang->slug, $url),
+			));			
+		}
+	}
+
 } // class Polylang_Admin_Base
 
 ?>

@@ -1,3 +1,7 @@
+<?php
+// displays the translations fields
+?>
+
 <p><em><?php $post_type == 'page' ? _e('ID of pages in other languages:', 'polylang') : _e('ID of posts in other languages:', 'polylang');?></em></p>
 <table>
 	<thead><tr>

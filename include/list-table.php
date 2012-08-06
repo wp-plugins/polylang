@@ -113,10 +113,13 @@ class Polylang_String_Table extends WP_List_Table {
 
 	function column_translations($item){
 		$out = '';
-		foreach($item['translations'] as $key=>$translation)
-			$out .= sprintf('<div class="translation"><label for="%1$s-%2$s">%3$s</label><input name="translation[%1$s][%2$s]" id="%1$s-%2$s" value="%4$s" /></div>',
+		foreach($item['translations'] as $key=>$translation) {
+			$input_type = $item['multiline'] ?
+				'<textarea name="translation[%1$s][%2$s]" id="%1$s-%2$s">%4$s</textarea>' :
+				'<input name="translation[%1$s][%2$s]" id="%1$s-%2$s" value="%4$s" />';
+			$out .= sprintf('<div class="translation"><label for="%1$s-%2$s">%3$s</label>'.$input_type.'</div>',
 				esc_attr($key), esc_attr($item['row']), esc_html($key), esc_html($translation));
-
+		}
 		return $out;
 	}
 

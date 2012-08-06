@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.8.10
+Version: 0.9dev28
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 */
@@ -24,7 +24,7 @@ Description: Adds multilingual capability to Wordpress
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('POLYLANG_VERSION', '0.8.10');
+define('POLYLANG_VERSION', '0.9dev28');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
@@ -44,14 +44,11 @@ if (file_exists(PLL_LOCAL_DIR.'/pll-config.php'))
 if (!defined('PLL_DISPLAY_ABOUT'))
 	define('PLL_DISPLAY_ABOUT', true); // displays the "About Polylang" metabox by default
 
-if (!defined('PLL_DISPLAY_ALL'))
-	define('PLL_DISPLAY_ALL', false); // diplaying posts & terms with undefined language is disabled by default (unsupported since 0.7)
-
 if (!defined('PLL_FILTER_HOME_URL'))
 	define('PLL_FILTER_HOME_URL', true); // filters the home url (to return the homepage in the right langage) by default
 
-if (!defined('PLL_SYNC'))
-	define('PLL_SYNC', true); // synchronisation is enabled by default
+if (!defined('PLL_SEARCH_FORM_JS'))
+	define('PLL_SEARCH_FORM_JS', true); // add javascript code to modify search form is enabled by default
 
 require_once(PLL_INC.'/base.php');
 require_once(PLL_INC.'/widget.php');
@@ -77,7 +74,7 @@ class Polylang extends Polylang_Base {
 		add_action('admin_init',  array(&$this, 'admin_init'));
 
 		// plugin and widget initialization
-		add_action('init', array(&$this, 'init'));
+		add_action('setup_theme', array(&$this, 'init'));
 		add_action('widgets_init', array(&$this, 'widgets_init'));
 		add_action('wp_loaded', array(&$this, 'prepare_rewrite_rules'), 20); // after Polylang_base::add_post_types_taxonomies
 
@@ -158,6 +155,7 @@ class Polylang extends Polylang_Base {
 			$options['hide_default'] = 0; // do not remove URL language information for default language
 			$options['force_lang'] = 0; // do not add URL language information when useless
 			$options['redirect_lang'] = 0; // do not redirect the language page to the homepage
+			$options['sync'] = 1; // synchronisation is enabled by default
 		}
 		$options['version'] = POLYLANG_VERSION;
 		update_option('polylang', $options);
@@ -284,7 +282,12 @@ class Polylang extends Polylang_Base {
 			}
 
 			if (version_compare($options['version'], '0.8.8', '<'))
-				flush_rewrite_rules(); // rewrite rules have been modified in 0.8.8 
+				flush_rewrite_rules(); // rewrite rules have been modified in 0.8.8
+
+			if (version_compare($options['version'], '0.9', '<')) {
+				if (defined('PLL_SYNC'))
+					$options['sync'] = PLL_SYNC ? 1 : 0;	// the option replaces PLL_SYNC in 0.9			
+			}
 
 			$options['version'] = POLYLANG_VERSION;
 			update_option('polylang', $options);
