@@ -118,7 +118,10 @@ class Polylang_String_Table extends WP_List_Table {
 				'<textarea name="translation[%1$s][%2$s]" id="%1$s-%2$s">%4$s</textarea>' :
 				'<input name="translation[%1$s][%2$s]" id="%1$s-%2$s" value="%4$s" />';
 			$out .= sprintf('<div class="translation"><label for="%1$s-%2$s">%3$s</label>'.$input_type.'</div>',
-				esc_attr($key), esc_attr($item['row']), esc_html($key), esc_html($translation));
+				esc_attr($key),
+				esc_attr($item['row']),
+				esc_html($key),
+				$item['multiline'] ? esc_textarea($translation) : esc_html($translation));
 		}
 		return $out;
 	}

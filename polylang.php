@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.9dev28
+Version: 0.9dev30
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 */
@@ -24,7 +24,7 @@ Description: Adds multilingual capability to Wordpress
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('POLYLANG_VERSION', '0.9dev28');
+define('POLYLANG_VERSION', '0.9dev30');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
@@ -49,6 +49,9 @@ if (!defined('PLL_FILTER_HOME_URL'))
 
 if (!defined('PLL_SEARCH_FORM_JS'))
 	define('PLL_SEARCH_FORM_JS', true); // add javascript code to modify search form is enabled by default
+
+if (!defined('PLL_LANG_EARLY'))
+	define('PLL_LANG_EARLY', true); // temporary option (will be suppressed in versions > 0.9)
 
 require_once(PLL_INC.'/base.php');
 require_once(PLL_INC.'/widget.php');

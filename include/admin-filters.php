@@ -574,7 +574,8 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		$post = get_post($_GET['from_media']);
 		$post_id = $post->ID;
 
-		$post->ID = null;
+		$post->ID = null; // to create a new attachment
+		$post->post_parent = ($post->post_parent && $tr_parent = $this->get_translation('post', $post->post_parent, $_GET['new_lang'])) ? $tr_parent : 0; // translates attachment parent if exists
 		$tr_id = wp_insert_attachment($post);
 		add_post_meta($tr_id, '_wp_attachment_metadata', get_post_meta($post_id, '_wp_attachment_metadata', true));
 		add_post_meta($tr_id, '_wp_attached_file', get_post_meta($post_id, '_wp_attached_file', true));

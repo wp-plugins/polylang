@@ -106,11 +106,18 @@ class Polylang_Admin extends Polylang_Admin_Base {
 					update_option('polylang_nav_menus', $menu_lang);
 
 					// delete language option in widgets
-					foreach ($widget_lang as $key=>$lang) {
-						if ($lang == $lang_slug)
+					foreach ($widget_lang as $key=>$slug) {
+						if ($slug == $lang_slug)
 							unset ($widget_lang[$key]);
 					}
 					update_option('polylang_widgets', $widget_lang);
+
+					// delete users options
+					foreach (get_users(array('fields' => 'ID')) as $user_id) {
+						delete_user_meta($user_id, 'user_lang', $lang->description);
+						delete_user_meta($user_id, 'pll_filter_content', $lang_slug);
+						delete_user_meta($user_id, 'description_'.$lang_slug);
+					}
 
 					// delete the string translations
 					delete_option('polylang_mo'.$lang_id);
@@ -220,7 +227,7 @@ class Polylang_Admin extends Polylang_Admin_Base {
 					$mo->add_entry($mo->make_entry('', '')); // empty string translation, just in case
 
 					// clean database
-					if ($_POST['clean']) {
+					if (isset($_POST['clean']) && $_POST['clean']) {
 						$new_mo = new MO();
 						foreach ($strings as $string)
 							$new_mo->add_entry($mo->make_entry($string['string'], $mo->translate($string['string'])));
@@ -303,7 +310,8 @@ class Polylang_Admin extends Polylang_Admin_Base {
 				$list_table = new Polylang_List_Table();
 				$list_table->prepare_items($data);
 
-				$rtl = 0;
+				if (!$action)
+					$rtl = 0;
 
 				// error messages for data validation
 				$errors[1] = __('Enter a valid WorPress locale', 'polylang');

@@ -25,7 +25,7 @@ class Polylang_Core extends Polylang_base {
 		add_action('pre_comment_on_post', array(&$this, 'pre_comment_on_post'));
 
 		// text domain management
-		$this->options['force_lang'] && get_option('permalink_structure') ?
+		$this->options['force_lang'] && get_option('permalink_structure') && PLL_LANG_EARLY ?
 			add_action('setup_theme', array(&$this, 'setup_theme'), 20) : // after Polylang::setup_theme
 			add_filter('override_load_textdomain', array(&$this, 'mofile'), 10, 3);
 
@@ -131,14 +131,31 @@ class Polylang_Core extends Polylang_base {
 				// break up string into pieces (languages and q factors)
 				preg_match_all('/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $lang_parse);
 
-				if (count($lang_parse[1])) {
-					// NOTE: array_combine => PHP5
-					$accept_langs = array_combine($lang_parse[1], $lang_parse[4]); // create a list like "en" => 0.8
+				$k = $lang_parse[1];
+				$v = $lang_parse[4];
+
+				if ($n = count($k)) {
 					// set default to 1 for any without q factor
-					foreach ($accept_langs as $accept_lang => $val) {
-						if ($val === '') $accept_langs[$accept_lang] = 1;
+					foreach ($v as $key => $val)
+						if ($val === '') $v[$key] = 1;
+
+					// bubble sort (need a stable sort for Android, so can't use a PHP sort function)
+					if ($n > 1) {
+						for ($i = 2; $i <= $n; $i++)
+							for ($j = 0; $j <= $n-2; $j++)
+								if ( $v[$j] < $v[$j + 1]) {
+									// swap values
+									$temp = $v[$j];
+									$v[$j] = $v[$j + 1];
+									$v[$j + 1] = $temp;
+									//swap keys
+									$temp = $k[$j];
+									$k[$j] = $k[$j + 1];
+									$k[$j + 1] = $temp;
+								}
 					}
-					arsort($accept_langs, SORT_NUMERIC); // sort list based on value
+					// NOTE: array_combine => PHP5
+					$accept_langs = array_combine($k,$v);
 				}
 			}
 
@@ -264,7 +281,7 @@ class Polylang_Core extends Polylang_base {
 			// set all our language filters and actions
 			$this->add_language_filters();
 
-			if (!($this->options['force_lang'] && $wp_rewrite->using_permalinks())) {
+			if (!($this->options['force_lang'] && $wp_rewrite->using_permalinks() && PLL_LANG_EARLY)) {
 				// now we can load text domains with the right language
 				$new_locale = get_locale();
 				foreach ($this->list_textdomains as $textdomain)
@@ -695,7 +712,13 @@ class Polylang_Core extends Polylang_base {
 
 	// translates site title and tagline
 	function bloginfo($output, $show) {
-		return in_array($show, array('', 'name', 'description')) ? __($output, 'pll_string') : $output;
+		if (in_array($show, array('', 'name', 'description'))) {
+			$output = __($output, 'pll_string');
+			if (current_filter() == 'get_bloginfo_rss')
+				$output = convert_chars($output);
+		}
+
+		return $output;
 	}
 
 	// translates biography
