@@ -69,11 +69,9 @@ abstract class Polylang_Base {
 			return;
 
 		if (isset($translations) && is_array($translations)) {
-			$tr = serialize(array_merge(array($lang->slug => $id), $translations));
-			update_metadata($type, $id, '_translations', $tr);
-
+			$translations = array_merge(array($lang->slug => $id), $translations);
 			foreach($translations as $key=>$p)
-				update_metadata($type, (int) $p, '_translations', $tr);
+				update_metadata($type, (int) $p, '_translations', $translations);
 		}
 	}
 
@@ -83,9 +81,8 @@ abstract class Polylang_Base {
 		if (is_array($translations)) {
 			$slug = array_search($id, $translations);
 			unset($translations[$slug]);
-			$tr = serialize($translations);
 			foreach($translations as $p)
-				update_metadata($type, (int) $p, '_translations', $tr);
+				update_metadata($type, (int) $p, '_translations', $translations);
 			delete_metadata($type, $id, '_translations');
 		}
 	}
@@ -102,7 +99,8 @@ abstract class Polylang_Base {
 
 	// returns an array of translations of a post or term
 	function get_translations($type, $id) {
-		return unserialize(get_metadata($type, $id, '_translations', true));
+		// maybe_unserialize due to useless serialization in versions < 0.9
+		return maybe_unserialize(get_metadata($type, $id, '_translations', true)); 
 	}
 
 	// store the post language in the database

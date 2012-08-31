@@ -30,9 +30,8 @@ class Polylang_Core extends Polylang_base {
 			add_filter('override_load_textdomain', array(&$this, 'mofile'), 10, 3);
 
 		add_action('init', array(&$this, 'init'));
-		add_action('wp', array(&$this, 'load_textdomains'));
-		add_action('login_init', array(&$this, 'load_textdomains'));
-		add_action('admin_init', array(&$this, 'load_textdomains')); // Ajax thanks to g100g
+		foreach (array('wp', 'login_init', 'admin_init') as $filter) // admin_init for ajax thanks to g100g
+			add_action($filter, array(&$this, 'load_textdomains'), 5); // priority 5 for post types and taxonomies with registered with in wp hook with default priority
 
 		// filters the WordPress locale
 		add_filter('locale', array(&$this, 'get_locale'));
@@ -290,6 +289,11 @@ class Polylang_Core extends Polylang_base {
 				// reinitializes wp_locale for weekdays and months, as well as for text direction				
 				$wp_locale->init();
 				$wp_locale->text_direction = get_metadata('term', $this->curlang->term_id, '_rtl', true) ? 'rtl' : 'ltr';
+
+				// register post types and taxonomies (3rd time !) to translate labels used on frontend
+				// FIXME is there a way to do this for custom post types and taxonomies?
+				create_initial_taxonomies();
+				create_initial_post_types();
 			}
 
 			// and finally load user defined strings
@@ -330,7 +334,7 @@ class Polylang_Core extends Polylang_base {
 	// filters posts according to the language
 	function pre_get_posts($query) {
 		// don't make anything if no language has been defined yet
-		// $this->post_types & $this->taxonomies are defined only once wp_loaded has been fired
+		// $this->post_types & $this->taxonomies are defined only once the action 'wp_loaded' has been fired
 		if (!$this->get_languages_list() || !did_action('wp_loaded'))
 			return;
 

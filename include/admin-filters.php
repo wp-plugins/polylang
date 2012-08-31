@@ -418,6 +418,9 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 			delete_post_meta($to, $key); // the synchronization process of multiple values custom fields is easier if we delete all metas first
 			if (isset($metas[$key])) {
 				foreach ($metas[$key] as $value) {
+					// important: always maybe_unserialize value coming from get_post_custom. See codex.
+					// thanks to goncalveshugo http://wordpress.org/support/topic/plugin-polylang-pll_copy_post_meta
+					$value = maybe_unserialize($value);
 					// special case for featured images which can be translated
 					if ($key == '_thumbnail_id')
 						$tr_value = $this->get_translation('post', $value, $lang);
