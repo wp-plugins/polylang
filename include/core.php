@@ -687,7 +687,7 @@ class Polylang_Core extends Polylang_base {
 
 	// filters the nav menus according to the current language when called from wp_nav_menus
 	function wp_nav_menu_args($args) {
-		if (!$args['menu'] && $args['theme_location']) {
+		if (/*!$args['menu'] &&*/ $args['theme_location']) {
 			$menu_lang = get_option('polylang_nav_menus');
 			if (isset($menu_lang[$args['theme_location']][$this->curlang->slug]))
 				$args['menu'] = $menu_lang[$args['theme_location']][$this->curlang->slug];
