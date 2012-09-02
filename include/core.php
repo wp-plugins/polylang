@@ -292,8 +292,18 @@ class Polylang_Core extends Polylang_base {
 
 				// register post types and taxonomies (3rd time !) to translate labels used on frontend
 				// FIXME is there a way to do this for custom post types and taxonomies?
-				create_initial_taxonomies();
+
+				// save object types for builtin taxonomies in case some have been registered
+				foreach (get_taxonomies(array('_builtin' => true), 'objects') as $tax)
+					$save_object_type_for_tax[$tax->name] = $tax->object_type;
+
+				create_initial_taxonomies(); // overwrites $wp_taxonomies->object_type
 				create_initial_post_types();
+
+				// recreate $wp_taxonomies->object_type
+				foreach ($save_object_type_for_tax as $tax=>$object_types)
+					foreach ($object_types as $object_type)
+						register_taxonomy_for_object_type($tax, $objec_type);						
 			}
 
 			// and finally load user defined strings
@@ -335,14 +345,15 @@ class Polylang_Core extends Polylang_base {
 	function pre_get_posts($query) {
 		// don't make anything if no language has been defined yet
 		// $this->post_types & $this->taxonomies are defined only once the action 'wp_loaded' has been fired
-		if (!$this->get_languages_list() || !did_action('wp_loaded'))
-			return;
+		// honor suppress_filters
+		if (!$this->get_languages_list() || !did_action('wp_loaded') || $query->get('suppress_filters'))
+			return $query;
 
 		$qvars = $query->query_vars;
 
 		// users may want to display content in a different language than the current one by setting it explicitely in the query
 		if (!$this->first_query && $this->curlang && isset($qvars['lang']) && $qvars['lang'])
-			return;
+			return $query;
 
 		$this->first_query = false;
 
@@ -350,12 +361,12 @@ class Polylang_Core extends Polylang_base {
 		// this test should be sufficient
 		if (isset($qvars['tax_query'][0]['taxonomy']) && $qvars['tax_query'][0]['taxonomy'] == 'language' &&
 			isset($qvars['tax_query'][0]['operator']) && $qvars['tax_query'][0]['operator'] == 'NOT IN')
-			return;
+			return $query;
 
 		// special case for wp-signup.php & wp-activate.php
 		if (is_home() && false === strpos($_SERVER['SCRIPT_NAME'], 'index.php')) {
 			$this->curlang = $this->get_preferred_language();
-			return;
+			return $query;
 		}
 
 		// homepage is requested, let's set the language
@@ -366,7 +377,7 @@ class Polylang_Core extends Polylang_base {
 		if ($this->options['redirect_lang'] && is_tax('language') && $this->page_on_front && (count($query->query) == 1 || (is_paged() && count($query->query) == 2))) {
 			$qvars['page_id'] = $this->get_post($this->page_on_front, $this->get_language(get_query_var('lang')));
 			$query->parse_query($qvars);
-			return;
+			return $query;
 		}
 
 		// sets is_home on translated home page when it displays posts
@@ -446,6 +457,8 @@ class Polylang_Core extends Polylang_base {
 			foreach ($query->tax_query->queries as $tax)
 				if (in_array($tax['taxonomy'], $this->taxonomies))
 					unset ($query->query_vars['lang']);
+
+		return $query;
 	}
 
 	// filter sticky posts by current language
