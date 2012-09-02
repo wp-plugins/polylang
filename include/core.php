@@ -303,7 +303,7 @@ class Polylang_Core extends Polylang_base {
 				// recreate $wp_taxonomies->object_type
 				foreach ($save_object_type_for_tax as $tax=>$object_types)
 					foreach ($object_types as $object_type)
-						register_taxonomy_for_object_type($tax, $objec_type);						
+						register_taxonomy_for_object_type($tax, $object_type);						
 			}
 
 			// and finally load user defined strings
