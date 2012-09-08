@@ -274,7 +274,7 @@ class Polylang_Core extends Polylang_base {
 		if ($this->get_languages_list() && $this->curlang = $this->get_current_language()) {
 
 			// set a cookie to remember the language. check headers have not been sent to avoid ugly error
-			if (!headers_sent())
+			if (!headers_sent() && (!isset($_COOKIE['wordpress_polylang']) || $_COOKIE['wordpress_polylang'] != $this->curlang->slug))
 				setcookie('wordpress_polylang', $this->curlang->slug, time() + 31536000 /* 1 year */, COOKIEPATH, COOKIE_DOMAIN);
 
 			// set all our language filters and actions
@@ -370,7 +370,8 @@ class Polylang_Core extends Polylang_base {
 		}
 
 		// homepage is requested, let's set the language
-		if (!$this->curlang && ((is_home() && !$this->page_for_posts) || (empty($query->query) && is_page() && $qvars['page_id'] == $this->page_on_front)))
+		// take care to avoid posts page for which is_home = 1
+		if (!$this->curlang && ((is_home() && !$qvars['page_id']) || (empty($query->query) && is_page() && $qvars['page_id'] == $this->page_on_front)))
 			$this->home_requested($query);
 
 		// redirect the language page to the homepage

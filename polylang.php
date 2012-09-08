@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.9dev36
+Version: 0.9dev37
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 */
@@ -24,22 +24,22 @@ Description: Adds multilingual capability to Wordpress
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('POLYLANG_VERSION', '0.9dev36');
+define('POLYLANG_VERSION', '0.9dev37');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
 define('PLL_INC', POLYLANG_DIR.'/include');
 
-define('POLYLANG_URL', WP_PLUGIN_URL.'/'.basename(POLYLANG_DIR)); // our url
-
 if (!defined('PLL_LOCAL_DIR'))
 	define('PLL_LOCAL_DIR', WP_CONTENT_DIR.'/polylang'); // default directory to store user data such as custom flags
 
-if (!defined('PLL_LOCAL_URL'))
-	define('PLL_LOCAL_URL', WP_CONTENT_URL.'/polylang'); // default url to access user data such as custom flags
-
 if (file_exists(PLL_LOCAL_DIR.'/pll-config.php'))
 	include_once(PLL_LOCAL_DIR.'/pll-config.php'); // includes local config file if exists
+
+define('POLYLANG_URL', WP_PLUGIN_URL.'/'.basename(POLYLANG_DIR)); // our url
+
+if (!defined('PLL_LOCAL_URL'))
+	define('PLL_LOCAL_URL', WP_CONTENT_URL.'/polylang'); // default url to access user data such as custom flags
 
 if (!defined('PLL_DISPLAY_ABOUT'))
 	define('PLL_DISPLAY_ABOUT', true); // displays the "About Polylang" metabox by default

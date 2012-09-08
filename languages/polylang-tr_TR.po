@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: polylang\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-19 20:19+0100\n"
+"POT-Creation-Date: 2012-09-03 19:18+0100\n"
 "PO-Revision-Date: \n"
-"Last-Translator: Vitor Carvalho <lightningspirit@gmail.com>\n"
+"Last-Translator: darchws <darchws@gmail.com>\n"
 "Language-Team: \n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -20,20 +20,20 @@ msgstr ""
 #: ../polylang.php:111
 #, php-format
 msgid "You are using WordPress %s. Polylang requires at least WordPress %s."
-msgstr "Está a utilizar o WordPress %s. O Polylang necessita de pelo menos ter a versão %s do WordPress."
+msgstr "Siz WordPress'in %s sürümünü kullanıyorsunuz. Polylang'ı kullanabilmeniz için en az WordPress %s sürümüne ihtiyacınız var."
 
 #: ../polylang.php:125
 msgid "For some reasons, Polylang could not create a table in your database."
-msgstr "Por algum motivo, o Polylang não conseguiu criar uma tabela na sua base de dados."
+msgstr "Bir nedenden dolayı Polylang veritabanınızda gerekli tabloları oluşturamadı."
 
 #: ../polylang.php:208
 msgid "Error: Restore of local flags failed!"
-msgstr "Erro: O restauro de bandeiras locais falhou."
+msgstr "Hata: Bayrak resimleriniz eski haline getirilemedi!"
 
 #: ../polylang.php:209
 #, php-format
 msgid "Please move your local flags from %s to %s"
-msgstr "Por favor, modifique a localização das bandeiras locais de %s para %s."
+msgstr "Lütfen bayrak resimlerinizi %s adresinden %s adresine taşıyın"
 
 #: ../include/calendar.php:106
 #, php-format
@@ -44,22 +44,22 @@ msgstr "%1$s %2$s"
 #: ../include/calendar.php:140
 #, php-format
 msgid "View posts for %1$s %2$s"
-msgstr "Ver artigos para %1$s %2$s"
+msgstr "%1$s %2$s tarihleri arasındaki yazılara bak"
 
 #: ../include/media-translations.php:3
 #: ../include/admin-filters.php:194
-#: ../include/admin-filters.php:525
-#: ../include/admin-filters.php:696
-#: ../include/admin-filters.php:714
+#: ../include/admin-filters.php:528
+#: ../include/admin-filters.php:699
+#: ../include/admin-filters.php:717
 #: ../include/post-translations.php:8
 #: ../include/term-translations.php:15
 msgid "Language"
-msgstr "Lingua"
+msgstr "Dil"
 
 #: ../include/media-translations.php:4
 #: ../include/term-translations.php:16
 msgid "Translation"
-msgstr "Tradução"
+msgstr "Çeviri"
 
 #: ../include/media-translations.php:18
 #: ../include/post-translations.php:10
@@ -67,383 +67,383 @@ msgstr "Tradução"
 #: ../include/term-translations.php:18
 #: ../include/term-translations.php:65
 msgid "Edit"
-msgstr "Editar"
+msgstr "Düzenle"
 
 #: ../include/media-translations.php:26
 #: ../include/post-translations.php:38
 #: ../include/term-translations.php:54
 msgid "Add new"
-msgstr "Adicionar novo"
+msgstr "Yeni ekle"
 
 #: ../include/widget.php:6
 msgid "Language Switcher"
-msgstr "Seleccionador de lingua"
+msgstr "Dil Değiştirme Ekranı"
 
 #: ../include/widget.php:6
 msgid "Displays a language switcher"
-msgstr "Apresenta o seleccionador de lingua"
+msgstr "Dil değiştirme ekranını görüntüler"
 
 #: ../include/widget.php:73
 msgid "Title:"
-msgstr "Título:"
+msgstr "Başlık:"
 
 #: ../include/admin-base.php:50
 #: ../include/admin-base.php:176
 #: ../include/admin.php:290
 #: ../include/admin-filters.php:221
 msgid "Languages"
-msgstr "Linguas"
+msgstr "Diller"
 
 #: ../include/admin-base.php:55
 msgid "About Polylang"
-msgstr "Acerca de Polylang"
+msgstr "Polylang Hakkında"
 
 #: ../include/admin-base.php:149
 msgid "Displays language names"
-msgstr "Apresentar os nomes das linguas"
+msgstr "Dil isimlerini görüntüler"
 
 #: ../include/admin-base.php:150
 msgid "Displays flags"
-msgstr "Apresentar bandeiras"
+msgstr "Bayrakları görüntüler"
 
 #: ../include/admin-base.php:151
 msgid "Forces link to front page"
-msgstr "Forçar a hiperligação para a página inicial"
+msgstr "Bağlantıyı anasayfa yapmak için zorlar"
 
 #: ../include/admin-base.php:152
 msgid "Hides the current language"
-msgstr "Esconde a lingua actual"
+msgstr "Geçerli olan dili sakla"
 
 #: ../include/admin-base.php:154
 msgid "Displays a language switcher at the end of the menu"
-msgstr "Apresenta o seleccionador de lingua no final do menu."
+msgstr "Dil değiştirme ekranını menünün en altında görüntüler"
 
 #: ../include/admin-base.php:155
 msgid "Displays as dropdown"
-msgstr "Apresentar como caixa de selecção"
+msgstr "Açılır menü halinde görüntüler"
 
 #: ../include/admin-base.php:177
 msgid "Filters content by language"
-msgstr "Filtrar conteúdo pela lingua"
+msgstr ""
 
 #: ../include/admin-base.php:184
 msgid "Show all languages"
-msgstr "Exibit todas as linguas"
+msgstr "Tüm dilleri göster"
 
 #: ../include/admin.php:295
 msgid "Menus"
-msgstr "Menus"
+msgstr "Menüler"
 
 #: ../include/admin.php:297
 msgid "Strings translation"
-msgstr "Tradução das entradas"
+msgstr "Cümle çevirisi"
 
 #: ../include/admin.php:298
-#: ../include/admin-filters.php:988
+#: ../include/admin-filters.php:991
 msgid "Settings"
-msgstr "Definições"
+msgstr "Ayarlar"
 
 #: ../include/admin.php:317
 msgid "Enter a valid WorPress locale"
-msgstr "Insira um código de lingua WordPress válido"
+msgstr "Geçerli bir WordPress adresi girin"
 
 #: ../include/admin.php:318
 msgid "The language code must be 2 characters long"
-msgstr "O código de lingua tem que ter um comprimento de 2 caractéres"
+msgstr "Dil kodu 2 karakter uzunluğunda olmalı"
 
 #: ../include/admin.php:319
 msgid "The language code must be unique"
-msgstr " O código de lingua tem que ser único"
+msgstr "Dil kodu daha önce kullanılmamış olmalı"
 
 #: ../include/admin.php:320
 msgid "The language must have a name"
-msgstr "A lingua tem que ter um nome"
+msgstr "Girdiğiniz dilin bir ismi olmalı"
 
 #: ../include/admin.php:321
 msgid "The language was created, but the WordPress language file was not downloaded. Please install it manually."
-msgstr "A lingua foi criada mas o ficheiro de lingua do WordPress não foi descarregado. Por favor, instale manualmente."
+msgstr "Dil oluşturuldu fakat WordPress için dil dosyası indirilemedi. Lütfen elden yükleyin."
 
 #: ../include/admin.php:409
 msgid "Site Title"
-msgstr "Titulo do site"
+msgstr "Site Başlığı"
 
 #: ../include/admin.php:410
 msgid "Tagline"
-msgstr "Assinatura"
+msgstr "Etiket Satırı"
 
 #: ../include/admin.php:428
 msgid "Widget title"
-msgstr "Titulo do Widget"
+msgstr "Bileşen Başlığı"
 
 #: ../include/admin-filters.php:176
-#: ../include/admin-filters.php:753
+#: ../include/admin-filters.php:756
 msgid "Add new translation"
-msgstr "Adicionar nova tradução"
+msgstr "Yeni çeviri ekle"
 
 #: ../include/admin-filters.php:190
 msgid "&mdash; No Change &mdash;"
-msgstr "&mdash; Sem alterações &mdash;"
+msgstr ""
 
 #: ../include/admin-filters.php:244
 msgid "Page's language:"
-msgstr "Lingua da página"
+msgstr "Sayfa'nın dili:"
 
 #: ../include/admin-filters.php:244
 msgid "Post's language:"
-msgstr "Lingua do artigo"
+msgstr "Yazı'nın dili:"
 
 #: ../include/admin-filters.php:305
 msgid "(no parent)"
-msgstr "(sem topo)"
+msgstr "(ebeveyn yok)"
 
-#: ../include/admin-filters.php:536
-#: ../include/admin-filters.php:561
+#: ../include/admin-filters.php:539
+#: ../include/admin-filters.php:564
 #: ../include/term-translations.php:6
 #: ../include/term-translations.php:11
 msgid "Translations"
-msgstr "Traduções"
+msgstr "Çeviriler"
 
-#: ../include/admin-filters.php:698
-#: ../include/admin-filters.php:717
+#: ../include/admin-filters.php:701
+#: ../include/admin-filters.php:720
 msgid "Sets the language"
-msgstr "Define a lingua"
+msgstr "Dili geçerli dil olarak ayarlar."
 
-#: ../include/admin-filters.php:879
+#: ../include/admin-filters.php:882
 msgid "None"
-msgstr "Nenhum"
+msgstr "Yok"
 
-#: ../include/admin-filters.php:910
+#: ../include/admin-filters.php:913
 msgid "Theme locations and languages"
-msgstr "Tema de localizações e llinguas"
+msgstr "Tema adresleri ve diller"
 
-#: ../include/admin-filters.php:916
+#: ../include/admin-filters.php:919
 #, php-format
 msgid "Please go to the %slanguages page%s to set theme locations and languages"
-msgstr "Por favor, vá a %spágina das linguas%s para definir o tema de localizações e linguas"
+msgstr "Tema adreslerini ve dilleri ayarlamak için lütfen %slanguages page%s bölümüne gidin"
 
-#: ../include/admin-filters.php:931
+#: ../include/admin-filters.php:934
 msgid "The widget is displayed for:"
-msgstr "O widget é apresentado para:"
+msgstr "Bu bileşenin görüntüleneceği dil:"
 
-#: ../include/admin-filters.php:935
+#: ../include/admin-filters.php:938
 msgid "All languages"
-msgstr "Todas as linguas"
+msgstr "Tüm diller"
 
-#: ../include/admin-filters.php:959
+#: ../include/admin-filters.php:962
 msgid "Admin language"
-msgstr "Ligua do administrador"
+msgstr "Yönetici dili"
 
-#: ../include/admin-filters.php:964
+#: ../include/admin-filters.php:967
 msgid "Wordpress default"
-msgstr "Padrão WordPress"
+msgstr ""
 
-#: ../include/admin-filters.php:994
+#: ../include/admin-filters.php:997
 msgid "Upgrading language files&#8230;"
-msgstr "A actualizar ficheiros de lingua&#8230;"
+msgstr "Dil dosyaları güncelleştiriliyor&#8230"
 
 #: ../include/languages-form.php:38
 msgid "Edit language"
-msgstr "Editar lingua"
+msgstr "Dili düzenle"
 
 #: ../include/languages-form.php:38
 #: ../include/languages-form.php:105
 msgid "Add new language"
-msgstr "Adicionar uma lingua nova"
+msgstr "Yeni Dil Ekle"
 
 #: ../include/languages-form.php:60
 msgid "Choose a language"
-msgstr "Escolher uma lingua"
+msgstr "Dil seç"
 
 #: ../include/languages-form.php:68
 msgid "You can choose a language in the list or directly edit it below."
-msgstr "Pode escolher uma lingua da lista ou editá-la directamente abaixo."
+msgstr "Listeden bir dil seçebilirsiniz ya da direk aşağıdaki bölümden düzenleyebilirsiniz."
 
 #: ../include/languages-form.php:72
 msgid "Full name"
-msgstr "Nome completo"
+msgstr "Tam İsim"
 
 #: ../include/languages-form.php:74
 msgid "The name is how it is displayed on your site (for example: English)."
-msgstr "O nome será apresentado como no seu site (por exemplo: Português)"
+msgstr "Sitede dilin gösterileceği isim (örneğin: Türkçe)."
 
 #: ../include/languages-form.php:78
 msgid "Locale"
-msgstr "Código de lingua"
+msgstr "Bölge Kodu"
 
 #: ../include/languages-form.php:81
 msgid "Wordpress Locale for the language (for example: en_US). You will need to install the .mo file for this language."
-msgstr "Código de lingua WordPress para a lingua (por exemplo: pt_PT). Precisará de instalar o ficheiro .mo para esta lingua."
+msgstr "WordPress Bölge kodu(örneğin: tr_TR). Bu dilin .mo uzantılı dil dosyasını yüklemeniz gerekiyor."
 
 #: ../include/languages-form.php:85
 msgid "Language code"
-msgstr "Lingua de código"
+msgstr "Dil kodu"
 
 #: ../include/languages-form.php:87
 msgid "2-letters ISO 639-1 language code (for example: en)"
-msgstr "Código de lingua 2-letras ISO 639-1 (Por exemplo: pt)"
+msgstr "2 harfli ISO 639-1 standardına uygun dil kodu (örneğin: tr)"
 
 #: ../include/languages-form.php:91
 msgid "Text direction"
-msgstr "Orientação do texto"
+msgstr "Yazma yönü"
 
 #: ../include/languages-form.php:93
 msgid "left to right"
-msgstr "Esquerda para a direita"
+msgstr "soldan sağa"
 
 #: ../include/languages-form.php:95
 msgid "right to left"
-msgstr "Direita para a esquerda"
+msgstr "sağdan sola"
 
 #: ../include/languages-form.php:96
 msgid "Choose the text direction for the language"
-msgstr "Escolha a orientação do texto para a lingua "
+msgstr "Dil için yazma yönünü seçin"
 
 #: ../include/languages-form.php:100
 msgid "Order"
-msgstr "Ordem"
+msgstr "Sıralama"
 
 #: ../include/languages-form.php:102
 msgid "Position of the language in the language switcher"
-msgstr "Posição da lingua no seleccionador de linguas"
+msgstr "Dilin dil gösterme ekranındaki sırası"
 
 #: ../include/languages-form.php:105
 msgid "Update"
-msgstr "Actualização"
+msgstr "Güncelle"
 
 #: ../include/languages-form.php:151
 msgid "Language switcher"
-msgstr "Seleccionador de lingua"
+msgstr "Dil Değiştirici"
 
 #: ../include/languages-form.php:175
 msgid "Clean strings translation database"
-msgstr "Limpar traduções da base de dados"
+msgstr ""
 
 #: ../include/languages-form.php:191
 msgid "Default language"
-msgstr "Lingua por padrão"
+msgstr "Varsayılan dil"
 
 #: ../include/languages-form.php:203
 msgid "There are posts, pages, categories or tags without language set. Do you want to set them all to default language ?"
-msgstr "Existem artigos, páginas, categorias ou tags sem lingua definida. Deseja colocá-los todos em lingua padrão?"
+msgstr "Dil ayarı belirlenmemiş yazılar, sayfalar, kategoriler ve etiketler var. Hepsi varsayılan dil olarak ayarlansın mı?"
 
 #: ../include/languages-form.php:211
 msgid "Detect browser language"
-msgstr "Detectar a lingua do navegador"
+msgstr "Tarayıcı dilini algıla"
 
 #: ../include/languages-form.php:217
 msgid "When the front page is visited, set the language according to the browser preference"
-msgstr "Quando a pagina inicial for visitada, defina a lingua consoante as definições do navegador"
+msgstr "Anasayfa açıldığında, geçerli dili tarayıcının diline ayarla"
 
 #: ../include/languages-form.php:224
 msgid "URL modifications"
-msgstr "Modificações no URL"
+msgstr "URL düzenleme"
 
 #: ../include/languages-form.php:230
 msgid "The language is set from content. Posts, pages, categories and tags urls are not modified."
-msgstr "A lingua é escolhida a partir do conteúdo. O URL dos artigos, páginas, categorias e etiquetas não são modificados."
+msgstr ""
 
 #: ../include/languages-form.php:238
 msgid "The language code, for example /en/, is added to all urls when using pretty permalinks."
-msgstr "O código de lingua, por exemplo /pt/, é adicionado a todas as URL se as ligações permanentes estiverem activadas."
+msgstr ""
 
 #: ../include/languages-form.php:247
 msgid "Remove /language/ in pretty permalinks. Example:"
-msgstr "Remover /language/ das hiperligações permanentes. Exemplo:"
+msgstr "/language/ etiketini adreslerde gizle. Örneğin:"
 
 #: ../include/languages-form.php:256
 msgid "Keep /language/ in pretty permalinks. Example:"
-msgstr "Manter /language/ nas hiperligações permanentes. Exemplo:"
+msgstr "/language/ etiketini adreslerde göster. Örneğin:"
 
 #: ../include/languages-form.php:265
 msgid "Hide URL language information for default language"
-msgstr "Esconder a informação da lingua padrão do URL"
+msgstr "Varsayılan dil için URL'de dil bilgisini gizle"
 
 #: ../include/languages-form.php:274
 #, php-format
 msgid "When using static front page, redirect the language page (example: %s) to the front page in the right language"
-msgstr "Se tiver configurada uma página estática, redirecionar a página da lingua (exemplo: %s) para a página inicial na lingua certa"
+msgstr ""
 
 #: ../include/languages-form.php:281
 msgid "Synchronization"
-msgstr "Sincronização"
+msgstr ""
 
 #: ../include/languages-form.php:287
 msgid "Allow to synchronize categories, tags, featured image and other metas between translations of a post or page"
-msgstr "Permitir sincronizar categorias, etiquetas, imagem de destaque e outros campos customizados entre traduções de artigos e páginas"
+msgstr ""
 
 #: ../include/post-translations.php:5
 msgid "ID of pages in other languages:"
-msgstr "Identificação das páginas noutras lnguas"
+msgstr "Sayfanın diğer dillerdeki ID'leri:"
 
 #: ../include/post-translations.php:5
 msgid "ID of posts in other languages:"
-msgstr "Identificação dos artigos noutras lnguas"
+msgstr "Yazının diğer dillerdeki ID'leri:"
 
 #: ../include/post-translations.php:9
 msgid "Page ID"
-msgstr "Identificação da página"
+msgstr "Sayfa ID"
 
 #: ../include/post-translations.php:9
 msgid "Post ID"
-msgstr "Identificação dos artigos"
+msgstr "Yazı ID"
 
 #: ../include/about.php:3
 #, php-format
 msgid "Polylang is provided with an extensive %sdocumentation%s (in English only). It includes information on how to set up your multilingual site and use it on a daily basis, a FAQ, as well as a documentation for programmers to adapt their plugins and themes."
-msgstr "O polylang está provido de uma extensa %sdocumentação%s (porém somente em Inglês). Inclui informação de como definir o seu site multilíngua e utilizá-lo no dia-a-dia, uma FAQ, assim como documentação para os programadores adaptarem os seus plugins e temas."
+msgstr "Polylang geniş bir %sdocumentation%s (sadece ingilizce) temin etmektedir. Belge içerisinde; çoklu dil desteğinin kendi sitenize nasıl kurulacağı ve kolay kullanımı, sık sorulan sorulan ve geliştiriciler için kendi temalarını ve eklentilerini uyumlu hale getirmeleri için gerekli bilgiler bulunmaktadır."
 
 #: ../include/about.php:8
 #, php-format
 msgid "You will also find useful information in the %ssupport forum%s. However don't forget to make a search before posting a new topic."
-msgstr "Também encontrará informações úteis no %sfórum de suporte%s, no entanto, não se esqueça de pesquisar antes de publicar um novo tópico."
+msgstr "Ayrıca %ssupport forum%s 'dan da yararlı bilgiler bulabilirsiniz. Ama yeni bir başlık açmadan önce arama yapmayı unutmayın."
 
 #: ../include/about.php:14
 #, php-format
 msgid "Polylang is free of charge and is released under the same license as WordPress, the %sGPL%s."
-msgstr "O Polylang é gratuito e é abrangido pela mesmo licença que o WordPress, o %sGPL%s."
+msgstr "Polylang'ın kullanımı ücretsizdir ve dağıtımı Wordpress ile aynı lisans sözleşmesi %sGPL%s altında yapılmıştır."
 
 #: ../include/about.php:18
 #, php-format
 msgid "If you wonder how you can help the project, just %sread this%s."
-msgstr "Se pretende ajudar o projeto, %sleia isto%s."
+msgstr "Eğer bu projeye nasıl katkıda bulunabileceğinizi merak ediyorsanız, %sbunu okuyun%s."
 
 #: ../include/about.php:22
 msgid "Finally if you like this plugin or if it helps your business, donations to the author are greatly appreciated."
-msgstr " Finalmente, se gostou deste plugin ou se este está a ajudá-lo no seu negócio, doações ao autor são extremamente agradecidas."
+msgstr "Ve son olarak bu eklentiyi beğendiyseniz veya profesyonel anlamda size yararı dokunduysa, proje sahibine yapacağınız parasal destek mutlulukla karşılanacaktır."
 
-#: ../include/core.php:547
+#: ../include/core.php:564
 msgid "Search"
-msgstr "Procurar"
+msgstr ""
 
 #: ../include/term-translations.php:48
 msgid "No untranslated term"
-msgstr "Nenhum termo por traduzir"
+msgstr "Çevrilmemiş kelime yok"
 
 #: ../include/list-table.php:27
 msgid "Delete"
-msgstr "Apagar"
+msgstr "Sil"
 
 #: ../include/list-table.php:47
 msgid "Code"
-msgstr "Código"
+msgstr "Dil Kodu"
 
 #: ../include/list-table.php:49
 msgid "Flag"
-msgstr "Bandeira"
+msgstr "Bayrak"
 
 #: ../include/list-table.php:50
 msgid "Posts"
-msgstr "Artigos"
+msgstr "Yazılar"
 
 #: ../include/list-table.php:105
 msgid "Strings translations"
-msgstr "Traduções de entradas"
+msgstr "Cümle Çevirileri"
 
 #: ../include/list-table.php:131
 msgid "Name"
-msgstr "Nome"
+msgstr "İsim"
 
 #: ../include/list-table.php:132
 msgid "String"
-msgstr "Entrada"
+msgstr "Cümle"
 
