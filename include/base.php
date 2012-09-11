@@ -18,7 +18,7 @@ abstract class Polylang_Base {
 
 	// init post types and taxonomies to filter by language
 	function add_post_types_taxonomies() {
-		$this->post_types = apply_filters('pll_get_post_types', array_merge(array('attachment' => 'attachment'), get_post_types(array('show_ui' => true))));
+		$this->post_types = apply_filters('pll_get_post_types', array_merge(PLL_MEDIA_SUPPORT ? array('attachment' => 'attachment') : array(), get_post_types(array('show_ui' => true))));
 		$this->taxonomies = apply_filters('pll_get_taxonomies', get_taxonomies(array('show_ui'=>true)));
 	}
 

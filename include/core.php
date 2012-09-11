@@ -189,7 +189,7 @@ class Polylang_Core extends Polylang_base {
 		elseif (isset($_REQUEST['pll_load_front']))
 			$lang =  isset($_REQUEST['lang']) && $_REQUEST['lang'] ? $this->get_language($_REQUEST['lang']) : $this->get_preferred_language();
 
-		elseif ((is_single() || is_page() || is_attachment()) && ( ($var = get_queried_object_id()) || ($var = get_query_var('p')) || ($var = get_query_var('page_id')) || ($var = get_query_var('attachment_id')) ))
+		elseif ((is_single() || is_page() || (is_attachment() && PLL_MEDIA_SUPPORT)) && ( ($var = get_queried_object_id()) || ($var = get_query_var('p')) || ($var = get_query_var('page_id')) || ($var = get_query_var('attachment_id')) ))
 			$lang = $this->get_post_language($var);
 
 		else {
@@ -311,7 +311,7 @@ class Polylang_Core extends Polylang_base {
 		}
 
 		else {
-			// cant't work so load the text domains with WordPress default language
+			// can't work so load the text domains with WordPress default language
 			foreach ($this->list_textdomains as $textdomain)
 				load_textdomain($textdomain['domain'], $textdomain['mo']);
 		}
@@ -610,7 +610,7 @@ class Polylang_Core extends Polylang_base {
 		$hide = $this->options['default_lang'] == $language->slug && $this->options['hide_default'];
 
 		// post and attachment
-		if (is_single() && $id = $this->get_post($wp_query->queried_object_id, $language))
+		if (is_single() && (PLL_MEDIA_SUPPORT || !is_attachment()) && $id = $this->get_post($wp_query->queried_object_id, $language))
 			$url = get_permalink($id);
 
 		// page for posts

@@ -29,7 +29,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 			return;
 
 		// add the language and translations columns in 'All Posts', 'All Pages' and 'Media library' panels
-		foreach (array('posts', 'pages', 'media') as $type) {
+		foreach (PLL_MEDIA_SUPPORT ? array('posts', 'pages', 'media') : array('posts', 'pages') as $type) {
 			add_filter('manage_'.$type.'_columns',  array(&$this, 'add_post_column'), 10, 2);
 	    add_action('manage_'.$type.'_custom_column', array(&$this, 'post_column'), 10, 2);
 		}
@@ -58,16 +58,22 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		add_action('save_post', array(&$this, 'save_post'), 10, 2);
 		add_action('before_delete_post', array(&$this, 'delete_post'));
 
-		// adds the language field and translations tables in the 'Edit Media' panel
-		add_filter('attachment_fields_to_edit', array(&$this, 'attachment_fields_to_edit'), 10, 2);
+		if (PLL_MEDIA_SUPPORT) {
+			// adds the language field and translations tables in the 'Edit Media' panel
+			add_filter('attachment_fields_to_edit', array(&$this, 'attachment_fields_to_edit'), 10, 2);
 
-		// ajax response for changing the language in media form
-		add_action('wp_ajax_media_lang_choice', array(&$this,'media_lang_choice'));
+			// ajax response for changing the language in media form
+			add_action('wp_ajax_media_lang_choice', array(&$this,'media_lang_choice'));
 
-		// adds actions related to languages when creating, saving or deleting media
-		add_filter('attachment_fields_to_save', array(&$this, 'save_media'));
-		add_action('delete_attachment', array(&$this, 'delete_post'));
-		add_filter('wp_delete_file', array(&$this, 'wp_delete_file'));
+			// adds actions related to languages when creating, saving or deleting media
+			add_filter('attachment_fields_to_save', array(&$this, 'save_media'));
+			add_action('delete_attachment', array(&$this, 'delete_post'));
+			add_filter('wp_delete_file', array(&$this, 'wp_delete_file'));
+
+			// creates a media translation
+			if (isset($_GET['action']) && $_GET['action'] == 'translate_media' && isset($_GET['new_lang']) && isset($_GET['from_media']))
+				$this->translate_media();
+		}
 
 		// filters categories and post tags by language
 		add_filter('terms_clauses', array(&$this, 'terms_clauses'), 10, 3);
@@ -112,10 +118,6 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 		// filters comments by language
 		add_filter('comments_clauses', array(&$this, 'comments_clauses'), 10, 2);
-
-		// creates a media translation
-		if (isset($_GET['action']) && $_GET['action'] == 'translate_media' && isset($_GET['new_lang']) && isset($_GET['from_media']))
-			$this->translate_media();
 	}
 
 	// adds languages and translations columns in posts, pages, media, categories and tags tables
@@ -201,8 +203,11 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
     $qvars = &$query->query_vars;
 
 		// do not filter post types such as nav_menu_item
-		if (!in_array($qvars['post_type'], $this->post_types))
+		if (!in_array($qvars['post_type'], $this->post_types)) {
+			if (isset($qvars['lang']))
+				unset ($qvars['lang']);				
 			return;
+		}
 
 		// filters the list of media by language when uploading from post
     if ($GLOBALS['pagenow'] == 'media-upload.php' && isset($_GET['post_id']) && $lang = $this->get_post_language($_GET['post_id']))

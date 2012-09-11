@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.9dev37
+Version: 0.9dev38
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 */
@@ -24,7 +24,7 @@ Description: Adds multilingual capability to Wordpress
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('POLYLANG_VERSION', '0.9dev37');
+define('POLYLANG_VERSION', '0.9dev38');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
@@ -53,9 +53,10 @@ if (!defined('PLL_SEARCH_FORM_JS'))
 if (!defined('PLL_LANG_EARLY'))
 	define('PLL_LANG_EARLY', true); // temporary option (will be suppressed in versions > 0.9)
 
+if (!defined('PLL_MEDIA_SUPPORT'))
+	define('PLL_MEDIA_SUPPORT', true); // FIXME put this in ui in 1.0 
+
 require_once(PLL_INC.'/base.php');
-require_once(PLL_INC.'/widget.php');
-require_once(PLL_INC.'/calendar.php');
 
 // controls the plugin, deals with activation, deactivation, upgrades, initialization as well as rewrite rules
 class Polylang extends Polylang_Base {
@@ -322,6 +323,9 @@ class Polylang extends Polylang_Base {
 
 	// registers our widgets
 	function widgets_init() {
+		require_once(PLL_INC.'/widget.php');
+		require_once(PLL_INC.'/calendar.php'); // loads this only now otherwise it breaks widgets not registered in a widgets_init hook
+
 		register_widget('Polylang_Widget');
 
 		// overwrites the calendar widget to filter posts by language
