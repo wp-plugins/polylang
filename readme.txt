@@ -3,8 +3,8 @@ Contributors: Chouby
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CCWWYUUQV8F4E
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, i18n, international, l10n, localization
 Requires at least: 3.1
-Tested up to: 3.4.1
-Stable tag: 0.8.10
+Tested up to: 3.4.2
+Stable tag: 0.9
 
 Polylang adds multilingual content management support to WordPress.
 
@@ -14,34 +14,14 @@ Polylang adds multilingual content management support to WordPress.
 
 You write posts, pages and create categories and post tags as usual, and then define the language for each of them. The translation is optional. The plugin does not integrate automatic or professional translation.
 
-* You can have as many languages as you want. RTL languages are now supported. WordPress languages files are automatically downloaded and updated.
-* You can translate posts, pages, categories, post tags, menus, widgets... Custom post types, custom taxonomies, sticky posts and post formats, RSS feeds and all default WordPress widgets are supported.
+* You can have as many languages as you want. RTL languages are supported. WordPress languages files are automatically downloaded and updated.
+* You can translate posts, pages, media, categories, post tags, menus, widgets... Custom post types, custom taxonomies, sticky posts and post formats, RSS feeds and all default WordPress widgets are supported.
 * Categories, post tags as well as some other metas are automatically copied when adding a new post or page translation
-* Support for Search form (see the FAQ in the documentation)
 * Support for multisite, pretty permalinks and static page used as front page
 * A language switcher is provided as a widget or in the nav menu
 * As a bonus, each user can set the WordPress admin language in its profile
 
-Unlike some other similar plugins, if you deactivate Polylang, your blog will go on working as smoothly as possible. All your posts, pages, category and post tags would be accessible - without language filter of course - provided that you do not check the option: "Add language information to all URL including posts, pages, categories and post tags".
-
-The plugin admin interface is currently available in:
-
-* English
-* French
-* German contributed by [Christian Ries](http://www.singbyfoot.lu)
-* Russian contributed by [yoyurec](http://yoyurec.in.ua)
-* Greek contributed by [theodotos](http://www.ubuntucy.org)
-* Dutch contributed by [AlbertGn](http://wordpress.org/support/profile/albertgn)
-* Hebrew contributed by [ArielK](http://www.arielk.net)
-* Polish contributed by [Peter Paciorkiewicz](http://www.paciorkiewicz.pl)
-* Latvian contributed by [@AndyDeGroo](http://twitter.com/AndyDeGroo)
-* Italian contributed by [Luca Barbetti](http://wordpress.org/support/profile/lucabarbetti)
-* Danish contributed by [Compute](http://wordpress.org/support/profile/compute)
-* Spanish contributed by Curro
-* Portuguese contributed by [Vitor Carvalho](http://vcarvalho.com/)
-* Lithuanian contributed by [Naglis Jonaitis](http://najo.lt/)
-
-Special thanks to [@AndyDeGroo](http://twitter.com/AndyDeGroo) and [RavanH](http://4visions.nl/) for their help in debugging and improving Polylang !
+The plugin admin interface is currently available in 15 languages: English, French, German contributed by [Christian Ries](http://www.singbyfoot.lu), Russian contributed by [yoyurec](http://yoyurec.in.ua), Greek contributed by [theodotos](http://www.ubuntucy.org), Dutch contributed by [AlbertGn](http://wordpress.org/support/profile/albertgn), Hebrew contributed by [ArielK](http://www.arielk.net), Polish contributed by [Peter Paciorkiewicz](http://www.paciorkiewicz.pl), Latvian contributed by [@AndyDeGroo](http://twitter.com/AndyDeGroo), Italian contributed by [Luca Barbetti](http://wordpress.org/support/profile/lucabarbetti), Danish contributed by [Compute](http://wordpress.org/support/profile/compute), Spanish contributed by Curro, Portuguese contributed by [Vitor Carvalho](http://vcarvalho.com/), Lithuanian contributed by [Naglis Jonaitis](http://najo.lt/), Turkish contributed by [darchws](http://darch.ws/)
 
 Other [contributions](http://wordpress.org/extend/plugins/polylang/other_notes/) are welcome ! 
 
@@ -58,7 +38,7 @@ Don't hesitate to [give your feedback](http://wordpress.org/support/plugin/polyl
 1. Upload everything (keeping the directory structure) to the `/wp-content/plugins/` directory.
 1. Activate the plugin through the 'Plugins' menu in WordPress.
 1. Go to the languages settings page and create the languages you need
-1. Add the 'language switcher' Widget to let your visitors switch the language.
+1. Add the 'language switcher' widget to let your visitors switch the language.
 1. Take care that your theme must come with the corresponding .mo files (Polylang downloads them for Twenty Ten and Twenty Eleven). If your theme is not internationalized yet, please refer to the [codex](http://codex.wordpress.org/I18n_for_WordPress_Developers#I18n_for_theme_and_plugin_developers) or ask the theme author to internationalize it.
 
 == Frequently Asked Questions ==
@@ -71,11 +51,11 @@ Don't hesitate to [give your feedback](http://wordpress.org/support/plugin/polyl
 
 = Is Polylang compatible with multisite ? =
 
-Yes. Since v0.5. You can either activate it at network level or at site level.
+Yes. You can either activate it at network or site level.
 
 = Can I use my own flags for the language switcher ? =
 
-Yes. You have to use PNG or JPG files and name them with the WordPress locale corresponding to the language. For example, en_US.png for English. Then upload these files in the `wp-content/polylang` directory. Don't use the `/polylang/flags` directory as your files would be removed when updating the plugin.
+Yes. You have to use PNG or JPG files and name them with the WordPress locale corresponding to the language. For example, en_US.png for English. Then upload these files in the `wp-content/polylang` directory. Don't use the `wp-content/polylang/flags` directory as your files would be removed when updating the plugin.
 
 == Screenshots ==
 
@@ -87,7 +67,7 @@ If you wonder how you can help Polylang, here are some ideas. As you will read, 
 
 = Help other users of Polylang =
 
-The [support forum]http://wordpress.org/support/plugin/polylang) is here so that users of the plugin can get help when they need it. However, I will not always be available to answer questions. You don't need to be a developer to help out. Very often similar questions have been answered in the past. You can subscribe to the tag ['polylang'](http://wordpress.org/tags/polylang) (emails or RSS feed, see just below the topic list) to know when a new topic has been posted.
+The [support forum](http://wordpress.org/support/plugin/polylang) is here so that users of the plugin can get help when they need it. However, I will not always be available to answer questions. You don't need to be a developer to help out. Very often similar questions have been answered in the past.
 
 = Report bugs =
 
@@ -99,7 +79,7 @@ You can subscribe to the tag ['polylang-dev'](http://wordpress.org/tags/polylang
 
 = Translate the admin interface =
 
-Polylang is already available in 14 languages. It's very easy to add a new one ! Download [poedit](http://www.poedit.net/download.php) (available for Windows, Mac OS X and Linux). Rename the file polylang.pot found in the polylang/languages directory into something like polylang-your_locale.po. Open the file with poedit and start translating (keeping strange codes such as %s, %1$s as is). Once done, just save and you will get two files polylang-your_locale.po and polylang-your_locale.mo that you can send to the author. The translation will be included with the next release.
+Polylang is already available in 15 languages. It's very easy to add a new one ! Download [poedit](http://www.poedit.net/download.php) (available for Windows, Mac OS X and Linux). Rename the file polylang.pot found in the polylang/languages directory into something like polylang-your_locale.po. Open the file with poedit and start translating (keeping strange codes such as %s, %1$s as is). Once done, just save and you will get two files polylang-your_locale.po and polylang-your_locale.mo that you can send to the author. The translation will be included with the next release.
 
 = Communicate =
 
@@ -110,6 +90,33 @@ If you like Polylang, you can spread the word... Rating the plugin is very easy,
 Every suggestions are welcome.
 
 == Changelog ==
+
+= 0.9 (2012-09-12) =
+
+* Add Turkish translation contributed by [darchws](http://darch.ws/)
+* Add media translation support
+* Add a persistant content language filter on admin side (WP 3.2+ required)
+* Add biographical info translation
+* Add multiline support for string translations
+* Add the possibility to clean the strings translation database
+* Add quick edit and bulk edit support for posts and pages
+* Add quick edit support for categories and tags
+* The language is now loaded with 'setup_theme' action instead of 'wp' action when always adding language information url
+* Search form now does use javascript only for searchform.php when pretty permalinks are not used
+* Add the option PLL_SEARCH_FORM_JS to disable the js code used to modify the search form
+* Suppress the option PLL_SYNC, replaced by an option in the language settings ui
+* Suppress the PLL_DISPLAY_ALL option
+* Suppress the template tag 'the_languages' (replaced by 'pll_the_languages' since v0.5)
+* Suppress the function 'pll_is_front_page' (useless since 0.8.2)
+* Bug correction: the browser language is sometimes not correctly detected by Android
+* Bug correction: the rtl text direction is not correct when editing an existing language
+* Bug correction: rss feed does not work if translated site title or tagline contains special characters
+* Bug correction: post types and taxonomies labels are not translated on frontend
+* Bug correction: the filter 'pll_copy_post_metas' does not work for metas with multiple values
+* Bug correction: translations table for post and terms are uselessly serialized two times
+* Bug correction: attempt to suppress conflict with themes which hardcode the name of nav menus (but do define a theme location)
+* Bug correction: homepage displays all posts when the front page displays a static page and no page is selected for front page (but one is selected for posts page)
+* Bug correction: widgets disappear when Polylang is enabled
 
 = 0.8.10 (2012-08-06) =
 
