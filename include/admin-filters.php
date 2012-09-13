@@ -196,6 +196,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 			printf('<label for="%s" class="alignleft"><span class="title">%s</span>%s</label>', $name, __('Language', 'polylang'), $this->dropdown_languages($args));
 			echo '</div></fieldset>';
 		}
+		return $column;
 	}
 
 	// filters posts, pages and media by language
@@ -206,7 +207,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		if (!in_array($qvars['post_type'], $this->post_types)) {
 			if (isset($qvars['lang']))
 				unset ($qvars['lang']);				
-			return;
+			return $query;
 		}
 
 		// filters the list of media by language when uploading from post
@@ -218,6 +219,8 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 		if (isset($qvars['lang']) &&  $qvars['lang'] == 'all')
 			unset ($qvars['lang']);
+
+		return $query;
 	}
 
 	// adds the Language box in the 'Edit Post' and 'Edit Page' panels (as well as in custom post types panels)
