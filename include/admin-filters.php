@@ -204,7 +204,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
     $qvars = &$query->query_vars;
 
 		// do not filter post types such as nav_menu_item
-		if (!in_array($qvars['post_type'], $this->post_types)) {
+		if (isset($qvars['post_type']) && !in_array($qvars['post_type'], $this->post_types)) {
 			if (isset($qvars['lang']))
 				unset ($qvars['lang']);				
 			return $query;
