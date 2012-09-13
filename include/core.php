@@ -832,7 +832,7 @@ class Polylang_Core extends Polylang_base {
 		else {
 			$output = '';
 
-			foreach ($this->get_languages_list($hide_if_empty) as $language) {
+			foreach ($this->get_languages_list(array('hide_empty' => $hide_if_empty)) as $language) {
 				// hide current language
 				if ($this->curlang->term_id == $language->term_id && $hide_current)
 					continue;
