@@ -469,15 +469,17 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 			return;
 
 		// make sure we get save terms in the right language (especially tags with same name in different languages)
-		foreach ($this->taxonomies as $tax) {
-			$terms = get_the_terms($post_id, $tax);
-			if (is_array($terms)) {
-				$newterms = array();
-				foreach ($terms as $term) {
-					if ($term_id = $this->get_term($term->term_id, $_POST['post_lang_choice']))
-						$newterms[] = (int) $term_id; // cast is important otherwise we get 'numeric' tags
+		if ($_POST['post_lang_choice']) {
+			foreach ($this->taxonomies as $tax) {
+				$terms = get_the_terms($post_id, $tax);
+				if (is_array($terms)) {
+					$newterms = array();
+					foreach ($terms as $term) {
+						if ($term_id = $this->get_term($term->term_id, $_POST['post_lang_choice']))
+							$newterms[] = (int) $term_id; // cast is important otherwise we get 'numeric' tags
+					}
+					wp_set_object_terms($post_id, $newterms, $tax);
 				}
-				wp_set_object_terms($post_id, $newterms, $tax);
 			}
 		}
 
@@ -782,9 +784,9 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 			return;
 
 		// save language
-		if (isset($_POST['term_lang_choice']) && $_POST['term_lang_choice'])
+		if (isset($_POST['term_lang_choice']))
 			$this->set_term_language($term_id, $_POST['term_lang_choice']);
-		if (isset($_POST['inline_lang_choice']) && $_POST['inline_lang_choice']) 
+		if (isset($_POST['inline_lang_choice'])) 
 			$this->set_term_language($term_id, $_POST['inline_lang_choice']); // don't use term_lang_choice for quick edit to avoid conflict with the "add term" form
 		elseif (isset($_POST['post_lang_choice']))
 			$this->set_term_language($term_id, $_POST['post_lang_choice']);

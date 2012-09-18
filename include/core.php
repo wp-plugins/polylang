@@ -643,12 +643,11 @@ class Polylang_Core extends Polylang_base {
 		elseif (!is_tax('post_format') && !is_tax('language') && (is_category() || is_tag() || is_tax()) ) {
 			$term = get_queried_object();
 			$lang = $this->get_term_language($term->term_id);
-			$taxonomy = $term->taxonomy;
 
-			if ($language->slug == $lang->slug)
-				$url = get_term_link($term, $taxonomy); // self link
+			if (!$lang || $language->slug == $lang->slug)
+				$url = get_term_link($term, $term->taxonomy); // self link
 			elseif ($link_id = $this->get_translation('term', $term->term_id, $language))
-				$url = get_term_link(get_term($link_id, $taxonomy), $taxonomy);
+				$url = get_term_link(get_term($link_id, $term->taxonomy), $term->taxonomy);
 		}
 
 		// don't test if there are existing translations before creating the url as it would be very expensive in sql queries
