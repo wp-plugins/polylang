@@ -231,7 +231,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		// replace tag metabox by our own
 		foreach (get_object_taxonomies($post_type) as $tax_name) {
 			$taxonomy = get_taxonomy($tax_name);
-			if ($taxonomy->show_ui &&  !is_taxonomy_hierarchical($tax_name)) {
+			if ($taxonomy->show_ui && !is_taxonomy_hierarchical($tax_name)) {
 				remove_meta_box('tagsdiv-' . $tax_name, null, 'side');
 				add_meta_box('pll-tagsdiv-' . $tax_name, $taxonomy->labels->name, 'post_tags_meta_box', null, 'side', 'core', array('taxonomy' => $tax_name));
 			}
@@ -529,7 +529,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		$lang = $this->get_post_language($post_id);
 
 		// fills with the post language when uploading from post, otherwise the default language
- 		if (!isset($lang))
+ 		if (!$lang)
 			$lang = $post->post_parent ? $this->get_post_language($post->post_parent) : $this->get_default_language();
 
 		$fields['language'] = array(

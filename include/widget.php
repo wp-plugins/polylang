@@ -30,7 +30,7 @@ class Polylang_Widget extends WP_Widget {
 		// javascript to switch the language when using a dropdown list
 		if ($dropdown) {			
 			foreach ($polylang->get_languages_list() as $language) {
-				$url = $force_home ? $polylang->get_home_url($language) : $polylang->get_translation_url($language);
+				$url = $force_home || ($url = $polylang->get_translation_url($language)) == null ? $polylang->get_home_url($language) : $url;
 				$urls[] = '"'.esc_js($language->slug).'":"'.esc_url($url).'"';
 			}
 
