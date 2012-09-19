@@ -786,8 +786,12 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		// save language
 		if (isset($_POST['term_lang_choice']))
 			$this->set_term_language($term_id, $_POST['term_lang_choice']);
-		if (isset($_POST['inline_lang_choice'])) 
-			$this->set_term_language($term_id, $_POST['inline_lang_choice']); // don't use term_lang_choice for quick edit to avoid conflict with the "add term" form
+		if (isset($_POST['inline_lang_choice'])) {
+			// don't use term_lang_choice for quick edit to avoid conflict with the "add term" form
+			if ($this->get_term_language($term_id)->slug != $_POST['inline_lang_choice'])
+				$this->delete_translation('term', $term_id);
+			$this->set_term_language($term_id, $_POST['inline_lang_choice']); 
+		}
 		elseif (isset($_POST['post_lang_choice']))
 			$this->set_term_language($term_id, $_POST['post_lang_choice']);
 
@@ -797,7 +801,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		// save translations after checking the translated term is in the right language (as well as cast id to int)
 		foreach ($_POST['term_tr_lang'] as $lang=>$tr_id) {
 			$tr_lang = $this->get_term_language((int) $tr_id);
-			$translations[$lang] = isset($tr_lang) && $tr_lang->slug == $lang ? (int) $tr_id : 0;
+			$translations[$lang] = $tr_lang && $tr_lang->slug == $lang ? (int) $tr_id : 0;
 		}
 
 		$this->save_translations('term', $term_id, $translations);

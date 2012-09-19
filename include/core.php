@@ -339,6 +339,10 @@ class Polylang_Core extends Polylang_base {
 	// special actions when home page is requested
 	// optionally redirects to the home page in the preferred language
 	function home_requested($query = false) {
+		// need this filter to get the right url when adding language code to all urls
+		if ($this->options['force_lang'] && $GLOBALS['wp_rewrite']->using_permalinks())
+			add_filter('_get_page_link', array(&$this, 'post_link'), 10, 2);
+
 		if ($this->options['hide_default'] && isset($_COOKIE['wordpress_polylang']))
 			$this->curlang = $this->get_language($this->options['default_lang']);
 		else
@@ -390,7 +394,7 @@ class Polylang_Core extends Polylang_base {
 
 		// homepage is requested, let's set the language
 		// take care to avoid posts page for which is_home = 1
-		if (!$this->curlang && ((is_home() && !$qvars['page_id']) || (empty($query->query) && is_page() && $qvars['page_id'] == $this->page_on_front)))
+		if (!$this->curlang && empty($query->query) && (is_home() || (is_page() && $qvars['page_id'] == $this->page_on_front)))
 			$this->home_requested($query);
 
 		// redirect the language page to the homepage
