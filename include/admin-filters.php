@@ -196,6 +196,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 			printf('<label for="%s" class="alignleft"><span class="title">%s</span>%s</label>', $name, __('Language', 'polylang'), $this->dropdown_languages($args));
 			echo '</div></fieldset>';
 		}
+		return $column;
 	}
 
 	// filters posts, pages and media by language
@@ -203,10 +204,10 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
     $qvars = &$query->query_vars;
 
 		// do not filter post types such as nav_menu_item
-		if (!in_array($qvars['post_type'], $this->post_types)) {
+		if (isset($qvars['post_type']) && !in_array($qvars['post_type'], $this->post_types)) {
 			if (isset($qvars['lang']))
 				unset ($qvars['lang']);				
-			return;
+			return $query;
 		}
 
 		// filters the list of media by language when uploading from post
@@ -218,6 +219,8 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 		if (isset($qvars['lang']) &&  $qvars['lang'] == 'all')
 			unset ($qvars['lang']);
+
+		return $query;
 	}
 
 	// adds the Language box in the 'Edit Post' and 'Edit Page' panels (as well as in custom post types panels)
@@ -228,7 +231,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		// replace tag metabox by our own
 		foreach (get_object_taxonomies($post_type) as $tax_name) {
 			$taxonomy = get_taxonomy($tax_name);
-			if ($taxonomy->show_ui &&  !is_taxonomy_hierarchical($tax_name)) {
+			if ($taxonomy->show_ui && !is_taxonomy_hierarchical($tax_name)) {
 				remove_meta_box('tagsdiv-' . $tax_name, null, 'side');
 				add_meta_box('pll-tagsdiv-' . $tax_name, $taxonomy->labels->name, 'post_tags_meta_box', null, 'side', 'core', array('taxonomy' => $tax_name));
 			}
@@ -466,15 +469,17 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 			return;
 
 		// make sure we get save terms in the right language (especially tags with same name in different languages)
-		foreach ($this->taxonomies as $tax) {
-			$terms = get_the_terms($post_id, $tax);
-			if (is_array($terms)) {
-				$newterms = array();
-				foreach ($terms as $term) {
-					if ($term_id = $this->get_term($term->term_id, $_POST['post_lang_choice']))
-						$newterms[] = (int) $term_id; // cast is important otherwise we get 'numeric' tags
+		if ($_POST['post_lang_choice']) {
+			foreach ($this->taxonomies as $tax) {
+				$terms = get_the_terms($post_id, $tax);
+				if (is_array($terms)) {
+					$newterms = array();
+					foreach ($terms as $term) {
+						if ($term_id = $this->get_term($term->term_id, $_POST['post_lang_choice']))
+							$newterms[] = (int) $term_id; // cast is important otherwise we get 'numeric' tags
+					}
+					wp_set_object_terms($post_id, $newterms, $tax);
 				}
-				wp_set_object_terms($post_id, $newterms, $tax);
 			}
 		}
 
@@ -526,7 +531,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		$lang = $this->get_post_language($post_id);
 
 		// fills with the post language when uploading from post, otherwise the default language
- 		if (!isset($lang))
+ 		if (!$lang)
 			$lang = $post->post_parent ? $this->get_post_language($post->post_parent) : $this->get_default_language();
 
 		$fields['language'] = array(
@@ -779,10 +784,14 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 			return;
 
 		// save language
-		if (isset($_POST['term_lang_choice']) && $_POST['term_lang_choice'])
+		if (isset($_POST['term_lang_choice']))
 			$this->set_term_language($term_id, $_POST['term_lang_choice']);
-		if (isset($_POST['inline_lang_choice']) && $_POST['inline_lang_choice']) 
-			$this->set_term_language($term_id, $_POST['inline_lang_choice']); // don't use term_lang_choice for quick edit to avoid conflict with the "add term" form
+		if (isset($_POST['inline_lang_choice'])) {
+			// don't use term_lang_choice for quick edit to avoid conflict with the "add term" form
+			if ($this->get_term_language($term_id)->slug != $_POST['inline_lang_choice'])
+				$this->delete_translation('term', $term_id);
+			$this->set_term_language($term_id, $_POST['inline_lang_choice']); 
+		}
 		elseif (isset($_POST['post_lang_choice']))
 			$this->set_term_language($term_id, $_POST['post_lang_choice']);
 
@@ -792,7 +801,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		// save translations after checking the translated term is in the right language (as well as cast id to int)
 		foreach ($_POST['term_tr_lang'] as $lang=>$tr_id) {
 			$tr_lang = $this->get_term_language((int) $tr_id);
-			$translations[$lang] = isset($tr_lang) && $tr_lang->slug == $lang ? (int) $tr_id : 0;
+			$translations[$lang] = $tr_lang && $tr_lang->slug == $lang ? (int) $tr_id : 0;
 		}
 
 		$this->save_translations('term', $term_id, $translations);

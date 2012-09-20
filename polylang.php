@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.9dev38
+Version: 0.9.0.6
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 */
@@ -24,7 +24,7 @@ Description: Adds multilingual capability to Wordpress
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('POLYLANG_VERSION', '0.9dev38');
+define('POLYLANG_VERSION', '0.9.0.6');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
@@ -304,11 +304,17 @@ class Polylang extends Polylang_Base {
 		$wpdb->termmeta = $wpdb->prefix . 'termmeta'; // registers the termmeta table in wpdb
 		$options = get_option('polylang');
 
+		load_plugin_textdomain('polylang', false, basename(POLYLANG_DIR).'/languages'); // plugin i18n
+
 		// registers the language taxonomy
 		// codex: use the init action to call this function
 		// object types will be set later once all custom post types are registered
 		register_taxonomy('language', null, array(
-			'label' => false,
+			'labels' => array(
+				'name' => __('Languages', 'polylang'),
+				'singular_name' => __('Language', 'polylang'),
+				'all_items' => __('All languages', 'polylang'),
+			),
 			'public' => false, // avoid displaying the 'like post tags text box' in the quick edit
 			'query_var'=>'lang',
 			'update_count_callback' => '_update_post_term_count'));
@@ -317,8 +323,6 @@ class Polylang extends Polylang_Base {
 		// language information always in front of the uri ('with_front' => false)
 		// the 3rd parameter structure has been modified in WP 3.4
 		add_permastruct('language', $options['rewrite'] ? '%language%' : 'language/%language%', version_compare($GLOBALS['wp_version'], '3.4' , '<') ? false : array('with_front' => false));
-
-		load_plugin_textdomain('polylang', false, basename(POLYLANG_DIR).'/languages'); // plugin i18n
 	}
 
 	// registers our widgets

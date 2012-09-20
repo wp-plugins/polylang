@@ -34,8 +34,8 @@ class Polylang_Admin_Base extends Polylang_Base {
 			$wp_locale->text_direction = get_metadata('term', $lang_id, '_rtl', true) ? 'rtl' : 'ltr';
 
 		// set user meta when choosing to filter content by language
-		if (isset($_GET['lang']) && $_GET['lang'])
-			update_user_meta(get_current_user_id(), 'pll_filter_content', $_GET['lang'] == 'all' ? '' : $_GET['lang']);
+		if (isset($_GET['lang']) && $_GET['lang'] && !is_numeric($_GET['lang'])) // numeric when editing a language
+			update_user_meta(get_current_user_id(), 'pll_filter_content', ($lang = $this->get_language($_GET['lang'])) ? $lang->slug : '');
 
 		if (!$this->get_languages_list())
 			return;
@@ -168,7 +168,8 @@ class Polylang_Admin_Base extends Polylang_Base {
 	function admin_bar_menu($wp_admin_bar) {
 		$url = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
-		$selected = isset($_GET['lang']) && $_GET['lang'] ? $_GET['lang'] : 
+		// $_GET['lang'] is numeric when editing a language, not when selecting a new language in the filter
+		$selected = isset($_GET['lang']) && $_GET['lang'] && !is_numeric($_GET['lang']) && ($lang = $this->get_language($_GET['lang'])) ? $lang->slug : 
 			(($lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true)) ? $lg : 'all');
 
 		$wp_admin_bar->add_menu(array(

@@ -5,6 +5,7 @@ class Polylang_Core extends Polylang_base {
 	private $curlang; // current language
 	private $default_locale;
 	private $list_textdomains = array(); // all text domains
+	private $labels; // post types and taxonomies labels to translate
 	private $first_query = true;
 
 	// options often needed
@@ -25,9 +26,13 @@ class Polylang_Core extends Polylang_base {
 		add_action('pre_comment_on_post', array(&$this, 'pre_comment_on_post'));
 
 		// text domain management
-		$this->options['force_lang'] && get_option('permalink_structure') && PLL_LANG_EARLY ?
-			add_action('setup_theme', array(&$this, 'setup_theme'), 20) : // after Polylang::setup_theme
+		if ($this->options['force_lang'] && get_option('permalink_structure') && PLL_LANG_EARLY)
+			add_action('setup_theme', array(&$this, 'setup_theme'), 20); // after Polylang::setup_theme
+		else {
 			add_filter('override_load_textdomain', array(&$this, 'mofile'), 10, 3);
+			add_filter('gettext', array(&$this, 'gettext'), 10, 3);
+			add_filter('gettext_with_context', array(&$this, 'gettext_with_context'), 10, 4);
+		}
 
 		add_action('init', array(&$this, 'init'));
 		foreach (array('wp', 'login_init', 'admin_init') as $filter) // admin_init for ajax thanks to g100g
@@ -261,6 +266,27 @@ class Polylang_Core extends Polylang_base {
 		return true; // prevents WP loading text domains as we will load them all later
 	}
 
+	// saves post types and taxonomies labels for a later usage
+	function gettext($translation, $text, $domain) {
+		$this->labels[$text] =  array('domain' => $domain);
+		return $translation;
+	}
+
+	// saves post types and taxonomies labels for a later usage
+	function gettext_with_context($translation, $text, $context, $domain) {
+		$this->labels[$text] =  array('domain' => $domain, 'context' => $context);
+		return $translation;
+	}
+
+	// translates post types and taxonomies labels once the language is known
+	function translate_labels($type) {
+		foreach($type->labels as $key=>$label)
+			if (isset($this->labels[$label]))
+				$type->labels->$key = isset($this->labels[$label]['context']) ?
+					_x($label, $this->labels[$label]['context'], $this->labels[$label]['domain']) :
+					__($label, $this->labels[$label]['domain']);
+	}
+
 	// NOTE: I believe there are two ways for a plugin to force the WP language
 	// as done by xili_language: load text domains and reinitialize wp_locale with the action 'wp'
 	// as done by qtranslate: define the locale with the action 'plugins_loaded', but in this case, the language must be specified in the url.
@@ -269,6 +295,8 @@ class Polylang_Core extends Polylang_base {
 
 		// our override_load_textdomain filter has done its job. let's remove it before calling load_textdomain
 		remove_filter('override_load_textdomain', array(&$this, 'mofile'));
+		remove_filter('gettext', array(&$this, 'gettext'), 10, 3);
+		remove_filter('gettext_with_context', array(&$this, 'gettext_with_context'), 10, 4);
 
 		// check there is at least one language defined and sets the current language
 		if ($this->get_languages_list() && $this->curlang = $this->get_current_language()) {
@@ -290,20 +318,11 @@ class Polylang_Core extends Polylang_base {
 				$wp_locale->init();
 				$wp_locale->text_direction = get_metadata('term', $this->curlang->term_id, '_rtl', true) ? 'rtl' : 'ltr';
 
-				// register post types and taxonomies (3rd time !) to translate labels used on frontend
-				// FIXME is there a way to do this for custom post types and taxonomies?
-
-				// save object types for builtin taxonomies in case some have been registered
-				foreach (get_taxonomies(array('_builtin' => true), 'objects') as $tax)
-					$save_object_type_for_tax[$tax->name] = $tax->object_type;
-
-				create_initial_taxonomies(); // overwrites $wp_taxonomies->object_type
-				create_initial_post_types();
-
-				// recreate $wp_taxonomies->object_type
-				foreach ($save_object_type_for_tax as $tax=>$object_types)
-					foreach ($object_types as $object_type)
-						register_taxonomy_for_object_type($tax, $object_type);						
+				// translate labels of post types and taxonomies
+				foreach ($GLOBALS['wp_taxonomies'] as $tax)
+					$this->translate_labels($tax);
+				foreach ($GLOBALS['wp_post_types'] as $pt)
+					$this->translate_labels($pt);
 			}
 
 			// and finally load user defined strings
@@ -320,6 +339,10 @@ class Polylang_Core extends Polylang_base {
 	// special actions when home page is requested
 	// optionally redirects to the home page in the preferred language
 	function home_requested($query = false) {
+		// need this filter to get the right url when adding language code to all urls
+		if ($this->options['force_lang'] && $GLOBALS['wp_rewrite']->using_permalinks())
+			add_filter('_get_page_link', array(&$this, 'post_link'), 10, 2);
+
 		if ($this->options['hide_default'] && isset($_COOKIE['wordpress_polylang']))
 			$this->curlang = $this->get_language($this->options['default_lang']);
 		else
@@ -371,7 +394,7 @@ class Polylang_Core extends Polylang_base {
 
 		// homepage is requested, let's set the language
 		// take care to avoid posts page for which is_home = 1
-		if (!$this->curlang && ((is_home() && !$qvars['page_id']) || (empty($query->query) && is_page() && $qvars['page_id'] == $this->page_on_front)))
+		if (!$this->curlang && empty($query->query) && (is_home() || (is_page() && $qvars['page_id'] == $this->page_on_front)))
 			$this->home_requested($query);
 
 		// redirect the language page to the homepage
@@ -624,12 +647,11 @@ class Polylang_Core extends Polylang_base {
 		elseif (!is_tax('post_format') && !is_tax('language') && (is_category() || is_tag() || is_tax()) ) {
 			$term = get_queried_object();
 			$lang = $this->get_term_language($term->term_id);
-			$taxonomy = $term->taxonomy;
 
-			if ($language->slug == $lang->slug)
-				$url = get_term_link($term, $taxonomy); // self link
+			if (!$lang || $language->slug == $lang->slug)
+				$url = get_term_link($term, $term->taxonomy); // self link
 			elseif ($link_id = $this->get_translation('term', $term->term_id, $language))
-				$url = get_term_link(get_term($link_id, $taxonomy), $taxonomy);
+				$url = get_term_link(get_term($link_id, $term->taxonomy), $term->taxonomy);
 		}
 
 		// don't test if there are existing translations before creating the url as it would be very expensive in sql queries
@@ -813,7 +835,7 @@ class Polylang_Core extends Polylang_base {
 		else {
 			$output = '';
 
-			foreach ($this->get_languages_list($hide_if_empty) as $language) {
+			foreach ($this->get_languages_list(array('hide_empty' => $hide_if_empty)) as $language) {
 				// hide current language
 				if ($this->curlang->term_id == $language->term_id && $hide_current)
 					continue;

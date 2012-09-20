@@ -105,8 +105,7 @@ abstract class Polylang_Base {
 
 	// store the post language in the database
 	function set_post_language($post_id, $lang) {
-		if ($lang)
-			wp_set_post_terms($post_id, $this->get_language($lang)->slug, 'language' );
+		wp_set_post_terms($post_id, $lang ? $this->get_language($lang)->slug : '', 'language' );
 	}
 
 	// returns the language of a post
@@ -127,8 +126,7 @@ abstract class Polylang_Base {
 
 	// store the term language in the database
 	function set_term_language($term_id, $lang) {
-		if ($lang)
-			update_metadata('term', $term_id, '_language', $this->get_language($lang)->term_id);
+		update_metadata('term', $term_id, '_language', $lang ? $this->get_language($lang)->term_id : 0);
 	}
 
 	// remove the term language in the database
