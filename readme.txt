@@ -21,7 +21,8 @@ You write posts, pages and create categories and post tags as usual, and then de
 * A language switcher is provided as a widget or in the nav menu
 * As a bonus, each user can set the WordPress admin language in its profile
 
-The plugin admin interface is currently available in 15 languages: English, French, German contributed by [Christian Ries](http://www.singbyfoot.lu), Russian contributed by [yoyurec](http://yoyurec.in.ua), Greek contributed by [theodotos](http://www.ubuntucy.org), Dutch contributed by [AlbertGn](http://wordpress.org/support/profile/albertgn), Hebrew contributed by [ArielK](http://www.arielk.net), Polish contributed by [Peter Paciorkiewicz](http://www.paciorkiewicz.pl), Latvian contributed by [@AndyDeGroo](http://twitter.com/AndyDeGroo), Italian contributed by [Luca Barbetti](http://wordpress.org/support/profile/lucabarbetti), Danish contributed by [Compute](http://wordpress.org/support/profile/compute), Spanish contributed by Curro, Portuguese contributed by [Vitor Carvalho](http://vcarvalho.com/), Lithuanian contributed by [Naglis Jonaitis](http://najo.lt/), Turkish contributed by [darchws](http://darch.ws/)
+The plugin admin interface is currently available in 16 languages: English, French, German contributed by [Christian Ries](http://www.singbyfoot.lu), Russian contributed by [yoyurec](http://yoyurec.in.ua), Greek contributed by [theodotos](http://www.ubuntucy.org), Dutch contributed by [AlbertGn](http://wordpress.org/support/profile/albertgn), Hebrew contributed by [ArielK](http://www.arielk.net), Polish contributed by [Peter Paciorkiewicz](http://www.paciorkiewicz.pl), Latvian contributed by [@AndyDeGroo](http://twitter.com/AndyDeGroo), Italian contributed by [Luca Barbetti](http://wordpress.org/support/profile/lucabarbetti), Danish contributed by [Compute](http://wordpress.org/support/profile/compute), Spanish contributed by Curro, Portuguese contributed by [Vitor Carvalho](http://vcarvalho.com/), Lithuanian contributed by [Naglis Jonaitis](http://najo.lt/), Turkish contributed by [darchws](http://darch.ws/), Finnish contributed by [Jani Alha](http://www.wysiwyg.fi)
+
 
 Other [contributions](http://wordpress.org/extend/plugins/polylang/other_notes/) are welcome ! 
 
@@ -79,7 +80,7 @@ You can subscribe to the tag ['polylang-dev'](http://wordpress.org/tags/polylang
 
 = Translate the admin interface =
 
-Polylang is already available in 15 languages. It's very easy to add a new one ! Download [poedit](http://www.poedit.net/download.php) (available for Windows, Mac OS X and Linux). Rename the file polylang.pot found in the polylang/languages directory into something like polylang-your_locale.po. Open the file with poedit and start translating (keeping strange codes such as %s, %1$s as is). Once done, just save and you will get two files polylang-your_locale.po and polylang-your_locale.mo that you can send to the author. The translation will be included with the next release.
+Polylang is already available in 16 languages. It's very easy to add a new one ! Download [poedit](http://www.poedit.net/download.php) (available for Windows, Mac OS X and Linux). Rename the file polylang.pot found in the polylang/languages directory into something like polylang-your_locale.po. Open the file with poedit and start translating (keeping strange codes such as %s, %1$s as is). Once done, just save and you will get two files polylang-your_locale.po and polylang-your_locale.mo that you can send to the author. The translation will be included with the next release.
 
 = Communicate =
 
@@ -90,6 +91,16 @@ If you like Polylang, you can spread the word... Rating the plugin is very easy,
 Every suggestions are welcome.
 
 == Changelog ==
+
+= 0.9.1 (2012-09-20) =
+
+* Add Finnish translation contributed by [Jani Alha](http://www.wysiwyg.fi)
+* Bug correction: improve the robustness of the admin content language filter
+* Bug correction: the language switcher displays languages which have no posts or pages (introduced in 0.9)
+* Bug correction: wrong default language when adding a new media
+* Bug correction: the dropdown language switcher does not switch language when there is no post translation
+* Bug correction: issue with translations when using category quick edit
+* Bug correction: home redirects to 404 when combining static front page + force_lang = 1 + hide_default = 0
 
 = 0.9 (2012-09-12) =
 
