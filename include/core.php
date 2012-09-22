@@ -233,6 +233,9 @@ class Polylang_Core extends Polylang_base {
 		preg_match($languages, trailingslashit($_SERVER['REQUEST_URI']), $matches);
 
 		// home is resquested
+		// some PHP setups turn requests for / into /index.php in REQUEST_URI
+		// thanks to Gonçalo Peres for pointing out the issue with queries unknown to WP
+		// http://wordpress.org/support/topic/plugin-polylang-language-homepage-redirection-problem-and-solution-but-incomplete?replies=4#post-2729566
 		if (str_replace('www.', '', home_url('/')) == trailingslashit((is_ssl() ? 'https://' : 'http://').str_replace('www.', '', $_SERVER['HTTP_HOST']).str_replace(array('index.php', '?'.$_SERVER['QUERY_STRING']), array('', ''), $_SERVER['REQUEST_URI'])))
 			$this->home_requested();
 
@@ -530,7 +533,7 @@ class Polylang_Core extends Polylang_base {
 
 	// prevents redirection of the homepage when using page on front
 	function redirect_canonical($redirect_url, $requested_url) {
-		return $requested_url == home_url('/') || $requested_url == $this->page_link('', get_option('page_on_front')) ? false : $redirect_url;
+		return $requested_url == home_url('/') || strpos($requested_url, $this->page_link('', get_option('page_on_front'))) !== false ? false : $redirect_url;
 	}
 
 	// adds some javascript workaround knowing it's not perfect...

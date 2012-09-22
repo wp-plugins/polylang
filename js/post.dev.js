@@ -191,6 +191,15 @@ jQuery(document).ready(function($) {
 		taxonomyParts.shift();
 		taxonomy = taxonomyParts.join('-');
 		taxonomies.push(taxonomy); // store the taxonomy for future use
+
+		// add our hidden field in the new category form - for each hierarchical taxonomy
+		// to set the language when creating a new category
+		$('#' + taxonomy + '-add-submit').before($('<input />')
+			.attr('type', 'hidden')
+			.attr('id', taxonomy + '-lang')
+			.attr('name', 'term_lang_choice')
+			.attr('value', $('#post_lang_choice').attr('value'))
+		);
 	});
 
 	// ajax for changing the post's language in the languages metabox
