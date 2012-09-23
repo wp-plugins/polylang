@@ -34,7 +34,8 @@ class Polylang_Admin_Base extends Polylang_Base {
 			$wp_locale->text_direction = get_metadata('term', $lang_id, '_rtl', true) ? 'rtl' : 'ltr';
 
 		// set user meta when choosing to filter content by language
-		if (isset($_GET['lang']) && $_GET['lang'] && !is_numeric($_GET['lang'])) // numeric when editing a language
+ 		// $_GET[lang] is used in ajax 'tag suggest' and is numeric when editing a language
+		if (!defined('DOING_AJAX') && isset($_GET['lang']) && $_GET['lang'] && !is_numeric($_GET['lang']))
 			update_user_meta(get_current_user_id(), 'pll_filter_content', ($lang = $this->get_language($_GET['lang'])) ? $lang->slug : '');
 
 		if (!$this->get_languages_list())
@@ -58,6 +59,7 @@ class Polylang_Admin_Base extends Polylang_Base {
 	// setup js scripts & css styles (only on the relevant pages)
 	function admin_enqueue_scripts() {
 		$screen = get_current_screen();
+		$suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
 
 		$scripts = array(
 			'admin' => array( array('settings_page_mlang'), array('jquery', 'wp-ajax-response', 'postbox') ),
@@ -68,10 +70,10 @@ class Polylang_Admin_Base extends Polylang_Base {
 
 		foreach ($scripts as $script => $v)
 			if (in_array($screen->base, $v[0]))
-				wp_enqueue_script('pll_'.$script, POLYLANG_URL .'/js/'.$script.'.js', $v[1], POLYLANG_VERSION);
+				wp_enqueue_script('pll_'.$script, POLYLANG_URL .'/js/'.$script.$suffix.'.js', $v[1], POLYLANG_VERSION);
 			
 		if (in_array($screen->base, array('settings_page_mlang', 'post', 'edit-tags', 'edit', 'upload', 'media')))
-			wp_enqueue_style('polylang_admin', POLYLANG_URL .'/css/admin.css', array(), POLYLANG_VERSION);
+			wp_enqueue_style('polylang_admin', POLYLANG_URL .'/css/admin'.$suffix.'.css', array(), POLYLANG_VERSION);
 	}
 
 	// downloads mofiles

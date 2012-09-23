@@ -1,1 +1,269 @@
-var pll_tagBox;(function(a){pll_tagBox={clean:function(b){return b.replace(/\s*,\s*/g,",").replace(/,+/g,",").replace(/[,\s]+$/,"").replace(/^[,\s]+/,"")},parseTags:function(e){var h=e.id,b=h.split("-check-num-")[1],d=a(e).closest(".tagsdiv"),g=d.find(".the-tags"),c=g.val().split(","),f=[];delete c[b];a.each(c,function(i,j){j=a.trim(j);if(j){f.push(j)}});g.val(this.clean(f.join(",")));this.quickClicks(d);return false},quickClicks:function(d){var g=a(".the-tags",d),e=a(".tagchecklist",d),f=a(d).attr("id"),b,c;if(!g.length){return}c=g.attr("disabled");b=g.val().split(",");e.empty();a.each(b,function(i,k){var j,h;k=a.trim(k);if(!k){return}j=a("<span />").text(k);if(!c){h=a('<a id="'+f+"-check-num-"+i+'" class="ntdelbutton">X</a>');h.click(function(){pll_tagBox.parseTags(this)});j.prepend("&nbsp;").prepend(h)}e.append(j)})},flushTags:function(e,b,g){b=b||false;var i,c=a(".the-tags",e),h=a("input.newtag",e),d;i=b?a(b).text():h.val();tagsval=c.val();d=tagsval?tagsval+","+i:i;d=this.clean(d);d=array_unique_noempty(d.split(",")).join(",");c.val(d);this.quickClicks(e);if(!b){h.val("")}if("undefined"==typeof(g)){h.focus()}return false},get:function(e,b){var c=e.substr(e.indexOf("-")+1);var d={action:"get-tagcloud",lang:a("#post_lang_choice").attr("value"),tax:c};a.post(ajaxurl,d,function(g,f){if(0==g||"success"!=f){g=wpAjax.broken}g=a('<p id="tagcloud-'+c+'" class="the-tagcloud">'+g+"</p>");a("a",g).click(function(){pll_tagBox.flushTags(a(this).closest(".inside").children(".tagsdiv"),this);return false});if(b==1){a("#"+e).after(g)}else{v=a(".the-tagcloud").css("display");a(".the-tagcloud").replaceWith(g);a(".the-tagcloud").css("display",v)}})},suggest:function(){ajaxtag=a("div.ajaxtag");a("input.newtag",ajaxtag).unbind().blur(function(){if(this.value==""){a(this).parent().siblings(".taghint").css("visibility","")}}).focus(function(){a(this).parent().siblings(".taghint").css("visibility","hidden")}).keyup(function(b){if(13==b.which){pll_tagBox.flushTags(a(this).closest(".tagsdiv"));return false}}).keypress(function(b){if(13==b.which){b.preventDefault();return false}}).each(function(){var c=a("#post_lang_choice").attr("value");var b=a(this).closest("div.tagsdiv").attr("id");a(this).suggest(ajaxurl+"?action=polylang-ajax-tag-search&lang="+c+"&tax="+b,{delay:500,minchars:2,multiple:true,multipleSep:","})})},init:function(){var b=this,c=a("div.ajaxtag");a(".tagsdiv").each(function(){pll_tagBox.quickClicks(this)});a("input.tagadd",c).click(function(){b.flushTags(a(this).closest(".tagsdiv"))});a("div.taghint",c).click(function(){a(this).css("visibility","hidden").parent().siblings(".newtag").focus()});pll_tagBox.suggest();a("#post").submit(function(){a("div.tagsdiv").each(function(){pll_tagBox.flushTags(this,false,1)})});a("a.tagcloud-link").click(function(){pll_tagBox.get(a(this).attr("id"),1);a(this).unbind().click(function(){a(this).siblings(".the-tagcloud").toggle();return false});return false})}}})(jQuery);jQuery(document).ready(function(b){var a=new Array();b(".categorydiv").each(function(){var e=b(this).attr("id"),d,c;d=e.split("-");d.shift();c=d.join("-");a.push(c);b("#"+c+"-add-submit").before(b("<input />").attr("type","hidden").attr("id",c+"-lang").attr("name","term_lang_choice").attr("value",b("#post_lang_choice").attr("value")))});b("#post_lang_choice").change(function(){var c={action:"post_lang_choice",lang:b(this).attr("value"),taxonomies:a,post_id:b("#post_ID").attr("value")};b.post(ajaxurl,c,function(d){var e=wpAjax.parseAjaxResponse(d,"ajax-response");b.each(e.responses,function(){switch(this.what){case"translations":b("#post-translations").html(this.data);break;case"taxonomy":var f=this.data;b("#"+f+"checklist").html(this.supplemental.all);b("#"+f+"checklist-pop").html(this.supplemental.populars);b("#new"+f+"_parent").replaceWith(this.supplemental.dropdown);b("#"+f+"-lang").val(b("#post_lang_choice").attr("value"));break;case"pages":b("#parent_id").replaceWith(this.data);break;default:break}});b(".tagcloud-link").each(function(){var f=b(this).attr("id");pll_tagBox.get(f,0)});pll_tagBox.suggest()})});if(b("#pll-tagsdiv-post_tag").length){pll_tagBox.init()}else{b("#side-sortables, #normal-sortables, #advanced-sortables").children("div.postbox").each(function(){if(this.id.indexOf("pll-tagsdiv-")===0){pll_tagBox.init();return false}})}jQuery("a.editinline").live("click",function(){inlineEditPost.revert();var c=inlineEditPost.getId(this);var d=b("input[name='lang_"+c+"']").attr("value");b("#post_lang_choice option:selected").removeAttr("selected");b('#post_lang_choice option[value="'+d+'"]').attr("selected","selected")})});
+var pll_tagBox;
+
+// mainly copy paste of WP code
+(function($){
+
+pll_tagBox = {
+	clean : function(tags) {
+		return tags.replace(/\s*,\s*/g, ',').replace(/,+/g, ',').replace(/[,\s]+$/, '').replace(/^[,\s]+/, '');
+	},
+
+	parseTags : function(el) {
+		var id = el.id, num = id.split('-check-num-')[1], taxbox = $(el).closest('.tagsdiv'), thetags = taxbox.find('.the-tags'), current_tags = thetags.val().split(','), new_tags = [];
+		delete current_tags[num];
+
+		$.each( current_tags, function(key, val) {
+			val = $.trim(val);
+			if ( val ) {
+				new_tags.push(val);
+			}
+		});
+
+		thetags.val( this.clean( new_tags.join(',') ) );
+
+		this.quickClicks(taxbox);
+		return false;
+	},
+
+	quickClicks : function(el) {
+		var thetags = $('.the-tags', el),
+			tagchecklist = $('.tagchecklist', el),
+			id = $(el).attr('id'),
+			current_tags, disabled;
+
+		if ( !thetags.length )
+			return;
+
+// FIXME: why this modification ?
+//		disabled = thetags.prop('disabled'); // 3.3
+//		disabled = thetags.attr('disabled'); // 3.1
+		disabled = thetags.attr('disabled');
+
+		current_tags = thetags.val().split(',');
+		tagchecklist.empty();
+
+		$.each( current_tags, function( key, val ) {
+			var span, xbutton;
+
+			val = $.trim( val );
+
+			if ( ! val )
+				return;
+
+			// Create a new span, and ensure the text is properly escaped.
+			span = $('<span />').text( val );
+
+			// If tags editing isn't disabled, create the X button.
+			if ( ! disabled ) {
+				xbutton = $( '<a id="' + id + '-check-num-' + key + '" class="ntdelbutton">X</a>' );
+				xbutton.click( function(){ pll_tagBox.parseTags(this); });
+				span.prepend('&nbsp;').prepend( xbutton );
+			}
+
+			// Append the span to the tag list.
+			tagchecklist.append( span );
+		});
+	},
+
+	flushTags : function(el, a, f) {
+		a = a || false;
+		var text, tags = $('.the-tags', el), newtag = $('input.newtag', el), newtags;
+
+		text = a ? $(a).text() : newtag.val();
+		tagsval = tags.val();
+		newtags = tagsval ? tagsval + ',' + text : text;
+
+		newtags = this.clean( newtags );
+		newtags = array_unique_noempty( newtags.split(',') ).join(',');
+		tags.val(newtags);
+		this.quickClicks(el);
+
+		if ( !a )
+			newtag.val('');
+		if ( 'undefined' == typeof(f) )
+			newtag.focus();
+
+		return false;
+	},
+
+	get : function(id, a) {
+		var tax = id.substr(id.indexOf('-')+1);
+
+		// add the language in the $_POST variable
+		var data = {
+			action: 'get-tagcloud',
+			lang: $('#post_lang_choice').attr('value'),
+			tax: tax
+		}
+
+		$.post(ajaxurl, data, function(r, stat) {
+			if ( 0 == r || 'success' != stat )
+				r = wpAjax.broken;
+
+			r = $('<p id="tagcloud-'+tax+'" class="the-tagcloud">'+r+'</p>');
+			$('a', r).click(function(){
+				pll_tagBox.flushTags( $(this).closest('.inside').children('.tagsdiv'), this);
+				return false;
+			});
+
+			// add an if else condition to allow modifying the tags outputed when switching the language
+			if (a == 1)
+				$('#'+id).after(r);
+			else {
+				v = $('.the-tagcloud').css('display');
+				$('.the-tagcloud').replaceWith(r);
+				$('.the-tagcloud').css('display', v);
+			}
+		});
+	},
+
+	suggest : function() {
+		ajaxtag = $('div.ajaxtag');
+		// add the unbind function to allow calling the function when the language is modified
+		$('input.newtag', ajaxtag).unbind().blur(function() {
+			if ( this.value == '' )
+	            $(this).parent().siblings('.taghint').css('visibility', '');
+	    }).focus(function(){
+			$(this).parent().siblings('.taghint').css('visibility', 'hidden');
+		}).keyup(function(e){
+			if ( 13 == e.which ) {
+				pll_tagBox.flushTags( $(this).closest('.tagsdiv') );
+				return false;
+			}
+		}).keypress(function(e){
+			if ( 13 == e.which ) {
+				e.preventDefault();
+				return false;
+			}
+		}).each(function(){
+			// add the language in the $_GET variable
+			var lang = $('#post_lang_choice').attr('value');
+			var tax = $(this).closest('div.tagsdiv').attr('id');
+			$(this).suggest( ajaxurl + '?action=polylang-ajax-tag-search&lang=' + lang + '&tax=' + tax, { delay: 500, minchars: 2, multiple: true, multipleSep: "," } );
+		});
+	},
+
+	init : function() {
+		var t = this, ajaxtag = $('div.ajaxtag');
+
+	    $('.tagsdiv').each( function() {
+	        pll_tagBox.quickClicks(this);
+	    });
+
+		$('input.tagadd', ajaxtag).click(function(){
+			t.flushTags( $(this).closest('.tagsdiv') );
+		});
+
+		$('div.taghint', ajaxtag).click(function(){
+			$(this).css('visibility', 'hidden').parent().siblings('.newtag').focus();
+		});
+
+		pll_tagBox.suggest();
+
+	    // save tags on post save/publish
+	    $('#post').submit(function(){
+			$('div.tagsdiv').each( function() {
+	        	pll_tagBox.flushTags(this, false, 1);
+			});
+		});
+
+		// tag cloud
+		$('a.tagcloud-link').click(function(){
+			pll_tagBox.get( $(this).attr('id'), 1 );
+			$(this).unbind().click(function(){
+				$(this).siblings('.the-tagcloud').toggle();
+				return false;
+			});
+			return false;
+		});
+	}
+};
+
+})(jQuery);
+
+jQuery(document).ready(function($) {
+	// collect taxonomies - code partly copied from WordPress
+	var taxonomies = new Array();
+	$('.categorydiv').each( function(){
+		var this_id = $(this).attr('id'), taxonomyParts, taxonomy;
+
+		taxonomyParts = this_id.split('-');
+		taxonomyParts.shift();
+		taxonomy = taxonomyParts.join('-');
+		taxonomies.push(taxonomy); // store the taxonomy for future use
+
+		// add our hidden field in the new category form - for each hierarchical taxonomy
+		// to set the language when creating a new category
+		$('#' + taxonomy + '-add-submit').before($('<input />')
+			.attr('type', 'hidden')
+			.attr('id', taxonomy + '-lang')
+			.attr('name', 'term_lang_choice')
+			.attr('value', $('#post_lang_choice').attr('value'))
+		);
+	});
+
+	// ajax for changing the post's language in the languages metabox
+	$('#post_lang_choice').change( function() {
+		var data = {
+			action: 'post_lang_choice',
+			lang: $(this).attr('value'),
+			taxonomies: taxonomies,
+			post_id: $('#post_ID').attr('value')
+		}
+
+		$.post(ajaxurl, data , function(response) {
+			var res = wpAjax.parseAjaxResponse(response, 'ajax-response');
+			$.each(res.responses, function() {
+				switch (this.what) {
+					case 'translations': // translations fields
+						$('#post-translations').html(this.data);
+						break;
+					case 'taxonomy': // categories metabox for posts
+						var tax = this.data;
+						$('#' + tax + 'checklist').html(this.supplemental.all);
+						$('#' + tax + 'checklist-pop').html(this.supplemental.populars);
+						$('#new' + tax + '_parent').replaceWith(this.supplemental.dropdown);
+						$('#' + tax + '-lang').val($('#post_lang_choice').attr('value')); // hidden field
+						break;
+					case 'pages': // parent dropdown list for pages
+						$('#parent_id').replaceWith(this.data);
+						break;
+					default:
+						break;
+				}
+			});
+
+			// modifies the language in the tag cloud	
+			$('.tagcloud-link').each(function() {
+				var id = $(this).attr('id');
+				pll_tagBox.get(id, 0); 			
+			});
+
+			// modifies the language in the tags suggestion input
+			pll_tagBox.suggest();
+		});
+	});
+
+	// Tag box			
+	// copy paste WP code
+	// replacing tagsdiv by pll-tagsdiv and tagBox by pll_tagBox
+	if ( $('#pll-tagsdiv-post_tag').length ) {
+		pll_tagBox.init();
+	} else {
+		$('#side-sortables, #normal-sortables, #advanced-sortables').children('div.postbox').each(function(){
+			if ( this.id.indexOf('pll-tagsdiv-') === 0 ) {
+				pll_tagBox.init();
+				return false;
+			}
+		});
+	}
+
+	// quick edit
+	jQuery("a.editinline").live("click", function() {
+		inlineEditPost.revert();
+		var post_id = inlineEditPost.getId(this);
+		var lang = $("input[name='lang_"+post_id+"']").attr('value');
+		$('#post_lang_choice option:selected').removeAttr('selected');
+		$('#post_lang_choice option[value="'+lang+'"]').attr('selected', 'selected');  
+	});
+});

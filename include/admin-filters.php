@@ -449,7 +449,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 		// save language
 		if (isset($_REQUEST['post_lang_choice'])) {
-			if ($this->get_post_language($post_id)->slug != $_REQUEST['post_lang_choice'])
+			if (($lang = $this->get_post_language($post_id)) && $lang->slug != $_REQUEST['post_lang_choice'])
 				$this->delete_translation('post', $post_id); // in case the language is modified using inline edit
 			$this->set_post_language($post_id, $_REQUEST['post_lang_choice']);
 		}
