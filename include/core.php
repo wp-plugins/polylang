@@ -766,14 +766,13 @@ class Polylang_Core extends Polylang_base {
 
 	// translates biography
 	function get_user_metadata($null, $id, $meta_key, $single) {
-		if ($meta_key == 'description')
-			return get_user_meta($id, 'description_'.$this->curlang->slug, true);
-		return $null;
+		return $meta_key == 'description' ? get_user_meta($id, 'description_'.$this->curlang->slug, true) : $null;
 	}
 
 	// translates page for posts and page on front
 	function translate_page($value) {
-		return isset($this->curlang) && $value ? $this->get_post($value, $this->curlang) : $value;
+		// returns the current page if there is no translation to avoid ugly notices
+		return isset($this->curlang) && $value && ($translation = $this->get_post($value, $this->curlang)) ? $translation : $value;
 	}
 
 	// filters the home url to get the right language

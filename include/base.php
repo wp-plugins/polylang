@@ -185,12 +185,13 @@ abstract class Polylang_Base {
 
 	// modifies post & page links
 	function post_link($link, $post) {
-		return $this->add_language_to_link($link, $this->get_post_language('_get_page_link' == current_filter() ? $post : $post->ID));
+		return 'post_type_link' == current_filter() && !in_array($post->post_type, $this->post_types) ?
+			$link : $this->add_language_to_link($link, $this->get_post_language('_get_page_link' == current_filter() ? $post : $post->ID));
 	}
 
 	// modifies term link
 	function term_link($link, $term, $tax) {
-		return $tax == 'post_format' || ($this->options['force_lang'] && $GLOBALS['wp_rewrite']->using_permalinks() && $tax != 'language') ?
+		return $tax == 'post_format' || ($this->options['force_lang'] && $GLOBALS['wp_rewrite']->using_permalinks() && in_array($tax, $this->taxonomies)) ?
 			$this->add_language_to_link($link, $this->get_term_language($term->term_id)) : $link;
 	}
 
