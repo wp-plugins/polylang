@@ -264,6 +264,8 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		$post_type = get_post_type($post_ID);
 		$lang = $this->get_language($_POST['lang']);
 
+		$this->set_post_language($post_ID, $lang); // save language, useful to set the language when uploading media from post
+
 		ob_start();
 		if ($lang)
 			include(PLL_INC.'/post-translations.php');
@@ -392,7 +394,6 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 	// copy or synchronize terms and metas
 	function copy_post_metas($from, $to, $lang, $sync = false) {
-
 		// copy or synchronize terms
 		foreach ($this->taxonomies as $tax) {
 			$newterms = array();

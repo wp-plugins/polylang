@@ -293,7 +293,7 @@ msgstr "Valitse kielen tekstin suunta"
 
 #: ../include/languages-form.php:100
 msgid "Order"
-msgstr "Tilaus"
+msgstr "Järjestys"
 
 #: ../include/languages-form.php:102
 msgid "Position of the language in the language switcher"

@@ -33,13 +33,13 @@ class Polylang_Admin_Base extends Polylang_Base {
 		if ($lang_id)
 			$wp_locale->text_direction = get_metadata('term', $lang_id, '_rtl', true) ? 'rtl' : 'ltr';
 
+		if (!$this->get_languages_list())
+			return;
+
 		// set user meta when choosing to filter content by language
  		// $_GET[lang] is used in ajax 'tag suggest' and is numeric when editing a language
 		if (!defined('DOING_AJAX') && isset($_GET['lang']) && $_GET['lang'] && !is_numeric($_GET['lang']))
 			update_user_meta(get_current_user_id(), 'pll_filter_content', ($lang = $this->get_language($_GET['lang'])) ? $lang->slug : '');
-
-		if (!$this->get_languages_list())
-			return;
 
 		// adds the languages in admin bar
 		// FIXME: OK for WP 3.2 and newer (the admin bar is not displayed on admin side for WP 3.1)
@@ -62,14 +62,14 @@ class Polylang_Admin_Base extends Polylang_Base {
 		$suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
 
 		$scripts = array(
-			'admin' => array( array('settings_page_mlang'), array('jquery', 'wp-ajax-response', 'postbox') ),
-			'post'  => array( array('post', 'media', 'async-upload', 'edit'),  array('jquery', 'wp-ajax-response') ),
-			'term'  => array( array('edit-tags'), array('jquery', 'wp-ajax-response') ),
-			'user'  => array( array('profile', 'user-edit'), array('jquery') ),
+			'admin' => array( array('settings_page_mlang'), array('jquery', 'wp-ajax-response', 'postbox'), 1 ),
+			'post'  => array( array('post', 'media', 'async-upload', 'edit'),  array('jquery', 'wp-ajax-response'), 0 ),
+			'term'  => array( array('edit-tags'), array('jquery', 'wp-ajax-response'), 0 ),
+			'user'  => array( array('profile', 'user-edit'), array('jquery'), 0 ),
 		);
 
 		foreach ($scripts as $script => $v)
-			if (in_array($screen->base, $v[0]))
+			if (in_array($screen->base, $v[0]) && ($v[2] || $this->get_languages_list()))
 				wp_enqueue_script('pll_'.$script, POLYLANG_URL .'/js/'.$script.$suffix.'.js', $v[1], POLYLANG_VERSION);
 			
 		if (in_array($screen->base, array('settings_page_mlang', 'post', 'edit-tags', 'edit', 'upload', 'media')))

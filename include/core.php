@@ -317,8 +317,9 @@ class Polylang_Core extends Polylang_base {
 				foreach ($this->list_textdomains as $textdomain)
 					load_textdomain( $textdomain['domain'], str_replace($this->default_locale, $new_locale, $textdomain['mo']));
 
-				// reinitializes wp_locale for weekdays and months, as well as for text direction				
-				$wp_locale->init();
+				// reinitializes wp_locale for weekdays and months, as well as for text direction
+				unset($wp_locale);
+				$wp_locale = new WP_Locale();				
 				$wp_locale->text_direction = get_metadata('term', $this->curlang->term_id, '_rtl', true) ? 'rtl' : 'ltr';
 
 				// translate labels of post types and taxonomies
