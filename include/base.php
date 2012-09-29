@@ -155,8 +155,8 @@ abstract class Polylang_Base {
 
 	// adds language information to a link when using pretty permalinks
 	function add_language_to_link($url, $lang) {
-		if (!isset($lang) || !$lang) // FIXME avoid notice when adding a page to a custom menu
-			return false;
+		if (!isset($lang) || !$lang)
+			return $url;
 
 		global $wp_rewrite;
 		if ($wp_rewrite->using_permalinks()) {
