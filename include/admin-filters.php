@@ -2,7 +2,6 @@
 
 // all modifications of the WordPress admin ui
 class Polylang_Admin_Filters extends Polylang_Admin_Base {
-
 	function __construct() {
 		parent::__construct();
 
@@ -264,6 +263,8 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		$post_type = get_post_type($post_ID);
 		$lang = $this->get_language($_POST['lang']);
 
+		$this->set_post_language($post_ID, $lang); // save language, useful to set the language when uploading media from post
+
 		ob_start();
 		if ($lang)
 			include(PLL_INC.'/post-translations.php');
@@ -392,7 +393,6 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 	// copy or synchronize terms and metas
 	function copy_post_metas($from, $to, $lang, $sync = false) {
-
 		// copy or synchronize terms
 		foreach ($this->taxonomies as $tax) {
 			$newterms = array();
@@ -449,7 +449,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 		// save language
 		if (isset($_REQUEST['post_lang_choice'])) {
-			if ($this->get_post_language($post_id)->slug != $_REQUEST['post_lang_choice'])
+			if (($lang = $this->get_post_language($post_id)) && $lang->slug != $_REQUEST['post_lang_choice'])
 				$this->delete_translation('post', $post_id); // in case the language is modified using inline edit
 			$this->set_post_language($post_id, $_REQUEST['post_lang_choice']);
 		}
@@ -1017,9 +1017,8 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 	// returns either the user preferred language or the default language
 	function get_default_language() {
-		return apply_filters('pll_get_default_language', ($lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true)) ?
-			$this->get_language($lg) :
-			$this->get_language($this->options['default_lang']));
+		$default_language = $this->get_language(($lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true)) ? $lg : $this->options['default_lang']);
+		return apply_filters('pll_get_default_language', $default_language);
 	}
 
 } // class Polylang_Admin_Filters

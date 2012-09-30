@@ -7,6 +7,16 @@ class Polylang_Admin extends Polylang_Admin_Base {
 
 	function __construct() {
 		parent::__construct();
+
+		// adds the about box the languages admin panel
+		add_action('admin_init',  array(&$this, 'admin_init'));
+	}
+
+	// adds the about box the languages admin panel
+	function admin_init() {
+		// test of $_GET['tab'] avoids displaying the automatically generated screen options on other tabs
+		if (PLL_DISPLAY_ABOUT && (!isset($_GET['tab']) || $_GET['tab'] == 'lang'))
+			add_meta_box('pll_about_box', __('About Polylang', 'polylang'), array(&$this, 'about'), 'settings_page_mlang', 'normal', 'high');
 	}
 
 	// displays the about metabox
@@ -17,12 +27,11 @@ class Polylang_Admin extends Polylang_Admin_Base {
 	// used to update the translation when a language slug has been modified
 	function update_translations($type, $ids, $old_slug) {
 		foreach ($ids as $id) {
-			$tr = get_metadata($type, $id, '_translations', true);
+			$tr = $this->get_translations($type, $id);
 			if ($tr) {
-				$tr = unserialize($tr);
 				$tr[$_POST['slug']] = $tr[$old_slug];
 				unset($tr[$old_slug]);
-				update_metadata($type, $id, '_translations', serialize($tr));
+				update_metadata($type, (int) $id, '_translations', $tr);
 			}
 		}
 	}
@@ -30,11 +39,10 @@ class Polylang_Admin extends Polylang_Admin_Base {
 	// used to delete the translation when a language is deleted
 	function delete_translations($type, $ids, $old_slug) {
 		foreach ($ids as $id) {
-			$tr = get_metadata($type, $id, '_translations', true);
+			$tr = $this->get_translations($type, $id);
 			if ($tr) {
-				$tr = unserialize($tr);
 				unset($tr[$old_slug]);
-				update_metadata($type, $id, '_translations', serialize($tr));
+				update_metadata($type, (int) $id, '_translations', $tr);
 			}
 		}
 	}
@@ -133,9 +141,9 @@ class Polylang_Admin extends Polylang_Admin_Base {
 						else
 							unset($options['default_lang']);
 						update_option('polylang', $options);
-
-						flush_rewrite_rules(); // refresh rewrite rules
 					}
+
+					flush_rewrite_rules(); // refresh rewrite rules
 				}
 				wp_redirect('admin.php?page=mlang'); // to refresh the page (possible thanks to the $_GET['noheader']=true)
 				exit;
