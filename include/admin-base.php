@@ -26,15 +26,15 @@ class Polylang_Admin_Base extends Polylang_Base {
 
 	// set user preferences
 	function admin_init_base() {
+		if (!$this->get_languages_list())
+			return;
+
 		// set text direction if the user set its own language
 		global $wpdb, $wp_locale;
 		$lang_id = $wpdb->get_var($wpdb->prepare("SELECT t.term_id FROM $wpdb->terms AS t INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id
 			WHERE tt.taxonomy = 'language' AND tt.description = %s LIMIT 1", get_locale())); // no function exists to get term by description
 		if ($lang_id)
 			$wp_locale->text_direction = get_metadata('term', $lang_id, '_rtl', true) ? 'rtl' : 'ltr';
-
-		if (!$this->get_languages_list())
-			return;
 
 		// set user meta when choosing to filter content by language
  		// $_GET[lang] is used in ajax 'tag suggest' and is numeric when editing a language
@@ -49,11 +49,6 @@ class Polylang_Admin_Base extends Polylang_Base {
 	// adds the link to the languages panel in the wordpress admin menu
 	function add_menus() {
 		add_submenu_page('options-general.php', __('Languages', 'polylang'), __('Languages', 'polylang'), 'manage_options', 'mlang',  array(&$this, 'languages_page'));
-
-		// adds the about box the languages admin panel
-		// test of $_GET['tab'] avoids displaying the automatically generated screen options on other tabs
-		if (PLL_DISPLAY_ABOUT && isset($_GET['page']) && $_GET['page'] == 'mlang' && (!isset($_GET['tab']) || $_GET['tab'] == 'lang'))
-			add_meta_box('pll_about_box', __('About Polylang', 'polylang'), array(&$this,'about'), 'settings_page_mlang', 'normal', 'high');
 	}
 
 	// setup js scripts & css styles (only on the relevant pages)
@@ -61,6 +56,10 @@ class Polylang_Admin_Base extends Polylang_Base {
 		$screen = get_current_screen();
 		$suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
 
+		// for each script:
+		// 0 => the pages on which to load the script
+		// 1 => the scripts it needs to work
+		// 2 => 1 if loaded even if languages have not been defined yet, 0 otherwise
 		$scripts = array(
 			'admin' => array( array('settings_page_mlang'), array('jquery', 'wp-ajax-response', 'postbox'), 1 ),
 			'post'  => array( array('post', 'media', 'async-upload', 'edit'),  array('jquery', 'wp-ajax-response'), 0 ),
@@ -147,7 +146,7 @@ class Polylang_Admin_Base extends Polylang_Base {
 	// returns options available for the language switcher (menu or widget)
 	// FIXME do not include the dropdown in menu yet since I need to work on js
 	function get_switcher_options($type = 'widget', $key ='string') {
-		$options = array (
+		$options = array(
 			'show_names' => array('string' => __('Displays language names', 'polylang'), 'default' => 1),
 			'show_flags' => array('string' => __('Displays flags', 'polylang'), 'default' => 0),
 			'force_home' => array('string' => __('Forces link to front page', 'polylang'), 'default' => 0),

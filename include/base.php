@@ -8,6 +8,10 @@ abstract class Polylang_Base {
 	protected $post_types; // post types to filter by language
 	protected $taxonomies; // taxonomies to filter by language
 
+	// used to cache results
+	private $languages_list = array();
+	private $links = array();
+
 	function __construct() {
 		// init options often needed
 		$this->options = get_option('polylang');
@@ -18,15 +22,20 @@ abstract class Polylang_Base {
 
 	// init post types and taxonomies to filter by language
 	function add_post_types_taxonomies() {
-		$this->post_types = apply_filters('pll_get_post_types', array_merge(PLL_MEDIA_SUPPORT ? array('attachment' => 'attachment') : array(), get_post_types(array('show_ui' => true))));
+		$post_types = array_merge(PLL_MEDIA_SUPPORT ? array('attachment' => 'attachment') : array(), get_post_types(array('show_ui' => true)));
+		$this->post_types = apply_filters('pll_get_post_types', $post_types);
 		$this->taxonomies = apply_filters('pll_get_taxonomies', get_taxonomies(array('show_ui'=>true)));
 	}
 
 	// returns the list of available languages
 	function get_languages_list($args = array()) {
+		// although get_terms is cached, it is efficient to add our own cache
+		if (isset($this->languages_list[$cache_key = md5(serialize($args))]))
+			return $this->languages_list[$cache_key];
+
 		$defaults = array('hide_empty' => false, 'orderby'=> 'term_group');
-		$args = wp_parse_args($args, $defaults);
-		return get_terms('language', $args);
+		$args = wp_parse_args($args, $defaults);		
+		return $this->languages_list[$cache_key] = get_terms('language', $args);
 	}
 
 	// retrieves the dropdown list of the languages
@@ -185,14 +194,20 @@ abstract class Polylang_Base {
 
 	// modifies post & page links
 	function post_link($link, $post) {
-		return 'post_type_link' == current_filter() && !in_array($post->post_type, $this->post_types) ?
+		if (isset($this->links[$link]))
+			return $this->links[$link];
+
+		return $this->links[$link] = ('post_type_link' == current_filter() && !in_array($post->post_type, $this->post_types)) ?
 			$link : $this->add_language_to_link($link, $this->get_post_language('_get_page_link' == current_filter() ? $post : $post->ID));
 	}
 
 	// modifies term link
 	function term_link($link, $term, $tax) {
-		return $tax == 'post_format' || ($this->options['force_lang'] && $GLOBALS['wp_rewrite']->using_permalinks() && in_array($tax, $this->taxonomies)) ?
-			$this->add_language_to_link($link, $this->get_term_language($term->term_id)) : $link;
+		if (isset($this->links[$link]))
+			return $this->links[$link];
+
+		$ok = $tax == 'post_format' || ($this->options['force_lang'] && $GLOBALS['wp_rewrite']->using_permalinks() && in_array($tax, $this->taxonomies));
+		return $this->links[$link] = $ok ? $this->add_language_to_link($link, $this->get_term_language($term->term_id)) : $link;
 	}
 
 	// returns the html link to the flag if exists

@@ -2,7 +2,6 @@
 
 // all modifications of the WordPress admin ui
 class Polylang_Admin_Filters extends Polylang_Admin_Base {
-
 	function __construct() {
 		parent::__construct();
 
@@ -1018,9 +1017,8 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 	// returns either the user preferred language or the default language
 	function get_default_language() {
-		return apply_filters('pll_get_default_language', ($lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true)) ?
-			$this->get_language($lg) :
-			$this->get_language($this->options['default_lang']));
+		$default_language = $this->get_language(($lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true)) ? $lg : $this->options['default_lang']);
+		return apply_filters('pll_get_default_language', $default_language);
 	}
 
 } // class Polylang_Admin_Filters
