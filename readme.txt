@@ -92,6 +92,10 @@ Every suggestions are welcome.
 
 == Changelog ==
 
+= 0.9.3 =
+
+* Bug correction: dates are not translated (introduced in 0.9.2)
+
 = 0.9.2 (2102-09-30) =
 
 * Support new WordPress (WP 3.5+) convention for js and css files naming

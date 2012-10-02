@@ -299,7 +299,7 @@ class Polylang_Core extends Polylang_base {
 	// as done by xili_language: load text domains and reinitialize wp_locale with the action 'wp'
 	// as done by qtranslate: define the locale with the action 'plugins_loaded', but in this case, the language must be specified in the url.
 	function load_textdomains() {
-		global $wp_rewrite, $wp_locale, $l10n;
+		global $wp_rewrite, $l10n;
 
 		// our override_load_textdomain filter has done its job. let's remove it before calling load_textdomain
 		remove_filter('override_load_textdomain', array(&$this, 'mofile'));
@@ -323,9 +323,9 @@ class Polylang_Core extends Polylang_base {
 					load_textdomain( $textdomain['domain'], str_replace($this->default_locale, $new_locale, $textdomain['mo']));
 
 				// reinitializes wp_locale for weekdays and months, as well as for text direction
-				unset($wp_locale);
-				$wp_locale = new WP_Locale();				
-				$wp_locale->text_direction = get_metadata('term', $this->curlang->term_id, '_rtl', true) ? 'rtl' : 'ltr';
+				unset($GLOBALS['wp_locale']);
+				$GLOBALS['wp_locale'] = new WP_Locale();				
+				$GLOBALS['wp_locale']->text_direction = get_metadata('term', $this->curlang->term_id, '_rtl', true) ? 'rtl' : 'ltr';
 
 				// translate labels of post types and taxonomies
 				foreach ($GLOBALS['wp_taxonomies'] as $tax)
