@@ -188,7 +188,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 			$name = $type == 'edit-tags' ? 'inline_lang_choice' : 'post_lang_choice';
 
 			$args = current_filter() == 'bulk_edit_custom_box' ?
-				array('name' => $name, 'add_option' => __('&mdash; No Change &mdash;')) :
+				array('name' => $name, 'add_options' => array(array('value' => -1, 'text' => __('&mdash; No Change &mdash;')))) :
 				array('name' => $name);
 
 			echo '<fieldset class="inline-edit-col-left"><div class="inline-edit-col">';
@@ -442,6 +442,10 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 	function save_post($post_id, $post) {
 		// does nothing except on post types which are filterable
 		if (!in_array($post->post_type, $this->post_types))
+			return;
+
+		// bulk edit does not modify the language
+		if (isset($_GET['bulk_edit']) && $_REQUEST['post_lang_choice'] == -1)
 			return;
 
 		if ($id = wp_is_post_revision($post_id))
@@ -949,7 +953,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 			$this->dropdown_languages(array(
 				'name'       =>  $widget->id.'_lang_choice',
 				'class'      => 'tags-input',
-				'add_option' => __('All languages', 'polylang'),
+				'add_options' => array(array('value' => 0, 'text' => __('All languages', 'polylang'))),
 				'selected'   => isset($widget_lang[$widget->id]) ? $widget_lang[$widget->id] : ''
 			))
 		);
@@ -978,7 +982,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 				'name'       => 'user_lang',
 				'value'      => 'description',
 				'selected'   => get_user_meta($profileuser->ID, 'user_lang', true),
-				'add_option' => __('Wordpress default', 'polylang')
+				'add_options' => array(array('value' => 0, 'text' => __('Wordpress default', 'polylang')))
 			))
 		);
 

@@ -41,11 +41,15 @@ abstract class Polylang_Base {
 	// retrieves the dropdown list of the languages
 	function dropdown_languages($args = array()) {
 		$args = apply_filters('pll_dropdown_language_args', $args);
-		$defaults = array('name' => 'lang_choice', 'class' => '', 'add_option' => false, 'hide_empty' => false, 'value' => 'slug', 'selected' => '');
+		$defaults = array('name' => 'lang_choice', 'class' => '', 'add_options' => array(), 'hide_empty' => false, 'value' => 'slug', 'selected' => '');
 		extract(wp_parse_args($args, $defaults));
 
+		// sort $add_options by value
+		uasort($add_options, create_function('$a, $b', "return \$a['value'] > \$b['value'];" ));
+
 		$out = sprintf('<select name="%1$s" id="%1$s"%2$s>'."\n", esc_attr($name), $class ? ' class="'.esc_attr($class).'"' : '');
-		$out .= $add_option !== false ? "<option value='0'>$add_option</option>\n" : '';
+		foreach ($add_options as $option)
+			$out .= "<option value='" . $option['value'] . "'>" . $option['text'] . "</option>\n";
 		foreach ($this->get_languages_list($args) as $language) {
 			$out .= sprintf("<option value='%s'%s>%s</option>\n",
 				esc_attr($language->$value),
@@ -254,12 +258,12 @@ abstract class Polylang_Base {
 	function exclude_pages($lang_id) {
 		$q = array(
 			'numberposts' => -1,
-			'post_type'   => array_intersect(get_post_types(array('hierarchical' => 1)), $this->post_types),
-			'fields'      => 'ids',
-			'tax_query'   => array(array(
+			'post_type'	 => array_intersect(get_post_types(array('hierarchical' => 1)), $this->post_types),
+			'fields'			=> 'ids',
+			'tax_query'	 => array(array(
 				'taxonomy' => 'language',
-				'fields'   => 'id',
-				'terms'    => $lang_id,
+				'fields'	 => 'id',
+				'terms'		=> $lang_id,
 				'operator' => 'NOT IN'
 			))
 		);

@@ -95,6 +95,7 @@ Every suggestions are welcome.
 = 0.9.3 =
 
 * Bug correction: dates are not translated (introduced in 0.9.2)
+* Bug correction: the language is lost when keeping - No change - for language in bulk edit
 
 = 0.9.2 (2102-09-30) =
 
