@@ -287,6 +287,7 @@ class Polylang_Admin extends Polylang_Admin_Base {
 
 					if ($values)
 						$wpdb->query("INSERT INTO $wpdb->termmeta (term_id, meta_key, meta_value) VALUES " . implode(',', $values));
+
 				}
 				break;
 
@@ -402,10 +403,8 @@ class Polylang_Admin extends Polylang_Admin_Base {
 
 		global $wpdb;
 		$terms = get_terms($this->taxonomies, array('get'=>'all', 'fields'=>'ids'));
-		$tr_terms = $wpdb->get_col("SELECT t.term_id FROM $wpdb->terms AS t
-			LEFT JOIN $wpdb->termmeta AS tm ON t.term_id = tm.term_id
-			WHERE tm.meta_key = '_language'");
-		$terms = array_diff($terms, $tr_terms);
+		$tr_terms = $wpdb->get_col("SELECT term_id FROM $wpdb->termmeta WHERE meta_key = '_language'");
+		$terms = array_unique(array_diff($terms, $tr_terms), SORT_NUMERIC); // array_unique to avoid duplicates if a term is in more than one taxonomy
 
 		return apply_filters('pll_get_objects_with_no_lang', empty($posts) && empty($terms) ? false : array('posts' => $posts, 'terms' => $terms));
 	}

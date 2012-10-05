@@ -96,6 +96,7 @@ Every suggestions are welcome.
 
 * Bug correction: dates are not translated (introduced in 0.9.2)
 * Bug correction: the language is lost when keeping - No change - for language in bulk edit
+* Bug correction: categories and tags are duplicate (when default language is set automatically to existing content and categories and tags share the same name)
 
 = 0.9.2 (2102-09-30) =
 

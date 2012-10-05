@@ -113,9 +113,9 @@ class Polylang_Core extends Polylang_base {
 		add_filter('widget_display_callback', array(&$this, 'widget_display_callback'), 10, 3);
 
 		// strings translation (must be applied before WordPress applies its default formatting filters)
-		add_filter('widget_title', array(&$this, 'widget_title'), 1);
-		add_filter('bloginfo', array(&$this, 'bloginfo'), 1, 2);
-		add_filter('get_bloginfo_rss', array(&$this, 'bloginfo'), 1, 2);
+		add_filter('widget_title', 'pll__', 1);
+		add_filter('option_blogname', 'pll__', 1);
+		add_filter('option_blogdescription', 'pll__', 1);
 
 		// translates biography
 		add_filter('get_user_metadata', array(&$this,'get_user_metadata'), 10, 4);
@@ -764,22 +764,6 @@ class Polylang_Core extends Polylang_base {
 		$widget_lang = get_option('polylang_widgets');
 		// don't display if a language filter is set and this is not the current one
 		return isset($widget_lang[$widget->id]) && $widget_lang[$widget->id] && $widget_lang[$widget->id] != $this->curlang->slug ? false : $instance;
-	}
-
-	// translates widget titles
-	function widget_title($title) {
-		return __($title, 'pll_string');
-	}
-
-	// translates site title and tagline
-	function bloginfo($output, $show) {
-		if (in_array($show, array('', 'name', 'description'))) {
-			$output = __($output, 'pll_string');
-			if (current_filter() == 'get_bloginfo_rss')
-				$output = convert_chars($output);
-		}
-
-		return $output;
 	}
 
 	// translates biography

@@ -258,12 +258,12 @@ abstract class Polylang_Base {
 	function exclude_pages($lang_id) {
 		$q = array(
 			'numberposts' => -1,
-			'post_type'	 => array_intersect(get_post_types(array('hierarchical' => 1)), $this->post_types),
-			'fields'			=> 'ids',
-			'tax_query'	 => array(array(
+			'post_type'   => array_intersect(get_post_types(array('hierarchical' => 1)), $this->post_types),
+			'fields'      => 'ids',
+			'tax_query'   => array(array(
 				'taxonomy' => 'language',
-				'fields'	 => 'id',
-				'terms'		=> $lang_id,
+				'fields'   => 'id',
+				'terms'    => $lang_id,
 				'operator' => 'NOT IN'
 			))
 		);
