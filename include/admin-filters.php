@@ -459,6 +459,8 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		}
 		elseif (isset($_GET['new_lang']))
 			$this->set_post_language($post_id, $_GET['new_lang']);
+		elseif (isset($_REQUEST['action']) && in_array($_REQUEST['action'], array('post-quickpress-save', 'post-quickpress-publish')))
+			$this->set_post_language($post_id, $this->get_default_language()); // default language for QuickPress
 		elseif ($this->get_post_language($post_id))
 			{} // avoids breaking the language if post is updated outside the edit post page (thanks to Gonçalo Peres)
 		else
