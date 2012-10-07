@@ -53,6 +53,7 @@ function pll_e($string) {
 if (!function_exists('icl_register_string') && !function_exists('icl_t')) {
 	function icl_register_string($context, $name, $string) {
 		return pll_register_string($name, $string);
+	}
 
 	function icl_t($context, $name, $string) {
 		return pll__($string);
