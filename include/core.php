@@ -251,6 +251,8 @@ class Polylang_Core extends Polylang_base {
 			$this->curlang = $this->get_preferred_language();
 		else
 			$this->curlang = $this->get_language($this->options['default_lang']);
+
+		$GLOBALS['l10n']['pll_string'] = $this->mo_import($this->curlang);
 	}
 
 	// save the default locale before we start any language manipulation
@@ -332,10 +334,11 @@ class Polylang_Core extends Polylang_base {
 					$this->translate_labels($tax);
 				foreach ($GLOBALS['wp_post_types'] as $pt)
 					$this->translate_labels($pt);
+
+				// and finally load user defined strings
+				$l10n['pll_string'] = $this->mo_import($this->curlang);
 			}
 
-			// and finally load user defined strings
-			$l10n['pll_string'] = $this->mo_import($this->curlang);
 		}
 
 		else {
