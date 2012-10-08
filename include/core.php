@@ -12,6 +12,11 @@ class Polylang_Core extends Polylang_base {
 	private $page_for_posts;
 	private $page_on_front;
 
+	// used to cache results
+	private $posts = array();
+	private $translation_url = array();
+	private $home_urls = array();
+
 	function __construct() {
 		parent::__construct();
 
@@ -108,9 +113,9 @@ class Polylang_Core extends Polylang_base {
 		add_filter('widget_display_callback', array(&$this, 'widget_display_callback'), 10, 3);
 
 		// strings translation (must be applied before WordPress applies its default formatting filters)
-		add_filter('widget_title', array(&$this, 'widget_title'), 1);
-		add_filter('bloginfo', array(&$this, 'bloginfo'), 1, 2);
-		add_filter('get_bloginfo_rss', array(&$this, 'bloginfo'), 1, 2);
+		add_filter('widget_title', 'pll__', 1);
+		add_filter('option_blogname', 'pll__', 1);
+		add_filter('option_blogdescription', 'pll__', 1);
 
 		// translates biography
 		add_filter('get_user_metadata', array(&$this,'get_user_metadata'), 10, 4);
@@ -233,6 +238,9 @@ class Polylang_Core extends Polylang_base {
 		preg_match($languages, trailingslashit($_SERVER['REQUEST_URI']), $matches);
 
 		// home is resquested
+		// some PHP setups turn requests for / into /index.php in REQUEST_URI
+		// thanks to Gonçalo Peres for pointing out the issue with queries unknown to WP
+		// http://wordpress.org/support/topic/plugin-polylang-language-homepage-redirection-problem-and-solution-but-incomplete?replies=4#post-2729566
 		if (str_replace('www.', '', home_url('/')) == trailingslashit((is_ssl() ? 'https://' : 'http://').str_replace('www.', '', $_SERVER['HTTP_HOST']).str_replace(array('index.php', '?'.$_SERVER['QUERY_STRING']), array('', ''), $_SERVER['REQUEST_URI'])))
 			$this->home_requested();
 
@@ -243,6 +251,8 @@ class Polylang_Core extends Polylang_base {
 			$this->curlang = $this->get_preferred_language();
 		else
 			$this->curlang = $this->get_language($this->options['default_lang']);
+
+		$GLOBALS['l10n']['pll_string'] = $this->mo_import($this->curlang);
 	}
 
 	// save the default locale before we start any language manipulation
@@ -291,7 +301,7 @@ class Polylang_Core extends Polylang_base {
 	// as done by xili_language: load text domains and reinitialize wp_locale with the action 'wp'
 	// as done by qtranslate: define the locale with the action 'plugins_loaded', but in this case, the language must be specified in the url.
 	function load_textdomains() {
-		global $wp_rewrite, $wp_locale, $l10n;
+		global $wp_rewrite, $l10n;
 
 		// our override_load_textdomain filter has done its job. let's remove it before calling load_textdomain
 		remove_filter('override_load_textdomain', array(&$this, 'mofile'));
@@ -308,25 +318,27 @@ class Polylang_Core extends Polylang_base {
 			// set all our language filters and actions
 			$this->add_language_filters();
 
-			if (!($this->options['force_lang'] && $wp_rewrite->using_permalinks() && PLL_LANG_EARLY)) {
+			if (!($this->options['force_lang'] && $wp_rewrite->using_permalinks() && PLL_LANG_EARLY) && $this->curlang->description != 'en_US') {
 				// now we can load text domains with the right language
 				$new_locale = get_locale();
 				foreach ($this->list_textdomains as $textdomain)
 					load_textdomain( $textdomain['domain'], str_replace($this->default_locale, $new_locale, $textdomain['mo']));
 
-				// reinitializes wp_locale for weekdays and months, as well as for text direction				
-				$wp_locale->init();
-				$wp_locale->text_direction = get_metadata('term', $this->curlang->term_id, '_rtl', true) ? 'rtl' : 'ltr';
+				// reinitializes wp_locale for weekdays and months, as well as for text direction
+				unset($GLOBALS['wp_locale']);
+				$GLOBALS['wp_locale'] = new WP_Locale();				
+				$GLOBALS['wp_locale']->text_direction = get_metadata('term', $this->curlang->term_id, '_rtl', true) ? 'rtl' : 'ltr';
 
 				// translate labels of post types and taxonomies
 				foreach ($GLOBALS['wp_taxonomies'] as $tax)
 					$this->translate_labels($tax);
 				foreach ($GLOBALS['wp_post_types'] as $pt)
 					$this->translate_labels($pt);
+
+				// and finally load user defined strings
+				$l10n['pll_string'] = $this->mo_import($this->curlang);
 			}
 
-			// and finally load user defined strings
-			$l10n['pll_string'] = $this->mo_import($this->curlang);
 		}
 
 		else {
@@ -519,18 +531,27 @@ class Polylang_Core extends Polylang_base {
 
 	// modifies the page link in case the front page is not in the default language
 	function page_link($link, $id) {
-		if ($this->options['redirect_lang'] && $this->page_on_front && $id == $this->get_post($this->page_on_front, $lang = $this->get_post_language($id)))
-			return $this->options['hide_default'] && $lang->slug == $this->options['default_lang'] ? trailingslashit($this->home) : get_term_link($lang, 'language');
+		if ($this->options['redirect_lang'] && $this->page_on_front) {
+			$lang = $lang = $this->get_post_language($id);
+			if (!isset($this->posts[$lang->slug][$this->page_on_front]))
+				$this->posts[$lang->slug][$this->page_on_front] = $this->get_post($this->page_on_front, $lang);
+			if ($id == $this->posts[$lang->slug][$this->page_on_front])
+				return $this->options['hide_default'] && $lang->slug == $this->options['default_lang'] ? trailingslashit($this->home) : get_term_link($lang, 'language');
+		}
 
-		if ($this->page_on_front && $this->options['hide_default'] && $id == $this->get_post($this->page_on_front, $this->options['default_lang']))
-			return trailingslashit($this->home);
+		if ($this->page_on_front && $this->options['hide_default']) {
+			if (!isset($this->posts[$this->options['default_lang']][$this->page_on_front]))
+				$this->posts[$this->options['default_lang']][$this->page_on_front] = $this->get_post($this->page_on_front, $this->options['default_lang']);
+			if ($id == $this->posts[$this->options['default_lang']][$this->page_on_front])
+				return trailingslashit($this->home);
+		}
 
 		return _get_page_link($id);
 	}
 
 	// prevents redirection of the homepage when using page on front
 	function redirect_canonical($redirect_url, $requested_url) {
-		return $requested_url == home_url('/') || $requested_url == $this->page_link('', get_option('page_on_front')) ? false : $redirect_url;
+		return $requested_url == home_url('/') || strpos($requested_url, $this->page_link('', get_option('page_on_front'))) !== false ? false : $redirect_url;
 	}
 
 	// adds some javascript workaround knowing it's not perfect...
@@ -628,6 +649,9 @@ class Polylang_Core extends Polylang_base {
 
 	// returns the url of the translation (if exists) of the current page
 	function get_translation_url($language) {
+		if (isset($this->translation_url[$language->slug]))
+			return $this->translation_url[$language->slug];
+
 		global $wp_query, $wp_rewrite;
 		$qvars = $wp_query->query;
 		$hide = $this->options['default_lang'] == $language->slug && $this->options['hide_default'];
@@ -705,7 +729,7 @@ class Polylang_Core extends Polylang_base {
 		elseif (is_home() || is_tax('language') )
 			$url = $this->get_home_url($language);
 
-		return isset($url) ? $url : null;
+		return $this->translation_url[$language->slug] = (isset($url) ? $url : null);
 	}
 
 	// filters the nav menus according to the current language when called from get_nav_menu_locations()
@@ -745,32 +769,16 @@ class Polylang_Core extends Polylang_base {
 		return isset($widget_lang[$widget->id]) && $widget_lang[$widget->id] && $widget_lang[$widget->id] != $this->curlang->slug ? false : $instance;
 	}
 
-	// translates widget titles
-	function widget_title($title) {
-		return __($title, 'pll_string');
-	}
-
-	// translates site title and tagline
-	function bloginfo($output, $show) {
-		if (in_array($show, array('', 'name', 'description'))) {
-			$output = __($output, 'pll_string');
-			if (current_filter() == 'get_bloginfo_rss')
-				$output = convert_chars($output);
-		}
-
-		return $output;
-	}
-
 	// translates biography
 	function get_user_metadata($null, $id, $meta_key, $single) {
-		if ($meta_key == 'description')
-			return get_user_meta($id, 'description_'.$this->curlang->slug, true);
-		return $null;
+		return $meta_key == 'description' ? get_user_meta($id, 'description_'.$this->curlang->slug, true) : $null;
 	}
 
 	// translates page for posts and page on front
-	function translate_page($value) {
-		return isset($this->curlang) && $value ? $this->get_post($value, $this->curlang) : $value;
+	function translate_page($val) {
+		// returns the current page if there is no translation to avoid ugly notices
+		// the fonction is often called so let's store the result
+		return isset($this->curlang) && $val && (isset($this->posts[$val]) || $this->posts[$val] = $this->get_post($val, $this->curlang)) ? $this->posts[$val] : $val;
 	}
 
 	// filters the home url to get the right language
@@ -779,7 +787,7 @@ class Polylang_Core extends Polylang_base {
 			return $url;
 
 		$theme = get_theme_root();
-		foreach (debug_backtrace() as $trace) {
+		foreach (debug_backtrace(/*!DEBUG_BACKTRACE_PROVIDE_OBJECT|DEBUG_BACKTRACE_IGNORE_ARGS*/) as $trace) {
 			// search form
 			if (isset($trace['file']) && strpos($trace['file'], 'searchform.php'))
 				return $GLOBALS['wp_rewrite']->using_permalinks() ? $this->get_home_url($this->curlang, true) : $url;
@@ -801,15 +809,18 @@ class Polylang_Core extends Polylang_base {
 		if ($language == '')
 			$language = $this->curlang;
 
+		if (isset($this->home_urls[$language->slug]))
+			return $this->home_urls[$language->slug];
+
 		if ($this->options['default_lang'] == $language->slug && $this->options['hide_default'])
-			return trailingslashit($this->home);
+			return $this->home_urls[$language->slug] = trailingslashit($this->home);
 
 		// a static page is used as front page : /!\ don't use get_page_link to avoid infinite loop
 		// don't use this for search form
 		if (!$is_search && $this->page_on_front && $id = $this->get_post($this->page_on_front, $language))
-			return $this->page_link('', $id);
+			return $this->home_urls[$language->slug] = $this->page_link('', $id);
 
-		return get_term_link($language, 'language');
+		return $this->home_urls[$language->slug] = get_term_link($language, 'language');
 	}
 
 	// displays (or returns) the language switcher
