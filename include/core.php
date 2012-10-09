@@ -301,8 +301,6 @@ class Polylang_Core extends Polylang_base {
 	// as done by xili_language: load text domains and reinitialize wp_locale with the action 'wp'
 	// as done by qtranslate: define the locale with the action 'plugins_loaded', but in this case, the language must be specified in the url.
 	function load_textdomains() {
-		global $wp_rewrite, $l10n;
-
 		// our override_load_textdomain filter has done its job. let's remove it before calling load_textdomain
 		remove_filter('override_load_textdomain', array(&$this, 'mofile'));
 		remove_filter('gettext', array(&$this, 'gettext'), 10, 3);
@@ -318,27 +316,28 @@ class Polylang_Core extends Polylang_base {
 			// set all our language filters and actions
 			$this->add_language_filters();
 
-			if (!($this->options['force_lang'] && $wp_rewrite->using_permalinks() && PLL_LANG_EARLY) && $this->curlang->description != 'en_US') {
-				// now we can load text domains with the right language
-				$new_locale = get_locale();
-				foreach ($this->list_textdomains as $textdomain)
-					load_textdomain( $textdomain['domain'], str_replace($this->default_locale, $new_locale, $textdomain['mo']));
+			if (!($this->options['force_lang'] && $GLOBALS['wp_rewrite']->using_permalinks() && PLL_LANG_EARLY)) {
+				if ($this->curlang->description != 'en_US') {
+					// now we can load text domains with the right language
+					$new_locale = get_locale();
+					foreach ($this->list_textdomains as $textdomain)
+						load_textdomain( $textdomain['domain'], str_replace($this->default_locale, $new_locale, $textdomain['mo']));
 
-				// reinitializes wp_locale for weekdays and months, as well as for text direction
-				unset($GLOBALS['wp_locale']);
-				$GLOBALS['wp_locale'] = new WP_Locale();				
-				$GLOBALS['wp_locale']->text_direction = get_metadata('term', $this->curlang->term_id, '_rtl', true) ? 'rtl' : 'ltr';
+					// reinitializes wp_locale for weekdays and months, as well as for text direction
+					unset($GLOBALS['wp_locale']);
+					$GLOBALS['wp_locale'] = new WP_Locale();				
+					$GLOBALS['wp_locale']->text_direction = get_metadata('term', $this->curlang->term_id, '_rtl', true) ? 'rtl' : 'ltr';
 
-				// translate labels of post types and taxonomies
-				foreach ($GLOBALS['wp_taxonomies'] as $tax)
-					$this->translate_labels($tax);
-				foreach ($GLOBALS['wp_post_types'] as $pt)
-					$this->translate_labels($pt);
+					// translate labels of post types and taxonomies
+					foreach ($GLOBALS['wp_taxonomies'] as $tax)
+						$this->translate_labels($tax);
+					foreach ($GLOBALS['wp_post_types'] as $pt)
+						$this->translate_labels($pt);
+				}
 
 				// and finally load user defined strings
-				$l10n['pll_string'] = $this->mo_import($this->curlang);
+				$GLOBALS['l10n']['pll_string'] = $this->mo_import($this->curlang);
 			}
-
 		}
 
 		else {
