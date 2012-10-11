@@ -383,18 +383,18 @@ class Polylang_Core extends Polylang_base {
 		if (!$this->get_languages_list() || !did_action('wp_loaded') || $query->get('suppress_filters'))
 			return $query;
 
-		$qvars = $query->query_vars;
+		$qv = $query->query_vars;
 
 		// users may want to display content in a different language than the current one by setting it explicitely in the query
-		if (!$this->first_query && $this->curlang && isset($qvars['lang']) && $qvars['lang'])
+		if (!$this->first_query && $this->curlang && isset($qv['lang']) && $qv['lang'])
 			return $query;
 
 		$this->first_query = false;
 
 		// detect our exclude pages query and returns to avoid conflicts
 		// this test should be sufficient
-		if (isset($qvars['tax_query'][0]['taxonomy']) && $qvars['tax_query'][0]['taxonomy'] == 'language' &&
-			isset($qvars['tax_query'][0]['operator']) && $qvars['tax_query'][0]['operator'] == 'NOT IN')
+		if (isset($qv['tax_query'][0]['taxonomy']) && $qv['tax_query'][0]['taxonomy'] == 'language' &&
+			isset($qv['tax_query'][0]['operator']) && $qv['tax_query'][0]['operator'] == 'NOT IN')
 			return $query;
 
 		// special case for wp-signup.php & wp-activate.php
@@ -405,13 +405,13 @@ class Polylang_Core extends Polylang_base {
 
 		// homepage is requested, let's set the language
 		// take care to avoid posts page for which is_home = 1
-		if (!$this->curlang && empty($query->query) && (is_home() || (is_page() && $qvars['page_id'] == $this->page_on_front)))
+		if (!$this->curlang && empty($query->query) && (is_home() || (is_page() && $qv['page_id'] == $this->page_on_front)))
 			$this->home_requested($query);
 
 		// redirect the language page to the homepage
 		if ($this->options['redirect_lang'] && is_tax('language') && $this->page_on_front && (count($query->query) == 1 || (is_paged() && count($query->query) == 2))) {
-			$qvars['page_id'] = $this->get_post($this->page_on_front, $this->get_language(get_query_var('lang')));
-			$query->parse_query($qvars);
+			$qv['page_id'] = $this->get_post($this->page_on_front, $this->get_language(get_query_var('lang')));
+			$query->parse_query($qv);
 			return $query;
 		}
 
@@ -427,10 +427,10 @@ class Polylang_Core extends Polylang_base {
 		if ($this->page_for_posts) {
 			// If permalinks are used, WordPress does set and use $query->queried_object_id and sets $query->query_vars['page_id'] to 0
 			// and does set and use $query->query_vars['page_id'] if permalinks are not used :(
-			if (isset($qvars['pagename']) && $qvars['pagename'] && isset($query->queried_object_id))
+			if (isset($qv['pagename']) && $qv['pagename'] && isset($query->queried_object_id))
 				$page_id = $query->queried_object_id;
-			elseif (isset($qvars['page_id']))
-				$page_id = $qvars['page_id'];
+			elseif (isset($qv['page_id']))
+				$page_id = $qv['page_id'];
 
 			if (isset($page_id) && $page_id && $this->get_post($page_id, $this->get_post_language($this->page_for_posts)) == $this->page_for_posts) {
 				$this->page_for_posts = $page_id;
@@ -443,49 +443,51 @@ class Polylang_Core extends Polylang_base {
 			}
 		}
 
-		$is_post_type = isset($qvars['post_type']) && (in_array($qvars['post_type'], $this->post_types) ||
-			 (is_array($qvars['post_type']) && array_intersect($qvars['post_type'], $this->post_types)) );
+		$is_post_type = isset($qv['post_type']) && (in_array($qv['post_type'], $this->post_types) ||
+			 (is_array($qv['post_type']) && array_intersect($qv['post_type'], $this->post_types)) );
 
 		// FIXME to generalize as I probably forget things
-		$is_archive = (count($query->query) == 1 && isset($qvars['paged']) && $qvars['paged']) ||
-			(isset($qvars['m']) && $qvars['m']) ||
-			(isset($qvars['author']) && $qvars['author']) ||
-			(isset($qvars['post_type']) && is_post_type_archive() && $is_post_type);
+		$is_archive = (count($query->query) == 1 && isset($qv['paged']) && $qv['paged']) ||
+			(isset($qv['m']) && $qv['m']) ||
+			(isset($qv['author']) && $qv['author']) ||
+			(isset($qv['post_type']) && is_post_type_archive() && $is_post_type);
 
 		// sets 404 when the language is not set for archives needing the language in the url
-		if (!$this->options['hide_default'] && !isset($qvars['lang']) && !$GLOBALS['wp_rewrite']->using_permalinks() && $is_archive)
+		if (!$this->options['hide_default'] && !isset($qv['lang']) && !$GLOBALS['wp_rewrite']->using_permalinks() && $is_archive)
 			$query->set_404();
 
 		// sets the language in case we hide the default language
-		if ($this->options['hide_default'] && !isset($qvars['lang']) && ($is_archive || (count($query->query) == 1 && isset($qvars['feed']) && $qvars['feed']) ))
+		if ($this->options['hide_default'] && !isset($qv['lang']) && ($is_archive || is_search() || (count($query->query) == 1 && isset($qv['feed']) && $qv['feed']) ))
 			$query->set('lang', $this->options['default_lang']);
 
 		// allow filtering recent posts and secondary queries by the current language
 		// take care not to break queries for non visible post types such as nav_menu_items, attachments...
-		if (/*$query->is_home && */$this->curlang && (!isset($qvars['post_type']) || $is_post_type ))
+		if (/*$query->is_home && */$this->curlang && (!isset($qv['post_type']) || $is_post_type ))
 			$query->set('lang', $this->curlang->slug);
 
 		// remove pages query when the language is set unless we do a search
 		// FIXME is only search broken by this ?
-		if (isset($qvars['lang']) && $qvars['lang'] && !isset($qvars['post_type']) && !is_search())
+		if (isset($qv['lang']) && $qv['lang'] && !isset($qv['post_type']) && !is_search())
 			$query->set('post_type', 'post');
 
 		// unset the is_archive flag for language pages to prevent loading the archive template
 		// keep archive flag for comment feed otherwise the language filter does not work
-		if (isset($qvars['lang']) && $qvars['lang'] && !is_comment_feed() &&
+		if (isset($qv['lang']) && $qv['lang'] && !is_comment_feed() &&
 			!is_post_type_archive() && !is_date() && !is_author() && !is_category() && !is_tag() && !is_tax('post_format'))
 			$query->is_archive = false;
 
 		// unset the is_tax flag for authors pages and post types archives
 		// FIXME Probably I should do this for other cases
-		if (isset($qvars['lang']) && $qvars['lang'] && (is_author() || is_post_type_archive() || is_date())) {
+		if (isset($qv['lang']) && $qv['lang'] && (is_author() || is_post_type_archive() || is_date() || is_search())) {
 			$query->is_tax = false;
 			unset($query->queried_object);
 		}
 
 		// sets a language for theme preview
-		if ($qvars['preview'])
+		if (is_preview() && is_front_page()) {
+			$this->curlang = $this->get_current_language();
 			$query->set('lang', $this->curlang->slug);
+		}
 
 		// to avoid conflict beetwen taxonomies
 		if (isset($query->tax_query->queries))
@@ -652,7 +654,7 @@ class Polylang_Core extends Polylang_base {
 			return $this->translation_url[$language->slug];
 
 		global $wp_query, $wp_rewrite;
-		$qvars = $wp_query->query;
+		$qv = $wp_query->query;
 		$hide = $this->options['default_lang'] == $language->slug && $this->options['hide_default'];
 
 		// post and attachment
@@ -688,22 +690,22 @@ class Polylang_Core extends Polylang_base {
 					remove_filter($filter, array(&$this, 'archive_link'));
 
 				if (is_author())
-					$url = $this->add_language_to_link(get_author_posts_url(0, $qvars['author_name']), $language);
+					$url = $this->add_language_to_link(get_author_posts_url(0, $qv['author_name']), $language);
 
 				if (is_year())
-					$url = $this->add_language_to_link(get_year_link($qvars['year']), $language);
+					$url = $this->add_language_to_link(get_year_link($qv['year']), $language);
 
 				if (is_month())
-					$url = $this->add_language_to_link(get_month_link($qvars['year'], $qvars['monthnum']), $language);
+					$url = $this->add_language_to_link(get_month_link($qv['year'], $qv['monthnum']), $language);
 
 				if (is_day())
-					$url = $this->add_language_to_link(get_day_link($qvars['year'], $qvars['monthnum'], $qvars['day']), $language);
+					$url = $this->add_language_to_link(get_day_link($qv['year'], $qv['monthnum'], $qv['day']), $language);
 
 				if (is_post_type_archive())
-					$url = $this->add_language_to_link(get_post_type_archive_link($qvars['post_type']), $language);
+					$url = $this->add_language_to_link(get_post_type_archive_link($qv['post_type']), $language);
 
 				if (is_tax('post_format'))
-					$url = $this->add_language_to_link(get_post_format_link($qvars['post_format']), $language);
+					$url = $this->add_language_to_link(get_post_format_link($qv['post_format']), $language);
 
 				// put our language filters again
 				add_filter('term_link', array(&$this, 'term_link'), 10, 3);

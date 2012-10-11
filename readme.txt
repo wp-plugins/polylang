@@ -92,6 +92,12 @@ Every suggestions are welcome.
 
 == Changelog ==
 
+= 0.9.4 =
+
+* Bug correction: some issues with string translations
+* Bug correction: search is not filtered by the (default) language when the language is set by content and the language code is hidden for the default language
+* Bug correction: post & page preview urls are broken when adding the language code to all urls 
+
 = 0.9.3 (2012-10-08) =
 
 * Add Bulgarian translation contributed by [pavelsof](http://wordpress.org/support/profile/pavelsof)

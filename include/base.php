@@ -201,8 +201,14 @@ abstract class Polylang_Base {
 		if (isset($this->links[$link]))
 			return $this->links[$link];
 
-		return $this->links[$link] = ('post_type_link' == current_filter() && !in_array($post->post_type, $this->post_types)) ?
-			$link : $this->add_language_to_link($link, $this->get_post_language('_get_page_link' == current_filter() ? $post : $post->ID));
+		if ('post_type_link' == current_filter() && !in_array($post->post_type, $this->post_types))
+			return $this->links[$link] = $link;
+
+		if ('_get_page_link' == current_filter()) // this filter uses the ID instead of the post object
+			$post = get_post($post);
+
+		// /!\ when post_status in not "publish", WP does not use pretty permalinks
+		return $this->links[$link] = $post->post_status != 'publish' ? $link : $this->add_language_to_link($link, $this->get_post_language($post->ID));
 	}
 
 	// modifies term link
