@@ -113,9 +113,8 @@ class Polylang_Core extends Polylang_base {
 		add_filter('widget_display_callback', array(&$this, 'widget_display_callback'), 10, 3);
 
 		// strings translation (must be applied before WordPress applies its default formatting filters)
-		add_filter('widget_title', 'pll__', 1);
-		add_filter('option_blogname', 'pll__', 1);
-		add_filter('option_blogdescription', 'pll__', 1);
+		foreach (array('widget_title', 'option_blogname', 'option_blogdescription', 'option_date_format', 'option_time_format') as $filter)
+			add_filter($filter, 'pll__', 1);
 
 		// translates biography
 		add_filter('get_user_metadata', array(&$this,'get_user_metadata'), 10, 4);

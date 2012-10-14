@@ -6,6 +6,7 @@
 // [3] => not set for ltr scripts, 'rtl' otherwise
 $languages = array(
 	array('ar', 'ar', 'العربية', 'rtl'),
+	array('be', 'be_BY', 'Беларуская мова'),
 	array('bg', 'bg_BG', 'български'),
 	array('bs', 'bs_BA', 'Bosanski'),
 	array('ca', 'ca', 'Català'),

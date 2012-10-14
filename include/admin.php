@@ -415,6 +415,8 @@ class Polylang_Admin extends Polylang_Admin_Base {
 		// WP strings
 		$this->register_string(__('Site Title'), get_option('blogname'));
 		$this->register_string(__('Tagline'), get_option('blogdescription'));
+		$this->register_string(__('Date Format'), get_option('date_format'));
+		$this->register_string(__('Time Format'), get_option('time_format'));
 
 		// widgets titles
 		$sidebars = wp_get_sidebars_widgets();
