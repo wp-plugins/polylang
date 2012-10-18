@@ -531,8 +531,7 @@ class Polylang_Core extends Polylang_base {
 
 	// modifies the page link in case the front page is not in the default language
 	function page_link($link, $id) {
-		if ($this->options['redirect_lang'] && $this->page_on_front) {
-			$lang = $lang = $this->get_post_language($id);
+		if ($this->options['redirect_lang'] && $this->page_on_front && $lang = $this->get_post_language($id)) {
 			if (!isset($this->posts[$lang->slug][$this->page_on_front]))
 				$this->posts[$lang->slug][$this->page_on_front] = $this->get_post($this->page_on_front, $lang);
 			if ($id == $this->posts[$lang->slug][$this->page_on_front])
