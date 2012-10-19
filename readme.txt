@@ -101,7 +101,7 @@ Every suggestions are welcome.
 * Bug correction: search is not filtered by the (default) language when the language is set by content and the language code is hidden for the default language
 * Bug correction: posts & pages preview urls are broken when adding the language code to all urls
 * Bug correction: automatically added new top-level pages to menus are not filtered by language
-* Bug correction: the admin language filter messes the categories languages when editing a post
+* Bug correction: the admin language filter messes the categories languages when editing a post and the parent dropdown list when editing a category
 
 = 0.9.3 (2012-10-08) =
 

@@ -689,8 +689,8 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 			$lang = $this->get_language($_GET['new_lang']);
 
 		// the language filter selection has just changed
-		// test $screen->base != 'post' to avoid interference between the language filter and the post language selection
-		elseif (isset($_GET['lang']) && $_GET['lang'] && $screen->base != 'post') {
+		// test $screen->base to avoid interference between the language filter and the post language selection and the category parent dropdown list
+		elseif (isset($_GET['lang']) && $_GET['lang'] && !in_array($screen->base, array('post', 'edit-tags'))) {
 			if ($_GET['lang'] != 'all')
 				$lang = $this->get_language($_GET['lang']);
 			elseif ($screen->base == 'edit-tags' && isset($args['class']))
@@ -698,7 +698,8 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		}
 
 		// again the language filter
-		elseif ($lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true) && $screen->base != 'post')
+		elseif (($lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true)) &&
+			$screen->base != 'post' && !($screen->base == 'edit-tags' && isset($args['class']))) // don't apply to post edit and the category parent dropdown list
 		 	$lang = $this->get_language($lg);
 
 		elseif (isset($_GET['post']))
