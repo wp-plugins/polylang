@@ -808,18 +808,18 @@ class Polylang_Core extends Polylang_base {
 		if ($language == '')
 			$language = $this->curlang;
 
-		if (isset($this->home_urls[$language->slug]))
-			return $this->home_urls[$language->slug];
+		if (isset($this->home_urls[$language->slug][$is_search]))
+			return $this->home_urls[$language->slug][$is_search];
 
 		if ($this->options['default_lang'] == $language->slug && $this->options['hide_default'])
-			return $this->home_urls[$language->slug] = trailingslashit($this->home);
+			return $this->home_urls[$language->slug][$is_search] = trailingslashit($this->home);
 
 		// a static page is used as front page : /!\ don't use get_page_link to avoid infinite loop
 		// don't use this for search form
 		if (!$is_search && $this->page_on_front && $id = $this->get_post($this->page_on_front, $language))
-			return $this->home_urls[$language->slug] = $this->page_link('', $id);
+			return $this->home_urls[$language->slug][$is_search] = $this->page_link('', $id);
 
-		return $this->home_urls[$language->slug] = get_term_link($language, 'language');
+		return $this->home_urls[$language->slug][$is_search] = get_term_link($language, 'language');
 	}
 
 	// displays (or returns) the language switcher

@@ -102,6 +102,7 @@ Every suggestions are welcome.
 * Bug correction: posts & pages preview urls are broken when adding the language code to all urls
 * Bug correction: automatically added new top-level pages to menus are not filtered by language
 * Bug correction: the admin language filter messes the categories languages when editing a post and the parent dropdown list when editing a category
+* Bug correction: search form does not work when using a static front page (introduced in 0.9.2)
 
 = 0.9.3 (2012-10-08) =
 
