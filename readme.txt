@@ -96,7 +96,8 @@ Every suggestions are welcome.
 
 * Add Belarusian translation contributed by [Alexander Markevitch](http://fourfeathers.by/)
 * Add Belarusian (be_BY) to predefined languages list (automatic download and update of language files won't work)
-* Add the possibility to translate the date format and time format 
+* Add the possibility to translate the date format and time format
+* Add compatibility with the 'icl_get_home_url' function from the WPML API
 * Bug correction: still some issues with string translations
 * Bug correction: search is not filtered by the (default) language when the language is set by content and the language code is hidden for the default language
 * Bug correction: posts & pages preview urls are broken when adding the language code to all urls
