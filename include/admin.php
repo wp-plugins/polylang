@@ -7,6 +7,16 @@ class Polylang_Admin extends Polylang_Admin_Base {
 
 	function __construct() {
 		parent::__construct();
+
+		// adds the about box the languages admin panel
+		add_action('admin_init',  array(&$this, 'admin_init'));
+	}
+
+	// adds the about box the languages admin panel
+	function admin_init() {
+		// test of $_GET['tab'] avoids displaying the automatically generated screen options on other tabs
+		if (PLL_DISPLAY_ABOUT && (!isset($_GET['tab']) || $_GET['tab'] == 'lang'))
+			add_meta_box('pll_about_box', __('About Polylang', 'polylang'), array(&$this, 'about'), 'settings_page_mlang', 'normal', 'high');
 	}
 
 	// displays the about metabox
@@ -17,12 +27,11 @@ class Polylang_Admin extends Polylang_Admin_Base {
 	// used to update the translation when a language slug has been modified
 	function update_translations($type, $ids, $old_slug) {
 		foreach ($ids as $id) {
-			$tr = get_metadata($type, $id, '_translations', true);
+			$tr = $this->get_translations($type, $id);
 			if ($tr) {
-				$tr = unserialize($tr);
 				$tr[$_POST['slug']] = $tr[$old_slug];
 				unset($tr[$old_slug]);
-				update_metadata($type, $id, '_translations', serialize($tr));
+				update_metadata($type, (int) $id, '_translations', $tr);
 			}
 		}
 	}
@@ -30,11 +39,10 @@ class Polylang_Admin extends Polylang_Admin_Base {
 	// used to delete the translation when a language is deleted
 	function delete_translations($type, $ids, $old_slug) {
 		foreach ($ids as $id) {
-			$tr = get_metadata($type, $id, '_translations', true);
+			$tr = $this->get_translations($type, $id);
 			if ($tr) {
-				$tr = unserialize($tr);
 				unset($tr[$old_slug]);
-				update_metadata($type, $id, '_translations', serialize($tr));
+				update_metadata($type, (int) $id, '_translations', $tr);
 			}
 		}
 	}
@@ -49,7 +57,7 @@ class Polylang_Admin extends Polylang_Admin_Base {
 		$menu_lang = get_option('polylang_nav_menus');
 
 		// for widgets
-		$widget_lang = get_option('polylang_widgets');
+		$widget_lang = get_option('polylang_widgets', array()); // returns empty array if not set yet
 
 		$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 
@@ -101,8 +109,10 @@ class Polylang_Admin extends Polylang_Admin_Base {
 					}
 
 					// delete menus locations
-					foreach ($locations as $location => $description)
-						unset($menu_lang[$location][$lang_slug]);
+					foreach ($locations as $location => $description) {
+						if (isset($menu_lang[$location][$lang_slug]))
+							unset($menu_lang[$location][$lang_slug]);
+					}
 					update_option('polylang_nav_menus', $menu_lang);
 
 					// delete language option in widgets
@@ -133,9 +143,9 @@ class Polylang_Admin extends Polylang_Admin_Base {
 						else
 							unset($options['default_lang']);
 						update_option('polylang', $options);
-
-						flush_rewrite_rules(); // refresh rewrite rules
 					}
+
+					flush_rewrite_rules(); // refresh rewrite rules
 				}
 				wp_redirect('admin.php?page=mlang'); // to refresh the page (possible thanks to the $_GET['noheader']=true)
 				exit;
@@ -259,9 +269,8 @@ class Polylang_Admin extends Polylang_Admin_Base {
 				flush_rewrite_rules();
 
 				// fills existing posts & terms with default language
-				if (isset($_POST['fill_languages'])) {
+				if (isset($_POST['fill_languages']) && $nolang = $this->get_objects_with_no_lang()) {
 					global $wpdb;
-					$nolang = $this->get_objects_with_no_lang();
 					$lang = $this->get_language($options['default_lang']);
 
 					$values = array();
@@ -279,6 +288,7 @@ class Polylang_Admin extends Polylang_Admin_Base {
 
 					if ($values)
 						$wpdb->query("INSERT INTO $wpdb->termmeta (term_id, meta_key, meta_value) VALUES " . implode(',', $values));
+
 				}
 				break;
 
@@ -394,10 +404,8 @@ class Polylang_Admin extends Polylang_Admin_Base {
 
 		global $wpdb;
 		$terms = get_terms($this->taxonomies, array('get'=>'all', 'fields'=>'ids'));
-		$tr_terms = $wpdb->get_col("SELECT t.term_id FROM $wpdb->terms AS t
-			LEFT JOIN $wpdb->termmeta AS tm ON t.term_id = tm.term_id
-			WHERE tm.meta_key = '_language'");
-		$terms = array_diff($terms, $tr_terms);
+		$tr_terms = $wpdb->get_col("SELECT term_id FROM $wpdb->termmeta WHERE meta_key = '_language'");
+		$terms = array_unique(array_diff($terms, $tr_terms), SORT_NUMERIC); // array_unique to avoid duplicates if a term is in more than one taxonomy
 
 		return apply_filters('pll_get_objects_with_no_lang', empty($posts) && empty($terms) ? false : array('posts' => $posts, 'terms' => $terms));
 	}
@@ -408,6 +416,8 @@ class Polylang_Admin extends Polylang_Admin_Base {
 		// WP strings
 		$this->register_string(__('Site Title'), get_option('blogname'));
 		$this->register_string(__('Tagline'), get_option('blogdescription'));
+		$this->register_string(__('Date Format'), get_option('date_format'));
+		$this->register_string(__('Time Format'), get_option('time_format'));
 
 		// widgets titles
 		$sidebars = wp_get_sidebars_widgets();

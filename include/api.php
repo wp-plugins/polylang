@@ -48,4 +48,24 @@ function pll__($string) {
 function pll_e($string) {
 	_e($string, 'pll_string');
 }
+
+// compatibility with WPML API
+if (!function_exists('icl_get_home_url')) {
+	function icl_get_home_url() {
+		return pll_home_url();
+	}
+}
+
+if (!function_exists('icl_register_string')) {
+	function icl_register_string($context, $name, $string) {
+		pll_register_string($name, $string);
+	}
+}
+
+if (!function_exists('icl_t')) {
+	function icl_t($context, $name, $string) {
+		return pll__($string);
+	}
+}
+
 ?>

@@ -2,12 +2,11 @@
 
 // all modifications of the WordPress admin ui
 class Polylang_Admin_Filters extends Polylang_Admin_Base {
-
 	function __construct() {
 		parent::__construct();
 
 		// additionnal filters and actions
-		add_action('admin_init',  array(&$this, 'admin_init'));
+		add_action('admin_init', array(&$this, 'admin_init'));
 
 		// remove the customize menu section as it is unusable with Polylang
 		add_action('customize_register', array(&$this, 'customize_register'), 20); // since WP 3.4
@@ -30,8 +29,8 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 		// add the language and translations columns in 'All Posts', 'All Pages' and 'Media library' panels
 		foreach (PLL_MEDIA_SUPPORT ? array('posts', 'pages', 'media') : array('posts', 'pages') as $type) {
-			add_filter('manage_'.$type.'_columns',  array(&$this, 'add_post_column'), 10, 2);
-	    add_action('manage_'.$type.'_custom_column', array(&$this, 'post_column'), 10, 2);
+			add_filter('manage_'.$type.'_columns', array(&$this, 'add_post_column'), 10, 2);
+			add_action('manage_'.$type.'_custom_column', array(&$this, 'post_column'), 10, 2);
 		}
 
 		// quick edit and bulk edit
@@ -80,14 +79,14 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 		foreach ($this->taxonomies as $tax) {
 			// adds the language field in the 'Categories' and 'Post Tags' panels
-			add_action($tax.'_add_form_fields',  array(&$this, 'add_term_form'));
+			add_action($tax.'_add_form_fields', array(&$this, 'add_term_form'));
 
 			// adds the language field and translations tables in the 'Edit Category' and 'Edit Tag' panels
-			add_action($tax.'_edit_form_fields',  array(&$this, 'edit_term_form'));
+			add_action($tax.'_edit_form_fields', array(&$this, 'edit_term_form'));
 
 			// adds the language column in the 'Categories' and 'Post Tags' tables
 			add_filter('manage_edit-'.$tax.'_columns', array(&$this, 'add_term_column'));
-		  add_action('manage_'.$tax.'_custom_column', array(&$this, 'term_column'), 10, 3);
+			add_action('manage_'.$tax.'_custom_column', array(&$this, 'term_column'), 10, 3);
 
 			// adds action related to languages when deleting categories and post tags
 			add_action('delete_'.$tax, array(&$this, 'delete_term'));
@@ -100,6 +99,9 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 		// ajax response for edit term form
 		add_action('wp_ajax_term_lang_choice', array(&$this,'term_lang_choice'));
+
+		// filter _wp_auto_add_pages_to_menu by language
+		add_action('transition_post_status', array(&$this, 'auto_add_pages_to_menu'), 5, 3); // before _wp_auto_add_pages_to_menu
 
 		// modifies the theme location nav menu metabox
 		add_filter('admin_head-nav-menus.php', array(&$this, 'nav_menu_theme_locations'));
@@ -160,12 +162,12 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		$post_type = isset($GLOBALS['post_type']) ? $GLOBALS['post_type'] : $_POST['post_type']; // 2nd case for quick edit
 		$language = $this->get_language(substr($column, 9));
 
-		// hidden field containing the post language for quick edit 
+		// hidden field containing the post language for quick edit
 		if ($column == $this->get_first_language_column())
 			printf('<input type="hidden" name="lang_%d" value="%s" />', $post_id, $lang->slug);
 
 		// link to edit post (or a translation)
-		if ($id = $this->get_post($post_id, $language)) 
+		if ($id = $this->get_post($post_id, $language))
 			printf('<a class="%1$s" title="%2$s" href="%3$s"></a>',
 				$id == $post_id ? 'pll_icon_tick' : 'pll_icon_edit',
 				esc_attr(get_post($id)->post_title),
@@ -189,7 +191,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 			$name = $type == 'edit-tags' ? 'inline_lang_choice' : 'post_lang_choice';
 
 			$args = current_filter() == 'bulk_edit_custom_box' ?
-				array('name' => $name, 'add_option' => __('&mdash; No Change &mdash;')) :
+				array('name' => $name, 'add_options' => array(array('value' => -1, 'text' => __('&mdash; No Change &mdash;')))) :
 				array('name' => $name);
 
 			echo '<fieldset class="inline-edit-col-left"><div class="inline-edit-col">';
@@ -201,23 +203,23 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 	// filters posts, pages and media by language
 	function parse_query($query) {
-    $qvars = &$query->query_vars;
+		$qvars = &$query->query_vars;
 
 		// do not filter post types such as nav_menu_item
 		if (isset($qvars['post_type']) && !in_array($qvars['post_type'], $this->post_types)) {
 			if (isset($qvars['lang']))
-				unset ($qvars['lang']);				
+				unset ($qvars['lang']);
 			return $query;
 		}
 
 		// filters the list of media by language when uploading from post
-    if ($GLOBALS['pagenow'] == 'media-upload.php' && isset($_GET['post_id']) && $lang = $this->get_post_language($_GET['post_id']))
+		if ($GLOBALS['pagenow'] == 'media-upload.php' && isset($_GET['post_id']) && $lang = $this->get_post_language($_GET['post_id']))
 			$query->set('lang', $lang->slug);
 
 		if (!isset($qvars['lang']) && $lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true))
 			$qvars['lang'] = $lg;
 
-		if (isset($qvars['lang']) &&  $qvars['lang'] == 'all')
+		if (isset($qvars['lang']) && $qvars['lang'] == 'all')
 			unset ($qvars['lang']);
 
 		return $query;
@@ -244,7 +246,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		$post_type = get_post_type($post_ID);
 
 		$lang = ($lg = $this->get_post_language($post_ID)) ? $lg :
-			(isset($_GET['new_lang']) ?  $this->get_language($_GET['new_lang']) :
+			(isset($_GET['new_lang']) ? $this->get_language($_GET['new_lang']) :
 			$this->get_default_language());
 
 		// NOTE: the class "tags-input" allows to include the field in the autosave $_POST (see autosave.js)
@@ -263,6 +265,8 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		$post_ID = $_POST['post_id'];
 		$post_type = get_post_type($post_ID);
 		$lang = $this->get_language($_POST['lang']);
+
+		$this->set_post_language($post_ID, $lang); // save language, useful to set the language when uploading media from post
 
 		ob_start();
 		if ($lang)
@@ -392,7 +396,6 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 	// copy or synchronize terms and metas
 	function copy_post_metas($from, $to, $lang, $sync = false) {
-
 		// copy or synchronize terms
 		foreach ($this->taxonomies as $tax) {
 			$newterms = array();
@@ -444,17 +447,23 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		if (!in_array($post->post_type, $this->post_types))
 			return;
 
+		// bulk edit does not modify the language
+		if (isset($_GET['bulk_edit']) && $_REQUEST['post_lang_choice'] == -1)
+			return;
+
 		if ($id = wp_is_post_revision($post_id))
 			$post_id = $id;
 
 		// save language
 		if (isset($_REQUEST['post_lang_choice'])) {
-			if ($this->get_post_language($post_id)->slug != $_REQUEST['post_lang_choice'])
+			if (($lang = $this->get_post_language($post_id)) && $lang->slug != $_REQUEST['post_lang_choice'])
 				$this->delete_translation('post', $post_id); // in case the language is modified using inline edit
 			$this->set_post_language($post_id, $_REQUEST['post_lang_choice']);
 		}
 		elseif (isset($_GET['new_lang']))
 			$this->set_post_language($post_id, $_GET['new_lang']);
+		elseif (isset($_REQUEST['action']) && in_array($_REQUEST['action'], array('post-quickpress-save', 'post-quickpress-publish')))
+			$this->set_post_language($post_id, $this->get_default_language()); // default language for QuickPress
 		elseif ($this->get_post_language($post_id))
 			{} // avoids breaking the language if post is updated outside the edit post page (thanks to Gonçalo Peres)
 		else
@@ -537,7 +546,11 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		$fields['language'] = array(
 			'label' => __('Language', 'polylang'),
 			'input' => 'html',
-			'html'  => $this->dropdown_languages(array('name' => "attachments[$post_id][language]", 'class' => "media_lang_choice", 'selected' => $lang ? $lang->slug : ''))
+			'html'  => $this->dropdown_languages(array(
+				'name'     => "attachments[$post_id][language]",
+				'class'    => "media_lang_choice",
+				'selected' => $lang ? $lang->slug : ''
+			))
 		);
 
 		// don't show translations except on edit media panel
@@ -587,8 +600,9 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		$post = get_post($_GET['from_media']);
 		$post_id = $post->ID;
 
-		$post->ID = null; // to create a new attachment
-		$post->post_parent = ($post->post_parent && $tr_parent = $this->get_translation('post', $post->post_parent, $_GET['new_lang'])) ? $tr_parent : 0; // translates attachment parent if exists
+		// create a new attachment (translate attachment parent if exists)
+		$post->ID = null; // will force the creation
+		$post->post_parent = ($post->post_parent && $tr_parent = $this->get_translation('post', $post->post_parent, $_GET['new_lang'])) ? $tr_parent : 0;
 		$tr_id = wp_insert_attachment($post);
 		add_post_meta($tr_id, '_wp_attachment_metadata', get_post_meta($post_id, '_wp_attachment_metadata', true));
 		add_post_meta($tr_id, '_wp_attached_file', get_post_meta($post_id, '_wp_attached_file', true));
@@ -625,7 +639,10 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 	function wp_delete_file($file) {
 		global $wpdb;
 		$uploadpath = wp_upload_dir();
-		$ids = $wpdb->get_col($wpdb->prepare("SELECT `post_id` FROM $wpdb->postmeta WHERE `meta_key` = '_wp_attached_file' AND `meta_value` = '%s'", ltrim($file, $uploadpath['basedir'])));
+		$ids = $wpdb->get_col($wpdb->prepare(
+			"SELECT `post_id` FROM $wpdb->postmeta WHERE `meta_key` = '_wp_attached_file' AND `meta_value` = '%s'",
+			ltrim($file, $uploadpath['basedir'])
+		));
 
 		if (!empty($ids)) {
 			// regenerate intermediate sizes if it's an image (since we could not prevent WP deleting them before)
@@ -671,14 +688,18 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		elseif (isset($_GET['new_lang']) && $_GET['new_lang'])
 			$lang = $this->get_language($_GET['new_lang']);
 
-		elseif (isset($_GET['lang']) && $_GET['lang']) {
+		// the language filter selection has just changed
+		// test $screen->base to avoid interference between the language filter and the post language selection and the category parent dropdown list
+		elseif (isset($_GET['lang']) && $_GET['lang'] && !in_array($screen->base, array('post', 'edit-tags'))) {
 			if ($_GET['lang'] != 'all')
 				$lang = $this->get_language($_GET['lang']);
 			elseif ($screen->base == 'edit-tags' && isset($args['class']))
 				$lang = $this->get_default_language(); // parent dropdown
 		}
 
-		elseif ($lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true))
+		// again the language filter
+		elseif (($lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true)) &&
+			$screen->base != 'post' && !($screen->base == 'edit-tags' && isset($args['class']))) // don't apply to post edit and the category parent dropdown list
 		 	$lang = $this->get_language($lg);
 
 		elseif (isset($_GET['post']))
@@ -738,7 +759,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 	// adds the language column (before the posts column) in the 'Categories' or 'Post Tags' table
 	function add_term_column($columns) {
-    return $this->add_column($columns, 'posts');
+		return $this->add_column($columns, 'posts');
 	}
 
 	// fills the language column in the 'Categories' or 'Post Tags' table
@@ -790,7 +811,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 			// don't use term_lang_choice for quick edit to avoid conflict with the "add term" form
 			if ($this->get_term_language($term_id)->slug != $_POST['inline_lang_choice'])
 				$this->delete_translation('term', $term_id);
-			$this->set_term_language($term_id, $_POST['inline_lang_choice']); 
+			$this->set_term_language($term_id, $_POST['inline_lang_choice']);
 		}
 		elseif (isset($_POST['post_lang_choice']))
 			$this->set_term_language($term_id, $_POST['post_lang_choice']);
@@ -916,6 +937,24 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		$x->send();
 	}
 
+	// filter _wp_auto_add_pages_to_menu by language
+	function auto_add_pages_to_menu( $new_status, $old_status, $post ) {
+		if ('publish' != $new_status || 'publish' == $old_status || 'page' != $post->post_type || ! empty($post->post_parent))
+			return;
+
+		// get all the menus in the post language
+		$menus = array();
+		$lang = $this->get_post_language($post->ID);
+		$menu_lang = get_option('polylang_nav_menus');
+		foreach ($menu_lang as $menu) {
+			if (isset($menu[$lang->slug]))
+				$menus[] = $menu[$lang->slug];
+		}
+		$menus = implode(',', $menus);
+
+		add_filter('option_nav_menu_options', create_function('$a', "\$a['auto_add'] = array_intersect(\$a['auto_add'], array($menus)); return \$a;"));
+	}
+
 	// modifies the theme location nav menu metabox
 	// thanks to: http://wordpress.stackexchange.com/questions/2770/how-to-add-a-custom-metabox-to-the-menu-management-admin-screen
 	function nav_menu_theme_locations() {
@@ -947,10 +986,10 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 			esc_attr( $widget->id.'_lang_choice'),
 			__('The widget is displayed for:', 'polylang'),
 			$this->dropdown_languages(array(
-				'name'       =>  $widget->id.'_lang_choice',
-				'class'      => 'tags-input',
-				'add_option' => __('All languages', 'polylang'),
-				'selected'   => isset($widget_lang[$widget->id]) ? $widget_lang[$widget->id] : ''
+				'name'        => $widget->id.'_lang_choice',
+				'class'       => 'tags-input',
+				'add_options' => array(array('value' => 0, 'text' => __('All languages', 'polylang'))),
+				'selected'    => isset($widget_lang[$widget->id]) ? $widget_lang[$widget->id] : ''
 			))
 		);
 	}
@@ -975,10 +1014,10 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		printf("<tr><th><label for='user_lang'>%s</label></th><td>%s</td></tr>",
 			__('Admin language', 'polylang'),
 			$this->dropdown_languages(array(
-				'name'       => 'user_lang',
-				'value'      => 'description',
-				'selected'   => get_user_meta($profileuser->ID, 'user_lang', true),
-				'add_option' => __('Wordpress default', 'polylang')
+				'name'        => 'user_lang',
+				'value'       => 'description',
+				'selected'    => get_user_meta($profileuser->ID, 'user_lang', true),
+				'add_options' => array(array('value' => 0, 'text' => __('Wordpress default', 'polylang')))
 			))
 		);
 
@@ -1017,9 +1056,8 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 	// returns either the user preferred language or the default language
 	function get_default_language() {
-		return apply_filters('pll_get_default_language', ($lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true)) ?
-			$this->get_language($lg) :
-			$this->get_language($this->options['default_lang']));
+		$default_language = $this->get_language(($lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true)) ? $lg : $this->options['default_lang']);
+		return apply_filters('pll_get_default_language', $default_language);
 	}
 
 } // class Polylang_Admin_Filters
