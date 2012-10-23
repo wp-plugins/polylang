@@ -732,14 +732,12 @@ class Polylang_Core extends Polylang_base {
 	}
 
 	// filters the nav menus according to the current language when called from get_nav_menu_locations()
-	// mainly for Artisteer generated themes
+	// mainly for Artisteer generated themes and themes which test has_nav_menu
 	function nav_menu_locations($menus) {
-		if (is_array($menus)) {
-			foreach($menus as $location => $menu) {
-				$menu_lang = get_option('polylang_nav_menus');
-				if (isset($menu_lang[$location][$this->curlang->slug]))
-					$menus[$location] = $menu_lang[$location][$this->curlang->slug];
-			}
+		$menu_lang = get_option('polylang_nav_menus');
+		foreach(get_registered_nav_menus() as $location => $menu) {
+			if (isset($menu_lang[$location][$this->curlang->slug]))
+				$menus[$location] = $menu_lang[$location][$this->curlang->slug];
 		}
 		return $menus;
 	}

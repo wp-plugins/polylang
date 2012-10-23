@@ -57,7 +57,7 @@ class Polylang_Admin extends Polylang_Admin_Base {
 		$menu_lang = get_option('polylang_nav_menus');
 
 		// for widgets
-		$widget_lang = get_option('polylang_widgets');
+		$widget_lang = get_option('polylang_widgets', array()); // returns empty array if not set yet
 
 		$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 
@@ -109,8 +109,10 @@ class Polylang_Admin extends Polylang_Admin_Base {
 					}
 
 					// delete menus locations
-					foreach ($locations as $location => $description)
-						unset($menu_lang[$location][$lang_slug]);
+					foreach ($locations as $location => $description) {
+						if (isset($menu_lang[$location][$lang_slug]))
+							unset($menu_lang[$location][$lang_slug]);
+					}
 					update_option('polylang_nav_menus', $menu_lang);
 
 					// delete language option in widgets
@@ -267,9 +269,8 @@ class Polylang_Admin extends Polylang_Admin_Base {
 				flush_rewrite_rules();
 
 				// fills existing posts & terms with default language
-				if (isset($_POST['fill_languages'])) {
+				if (isset($_POST['fill_languages']) && $nolang = $this->get_objects_with_no_lang()) {
 					global $wpdb;
-					$nolang = $this->get_objects_with_no_lang();
 					$lang = $this->get_language($options['default_lang']);
 
 					$values = array();
