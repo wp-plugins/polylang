@@ -92,6 +92,11 @@ Every suggestions are welcome.
 
 == Changelog ==
 
+= 0.9.5 =
+
+* Bug correction: post preview does not work when adding the language code to all urls
+* Bug correction: redirect to front page in default language when posting a comment on static front page
+
 = 0.9.4 (2012-10-23) =
 
 * Add Afrikaans translation contributed by [Kobus Joubert](http://translate3d.com/)

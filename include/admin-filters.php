@@ -942,10 +942,14 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		if ('publish' != $new_status || 'publish' == $old_status || 'page' != $post->post_type || ! empty($post->post_parent))
 			return;
 
-		// get all the menus in the post language
-		$menus = array();
 		$lang = $this->get_post_language($post->ID);
 		$menu_lang = get_option('polylang_nav_menus');
+
+		if (!$lang || !$menu_lang)
+			return;
+
+		// get all the menus in the post language
+		$menus = array();
 		foreach ($menu_lang as $menu) {
 			if (isset($menu[$lang->slug]))
 				$menus[] = $menu[$lang->slug];

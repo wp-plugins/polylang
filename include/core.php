@@ -217,10 +217,10 @@ class Polylang_Core extends Polylang_base {
 	}
 
 	// sets the language of comment
-	// useful to redirect to correct post comment url when adding the language to all url
 	function pre_comment_on_post($post_id) {
 		$this->curlang = $this->get_post_language($post_id);
-		$this->add_post_term_link_filters();
+		add_filter('page_link', array(&$this, 'page_link'), 10, 2); // useful when posting a comment on static front page in non default language
+		$this->add_post_term_link_filters(); 	// useful to redirect to correct post comment url when adding the language to all url
 	}
 
 	// sets the language when it is always included in the url
@@ -240,7 +240,8 @@ class Polylang_Core extends Polylang_base {
 		// some PHP setups turn requests for / into /index.php in REQUEST_URI
 		// thanks to Gonçalo Peres for pointing out the issue with queries unknown to WP
 		// http://wordpress.org/support/topic/plugin-polylang-language-homepage-redirection-problem-and-solution-but-incomplete?replies=4#post-2729566
-		if (str_replace('www.', '', home_url('/')) == trailingslashit((is_ssl() ? 'https://' : 'http://').str_replace('www.', '', $_SERVER['HTTP_HOST']).str_replace(array('index.php', '?'.$_SERVER['QUERY_STRING']), array('', ''), $_SERVER['REQUEST_URI'])))
+		// take care to post preview http://wordpress.org/support/topic/static-frontpage-url-parameter-url-language-information
+		if (str_replace('www.', '', home_url('/')) == trailingslashit((is_ssl() ? 'https://' : 'http://').str_replace('www.', '', $_SERVER['HTTP_HOST']).str_replace(array('index.php', '?'.$_SERVER['QUERY_STRING']), array('', ''), $_SERVER['REQUEST_URI'])) && !strpos($_SERVER['QUERY_STRING'], 'preview'))
 			$this->home_requested();
 
 		// $matches[1] is the slug of the requested language
