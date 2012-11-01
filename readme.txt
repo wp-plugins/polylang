@@ -99,6 +99,7 @@ Every suggestions are welcome.
 * Bug correction: redirect to front page in default language when posting a comment on static front page
 * Bug correction: impossible to create terms with the same name in different languages
 * Bug correction: query string added by other plugins is erased when adding the language code to all urls
+* Bug correction: redirect erase 'POST' variables on homepage when adding the language code to all urls
 
 = 0.9.4 (2012-10-23) =
 

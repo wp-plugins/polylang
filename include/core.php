@@ -372,8 +372,9 @@ class Polylang_Core extends Polylang_base {
 		// redirect to the home page in the right language
 		// test to avoid crash if get_home_url returns something wrong
 		// FIXME why this happens? http://wordpress.org/support/topic/polylang-crashes-1
+		// don't redirect if $_POST is not empty as it could break other plugins
 		// don't forget the query string which may be added by plugins even when permalinks are used
-		elseif (is_string($redirect = $this->get_home_url($this->curlang))) {
+		elseif (is_string($redirect = $this->get_home_url($this->curlang)) && empty($_POST)) {
 			wp_redirect(!$query && $_SERVER['QUERY_STRING'] ? $redirect.'?'. $_SERVER['QUERY_STRING'] : $redirect);
 			exit;
 		}
