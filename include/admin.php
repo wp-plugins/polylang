@@ -8,20 +8,23 @@ class Polylang_Admin extends Polylang_Admin_Base {
 	function __construct() {
 		parent::__construct();
 
-		// adds the about box the languages admin panel
-		add_action('admin_init',  array(&$this, 'admin_init'));
+		// adds screen options and the about box in the languages admin panel
+		add_action('load-settings_page_mlang',  array(&$this, 'load_page'));
+
+		// saves per-page value in screen option
+		add_filter('set-screen-option', create_function('$s, $o, $v', 'return $v;'), 10, 3);
 	}
 
-	// adds the about box the languages admin panel
-	function admin_init() {
+	// adds screen options and the about box in the languages admin panel
+	function load_page() {
 		// test of $_GET['tab'] avoids displaying the automatically generated screen options on other tabs
-		if (PLL_DISPLAY_ABOUT && (!isset($_GET['tab']) || $_GET['tab'] == 'lang'))
-			add_meta_box('pll_about_box', __('About Polylang', 'polylang'), array(&$this, 'about'), 'settings_page_mlang', 'normal', 'high');
-	}
+		if (PLL_DISPLAY_ABOUT && (!isset($_GET['tab']) || $_GET['tab'] == 'lang')) {
+			add_meta_box('pll_about_box', __('About Polylang', 'polylang'), create_function('',"include(PLL_INC.'/about.php');"), 'settings_page_mlang', 'normal');
+			add_screen_option('per_page', array('label' => __('Languages', 'polylang'), 'default' => 10, 'option' => 'pll_lang_per_page'));
+		}
 
-	// displays the about metabox
-	function about() {
-		include(PLL_INC.'/about.php');
+		if (isset($_GET['tab']) && $_GET['tab'] == 'strings')
+			add_screen_option('per_page', array('label' => __('Strings translations', 'polylang'), 'default' => 10, 'option' => 'pll_strings_per_page'));
 	}
 
 	// used to update the translation when a language slug has been modified

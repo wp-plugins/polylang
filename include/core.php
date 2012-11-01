@@ -201,7 +201,7 @@ class Polylang_Core extends Polylang_base {
 		elseif ((is_single() || is_page() || (is_attachment() && PLL_MEDIA_SUPPORT)) && ( ($var = get_queried_object_id()) || ($var = get_query_var('p')) || ($var = get_query_var('page_id')) || ($var = get_query_var('attachment_id')) ))
 			$lang = $this->get_post_language($var);
 
-		else {
+		elseif (isset($this->taxonomies)) {
 			foreach ($this->taxonomies as $taxonomy) {
 				if ($var = get_query_var(get_taxonomy($taxonomy)->query_var))
 					$lang = $this->get_term_language($var, $taxonomy);
@@ -240,10 +240,13 @@ class Polylang_Core extends Polylang_base {
 		// some PHP setups turn requests for / into /index.php in REQUEST_URI
 		// thanks to Gonçalo Peres for pointing out the issue with queries unknown to WP
 		// http://wordpress.org/support/topic/plugin-polylang-language-homepage-redirection-problem-and-solution-but-incomplete?replies=4#post-2729566
-		// take care to post preview http://wordpress.org/support/topic/static-frontpage-url-parameter-url-language-information
-		if (str_replace('www.', '', home_url('/')) == trailingslashit((is_ssl() ? 'https://' : 'http://').str_replace('www.', '', $_SERVER['HTTP_HOST']).str_replace(array('index.php', '?'.$_SERVER['QUERY_STRING']), array('', ''), $_SERVER['REQUEST_URI'])) && !strpos($_SERVER['QUERY_STRING'], 'preview'))
-			$this->home_requested();
-
+		if (str_replace('www.', '', home_url('/')) == trailingslashit((is_ssl() ? 'https://' : 'http://').str_replace('www.', '', $_SERVER['HTTP_HOST']).str_replace(array('index.php', '?'.$_SERVER['QUERY_STRING']), array('', ''), $_SERVER['REQUEST_URI']))) {
+			// take care to post preview http://wordpress.org/support/topic/static-frontpage-url-parameter-url-language-information
+			if (isset($_GET['preview']) && isset($_GET['p']) && $lg = $this->get_post_language($_GET['p']))
+				$this->curlang = $lg ? $lg : $this->get_language($this->options['default_lang']);
+			else
+				$this->home_requested();
+		}
 		// $matches[1] is the slug of the requested language
 		elseif ($matches)
 			$this->curlang = $this->get_language($matches[1]);
@@ -369,8 +372,9 @@ class Polylang_Core extends Polylang_base {
 		// redirect to the home page in the right language
 		// test to avoid crash if get_home_url returns something wrong
 		// FIXME why this happens? http://wordpress.org/support/topic/polylang-crashes-1
+		// don't forget the query string which may be added by plugins even when permalinks are used
 		elseif (is_string($redirect = $this->get_home_url($this->curlang))) {
-			wp_redirect($redirect);
+			wp_redirect(!$query && $_SERVER['QUERY_STRING'] ? $redirect.'?'. $_SERVER['QUERY_STRING'] : $redirect);
 			exit;
 		}
 	}

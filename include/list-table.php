@@ -69,7 +69,7 @@ class Polylang_List_Table extends WP_List_Table {
 */
 
 	function prepare_items($data = array()) {
-		$per_page = 10; // 10 languages per page
+		$per_page = $this->get_items_per_page('pll_lang_per_page');
 		$columns = $this->get_columns();
 		$hidden = array();
 		$sortable = $this->get_sortable_columns();
@@ -140,7 +140,7 @@ class Polylang_String_Table extends WP_List_Table {
 	}
 
 	function prepare_items($data = array()) {
-		$per_page = 10; // 10 strings per page
+		$per_page = $this->get_items_per_page('pll_strings_per_page');
 		$columns = $this->get_columns();
 		$hidden = array();
 		$sortable = $this->get_sortable_columns();
