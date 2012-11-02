@@ -5,6 +5,7 @@ Tags: multilingual, bilingual, translate, translation, language, multilanguage, 
 Requires at least: 3.1
 Tested up to: 3.4.2
 Stable tag: 0.9.4
+License: GPLv2 or later
 
 Polylang adds multilingual content management support to WordPress.
 
@@ -100,6 +101,7 @@ Every suggestions are welcome.
 * Bug correction: impossible to create terms with the same name in different languages
 * Bug correction: query string added by other plugins is erased when adding the language code to all urls
 * Bug correction: redirect erase 'POST' variables on homepage when adding the language code to all urls
+* Bug correction: English (en_US) loads rtl style when using a localized WordPress package with an rtl language
 
 = 0.9.4 (2012-10-23) =
 

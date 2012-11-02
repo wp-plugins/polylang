@@ -320,23 +320,21 @@ class Polylang_Core extends Polylang_base {
 			$this->add_language_filters();
 
 			if (!($this->options['force_lang'] && $GLOBALS['wp_rewrite']->using_permalinks() && PLL_LANG_EARLY)) {
-				if ($this->curlang->description != 'en_US') {
-					// now we can load text domains with the right language
-					$new_locale = get_locale();
-					foreach ($this->list_textdomains as $textdomain)
-						load_textdomain( $textdomain['domain'], str_replace($this->default_locale, $new_locale, $textdomain['mo']));
+				// now we can load text domains with the right language
+				$new_locale = get_locale();
+				foreach ($this->list_textdomains as $textdomain)
+					load_textdomain( $textdomain['domain'], str_replace($this->default_locale, $new_locale, $textdomain['mo']));
 
-					// reinitializes wp_locale for weekdays and months, as well as for text direction
-					unset($GLOBALS['wp_locale']);
-					$GLOBALS['wp_locale'] = new WP_Locale();				
-					$GLOBALS['wp_locale']->text_direction = get_metadata('term', $this->curlang->term_id, '_rtl', true) ? 'rtl' : 'ltr';
+				// reinitializes wp_locale for weekdays and months, as well as for text direction
+				unset($GLOBALS['wp_locale']);
+				$GLOBALS['wp_locale'] = new WP_Locale();				
+				$GLOBALS['wp_locale']->text_direction = get_metadata('term', $this->curlang->term_id, '_rtl', true) ? 'rtl' : 'ltr';
 
-					// translate labels of post types and taxonomies
-					foreach ($GLOBALS['wp_taxonomies'] as $tax)
-						$this->translate_labels($tax);
-					foreach ($GLOBALS['wp_post_types'] as $pt)
-						$this->translate_labels($pt);
-				}
+				// translate labels of post types and taxonomies
+				foreach ($GLOBALS['wp_taxonomies'] as $tax)
+					$this->translate_labels($tax);
+				foreach ($GLOBALS['wp_post_types'] as $pt)
+					$this->translate_labels($pt);
 
 				// and finally load user defined strings
 				$GLOBALS['l10n']['pll_string'] = $this->mo_import($this->curlang);
