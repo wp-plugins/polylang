@@ -96,12 +96,15 @@ Every suggestions are welcome.
 = 0.9.5 =
 
 * The user can now choose the number of languages and strings translations to display
+* Add compatibility with the 'icl_object_id' function and ICL_LANGUAGE_CODE and ICL_LANGUAGE_NAME constants from the WPML API
 * Bug correction: post preview does not work when adding the language code to all urls
 * Bug correction: redirect to front page in default language when posting a comment on static front page
 * Bug correction: impossible to create terms with the same name in different languages
 * Bug correction: query string added by other plugins is erased when adding the language code to all urls
 * Bug correction: redirect erase 'POST' variables on homepage when adding the language code to all urls
 * Bug correction: English (en_US) loads rtl style when using a localized WordPress package with an rtl language
+* Bug correction: on some installation strings translations do not work with some special characters
+* Bug correction: incoming links are not redirected to canonical url when adding the language code to all urls and hiding the code for the default language
 
 = 0.9.4 (2012-10-23) =
 

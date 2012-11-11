@@ -9,7 +9,7 @@ class Polylang_Widget extends WP_Widget {
 	// displays the widget
 	function widget($args, $instance) {
 		global $polylang;
-		if (!(isset($polylang) && $polylang->get_languages_list()))
+		if (!(isset($polylang) && $polylang->get_languages_list() && $list = $polylang->the_languages(array_merge($instance, array('echo' => 0)))))
 			return;
 
 		extract($args);
@@ -22,7 +22,7 @@ class Polylang_Widget extends WP_Widget {
 			echo $before_title . $title . $after_title;
 		if (!$dropdown)
 			echo "<ul>\n";
-		$polylang->the_languages($instance);
+		echo $list;
 		if (!$dropdown)
 			echo "</ul>\n";
 		echo "$after_widget\n";

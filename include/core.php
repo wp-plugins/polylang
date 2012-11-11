@@ -75,6 +75,10 @@ class Polylang_Core extends Polylang_base {
 		// prevents redirection of the homepage
 		add_filter('redirect_canonical', array(&$this, 'redirect_canonical'), 10, 2);
 
+		// redirects incoming links to the proper URL when adding the language code to all urls
+		if ($this->options['force_lang'] && get_option('permalink_structure') && PLL_LANG_EARLY)
+			add_action('template_redirect',  array(&$this, 'redirect_canonical_with_lang'), 20); // after Wordpress redirect_canonical
+
 		// adds javascript at the end of the document
 		if (!$GLOBALS['wp_rewrite']->using_permalinks() && PLL_SEARCH_FORM_JS)
 			add_action('wp_footer', array(&$this, 'wp_print_footer_scripts'));
@@ -256,6 +260,7 @@ class Polylang_Core extends Polylang_base {
 			$this->curlang = $this->get_language($this->options['default_lang']);
 
 		$GLOBALS['l10n']['pll_string'] = $this->mo_import($this->curlang);
+		do_action('pll_language_defined');
 	}
 
 	// save the default locale before we start any language manipulation
@@ -338,6 +343,7 @@ class Polylang_Core extends Polylang_base {
 
 				// and finally load user defined strings
 				$GLOBALS['l10n']['pll_string'] = $this->mo_import($this->curlang);
+				do_action('pll_language_defined');
 			}
 		}
 
@@ -555,6 +561,25 @@ class Polylang_Core extends Polylang_base {
 	// prevents redirection of the homepage when using page on front
 	function redirect_canonical($redirect_url, $requested_url) {
 		return $requested_url == home_url('/') || strpos($requested_url, $this->page_link('', get_option('page_on_front'))) !== false ? false : $redirect_url;
+	}
+
+	// redirects incoming links to the proper URL when adding the language code to all urls
+	function redirect_canonical_with_lang() {
+		$requested_url  = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+		if (is_single() || is_page()) {
+			global $post;
+			if (isset($post->ID) && in_array($post->post_type, $this->post_types))
+				$redirect_url = get_permalink((int)$post->ID);
+		}
+		elseif (is_category() || is_tag() || is_tax()) {
+			$obj = $GLOBALS['wp_query']->get_queried_object();
+			if (in_array($obj->taxonomy, $this->taxonomies))
+				$redirect_url = get_term_link((int)$obj->term_id, $obj->taxonomy);
+		}
+		if (isset($redirect_url) && !is_wp_error($redirect_url) && $redirect_url != $requested_url) {
+			wp_redirect($redirect_url, 301);
+			exit;
+		}
 	}
 
 	// adds some javascript workaround knowing it's not perfect...

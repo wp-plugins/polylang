@@ -100,6 +100,13 @@ abstract class Polylang_Base {
 		}
 	}
 
+	// returns the id of the translation of a port or term
+	// created for compatibility with the WPML API function icl_object_id
+	function object_id($id, $type, $lang) {
+		return in_array($type, $this->post_types) ? $this->get_translation('post', $id, $lang) :
+			(in_array($type, $this->taxonomies) ? $this->get_translation('term', $id, $lang) : false);
+	}
+
 	// returns the id of the translation of a post or term
 	// $type: either 'post' or 'term'
 	// $id: post id or term id

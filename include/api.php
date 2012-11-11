@@ -15,15 +15,13 @@ function pll_current_language($args = 'slug') {
 // among the post and its translations, returns the id of the post which is in the language represented by $slug
 function pll_get_post($post_id, $slug = false) {
 	global $polylang;
-	$slug = $slug ? $slug : pll_current_language();
-	return isset($polylang) && $slug ? $polylang->get_post($post_id, $slug) : null;
+	return isset($polylang) && ($slug = $slug ? $slug : pll_current_language()) ? $polylang->get_post($post_id, $slug) : null;
 }
 
 // among the term and its translations, returns the id of the term which is in the language represented by $slug
 function pll_get_term($term_id, $slug = false) {
 	global $polylang;
-	$slug = $slug ? $slug : pll_current_language();
-	return isset($polylang) && $slug ? $polylang->get_term($term_id, $slug) : null;
+	return isset($polylang) && ($slug = $slug ? $slug : pll_current_language()) ? $polylang->get_term($term_id, $slug) : null;
 }
 
 // returns the home url in the right language
@@ -50,6 +48,24 @@ function pll_e($string) {
 }
 
 // compatibility with WPML API
+add_action('pll_language_defined', 'pll_define_wpml_constants');
+
+function pll_define_wpml_constants() {
+	if(!defined('ICL_LANGUAGE_CODE'))
+    define('ICL_LANGUAGE_CODE', pll_current_language());
+
+	if(!defined('ICL_LANGUAGE_NAME'))
+    define('ICL_LANGUAGE_NAME', pll_current_language('name'));
+}
+
+if (!function_exists('icl_object_id')) {
+	function icl_object_id($id, $type, $return_original_if_missing, $lang = false) {
+		global $polylang;
+		return isset($polylang) && ($lang = $lang ? $lang : pll_current_language()) && ($tr_id = $polylang->object_id($id, $type, $lang)) ? $tr_id :
+			($return_original_if_missing ? $id : null);
+	}
+}
+
 if (!function_exists('icl_get_home_url')) {
 	function icl_get_home_url() {
 		return pll_home_url();
