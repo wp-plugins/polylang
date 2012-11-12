@@ -105,6 +105,7 @@ Every suggestions are welcome.
 * Bug correction: English (en_US) loads rtl style when using a localized WordPress package with an rtl language
 * Bug correction: on some installation strings translations do not work with some special characters
 * Bug correction: incoming links are not redirected to canonical url when adding the language code to all urls and hiding the code for the default language
+* Bug correction: search form does not work in non default language when using permalinks without trailing slash
 
 = 0.9.4 (2012-10-23) =
 

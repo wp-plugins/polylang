@@ -73,11 +73,11 @@ class Polylang_Core extends Polylang_base {
 		add_filter('page_link', array(&$this, 'page_link'), 10, 2);
 
 		// prevents redirection of the homepage
-		add_filter('redirect_canonical', array(&$this, 'redirect_canonical'), 10, 2);
+		add_filter('redirect_canonical', array(&$this, 'stop_redirect_canonical'), 10, 2);
 
 		// redirects incoming links to the proper URL when adding the language code to all urls
 		if ($this->options['force_lang'] && get_option('permalink_structure') && PLL_LANG_EARLY)
-			add_action('template_redirect',  array(&$this, 'redirect_canonical_with_lang'), 20); // after Wordpress redirect_canonical
+			add_action('template_redirect',  array(&$this, 'redirect_canonical'), 20); // after Wordpress redirect_canonical
 
 		// adds javascript at the end of the document
 		if (!$GLOBALS['wp_rewrite']->using_permalinks() && PLL_SEARCH_FORM_JS)
@@ -559,13 +559,15 @@ class Polylang_Core extends Polylang_base {
 	}
 
 	// prevents redirection of the homepage when using page on front
-	function redirect_canonical($redirect_url, $requested_url) {
+	function stop_redirect_canonical($redirect_url, $requested_url) {
 		return $requested_url == home_url('/') || strpos($requested_url, $this->page_link('', get_option('page_on_front'))) !== false ? false : $redirect_url;
 	}
 
 	// redirects incoming links to the proper URL when adding the language code to all urls
-	function redirect_canonical_with_lang() {
-		$requested_url  = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+	function redirect_canonical($requested_url = false, $do_redirect = true) {
+		if (!$requested_url)
+			$requested_url  = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+
 		if (is_single() || is_page()) {
 			global $post;
 			if (isset($post->ID) && in_array($post->post_type, $this->post_types))
@@ -576,10 +578,21 @@ class Polylang_Core extends Polylang_base {
 			if (in_array($obj->taxonomy, $this->taxonomies))
 				$redirect_url = get_term_link((int)$obj->term_id, $obj->taxonomy);
 		}
-		if (isset($redirect_url) && !is_wp_error($redirect_url) && $redirect_url != $requested_url) {
-			wp_redirect($redirect_url, 301);
-			exit;
+
+		if (!isset($redirect_url) || is_wp_error($redirect_url) || $redirect_url == $requested_url)
+			return false;
+
+		if ($do_redirect) {
+			// protect against chained redirects
+			if (!$this->redirect_canonical($redirect_url, false) ) {
+				wp_redirect($redirect_url, 301);
+				exit;
+			} 
+			else
+				return false;
 		}
+
+		return $redirect_url;
 	}
 
 	// adds some javascript workaround knowing it's not perfect...
@@ -821,7 +834,7 @@ class Polylang_Core extends Polylang_base {
 			$ok = $trace['function'] == 'wp_nav_menu' ||
 				// direct call from the theme
 				(isset($trace['file']) && strpos($trace['file'], $theme) !== false &&
-					in_array($trace['function'], array('home_url', 'bloginfo', 'get_bloginfo')) );
+					in_array($trace['function'], array('home_url', 'get_home_url', 'bloginfo', 'get_bloginfo')) );
 
 			if ($ok)
 				return $this->get_home_url($this->curlang);
@@ -846,7 +859,7 @@ class Polylang_Core extends Polylang_base {
 		if (!$is_search && $this->page_on_front && $id = $this->get_post($this->page_on_front, $language))
 			return $this->home_urls[$language->slug][$is_search] = $this->page_link('', $id);
 
-		return $this->home_urls[$language->slug][$is_search] = get_term_link($language, 'language');
+		return $this->home_urls[$language->slug][$is_search] = trailingslashit(get_term_link($language, 'language'));
 	}
 
 	// displays (or returns) the language switcher

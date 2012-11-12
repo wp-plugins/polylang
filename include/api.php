@@ -61,7 +61,7 @@ function pll_define_wpml_constants() {
 if (!function_exists('icl_object_id')) {
 	function icl_object_id($id, $type, $return_original_if_missing, $lang = false) {
 		global $polylang;
-		return isset($polylang) && ($lang = $lang ? $lang : pll_current_language()) && ($tr_id = $polylang->object_id($id, $type, $lang)) ? $tr_id :
+		return isset($polylang) && ($lang = $lang ? $lang : pll_current_language()) && ($tr_id = $polylang->get_translation($type, $id, $lang)) ? $tr_id :
 			($return_original_if_missing ? $id : null);
 	}
 }

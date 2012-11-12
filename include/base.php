@@ -10,6 +10,7 @@ abstract class Polylang_Base {
 
 	// used to cache results
 	private $languages_list = array();
+	private $language = array();
 	private $links = array();
 
 	function __construct() {
@@ -62,13 +63,17 @@ abstract class Polylang_Base {
 	}
 
 	// returns the language by its id or its slug
-	// Note: it seems that a numeric value is better for performance (3.2.1)
+	// Note: it seems that get_term_by slug is not cached (3.2.1)
 	function get_language($value) {
-		$lang = is_object($value) ? $value :
-			((is_numeric($value) || (int) $value) ? get_term((int) $value, 'language') :
-			(is_string($value) ? get_term_by('slug', $value , 'language') : // seems it is not cached in 3.2.1
-			false));
-		return isset($lang) && $lang && !is_wp_error($lang) ? $lang : false;
+		if (is_object($value))
+			return $value;
+
+		if (isset($this->language[$value]))
+			return $this->language[$value];
+
+		$lang = (is_numeric($value) || (int) $value) ? get_term((int) $value, 'language') :
+			(is_string($value) ? get_term_by('slug', $value , 'language') : false);
+		return isset($lang) && $lang && !is_wp_error($lang) ? ($this->language[$value] = $lang) : false;
 	}
 
 	// saves translations for posts or terms
@@ -100,13 +105,6 @@ abstract class Polylang_Base {
 		}
 	}
 
-	// returns the id of the translation of a port or term
-	// created for compatibility with the WPML API function icl_object_id
-	function object_id($id, $type, $lang) {
-		return in_array($type, $this->post_types) ? $this->get_translation('post', $id, $lang) :
-			(in_array($type, $this->taxonomies) ? $this->get_translation('term', $id, $lang) : false);
-	}
-
 	// returns the id of the translation of a post or term
 	// $type: either 'post' or 'term'
 	// $id: post id or term id
@@ -119,8 +117,9 @@ abstract class Polylang_Base {
 
 	// returns an array of translations of a post or term
 	function get_translations($type, $id) {
+		$type = ($type == 'post' || in_array($type, $this->post_types)) ? 'post' : (($type == 'term' || in_array($type, $this->taxonomies)) ? 'term' : false);
 		// maybe_unserialize due to useless serialization in versions < 0.9
-		return maybe_unserialize(get_metadata($type, $id, '_translations', true)); 
+		return $type ? maybe_unserialize(get_metadata($type, $id, '_translations', true)) : array(); 
 	}
 
 	// store the post language in the database
