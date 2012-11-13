@@ -2,9 +2,11 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.9.1
+Version: 0.9.5
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
+Text Domain: polylang
+Domain Path: /languages
 */
 
 /*  Copyright 2011-2012 F. Demarle
@@ -24,7 +26,7 @@ Description: Adds multilingual capability to Wordpress
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('POLYLANG_VERSION', '0.9.1');
+define('POLYLANG_VERSION', '0.9.5');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
@@ -66,12 +68,15 @@ class Polylang extends Polylang_Base {
 		global $polylang; // globalize the variable to access it in the API
 
 		// manages plugin activation and deactivation
-		register_activation_hook( __FILE__, array(&$this, 'activate') );
-		register_deactivation_hook( __FILE__, array(&$this, 'deactivate') );
+		register_activation_hook( __FILE__, array(&$this, 'activate'));
+		register_deactivation_hook( __FILE__, array(&$this, 'deactivate'));
 
 		// stopping here if we are going to deactivate the plugin avoids breaking rewrite rules
 		if (isset($_GET['action']) && $_GET['action'] == 'deactivate' && isset($_GET['plugin']) && $_GET['plugin'] == 'polylang/polylang.php')
 			return;
+
+		// blog creation on multisite
+		add_action('wpmu_new_blog', array(&$this, 'wpmu_new_blog'));
 
 		// manages plugin upgrade
 		add_filter('upgrader_post_install', array(&$this, 'post_upgrade'));
@@ -106,24 +111,22 @@ class Polylang extends Polylang_Base {
 	// plugin activation for multisite
 	function activate() {
 		global $wp_version, $wpdb;
-		$style = '<p style = "font-family: sans-serif; font-size: 12px; color: #333; margin: -5px">%s</p>';
+		load_plugin_textdomain('polylang', false, basename(POLYLANG_DIR).'/languages'); // plugin i18n
 
 		if (version_compare($wp_version, PLL_MIN_WP_VERSION , '<')) 
-			die (sprintf($style, sprintf(__('You are using WordPress %s. Polylang requires at least WordPress %s.', 'polylang'), $wp_version, PLL_MIN_WP_VERSION)));
+			die (sprintf('<p style = "font-family: sans-serif; font-size: 12px; color: #333; margin: -5px">%s</p>',
+				sprintf(__('You are using WordPress %s. Polylang requires at least WordPress %s.', 'polylang'), $wp_version, PLL_MIN_WP_VERSION)));
 
 		// check if it is a network activation - if so, run the activation function for each blog
 		if (is_multisite() && isset($_GET['networkwide']) && ($_GET['networkwide'] == 1)) {
 			foreach ($wpdb->get_col($wpdb->prepare("SELECT blog_id FROM $wpdb->blogs")) as $blog_id) {
 				switch_to_blog($blog_id);
-				$r = $this->_activate();
+				$this->_activate();
 			}
 			restore_current_blog();
 		}
 		else
-			$r = $this->_activate();
-
-		if (!$r)
-			die (sprintf($style, __('For some reasons, Polylang could not create a table in your database.', 'polylang')));
+			$this->_activate();
 	}
 
 	// plugin activation
@@ -146,7 +149,8 @@ class Polylang extends Polylang_Base {
 			) $charset_collate;");
 
 		if ($r === false)
-			return false;
+			die (sprintf('<p style = "font-family: sans-serif; font-size: 12px; color: #333; margin: -5px">%s</p>',
+				__('For some reasons, Polylang could not create a table in your database.', 'polylang')));
 
 		// codex tells to use the init action to call register_taxonomy but I need it now for my rewrite rules
 		register_taxonomy('language', null , array('label' => false, 'query_var'=>'lang')); 
@@ -168,7 +172,6 @@ class Polylang extends Polylang_Base {
 		$this->add_post_types_taxonomies();
 		$this->prepare_rewrite_rules();
 		flush_rewrite_rules();
-		return true;
 	}
 
 	// plugin deactivation for multisite
@@ -190,6 +193,13 @@ class Polylang extends Polylang_Base {
 	// plugin deactivation
 	function _deactivate() {
 		flush_rewrite_rules();
+	}
+
+	// blog creation on multisite
+	function wpmu_new_blog($blog_id) {
+		switch_to_blog($blog_id);
+		$r = $this->_activate();
+		restore_current_blog();
 	}
 
 	// restores the local_flags directory after upgrade from version 0.5.1 or older
