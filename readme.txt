@@ -93,10 +93,11 @@ Every suggestions are welcome.
 
 == Changelog ==
 
-= 0.9.5 =
+= 0.9.5 (2012-11-13) =
 
 * The user can now choose the number of languages and strings translations to display
 * Add compatibility with the 'icl_object_id' function and ICL_LANGUAGE_CODE and ICL_LANGUAGE_NAME constants from the WPML API
+* Add 17 languages to the predefined list (automatic download and update of language files won't work)
 * Bug correction: post preview does not work when adding the language code to all urls
 * Bug correction: redirect to front page in default language when posting a comment on static front page
 * Bug correction: impossible to create terms with the same name in different languages
