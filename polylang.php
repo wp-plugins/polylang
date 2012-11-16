@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.9.5
+Version: 0.9.5.1
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 Text Domain: polylang
@@ -26,7 +26,7 @@ Domain Path: /languages
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('POLYLANG_VERSION', '0.9.5');
+define('POLYLANG_VERSION', '0.9.5.1');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
@@ -119,7 +119,7 @@ class Polylang extends Polylang_Base {
 
 		// check if it is a network activation - if so, run the activation function for each blog
 		if (is_multisite() && isset($_GET['networkwide']) && ($_GET['networkwide'] == 1)) {
-			foreach ($wpdb->get_col($wpdb->prepare("SELECT blog_id FROM $wpdb->blogs")) as $blog_id) {
+			foreach ($wpdb->get_col("SELECT blog_id FROM $wpdb->blogs") as $blog_id) {
 				switch_to_blog($blog_id);
 				$this->_activate();
 			}
@@ -180,7 +180,7 @@ class Polylang extends Polylang_Base {
 
 		// check if it is a network deactivation - if so, run the deactivation function for each blog
 		if (is_multisite() && isset($_GET['networkwide']) && ($_GET['networkwide'] == 1)) {
-			foreach ($wpdb->get_col($wpdb->prepare("SELECT blog_id FROM $wpdb->blogs")) as $blog_id) {
+			foreach ($wpdb->get_col("SELECT blog_id FROM $wpdb->blogs") as $blog_id) {
 				switch_to_blog($blog_id);
 				$this->_deactivate();
 			}

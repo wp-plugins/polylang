@@ -260,8 +260,8 @@ abstract class Polylang_Base {
 	function _terms_clauses($clauses, $lang) {
 		global $wpdb;
 		if (isset($lang) && $lang) {
-			$clauses['join'] .= $wpdb->prepare(" LEFT JOIN $wpdb->termmeta AS pll_tm ON t.term_id = pll_tm.term_id");
-			$clauses['where'] .= $wpdb->prepare(" AND pll_tm.meta_key = '_language' AND pll_tm.meta_value IN ($lang->term_id)");
+			$clauses['join'] .= " LEFT JOIN $wpdb->termmeta AS pll_tm ON t.term_id = pll_tm.term_id";
+			$clauses['where'] .= $wpdb->prepare(" AND pll_tm.meta_key = '_language' AND pll_tm.meta_value IN (%s)", $lang->term_id);
 		}
 		return $clauses;
 	}

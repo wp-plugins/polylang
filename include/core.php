@@ -498,6 +498,11 @@ class Polylang_Core extends Polylang_base {
 			$query->set('lang', $this->curlang->slug);
 		}
 
+		// sets the language for an empty string search when hiding the code for default language
+		// http://wordpress.org/support/topic/search-for-empty-string-in-default-language
+		if (!$this->curlang && !get_query_var('lang') && $this->options['hide_default'] && isset($query->query['s']) && !$query->query['s'])
+			$query->set('lang', $this->options['default_lang']);			
+
 		// to avoid conflict beetwen taxonomies
 		if (isset($query->tax_query->queries))
 			foreach ($query->tax_query->queries as $tax)
@@ -673,14 +678,13 @@ class Polylang_Core extends Polylang_base {
 	// modifies the sql request for wp_get_archives an get_adjacent_post to filter by the current language
 	function posts_join($sql) {
 		global $wpdb;
-		return $sql . $wpdb->prepare(" INNER JOIN $wpdb->term_relationships AS pll_tr ON pll_tr.object_id = ID");
+		return $sql . " INNER JOIN $wpdb->term_relationships AS pll_tr ON pll_tr.object_id = ID";
 	}
 
 	// modifies the sql request for wp_get_archives and get_adjacent_post to filter by the current language
 	function posts_where($sql) {
 		global $wpdb;
-		$id = $this->curlang->term_taxonomy_id;
-		return $sql . $wpdb->prepare(" AND pll_tr.term_taxonomy_id IN ($id)");
+		return $sql . $wpdb->prepare(" AND pll_tr.term_taxonomy_id IN (%s)", $this->curlang->term_taxonomy_id);
 	}
 
 	// modifies the author and date links to add the language parameter (as well as feed link)
@@ -859,7 +863,10 @@ class Polylang_Core extends Polylang_base {
 		if (!$is_search && $this->page_on_front && $id = $this->get_post($this->page_on_front, $language))
 			return $this->home_urls[$language->slug][$is_search] = $this->page_link('', $id);
 
-		return $this->home_urls[$language->slug][$is_search] = trailingslashit(get_term_link($language, 'language'));
+		$link = get_term_link($language, 'language');
+		// add a trailing slash as done by WP on homepage (otherwise could break the search form when the permalink structure does not include one)
+		// only for pretty permalinks
+		return $this->home_urls[$language->slug][$is_search] = $GLOBALS['wp_rewrite']->using_permalinks() ? trailingslashit($link) : $link;
 	}
 
 	// displays (or returns) the language switcher

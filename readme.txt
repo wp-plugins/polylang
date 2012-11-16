@@ -93,6 +93,11 @@ Every suggestions are welcome.
 
 == Changelog ==
 
+= 0.9.6 =
+
+* Bug correction: search for empty string in default language displays posts in all languages when hiding the URL language information for default language 
+* Tests done with WordPress 3.5 beta 3
+
 = 0.9.5 (2012-11-13) =
 
 * The user can now choose the number of languages and strings translations to display

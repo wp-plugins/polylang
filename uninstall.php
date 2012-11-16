@@ -7,7 +7,7 @@ class Polylang_Uninstall {
 
 		// check if it is a multisite uninstall - if so, run the uninstall function for each blog id
 		if (is_multisite()) {
-			foreach ($wpdb->get_col($wpdb->prepare("SELECT blog_id FROM $wpdb->blogs")) as $blog_id) {
+			foreach ($wpdb->get_col("SELECT blog_id FROM $wpdb->blogs") as $blog_id) {
 				switch_to_blog($blog_id);
 				$this->uninstall();
 			}
@@ -57,7 +57,7 @@ class Polylang_Uninstall {
 		$table = $wpdb->termmeta;
 		$count = $wpdb->get_var("SELECT COUNT(*) FROM $table;");
 		if (!$count) {
-			$wpdb->query($wpdb->prepare("DROP TABLE $table;"));
+			$wpdb->query("DROP TABLE $table;");
 			unset($wpdb->termmeta);
 		}
 

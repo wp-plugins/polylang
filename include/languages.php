@@ -32,7 +32,7 @@ $languages = array(
 	array('fy', 'fy', 'Frysk'),
 	array('gd', 'gd', 'Gàidhlig'),
 	array('gl', 'gl_ES', 'Galego'),
-	array('he', 'he_IL', 'עברית',  'rtl'),
+	array('he', 'he_IL', 'עברית', 'rtl'),
 	array('hi', 'hi_IN', 'हिन्दी'),
 	array('hr', 'hr', 'Hrvatski'),
 	array('hu', 'hu_HU', 'Magyar'),
