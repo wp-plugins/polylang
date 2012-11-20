@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://wordpress.org/extend/plugins/polylang/
-Version: 0.9.5.1
+Version: 0.9.5.3
 Author: F. Demarle
 Description: Adds multilingual capability to Wordpress
 Text Domain: polylang
@@ -26,7 +26,7 @@ Domain Path: /languages
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('POLYLANG_VERSION', '0.9.5.1');
+define('POLYLANG_VERSION', '0.9.5.3');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
@@ -298,10 +298,8 @@ class Polylang extends Polylang_Base {
 			if (version_compare($options['version'], '0.8.8', '<'))
 				flush_rewrite_rules(); // rewrite rules have been modified in 0.8.8
 
-			if (version_compare($options['version'], '0.9', '<')) {
-				if (defined('PLL_SYNC'))
-					$options['sync'] = PLL_SYNC ? 1 : 0;	// the option replaces PLL_SYNC in 0.9			
-			}
+			if (version_compare($options['version'], '0.9', '<'))
+				$options['sync'] = defined('PLL_SYNC') && !PLL_SYNC ? 0 : 1;	// the option replaces PLL_SYNC in 0.9
 
 			$options['version'] = POLYLANG_VERSION;
 			update_option('polylang', $options);

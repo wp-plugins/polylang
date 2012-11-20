@@ -531,8 +531,8 @@ class Polylang_Core extends Polylang_base {
 				return $clauses;
 		}
 
-		// adds our clauses to filter by current language
-		return $this->_terms_clauses($clauses, $this->curlang);
+		// adds our clauses to filter by language
+		return $this->_terms_clauses($clauses, isset($args['lang']) && $args['lang'] ? $args['lang'] : $this->curlang);
 	}
 
 	// meta in the html head section

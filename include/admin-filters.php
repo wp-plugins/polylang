@@ -508,7 +508,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		$this->save_translations('post', $post_id, $translations);
 
 		// STOP synchronisation if unwanted
-		if (!$this->options['sync'])
+		if (!isset($this->options['sync']) || !$this->options['sync'])
 			return;
 
 		// synchronise terms and metas in translations
@@ -665,6 +665,10 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 			if (!in_array($tax, $this->taxonomies))
 				return $clauses;
 		}
+
+		// if get_terms is queried with a 'lang' parameter
+		if (isset($args['lang']) && $args['lang'])
+			return $this->_terms_clauses($clauses, $args['lang']);
 
 		if (function_exists('get_current_screen'))
 			$screen = get_current_screen(); // since WP 3.1, may not be available the first time(s) get_terms is called
@@ -836,7 +840,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		// synchronize translations of this term in all posts
 
 		// STOP synchronisation if unwanted
-		if (!$this->options['sync'])
+		if (!isset($this->options['sync']) || !$this->options['sync'])
 			return;
 
 		// get all posts associated to this term

@@ -95,6 +95,7 @@ Every suggestions are welcome.
 
 = 0.9.6 =
 
+* It is now possible to query the terms by language using the WordPress function 'get_terms'
 * Bug correction: search for empty string in default language displays posts in all languages when hiding the URL language information for default language 
 * Tests done with WordPress 3.5 beta 3
 
