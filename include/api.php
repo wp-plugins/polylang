@@ -3,13 +3,13 @@
 // template tag: displays the language switcher
 function pll_the_languages($args = '') {
 	global $polylang;
-	return isset($polylang) ? $polylang->the_languages($args) : '';
+	return class_exists('Polylang_Core') && $polylang instanceof Polylang_Core ? $polylang->the_languages($args) : '';
 }
 
 // returns the current language
 function pll_current_language($args = 'slug') {
 	global $polylang;
-	return isset($polylang) ? $polylang->current_language($args) : false;
+	return class_exists('Polylang_Core') && $polylang instanceof Polylang_Core ? $polylang->current_language($args) : false;
 }
 
 // among the post and its translations, returns the id of the post which is in the language represented by $slug
@@ -27,7 +27,7 @@ function pll_get_term($term_id, $slug = false) {
 // returns the home url in the right language
 function pll_home_url() {
 	global $polylang;
-	return isset($polylang) ? $polylang->get_home_url() : home_url('/');
+	return class_exists('Polylang_Core') && $polylang instanceof Polylang_Core ? $polylang->get_home_url() : home_url('/');
 }
 
 // register strings for translation in the "strings translation" panel

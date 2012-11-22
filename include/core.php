@@ -76,8 +76,9 @@ class Polylang_Core extends Polylang_base {
 		add_filter('redirect_canonical', array(&$this, 'stop_redirect_canonical'), 10, 2);
 
 		// redirects incoming links to the proper URL when adding the language code to all urls
-		if ($this->options['force_lang'] && get_option('permalink_structure') && PLL_LANG_EARLY)
-			add_action('template_redirect',  array(&$this, 'redirect_canonical'), 20); // after Wordpress redirect_canonical
+// FIXME causes a lot of issues
+//		if ($this->options['force_lang'] && get_option('permalink_structure') && PLL_LANG_EARLY)
+//			add_action('template_redirect',  array(&$this, 'redirect_canonical'), 20); // after Wordpress redirect_canonical
 
 		// adds javascript at the end of the document
 		if (!$GLOBALS['wp_rewrite']->using_permalinks() && PLL_SEARCH_FORM_JS)

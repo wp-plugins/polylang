@@ -67,7 +67,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 			add_action('wp_ajax_media_lang_choice', array(&$this,'media_lang_choice'));
 
 			// adds actions related to languages when creating, saving or deleting media
-			add_filter('attachment_fields_to_save', array(&$this, 'save_media'));
+			add_filter('attachment_fields_to_save', array(&$this, 'save_media'), 10, 2);
 			add_action('delete_attachment', array(&$this, 'delete_post'));
 			add_filter('wp_delete_file', array(&$this, 'wp_delete_file'));
 
@@ -231,7 +231,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 	// adds the Language box in the 'Edit Post' and 'Edit Page' panels (as well as in custom post types panels)
 	function add_meta_boxes($post_type) {
-		if (in_array($post_type, $this->post_types))
+		if (in_array($post_type, array_diff($this->post_types, array('attachment'))))
 			add_meta_box('ml_box', __('Languages','polylang'), array(&$this,'post_language'), $post_type, 'side', 'high');
 
 		// replace tag metabox by our own
@@ -541,7 +541,6 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 	// adds the language field and translations tables in the 'Edit Media' panel
 	function attachment_fields_to_edit($fields, $post) {
-		$screen = get_current_screen();
 		$post_id = $post->ID;
 		$lang = $this->get_post_language($post_id);
 
@@ -560,7 +559,8 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		);
 
 		// don't show translations except on edit media panel
-		if ($screen->base == 'media') {
+		// media.php for WP < 3.5 and post.php since WP 3.5
+		if (in_array($GLOBALS['pagenow'], array('media.php', 'post.php'))) {
 		if ($lang) {
 				ob_start();
 				include PLL_INC . '/media-translations.php';
@@ -579,6 +579,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 	}
 
 	// ajax response for changing the language in media form
+	// FIXME: js not written!!!
 	function media_lang_choice() {
 		preg_match('#([0-9]+)#', $_POST['post_id'], $matches);
 		$post_id = $matches[1];
@@ -626,8 +627,9 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 	}
 
 	// called when a media is saved
-	// the language is automatically saved by WP
-	function save_media($post) {
+	function save_media($post, $attachment) {
+		$this->set_post_language($post['ID'], $attachment['language']); // the language is no more automatically saved by WP since WP 3.5 
+
 		$this->delete_translation('post', $post['ID']);
 
 		// save translations after checking the translated media is in the right language
