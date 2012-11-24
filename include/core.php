@@ -75,11 +75,6 @@ class Polylang_Core extends Polylang_base {
 		// prevents redirection of the homepage
 		add_filter('redirect_canonical', array(&$this, 'stop_redirect_canonical'), 10, 2);
 
-		// redirects incoming links to the proper URL when adding the language code to all urls
-// FIXME causes a lot of issues
-//		if ($this->options['force_lang'] && get_option('permalink_structure') && PLL_LANG_EARLY)
-//			add_action('template_redirect',  array(&$this, 'redirect_canonical'), 20); // after Wordpress redirect_canonical
-
 		// adds javascript at the end of the document
 		if (!$GLOBALS['wp_rewrite']->using_permalinks() && PLL_SEARCH_FORM_JS)
 			add_action('wp_footer', array(&$this, 'wp_print_footer_scripts'));
@@ -257,8 +252,10 @@ class Polylang_Core extends Polylang_base {
 			$this->curlang = $this->get_language($matches[1]);
 		elseif (false === strpos($_SERVER['SCRIPT_NAME'], 'index.php')) // wp-login, wp-signup, wp-activate
 			$this->curlang = $this->get_preferred_language();
-		else
+		else {
 			$this->curlang = $this->get_language($this->options['default_lang']);
+			add_action('wp', array(&$this, 'check_language_code_in_url')); // before Wordpress redirect_canonical
+		}
 
 		$GLOBALS['l10n']['pll_string'] = $this->mo_import($this->curlang);
 		do_action('pll_language_defined');
@@ -564,41 +561,33 @@ class Polylang_Core extends Polylang_base {
 		return _get_page_link($id);
 	}
 
-	// prevents redirection of the homepage when using page on front
-	function stop_redirect_canonical($redirect_url, $requested_url) {
-		return $requested_url == home_url('/') || strpos($requested_url, $this->page_link('', get_option('page_on_front'))) !== false ? false : $redirect_url;
-	}
-
 	// redirects incoming links to the proper URL when adding the language code to all urls
-	function redirect_canonical($requested_url = false, $do_redirect = true) {
-		if (!$requested_url)
-			$requested_url  = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-
+	function check_language_code_in_url() {
 		if (is_single() || is_page()) {
 			global $post;
 			if (isset($post->ID) && in_array($post->post_type, $this->post_types))
-				$redirect_url = get_permalink((int)$post->ID);
+				$language = $this->get_post_language((int)$post->ID);
 		}
 		elseif (is_category() || is_tag() || is_tax()) {
 			$obj = $GLOBALS['wp_query']->get_queried_object();
 			if (in_array($obj->taxonomy, $this->taxonomies))
-				$redirect_url = get_term_link((int)$obj->term_id, $obj->taxonomy);
+				$language = $this->get_term_language((int)$obj->term_id);
 		}
-
-		if (!isset($redirect_url) || is_wp_error($redirect_url) || $redirect_url == $requested_url)
-			return false;
-
-		if ($do_redirect) {
-			// protect against chained redirects
-			if (!$this->redirect_canonical($redirect_url, false) ) {
-				wp_redirect($redirect_url, 301);
-				exit;
-			} 
-			else
-				return false;
+		
+		// the language is not correctly set so let's redirect to the correct url for this object
+		if (isset($language) && $language->slug != $this->curlang->slug) {
+			$requested_url  = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+			$redirect_url = $this->add_language_to_link($requested_url, $language);
+			wp_redirect($redirect_url, 301);
+			exit;
 		}
+	}
 
-		return $redirect_url;
+	// prevents redirection of the homepage when using page on front
+	function stop_redirect_canonical($redirect_url, $requested_url) {
+		$home_url = home_url('/');
+		$page_link = $this->page_link('', get_option('page_on_front'));
+		return $requested_url == $home_url || ($page_link != $home_url && strpos($requested_url, $page_link ) !== false) ? false : $redirect_url;
 	}
 
 	// adds some javascript workaround knowing it's not perfect...

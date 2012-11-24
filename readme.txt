@@ -97,7 +97,7 @@ Every suggestions are welcome.
 
 * It is now possible to query the terms by language using the WordPress function 'get_terms'
 * Bug correction: search for empty string in default language displays posts in all languages when hiding the URL language information for default language 
-* Bug correction: removed the canonical redirection introduced in 0.9.5 which creates more problems than it solves
+* Bug correction: completely reworked the canonical redirection introduced in 0.9.5 which created more problems than it solved
 * Tests done with WordPress 3.5 beta RC1
 
 = 0.9.5 (2012-11-13) =
