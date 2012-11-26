@@ -4,7 +4,8 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, i18n, international, l10n, localization
 Requires at least: 3.1
 Tested up to: 3.4.2
-Stable tag: 0.9.1
+Stable tag: 0.9.6
+License: GPLv2 or later
 
 Polylang adds multilingual content management support to WordPress.
 
@@ -21,7 +22,7 @@ You write posts, pages and create categories and post tags as usual, and then de
 * A language switcher is provided as a widget or in the nav menu
 * As a bonus, each user can set the WordPress admin language in its profile
 
-The plugin admin interface is currently available in 16 languages: English, French, German contributed by [Christian Ries](http://www.singbyfoot.lu), Russian contributed by [yoyurec](http://yoyurec.in.ua), Greek contributed by [theodotos](http://www.ubuntucy.org), Dutch contributed by [AlbertGn](http://wordpress.org/support/profile/albertgn), Hebrew contributed by [ArielK](http://www.arielk.net), Polish contributed by [Peter Paciorkiewicz](http://www.paciorkiewicz.pl), Latvian contributed by [@AndyDeGroo](http://twitter.com/AndyDeGroo), Italian contributed by [Luca Barbetti](http://wordpress.org/support/profile/lucabarbetti), Danish contributed by [Compute](http://wordpress.org/support/profile/compute), Spanish contributed by Curro, Portuguese contributed by [Vitor Carvalho](http://vcarvalho.com/), Lithuanian contributed by [Naglis Jonaitis](http://najo.lt/), Turkish contributed by [darchws](http://darch.ws/), Finnish contributed by [Jani Alha](http://www.wysiwyg.fi)
+The plugin admin interface is currently available in 19 languages: English, French, German contributed by [Christian Ries](http://www.singbyfoot.lu), Russian contributed by [yoyurec](http://yoyurec.in.ua), Greek contributed by [theodotos](http://www.ubuntucy.org), Dutch contributed by [AlbertGn](http://wordpress.org/support/profile/albertgn), Hebrew contributed by [ArielK](http://www.arielk.net), Polish contributed by [Peter Paciorkiewicz](http://www.paciorkiewicz.pl), Latvian contributed by [@AndyDeGroo](http://twitter.com/AndyDeGroo), Italian contributed by [Luca Barbetti](http://wordpress.org/support/profile/lucabarbetti), Danish contributed by [Compute](http://wordpress.org/support/profile/compute), Spanish contributed by Curro, Portuguese contributed by [Vitor Carvalho](http://vcarvalho.com/), Lithuanian contributed by [Naglis Jonaitis](http://najo.lt/), Turkish contributed by [darchws](http://darch.ws/), Finnish contributed by [Jani Alha](http://www.wysiwyg.fi), Bulgarian contributed by [pavelsof](http://wordpress.org/support/profile/pavelsof), Belarusian contributed by [Alexander Markevitch](http://fourfeathers.by/), Afrikaans contributed by [Kobus Joubert](http://translate3d.com/)
 
 
 Other [contributions](http://wordpress.org/extend/plugins/polylang/other_notes/) are welcome ! 
@@ -80,7 +81,7 @@ You can subscribe to the tag ['polylang-dev'](http://wordpress.org/tags/polylang
 
 = Translate the admin interface =
 
-Polylang is already available in 16 languages. It's very easy to add a new one ! Download [poedit](http://www.poedit.net/download.php) (available for Windows, Mac OS X and Linux). Rename the file polylang.pot found in the polylang/languages directory into something like polylang-your_locale.po. Open the file with poedit and start translating (keeping strange codes such as %s, %1$s as is). Once done, just save and you will get two files polylang-your_locale.po and polylang-your_locale.mo that you can send to the author. The translation will be included with the next release.
+Polylang is already available in 19 languages. It's very easy to add a new one ! Download [poedit](http://www.poedit.net/download.php) (available for Windows, Mac OS X and Linux). Rename the file polylang.pot found in the polylang/languages directory into something like polylang-your_locale.po. Open the file with poedit and start translating (keeping strange codes such as %s, %1$s as is). Once done, just save and you will get two files polylang-your_locale.po and polylang-your_locale.mo that you can send to the author. The translation will be included with the next release.
 
 = Communicate =
 
@@ -91,6 +92,65 @@ If you like Polylang, you can spread the word... Rating the plugin is very easy,
 Every suggestions are welcome.
 
 == Changelog ==
+
+= 0.9.6 (2012-11-26) =
+
+* It is now possible to query the terms by language using the WordPress function 'get_terms'
+* Bug correction: search for empty string in default language displays posts in all languages when hiding the URL language information for default language 
+* Bug correction: completely reworked the canonical redirection introduced in 0.9.5 which created more problems than it solved
+* Bug correction: ajax for media translations does not work
+* Started tests with WordPress 3.5 beta RC1
+
+= 0.9.5 (2012-11-13) =
+
+* The user can now choose the number of languages and strings translations to display
+* Add compatibility with the 'icl_object_id' function and ICL_LANGUAGE_CODE and ICL_LANGUAGE_NAME constants from the WPML API
+* Add 17 languages to the predefined list (automatic download and update of language files won't work)
+* Bug correction: post preview does not work when adding the language code to all urls
+* Bug correction: redirect to front page in default language when posting a comment on static front page
+* Bug correction: impossible to create terms with the same name in different languages
+* Bug correction: query string added by other plugins is erased when adding the language code to all urls
+* Bug correction: redirect erase 'POST' variables on homepage when adding the language code to all urls
+* Bug correction: English (en_US) loads rtl style when using a localized WordPress package with an rtl language
+* Bug correction: on some installation strings translations do not work with some special characters
+* Bug correction: incoming links are not redirected to canonical url when adding the language code to all urls and hiding the code for the default language
+* Bug correction: search form does not work in non default language when using permalinks without trailing slash
+
+= 0.9.4 (2012-10-23) =
+
+* Add Afrikaans translation contributed by [Kobus Joubert](http://translate3d.com/)
+* Add Belarusian translation contributed by [Alexander Markevitch](http://fourfeathers.by/)
+* Add Afrikaans (af) and Belarusian (be_BY) to predefined languages list (automatic download and update of language files won't work)
+* Add the possibility to translate the date format and time format
+* Add compatibility with the 'icl_get_home_url' function from the WPML API
+* Bug correction: still some issues with string translations
+* Bug correction: search is not filtered by the (default) language when the language is set by content and the language code is hidden for the default language
+* Bug correction: posts & pages preview urls are broken when adding the language code to all urls
+* Bug correction: automatically added new top-level pages to menus are not filtered by language
+* Bug correction: the admin language filter messes the categories languages when editing a post and the parent dropdown list when editing a category
+* Bug correction: search form does not work when using a static front page (introduced in 0.9.2)
+* Bug correction: can't set languages for categories and post tags on blogs created after polylang has been activated at network level
+* Bug correction: menus don't work with catch box theme ('has_nav_menu' not correctly filtered)
+
+= 0.9.3 (2012-10-08) =
+
+* Add Bulgarian translation contributed by [pavelsof](http://wordpress.org/support/profile/pavelsof)
+* Add compatibility with WPML API for strings translations
+* Bug correction: dates are not translated (introduced in 0.9.2)
+* Bug correction: the language is lost when keeping - No change - for language in bulk edit
+* Bug correction: categories and tags are duplicate (when default language is set automatically to existing content and categories and tags share the same name)
+
+= 0.9.2 (2012-09-30) =
+
+* Support new WordPress (WP 3.5+) convention for js and css files naming
+* Improve performance, mainly on frontend
+* Bug correction: the category language is not set when creating it in the post editor (introduced in 0.9)
+* Bug correction: unable to add a query string when using a static front page 
+* Bug correction: ajax tag suggestion in "edit post" conflicts with the admin content language filter
+* Bug correction: ugly notices when trying to access a static front page which has not been translated
+* Bug correction: the language code is added to custom post types and taxonomies permalinks even if they are not translatable
+* Bug correction: some arrays in wp_locale mix English and other language
+* Bug correction: the media language is not correctly set when uploading from post if the post has not been saved after choosing the language 
 
 = 0.9.1 (2012-09-20) =
 

@@ -4,13 +4,14 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-08-19 20:12+0100\n"
 "PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"Last-Translator: Павел <pavelsof@gmail.com>\n"
+"Language-Team: Павел <pavelsof@gmail.com>\n"
+"Language: Bulgarian\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2: nplural=n>1;\n"
-"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _e;__;_x\n"
 "X-Poedit-Basepath: .\n"
 "X-Generator: Poedit 1.5.3\n"
@@ -21,20 +22,23 @@ msgstr ""
 #, php-format
 msgid "You are using WordPress %s. Polylang requires at least WordPress %s."
 msgstr ""
-"Käytät WordPress versiota %s. Polylang vaatii vähintään WordPress version %s."
+"Вие използвате WordPress %s. Минималните изисквания за Polylang включват "
+"WordPress %s."
 
 #: ../polylang.php:125
 msgid "For some reasons, Polylang could not create a table in your database."
-msgstr "Jostain syystä Polylang ei voinut luoda taulukkoa tietokantaasi."
+msgstr ""
+"По една или друга причина Polylang не успя да си създаде необходимата "
+"таблица в базата данни. "
 
 #: ../polylang.php:208
 msgid "Error: Restore of local flags failed!"
-msgstr "Virhe: Paikallisten lippujen palautus epäonnistui!"
+msgstr "Грешка: възстановяването на знаменцата бе неуспешно!"
 
 #: ../polylang.php:209
 #, php-format
 msgid "Please move your local flags from %s to %s"
-msgstr "Siirrä paikalliset lippusi kansiosta %s kansioon %s"
+msgstr "Моля преместете знаменцата от %s в %s"
 
 #: ../include/calendar.php:106
 #, php-format
@@ -44,326 +48,331 @@ msgstr "%1$s %2$s"
 #: ../include/calendar.php:132 ../include/calendar.php:140
 #, php-format
 msgid "View posts for %1$s %2$s"
-msgstr "Näytä artikkelit %1$s %2$s"
+msgstr "Преглед на публикациите за %1$s %2$s"
 
 #: ../include/media-translations.php:3 ../include/admin-filters.php:194
 #: ../include/admin-filters.php:525 ../include/admin-filters.php:696
 #: ../include/admin-filters.php:714 ../include/post-translations.php:8
 #: ../include/term-translations.php:15
 msgid "Language"
-msgstr "Kieli"
+msgstr "Език"
 
 #: ../include/media-translations.php:4 ../include/term-translations.php:16
 msgid "Translation"
-msgstr "Käännös"
+msgstr "Превод"
 
 #: ../include/media-translations.php:18 ../include/post-translations.php:10
 #: ../include/post-translations.php:33 ../include/term-translations.php:18
 #: ../include/term-translations.php:65
 msgid "Edit"
-msgstr "Muokkaa"
+msgstr "Редактиране"
 
 #: ../include/media-translations.php:26 ../include/post-translations.php:38
 #: ../include/term-translations.php:54
 msgid "Add new"
-msgstr "Lisää uusi"
+msgstr "Добави нов"
 
 #: ../include/widget.php:6
 msgid "Language Switcher"
-msgstr "Kielivalinta"
+msgstr "Джаджа за смяна на езика"
 
 #: ../include/widget.php:6
 msgid "Displays a language switcher"
-msgstr "Näytä kielivalinta"
+msgstr "Показване на джаджа за смяна на езика"
 
 #: ../include/widget.php:73
 msgid "Title:"
-msgstr "Otsikko:"
+msgstr "Заглавие:"
 
 #: ../include/admin-base.php:50 ../include/admin-base.php:176
 #: ../include/admin.php:290 ../include/admin-filters.php:221
 msgid "Languages"
-msgstr "Kielet"
+msgstr "Езици"
 
 #: ../include/admin-base.php:55
 msgid "About Polylang"
-msgstr "Tietoja Polylang:sta"
+msgstr "Относно Polylang"
 
 #: ../include/admin-base.php:149
 msgid "Displays language names"
-msgstr "Näytä kielien nimet"
+msgstr "Показване на имената на езиците"
 
 #: ../include/admin-base.php:150
 msgid "Displays flags"
-msgstr "Näytä liput"
+msgstr "Показване на знаменца"
 
 #: ../include/admin-base.php:151
 msgid "Forces link to front page"
-msgstr "Pakottaa linkin etusivulle"
+msgstr "Всички връзки сочат към началната страница"
 
 #: ../include/admin-base.php:152
 msgid "Hides the current language"
-msgstr "Piilottaa nykyisen kielen"
+msgstr "Скриване на текущия език"
 
 #: ../include/admin-base.php:154
 msgid "Displays a language switcher at the end of the menu"
-msgstr "Näytä kielivalinta valikon lopussa"
+msgstr "Показване на джаджата за смяна на езици след менюто"
 
 #: ../include/admin-base.php:155
 msgid "Displays as dropdown"
-msgstr "Näytä pudotusvalikkona"
+msgstr "Показване като падащо меню"
 
 #: ../include/admin-base.php:177
 msgid "Filters content by language"
-msgstr "Suodata sisältöä kielen mukaan"
+msgstr "Филтриране на съдържанието по език"
 
 #: ../include/admin-base.php:184
 msgid "Show all languages"
-msgstr "Näytä kaikki kielet"
+msgstr "Показване на всички езици"
 
 #: ../include/admin.php:295
 msgid "Menus"
-msgstr "Valikot"
+msgstr "Менюта"
 
 #: ../include/admin.php:297
 msgid "Strings translation"
-msgstr "Merkkijonojen käännös"
+msgstr "Превод на низове"
 
 #: ../include/admin.php:298 ../include/admin-filters.php:988
 msgid "Settings"
-msgstr "Asetukset"
+msgstr "Настройки"
 
 #: ../include/admin.php:317
 msgid "Enter a valid WorPress locale"
-msgstr "Syötä oikeanmuotoinen WordPress lokaali"
+msgstr "Въведете валидно (WordPress) местоположение"
 
 #: ../include/admin.php:318
 msgid "The language code must be 2 characters long"
-msgstr "Kielikoodin täytyy olla 2 merkkiä pitkä"
+msgstr "Кодът на езика трябва да бъде двубуквен"
 
 #: ../include/admin.php:319
 msgid "The language code must be unique"
-msgstr "Kielikoodin täytyy olla uniikki"
+msgstr "Кодът на езика трябва да бъде уникален"
 
 #: ../include/admin.php:320
 msgid "The language must have a name"
-msgstr "Kielellä täytyy olla nimi"
+msgstr "Кодът на езика трябва да има наименование"
 
 #: ../include/admin.php:321
 msgid ""
 "The language was created, but the WordPress language file was not "
 "downloaded. Please install it manually."
 msgstr ""
-"Kieli luotiin, mutta WordPress-kielitiedostoa ei ladattu. Asenna se käsin."
+"Езикът беше добавен, но езиковият файл не може да бъде зареден. Моля "
+"инсталирайте го ръчно. "
 
 #: ../include/admin.php:409
 msgid "Site Title"
-msgstr "Sivuston otsikko"
+msgstr "Заглавие на уебсайта"
 
 #: ../include/admin.php:410
 msgid "Tagline"
-msgstr "Kuvaus"
+msgstr "Кратко описание"
 
 #: ../include/admin.php:428
 msgid "Widget title"
-msgstr "Vimpaimen otsikko"
+msgstr "Заглавие на джаджата"
 
 #: ../include/admin-filters.php:176 ../include/admin-filters.php:753
 msgid "Add new translation"
-msgstr "Lisää uusi käännös"
+msgstr "Добавяне на нов превод"
 
 #: ../include/admin-filters.php:190
 msgid "&mdash; No Change &mdash;"
-msgstr "&mdash; Ei muutosta &mdash;"
+msgstr "&mdash; Без промяна &mdash;"
 
 #: ../include/admin-filters.php:244
 msgid "Page's language:"
-msgstr "Sivun kieli:"
+msgstr "Език на страницата"
 
 #: ../include/admin-filters.php:244
 msgid "Post's language:"
-msgstr "Artikkelin kieli:"
+msgstr "Език на публикацията"
 
 #: ../include/admin-filters.php:305
 msgid "(no parent)"
-msgstr "(ei päätasoa)"
+msgstr "(без родител)"
 
 #: ../include/admin-filters.php:536 ../include/admin-filters.php:561
 #: ../include/term-translations.php:6 ../include/term-translations.php:11
 msgid "Translations"
-msgstr "Käännökset"
+msgstr "Преводи"
 
 #: ../include/admin-filters.php:698 ../include/admin-filters.php:717
 msgid "Sets the language"
-msgstr "Aseta kieli"
+msgstr "Избор на език"
 
 #: ../include/admin-filters.php:879
 msgid "None"
-msgstr "Ei mitään"
+msgstr "Празно"
 
 #: ../include/admin-filters.php:910
 msgid "Theme locations and languages"
-msgstr "Teeman sijainnit ja kielet"
+msgstr "Език и местоположение"
 
 #: ../include/admin-filters.php:916
 #, php-format
 msgid ""
 "Please go to the %slanguages page%s to set theme locations and languages"
-msgstr "Siirry %skielisivulle%s asettamaan teemojen sijainnit ja kielet"
+msgstr "Моля посетете %sстраницата за настройка на езиците%s."
 
 #: ../include/admin-filters.php:931
 msgid "The widget is displayed for:"
-msgstr "Vimpain näytetään:"
+msgstr "Джаджата се показва за:"
 
 #: ../include/admin-filters.php:935
 msgid "All languages"
-msgstr "Kaikki kielet"
+msgstr "Всички езици"
 
 #: ../include/admin-filters.php:959
 msgid "Admin language"
-msgstr "Ylläpidon kieli"
+msgstr "Езика на администраторския панел"
 
 #: ../include/admin-filters.php:964
 msgid "Wordpress default"
-msgstr "Wordpress oletus"
+msgstr "Езика по подразбиране"
 
 #: ../include/admin-filters.php:994
 msgid "Upgrading language files&#8230;"
-msgstr "Päivitetään kielitiedostoja&#8230;"
+msgstr "Обновяване на езиковите файлове&#8230;"
 
 #: ../include/languages-form.php:38
 msgid "Edit language"
-msgstr "Muokkaa kieltä"
+msgstr "Редактиране на езика"
 
 #: ../include/languages-form.php:38 ../include/languages-form.php:105
 msgid "Add new language"
-msgstr "Lisää uusi kieli"
+msgstr "Добавяне на нов език"
 
 #: ../include/languages-form.php:60
 msgid "Choose a language"
-msgstr "Valitse kieli"
+msgstr "Изберете език"
 
 #: ../include/languages-form.php:68
 msgid "You can choose a language in the list or directly edit it below."
-msgstr "Voit valita kielen listalta tai muokata sitä suoraan alla."
+msgstr ""
+"Можете да изберете език от падащото меню или да създадете нов използвайки "
+"полетата по-долу. "
 
 #: ../include/languages-form.php:72
 msgid "Full name"
-msgstr "Täydellinen nimi"
+msgstr "Наименование"
 
 #: ../include/languages-form.php:74
 msgid "The name is how it is displayed on your site (for example: English)."
-msgstr "Nimi kuinka se esiintyy sivustollasi (esimerkiksi: Englanti)."
+msgstr ""
+"Наименованието както ще се показва в уебсайта (например: български, English)"
 
 #: ../include/languages-form.php:78
 msgid "Locale"
-msgstr "Lokaali"
+msgstr "Местоположение"
 
 #: ../include/languages-form.php:81
 msgid ""
 "Wordpress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
 msgstr ""
-"Wordpress lokaali tälle kielelle (esimerkiksi: en_US). Sinun pitää asentaa ."
-"mo-tiedosto tälle kielelle."
+"Местоположение според WordPress (например: bg_BG, en_GB). Ще трябва да "
+"инсталирате съответния езиков файл (.mo). "
 
 #: ../include/languages-form.php:85
 msgid "Language code"
-msgstr "Kielikoodi"
+msgstr "Код на езика"
 
 #: ../include/languages-form.php:87
 msgid "2-letters ISO 639-1 language code (for example: en)"
-msgstr "2-kirjaiminen ISO 639-1 kielikoodi (esimerkiksi: en)"
+msgstr "Двубуквеният код на езика според ISO 639-1 (например: bg, en)"
 
 #: ../include/languages-form.php:91
 msgid "Text direction"
-msgstr "Tekstin suunta"
+msgstr "Посока на писане"
 
 #: ../include/languages-form.php:93
 msgid "left to right"
-msgstr "vasemmalta oikealle"
+msgstr "отляво надясно"
 
 #: ../include/languages-form.php:95
 msgid "right to left"
-msgstr "oikealta vasemmalle"
+msgstr "отдясно наляво"
 
 #: ../include/languages-form.php:96
 msgid "Choose the text direction for the language"
-msgstr "Valitse kielen tekstin suunta"
+msgstr "Изберете посоката на писане"
 
 #: ../include/languages-form.php:100
 msgid "Order"
-msgstr "Järjestys"
+msgstr "Подредба"
 
 #: ../include/languages-form.php:102
 msgid "Position of the language in the language switcher"
-msgstr "Kielen sijainti kielivalinnassa"
+msgstr "Кой подред ще се показва езикът в джаджата за смяна на езици"
 
 #: ../include/languages-form.php:105
 msgid "Update"
-msgstr "Päivitä"
+msgstr "Обновяване"
 
 #: ../include/languages-form.php:151
 msgid "Language switcher"
-msgstr "Kielivalinta"
+msgstr "Джаджа за смяна на езика"
 
 #: ../include/languages-form.php:175
 msgid "Clean strings translation database"
-msgstr "Tyhjennä merkkijonot käännöstietokannasta"
+msgstr "Изтриване на запазените преводи "
 
 #: ../include/languages-form.php:191
 msgid "Default language"
-msgstr "Oletuskieli"
+msgstr "Език по подразбиране"
 
 #: ../include/languages-form.php:203
 msgid ""
 "There are posts, pages, categories or tags without language set. Do you want "
 "to set them all to default language ?"
 msgstr ""
-"Siellä on artikkeleita, sivuja, kategorioita tai tageja ilman asetettua "
-"kieltä. Haluatko asettaa ne oletuskielelle?"
+"Намерени са публикации, страници, категории и етикети, за които не е посочен "
+"език. Искате ли да бъдат прехвърлени към езика по подразбиране?"
 
 #: ../include/languages-form.php:211
 msgid "Detect browser language"
-msgstr "Tunnista selaimen kieli"
+msgstr "Засичане на езика на браузъра"
 
 #: ../include/languages-form.php:217
 msgid ""
 "When the front page is visited, set the language according to the browser "
 "preference"
-msgstr "Kun etusivulla vieraillaan, aseta kieli selaimen asetuksen mukaan"
+msgstr ""
+"Когато потребителят посети началната страница, езикът му да се настройва "
+"според предпочитанията на браузъра. "
 
 #: ../include/languages-form.php:224
 msgid "URL modifications"
-msgstr "URL muunnokset"
+msgstr "Промени в адреса (URL)"
 
 #: ../include/languages-form.php:230
 msgid ""
 "The language is set from content. Posts, pages, categories and tags urls are "
 "not modified."
 msgstr ""
-"Kieli asetetaan sisällöstä. Artikkelien, sivujen, kategorioiden ja tagien "
-"url-osoitteita ei muokata."
+"Езикът зависи от съдържанието. Адресите (URLs) на публикациите, страниците, "
+"категориите и етикетите не се променят. "
 
 #: ../include/languages-form.php:238
 msgid ""
 "The language code, for example /en/, is added to all urls when using pretty "
 "permalinks."
 msgstr ""
-"Kielikoodi, esimerkiksi /en/, lisätään url-osoitteisiin kun käytetään "
-"osoiterakennetta."
+"Кодът на езика (например /bg/, /en/) се добавя към всички адреси (URLs)."
 
 #: ../include/languages-form.php:247
 msgid "Remove /language/ in pretty permalinks. Example:"
-msgstr "Poista /language/ osoiterakenteesta. Esimerkiksi:"
+msgstr "Премахване на /language/ от адресите (URLs). Например:"
 
 #: ../include/languages-form.php:256
 msgid "Keep /language/ in pretty permalinks. Example:"
-msgstr "Säilytä /language/ osoiterakenteessa. Esimerkiksi:"
+msgstr "Запазване на /language/ в адресите (URLs). Например:"
 
 #: ../include/languages-form.php:265
 msgid "Hide URL language information for default language"
-msgstr "Piilota URL-osoitteen kielitieto oletuskieleltä"
+msgstr "Скриване на информацията за езика от адресите за езика по подразбиране"
 
 #: ../include/languages-form.php:274
 #, php-format
@@ -371,36 +380,36 @@ msgid ""
 "When using static front page, redirect the language page (example: %s) to "
 "the front page in the right language"
 msgstr ""
-"Kun käytetään staattista etusivua, uudelleenohjaa kielisivu (esimerkiksi: "
-"%s) oikean kielen etusivulle"
+"При използване на статична начална страница адресите от типа %s да сочат към "
+"началната страница на съответния език"
 
 #: ../include/languages-form.php:281
 msgid "Synchronization"
-msgstr "Synkronointi"
+msgstr "Синхронизация"
 
 #: ../include/languages-form.php:287
 msgid ""
 "Allow to synchronize categories, tags, featured image and other metas "
 "between translations of a post or page"
 msgstr ""
-"Salli kategorioiden, tagien, artikkelikuvan ja muiden meta-tietojen "
-"synkronointi artikkelin tai sivun käännösten välillä"
+"Позволяване синхронизацията на категории, етикети, картинки и други meta "
+"неща между различните преводи на публикациите и страниците"
 
 #: ../include/post-translations.php:5
 msgid "ID of pages in other languages:"
-msgstr "Sivun ID toisilla kielillä:"
+msgstr "Ключове на преводите на тази страница"
 
 #: ../include/post-translations.php:5
 msgid "ID of posts in other languages:"
-msgstr "Artikkelin ID toisilla kielillä:"
+msgstr "Ключове на преводите на тази публикация"
 
 #: ../include/post-translations.php:9
 msgid "Page ID"
-msgstr "Sivun ID"
+msgstr "Ключ"
 
 #: ../include/post-translations.php:9
 msgid "Post ID"
-msgstr "Artikkelin ID"
+msgstr "Ключ"
 
 #: ../include/about.php:3
 #, php-format
@@ -410,10 +419,10 @@ msgid ""
 "on a daily basis, a FAQ, as well as a documentation for programmers to adapt "
 "their plugins and themes."
 msgstr ""
-"Polylang toimitetaan kattavan %sdokumentaation%s kanssa (vain englanniksi). "
-"Se sisältää tietoa kuinka perustat monikielisen sivustosi ja käytät sitä "
-"päivittäisessä käytössä, UKK:t sekä dokumentaation ohjelmoijille "
-"sovittaakseen heidän lisäosansa ja teemansa."
+"Polylang има подробна %sдокументация на английски%s, съдържаща информация за "
+"първоначалното настройване и поддръжка на многоезични уебсайтове, отговори "
+"на често задавани въпроси, както и документация за разработчици за "
+"интегриране на Polylang с техните разширения и теми. "
 
 #: ../include/about.php:8
 #, php-format
@@ -421,8 +430,9 @@ msgid ""
 "You will also find useful information in the %ssupport forum%s. However "
 "don't forget to make a search before posting a new topic."
 msgstr ""
-"Löydät myös tarpeellista tietoa %stukifoorumilta%s. Älä kuitenkaan unohda "
-"tehdä hakua ennen uuden viestin lähettämistä."
+"Освен това можете да намерите полезна информация във %sфорума за поддръжка"
+"%s; но не забравяйте да потърсите дали някой вече не е задал Вашия въпрос "
+"преди да изпратите запитване. "
 
 #: ../include/about.php:14
 #, php-format
@@ -430,54 +440,54 @@ msgid ""
 "Polylang is free of charge and is released under the same license as "
 "WordPress, the %sGPL%s."
 msgstr ""
-"Polylang on ilmainen ja se on julkaistu saman lisenssin alla kuin WordPress, "
-"%sGPL%s."
+"Polylang е безплатно разширение, публикувано под същия лиценз като "
+"WordPress, %sGPL%s."
 
 #: ../include/about.php:18
 #, php-format
 msgid "If you wonder how you can help the project, just %sread this%s."
-msgstr "Mikäli mietit kuinka voit auttaa projektia, %slue vain tämä%s."
+msgstr "Ако се питате как можете и Вие да помогнете, %sпрочетете това%s. "
 
 #: ../include/about.php:22
 msgid ""
 "Finally if you like this plugin or if it helps your business, donations to "
 "the author are greatly appreciated."
 msgstr ""
-"Viimeiseksi mikäli pidit tästä lisäosasta tai se auttaa yritystäsi, "
-"lahjoituksia tekijälle arvostetaan suuresti."
+"Не на последно място, ако наистина харесвате това разширение и/или то помага "
+"на Вашия бизнес, авторът му високо оценява всяко едно дарение."
 
 #: ../include/core.php:547
 msgid "Search"
-msgstr "Hae"
+msgstr "Търсене"
 
 #: ../include/term-translations.php:48
 msgid "No untranslated term"
-msgstr "Ei kääntämättömiä termejä"
+msgstr "Няма непреведени низове"
 
 #: ../include/list-table.php:27
 msgid "Delete"
-msgstr "Poista"
+msgstr "Изтриване"
 
 #: ../include/list-table.php:47
 msgid "Code"
-msgstr "Koodi"
+msgstr "Код"
 
 #: ../include/list-table.php:49
 msgid "Flag"
-msgstr "Lippu"
+msgstr "Знаменце"
 
 #: ../include/list-table.php:50
 msgid "Posts"
-msgstr "Artikkelit"
+msgstr "Публикации"
 
 #: ../include/list-table.php:105
 msgid "Strings translations"
-msgstr "Merkkijonojen käännökset"
+msgstr "Превод на низове"
 
 #: ../include/list-table.php:131
 msgid "Name"
-msgstr "Nimi"
+msgstr "Наименование"
 
 #: ../include/list-table.php:132
 msgid "String"
-msgstr "Merkkijono"
+msgstr "Низ"
