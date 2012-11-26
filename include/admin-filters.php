@@ -217,7 +217,9 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		}
 
 		// filters the list of media by language when uploading from post
-		if ($GLOBALS['pagenow'] == 'media-upload.php' && isset($_GET['post_id']) && $lang = $this->get_post_language($_GET['post_id']))
+		if (($GLOBALS['pagenow'] == 'media-upload.php' || // WP < 3.5
+			($GLOBALS['pagenow'] == 'admin-ajax.php' && isset($_REQUEST['action']) && $_REQUEST['action'] == 'query-attachments')) && // WP 3.5+
+			isset($_REQUEST['post_id']) && $lang = $this->get_post_language($_REQUEST['post_id']))
 			$query->set('lang', $lang->slug);
 
 		if (!isset($qvars['lang']) && $lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true))
@@ -229,7 +231,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		return $query;
 	}
 
-	// adds the Language box in the 'Edit Post' and 'Edit Page' panels (as well as in custom post types panels)
+	// adds the Language box in the 'Edit Post' and 'Edit Page' panels (as well as in custom post types panels) but not in the 'Edit media' panel
 	function add_meta_boxes($post_type) {
 		if (in_array($post_type, array_diff($this->post_types, array('attachment'))))
 			add_meta_box('ml_box', __('Languages','polylang'), array(&$this,'post_language'), $post_type, 'side', 'high');
@@ -559,7 +561,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		);
 
 		// don't show translations except on edit media panel
-		// media.php for WP < 3.5 and post.php since WP 3.5
+		// media.php for WP < 3.5 and post.php for WP 3.5+
 		if (in_array($GLOBALS['pagenow'], array('media.php', 'post.php'))) {
 		if ($lang) {
 				ob_start();
@@ -579,7 +581,6 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 	}
 
 	// ajax response for changing the language in media form
-	// FIXME: js not written!!!
 	function media_lang_choice() {
 		preg_match('#([0-9]+)#', $_POST['post_id'], $matches);
 		$post_id = $matches[1];
@@ -628,7 +629,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 	// called when a media is saved
 	function save_media($post, $attachment) {
-		$this->set_post_language($post['ID'], $attachment['language']); // the language is no more automatically saved by WP since WP 3.5 
+		$this->set_post_language($post['ID'], $attachment['language']); // FIXME the language is no more automatically saved by WP since WP 3.5 (just a bug?)
 
 		$this->delete_translation('post', $post['ID']);
 

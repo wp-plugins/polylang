@@ -266,4 +266,28 @@ jQuery(document).ready(function($) {
 		$('#post_lang_choice option:selected').removeAttr('selected');
 		$('#post_lang_choice option[value="'+lang+'"]').attr('selected', 'selected');  
 	});
+
+	// ajax for changing the media's language
+	$('.media_lang_choice').change( function() {
+		var data = {
+			action: 'media_lang_choice',
+			lang: $(this).attr('value'),
+			post_id: $(this).attr('name')
+		}
+
+		$.post(ajaxurl, data , function(response) {
+			var res = wpAjax.parseAjaxResponse(response, 'ajax-response');
+			$.each(res.responses, function() {
+				switch (this.what) {
+					case 'translations': // translations fields
+						$('.translations').html(this.data); // WP < 3.5
+						$('.compat-field-translations').html(this.data); // WP 3.5+
+						break;
+					default:
+						break;
+				}
+			});
+		});
+	});
+
 });
