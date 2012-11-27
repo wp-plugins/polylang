@@ -93,6 +93,11 @@ Every suggestions are welcome.
 
 == Changelog ==
 
+= 0.9.6.1 =
+
+* Bug correction: the admin language filter does filter non translatable post types
+* Again test with WordPress 3.5 beta RC1
+
 = 0.9.6 (2012-11-26) =
 
 * It is now possible to query the terms by language using the WordPress function 'get_terms'

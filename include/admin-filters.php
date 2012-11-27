@@ -222,7 +222,8 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 			isset($_REQUEST['post_id']) && $lang = $this->get_post_language($_REQUEST['post_id']))
 			$query->set('lang', $lang->slug);
 
-		if (!isset($qvars['lang']) && $lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true))
+		if (isset($qvars['post_type']) && in_array($qvars['post_type'], $this->post_types) &&
+			!isset($qvars['lang']) && $lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true))
 			$qvars['lang'] = $lg;
 
 		if (isset($qvars['lang']) && $qvars['lang'] == 'all')
@@ -547,8 +548,10 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		$lang = $this->get_post_language($post_id);
 
 		// fills with the post language when uploading from post, otherwise the default language
- 		if (!$lang)
+ 		if (!$lang) {
 			$lang = $post->post_parent ? $this->get_post_language($post->post_parent) : $this->get_default_language();
+			$this->set_post_language($post_id, $lang); // save it
+		}
 
 		$fields['language'] = array(
 			'label' => __('Language', 'polylang'),
@@ -623,7 +626,8 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		$translations[$_GET['new_lang']] = $tr_id;
 		$this->save_translations('post', $tr_id, $translations);
 
-		wp_redirect(admin_url("media.php?attachment_id=$tr_id&action=edit"));
+		$url = version_compare($GLOBALS['wp_version'], '3.5', '<') ? "media.php?attachment_id=$tr_id&action=edit" : "post.php?post=$tr_id&action=edit";
+		wp_redirect(admin_url($url));
 		exit;
 	}
 
