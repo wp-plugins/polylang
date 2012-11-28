@@ -226,7 +226,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 			!isset($qvars['lang']) && $lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true))
 			$qvars['lang'] = $lg;
 
-		if (isset($qvars['lang']) && $qvars['lang'] == 'all')
+		if ((isset($qvars['post_type']) && !in_array($qvars['post_type'], $this->post_types)) || (isset($qvars['lang']) && $qvars['lang'] == 'all'))
 			unset ($qvars['lang']);
 
 		return $query;
