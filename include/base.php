@@ -159,7 +159,7 @@ abstract class Polylang_Base {
 			$term_id = $value;
 		elseif (is_string($value) && $taxonomy)
 			$term_id = get_term_by('slug', $value , $taxonomy)->term_id;
-		return $term_id ? $this->get_language(get_metadata('term', $term_id, '_language', true)) : false;
+		return isset($term_id) && $term_id ? $this->get_language(get_metadata('term', $term_id, '_language', true)) : false;
 	}
 
 	// among the term and its translations, returns the id of the term which is in $lang

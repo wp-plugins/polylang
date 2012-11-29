@@ -559,9 +559,14 @@ class Polylang_Core extends Polylang_base {
 
 	// prevents redirection of the homepage when using page on front
 	function stop_redirect_canonical($redirect_url, $requested_url) {
-		$home_url = home_url('/');
-		$page_link = $this->page_link('', get_option('page_on_front'));
-		return $requested_url == $home_url || ($page_link != $home_url && strpos($requested_url, $page_link ) !== false) ? false : $redirect_url;
+		if (($page_on_front = get_option('page_on_front')) && $page_on_front == get_query_var('page_id')) // default permalinks
+			return false;
+
+		$url = @parse_url($requested_url);
+		$url = trailingslashit($url['scheme'] . '://' .$url['host'] . (isset($url['path']) ? $url['path'] : ''));
+		$page_on_front = trailingslashit($this->page_link('', $page_on_front));
+
+		return $url == home_url('/') || $url == $page_on_front ? false : $redirect_url;
 	}
 
 	// redirects incoming links to the proper URL when adding the language code to all urls

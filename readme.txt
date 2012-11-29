@@ -93,9 +93,10 @@ Every suggestions are welcome.
 
 == Changelog ==
 
-= 0.9.6.1 =
+= 0.9.7 =
 
 * Bug correction: the admin language filter does filter non translatable post types
+* Bug correction: again the canonical redirection
 * Again test with WordPress 3.5 beta RC1
 
 = 0.9.6 (2012-11-26) =
