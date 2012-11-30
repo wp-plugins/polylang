@@ -97,7 +97,8 @@ Every suggestions are welcome.
 
 * Bug correction: the admin language filter does filter non translatable post types
 * Bug correction: again the canonical redirection
-* Again test with WordPress 3.5 beta RC1
+* Bug correction: Fatal error when Polylang is used together with 'Author Avatars List'
+* Tests done with WordPress 3.5 beta RC2 and Twenty Twelve
 
 = 0.9.6 (2012-11-26) =
 
@@ -105,7 +106,7 @@ Every suggestions are welcome.
 * Bug correction: search for empty string in default language displays posts in all languages when hiding the URL language information for default language 
 * Bug correction: completely reworked the canonical redirection introduced in 0.9.5 which created more problems than it solved
 * Bug correction: ajax for media translations does not work
-* Started tests with WordPress 3.5 beta RC1
+* Started tests with WordPress 3.5 beta RC1 and Twenty Twelve
 
 = 0.9.5 (2012-11-13) =
 

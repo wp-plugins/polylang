@@ -433,8 +433,8 @@ class Polylang_Admin extends Polylang_Admin_Base {
 			foreach ($widgets as $widget) {
 				// nothing can be done if the widget is created using pre WP2.8 API :(
 				// there is no object, so we can't access it to get the widget options
-				// the second part of the test is probably useless
-				if (!isset($wp_registered_widgets[$widget]['callback'][0]) || !is_object($wp_registered_widgets[$widget]['callback'][0]))
+				if (!isset($wp_registered_widgets[$widget]['callback'][0]) || !is_object($wp_registered_widgets[$widget]['callback'][0]) ||
+					!method_exists($wp_registered_widgets[$widget]['callback'][0], 'get_settings'))
 					continue;
 
 				$widget_settings = $wp_registered_widgets[$widget]['callback'][0]->get_settings();
