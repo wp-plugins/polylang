@@ -3,8 +3,8 @@ Contributors: Chouby
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CCWWYUUQV8F4E
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, i18n, international, l10n, localization
 Requires at least: 3.1
-Tested up to: 3.4.2
-Stable tag: 0.9.6
+Tested up to: 3.5
+Stable tag: 0.9.7
 License: GPLv2 or later
 
 Polylang adds multilingual content management support to WordPress.
@@ -93,12 +93,13 @@ Every suggestions are welcome.
 
 == Changelog ==
 
-= 0.9.7 =
+= 0.9.7 (2012-12-04) =
 
 * Bug correction: the admin language filter does filter non translatable post types
 * Bug correction: again the canonical redirection
-* Bug correction: Fatal error when Polylang is used together with 'Author Avatars List'
-* Tests done with WordPress 3.5 beta RC2 and Twenty Twelve
+* Bug correction: fatal error when Polylang is used together with 'Author Avatars List'
+* Bug correction: widget titles uselessly appear in the strings translations table when the widget is set for only one language
+* Tests done with WordPress 3.5 beta RC3 and Twenty Twelve
 
 = 0.9.6 (2012-11-26) =
 

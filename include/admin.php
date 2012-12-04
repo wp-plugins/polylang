@@ -417,6 +417,7 @@ class Polylang_Admin extends Polylang_Admin_Base {
 
 	function &get_strings() {
 		global $wp_registered_widgets;
+		$languages = get_option('polylang_widgets');
 
 		// WP strings
 		$this->register_string(__('Site Title'), get_option('blogname'));
@@ -439,7 +440,8 @@ class Polylang_Admin extends Polylang_Admin_Base {
 
 				$widget_settings = $wp_registered_widgets[$widget]['callback'][0]->get_settings();
 				$number = $wp_registered_widgets[$widget]['params'][0]['number'];
-				if (isset($widget_settings[$number]['title']) && $title = $widget_settings[$number]['title'])
+				// don't enable widget title translation if the widget is visible in only one language or if there is no title
+				if (!(isset($languages[$widget]) && $languages[$widget]) && isset($widget_settings[$number]['title']) && $title = $widget_settings[$number]['title'])
 					$this->register_string(__('Widget title', 'polylang'), $title);
 			}
 		}
