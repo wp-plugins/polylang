@@ -181,7 +181,7 @@ break;
 case 'settings': ?>
 
 <div class="form-wrap">
-	<form id="options-lang" method="post" action="admin.php?page=mlang&tab=settings" class="validate">
+	<form id="options-lang" method="post" action="admin.php?page=mlang&tab=settings&noheader=true" class="validate">
 	<?php wp_nonce_field('options-lang', '_wpnonce_options-lang');?>
 	<input type="hidden" name="action" value="options" />
 

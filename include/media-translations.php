@@ -14,7 +14,8 @@
 				printf('<td class="tr-edit-column"><input type="hidden" name="media_tr_lang[%s]" value="%d" /><a href="%s">%s</a></td>',
  					esc_attr($language->slug),
 					esc_attr($translation_id),
-					esc_url(admin_url(sprintf('media.php?attachment_id=%d&action=edit', $translation_id))),
+					esc_url(admin_url(sprintf(version_compare($GLOBALS['wp_version'], '3.5', '<') ?
+						'media.php?attachment_id=%d&action=edit' : 'post.php?post=%d&action=edit', $translation_id))),
 					__('Edit','polylang')
 				);
 			}
