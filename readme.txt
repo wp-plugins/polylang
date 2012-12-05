@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, i18n, international, l10n, localization
 Requires at least: 3.1
 Tested up to: 3.5
-Stable tag: 0.9.7
+Stable tag: 0.9.8
 License: GPLv2 or later
 
 Polylang adds multilingual content management support to WordPress.
@@ -93,7 +93,7 @@ Every suggestions are welcome.
 
 == Changelog ==
 
-= 0.9.8 =
+= 0.9.8 (2012-12-05) =
 
 * Bug correction: ajax on frontend does not work when adding the language code to all urls
 * Bug correction: search forms using the get_search_form filter do not work
