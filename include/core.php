@@ -226,42 +226,42 @@ class Polylang_Core extends Polylang_base {
 	// sets the language when it is always included in the url
 	function setup_theme() {
 		// special case for ajax request
-		if (isset($_REQUEST['pll_load_front'])) {
+		if (isset($_REQUEST['pll_load_front']))
 			$this->curlang = isset($_REQUEST['lang']) && $_REQUEST['lang'] ? $this->get_language($_REQUEST['lang']) : $this->get_preferred_language();
-			do_action('pll_language_defined');
-			return;
-		}
 
-		$root = $this->options['rewrite']? '' : 'language/';
-
-		foreach ($this->get_languages_list() as $language)
-			$languages[] = $language->slug;
-
-		$languages = $GLOBALS['wp_rewrite']->using_permalinks() ?
-			'#\/'.$root.'('.implode('|', $languages).')\/#' :
-			'#lang=('.implode('|', $languages).')#';
-
-		preg_match($languages, trailingslashit($_SERVER['REQUEST_URI']), $matches);
-
-		// home is resquested
-		// some PHP setups turn requests for / into /index.php in REQUEST_URI
-		// thanks to Gonçalo Peres for pointing out the issue with queries unknown to WP
-		// http://wordpress.org/support/topic/plugin-polylang-language-homepage-redirection-problem-and-solution-but-incomplete?replies=4#post-2729566
-		if (str_replace('www.', '', home_url('/')) == trailingslashit((is_ssl() ? 'https://' : 'http://').str_replace('www.', '', $_SERVER['HTTP_HOST']).str_replace(array('index.php', '?'.$_SERVER['QUERY_STRING']), array('', ''), $_SERVER['REQUEST_URI']))) {
-			// take care to post preview http://wordpress.org/support/topic/static-frontpage-url-parameter-url-language-information
-			if (isset($_GET['preview']) && isset($_GET['p']) && $lg = $this->get_post_language($_GET['p']))
-				$this->curlang = $lg ? $lg : $this->get_language($this->options['default_lang']);
-			else
-				$this->home_requested();
-		}
-		// $matches[1] is the slug of the requested language
-		elseif ($matches)
-			$this->curlang = $this->get_language($matches[1]);
-		elseif (false === strpos($_SERVER['SCRIPT_NAME'], 'index.php')) // wp-login, wp-signup, wp-activate
-			$this->curlang = $this->get_preferred_language();
+		// standard case
 		else {
-			$this->curlang = $this->get_language($this->options['default_lang']);
-			add_action('wp', array(&$this, 'check_language_code_in_url')); // before Wordpress redirect_canonical
+			$root = $this->options['rewrite']? '' : 'language/';
+
+			foreach ($this->get_languages_list() as $language)
+				$languages[] = $language->slug;
+
+			$languages = $GLOBALS['wp_rewrite']->using_permalinks() ?
+				'#\/'.$root.'('.implode('|', $languages).')\/#' :
+				'#lang=('.implode('|', $languages).')#';
+
+			preg_match($languages, trailingslashit($_SERVER['REQUEST_URI']), $matches);
+
+			// home is resquested
+			// some PHP setups turn requests for / into /index.php in REQUEST_URI
+			// thanks to Gonçalo Peres for pointing out the issue with queries unknown to WP
+			// http://wordpress.org/support/topic/plugin-polylang-language-homepage-redirection-problem-and-solution-but-incomplete?replies=4#post-2729566
+			if (str_replace('www.', '', home_url('/')) == trailingslashit((is_ssl() ? 'https://' : 'http://').str_replace('www.', '', $_SERVER['HTTP_HOST']).str_replace(array('index.php', '?'.$_SERVER['QUERY_STRING']), array('', ''), $_SERVER['REQUEST_URI']))) {
+				// take care to post preview http://wordpress.org/support/topic/static-frontpage-url-parameter-url-language-information
+				if (isset($_GET['preview']) && isset($_GET['p']) && $lg = $this->get_post_language($_GET['p']))
+					$this->curlang = $lg ? $lg : $this->get_language($this->options['default_lang']);
+				else
+					$this->home_requested();
+			}
+			// $matches[1] is the slug of the requested language
+			elseif ($matches)
+				$this->curlang = $this->get_language($matches[1]);
+			elseif (false === strpos($_SERVER['SCRIPT_NAME'], 'index.php')) // wp-login, wp-signup, wp-activate
+				$this->curlang = $this->get_preferred_language();
+			else {
+				$this->curlang = $this->get_language($this->options['default_lang']);
+				add_action('wp', array(&$this, 'check_language_code_in_url')); // before Wordpress redirect_canonical
+			}
 		}
 
 		$GLOBALS['l10n']['pll_string'] = $this->mo_import($this->curlang);
@@ -827,6 +827,7 @@ class Polylang_Core extends Polylang_base {
 			return $url;
 
 		$theme = get_theme_root();
+		// FIXME can I decrease the size of the array to improve speed?
 		foreach (array_reverse(debug_backtrace(/*!DEBUG_BACKTRACE_PROVIDE_OBJECT|DEBUG_BACKTRACE_IGNORE_ARGS*/)) as $trace) {
 			// search form
 			if (isset($trace['file']) && strpos($trace['file'], 'searchform.php'))
