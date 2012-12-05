@@ -93,6 +93,11 @@ Every suggestions are welcome.
 
 == Changelog ==
 
+= 0.9.8 =
+
+* Bug correction: ajax on frontend does not work when adding the language code to all urls
+* Bug correction: search forms using the get_search_form filter do not work
+
 = 0.9.7 (2012-12-04) =
 
 * Bug correction: the admin language filter does filter non translatable post types

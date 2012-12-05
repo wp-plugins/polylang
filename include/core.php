@@ -41,7 +41,7 @@ class Polylang_Core extends Polylang_base {
 
 		add_action('init', array(&$this, 'init'));
 		foreach (array('wp', 'login_init', 'admin_init') as $filter) // admin_init for ajax thanks to g100g
-			add_action($filter, array(&$this, 'load_textdomains'), 5); // priority 5 for post types and taxonomies with registered with in wp hook with default priority
+			add_action($filter, array(&$this, 'load_textdomains'), 5); // priority 5 for post types and taxonomies registered in wp hook with default priority
 
 		// filters the WordPress locale
 		add_filter('locale', array(&$this, 'get_locale'));
@@ -225,6 +225,13 @@ class Polylang_Core extends Polylang_base {
 
 	// sets the language when it is always included in the url
 	function setup_theme() {
+		// special case for ajax request
+		if (isset($_REQUEST['pll_load_front'])) {
+			$this->curlang = isset($_REQUEST['lang']) && $_REQUEST['lang'] ? $this->get_language($_REQUEST['lang']) : $this->get_preferred_language();
+			do_action('pll_language_defined');
+			return;
+		}
+
 		$root = $this->options['rewrite']? '' : 'language/';
 
 		foreach ($this->get_languages_list() as $language)
@@ -808,10 +815,10 @@ class Polylang_Core extends Polylang_base {
 	}
 
 	// translates page for posts and page on front
-	function translate_page($val) {
+	function translate_page($v) {
 		// returns the current page if there is no translation to avoid ugly notices
 		// the fonction is often called so let's store the result
-		return isset($this->curlang) && $val && (isset($this->posts[$val]) || $this->posts[$val] = $this->get_post($val, $this->curlang)) ? $this->posts[$val] : $val;
+		return isset($this->curlang) && $v && (isset($this->posts[$v]) || $this->posts[$v] = $this->get_post($v, $this->curlang)) ? $this->posts[$v] : $v;
 	}
 
 	// filters the home url to get the right language
@@ -820,10 +827,14 @@ class Polylang_Core extends Polylang_base {
 			return $url;
 
 		$theme = get_theme_root();
-		foreach (debug_backtrace(/*!DEBUG_BACKTRACE_PROVIDE_OBJECT|DEBUG_BACKTRACE_IGNORE_ARGS*/) as $trace) {
+		foreach (array_reverse(debug_backtrace(/*!DEBUG_BACKTRACE_PROVIDE_OBJECT|DEBUG_BACKTRACE_IGNORE_ARGS*/)) as $trace) {
 			// search form
 			if (isset($trace['file']) && strpos($trace['file'], 'searchform.php'))
 				return $GLOBALS['wp_rewrite']->using_permalinks() ? $this->get_home_url($this->curlang, true) : $url;
+
+			// don't interfere with get_search_form filter which I prefer to use when possible
+			if ($trace['function'] == 'get_search_form')
+				return $url;
 
 			$ok = $trace['function'] == 'wp_nav_menu' ||
 				// direct call from the theme
