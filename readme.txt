@@ -93,6 +93,10 @@ Every suggestions are welcome.
 
 == Changelog ==
 
+= 0.9.9 =
+
+* Bug correction: again the canonical redirection
+
 = 0.9.8 (2012-12-05) =
 
 * Bug correction: ajax on frontend does not work when adding the language code to all urls

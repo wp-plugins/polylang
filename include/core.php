@@ -225,21 +225,19 @@ class Polylang_Core extends Polylang_base {
 
 	// sets the language when it is always included in the url
 	function setup_theme() {
+		global $wp_rewrite;
+
 		// special case for ajax request
 		if (isset($_REQUEST['pll_load_front']))
 			$this->curlang = isset($_REQUEST['lang']) && $_REQUEST['lang'] ? $this->get_language($_REQUEST['lang']) : $this->get_preferred_language();
 
 		// standard case
 		else {
-			$root = $this->options['rewrite']? '' : 'language/';
-
 			foreach ($this->get_languages_list() as $language)
 				$languages[] = $language->slug;
 
-			$languages = $GLOBALS['wp_rewrite']->using_permalinks() ?
-				'#\/'.$root.'('.implode('|', $languages).')\/#' :
-				'#lang=('.implode('|', $languages).')#';
-
+			$root = $this->options['rewrite'] ? '' : 'language/';
+			$languages = $wp_rewrite->using_permalinks() ? '#\/'.$root.'('.implode('|', $languages).')\/#' : '#lang=('.implode('|', $languages).')#';
 			preg_match($languages, trailingslashit($_SERVER['REQUEST_URI']), $matches);
 
 			// home is resquested
@@ -258,10 +256,11 @@ class Polylang_Core extends Polylang_base {
 				$this->curlang = $this->get_language($matches[1]);
 			elseif (false === strpos($_SERVER['SCRIPT_NAME'], 'index.php')) // wp-login, wp-signup, wp-activate
 				$this->curlang = $this->get_preferred_language();
-			else {
+			else
 				$this->curlang = $this->get_language($this->options['default_lang']);
+
+			if ($wp_rewrite->using_permalinks())
 				add_action('wp', array(&$this, 'check_language_code_in_url')); // before Wordpress redirect_canonical
-			}
 		}
 
 		$GLOBALS['l10n']['pll_string'] = $this->mo_import($this->curlang);
@@ -361,8 +360,10 @@ class Polylang_Core extends Polylang_base {
 	// special actions when home page is requested
 	// optionally redirects to the home page in the preferred language
 	function home_requested($query = false) {
+		global $wp_rewrite;
+
 		// need this filter to get the right url when adding language code to all urls
-		if ($this->options['force_lang'] && $GLOBALS['wp_rewrite']->using_permalinks())
+		if ($this->options['force_lang'] && $wp_rewrite->using_permalinks())
 			add_filter('_get_page_link', array(&$this, 'post_link'), 10, 2);
 
 		if ($this->options['hide_default'] && isset($_COOKIE['wordpress_polylang']))
@@ -373,16 +374,17 @@ class Polylang_Core extends Polylang_base {
 		// we are already on the right page
 		if ($this->options['default_lang'] == $this->curlang->slug && $this->options['hide_default']) {
 			if ($this->page_on_front && $link_id = $this->get_post($this->page_on_front, $this->curlang))
-				$query ? $query->set('page_id', $link_id) : set_query_var('page_id', $link_id);						else
+				$query ? $query->set('page_id', $link_id) : set_query_var('page_id', $link_id);
+			else
 				$query ? $query->set('lang', $this->curlang->slug) : set_query_var('lang', $this->curlang->slug);
 		}
 		// redirect to the home page in the right language
 		// test to avoid crash if get_home_url returns something wrong
 		// FIXME why this happens? http://wordpress.org/support/topic/polylang-crashes-1
 		// don't redirect if $_POST is not empty as it could break other plugins
-		// don't forget the query string which may be added by plugins even when permalinks are used
+		// don't forget the query string which may be added by plugins
 		elseif (is_string($redirect = $this->get_home_url($this->curlang)) && empty($_POST)) {
-			wp_redirect(!$query && $_SERVER['QUERY_STRING'] ? $redirect.'?'. $_SERVER['QUERY_STRING'] : $redirect);
+			wp_redirect($_SERVER['QUERY_STRING'] ? $redirect . ($wp_rewrite->using_permalinks() ? '?' : '&') . $_SERVER['QUERY_STRING'] : $redirect);
 			exit;
 		}
 	}
@@ -566,14 +568,9 @@ class Polylang_Core extends Polylang_base {
 
 	// prevents redirection of the homepage when using page on front
 	function stop_redirect_canonical($redirect_url, $requested_url) {
-		if (($page_on_front = get_option('page_on_front')) && $page_on_front == get_query_var('page_id')) // default permalinks
-			return false;
-
-		$url = @parse_url($requested_url);
-		$url = trailingslashit($url['scheme'] . '://' .$url['host'] . (isset($url['path']) ? $url['path'] : ''));
-		$page_on_front = trailingslashit($this->page_link('', $page_on_front));
-
-		return $url == home_url('/') || $url == $page_on_front ? false : $redirect_url;
+		global $wp_query;
+		return is_page() && !is_feed() && isset($wp_query->queried_object) && 'page' == get_option('show_on_front') &&
+ 			$wp_query->queried_object->ID == get_option('page_on_front') ? false : $redirect_url;
 	}
 
 	// redirects incoming links to the proper URL when adding the language code to all urls
@@ -588,9 +585,14 @@ class Polylang_Core extends Polylang_base {
 			if (in_array($obj->taxonomy, $this->taxonomies))
 				$language = $this->get_term_language((int)$obj->term_id);
 		}
-			// the language is not correctly set so let's redirect to the correct url for this object
+
+		// the language is not correctly set so let's redirect to the correct url for this object
 		if (isset($language) && $language->slug != $this->curlang->slug) {
-			$requested_url  = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+			$root = $this->options['rewrite'] ? '/' : '/language/';
+			foreach ($this->get_languages_list() as $lang)
+				$languages[] = $root . $lang->slug;
+
+			$requested_url  = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . str_replace($languages, '', $_SERVER['REQUEST_URI']);
 			$redirect_url = $this->add_language_to_link($requested_url, $language);
 			wp_redirect($redirect_url, 301);
 			exit;
