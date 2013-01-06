@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: polylang\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-19 20:14+0100\n"
-"PO-Revision-Date: 2012-08-21 23:47+0300\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2013-01-06 19:26+0100\n"
 "Last-Translator: Theodotos Andreou <theo@ubuntucy.org>\n"
 "Language-Team: Ubuntucy - www.ubuntucy.org\n"
 "Language: el\n"
@@ -21,562 +21,581 @@ msgstr ""
 "X-Poedit-SearchPath-0: ..\n"
 
 # @ polylang
-#: ../polylang.php:111
-#, php-format
-msgid "You are using WordPress %s. Polylang requires at least WordPress %s."
-msgstr ""
-"Χρησιμοποιείτε WordPress %s. Το Polylang χρειάζεται τουλάχιστον WordPress %"
-"s."
-
-# @ polylang
-#: ../polylang.php:125
-msgid "For some reasons, Polylang could not create a table in your database."
-msgstr ""
-"Το Polylang δεν μπόρεσε να δημιουργήσει πίνακα στην βάση δεδομένων σας, για "
-"κάποιο λόγο."
-
-# @ polylang
-#: ../polylang.php:208
-msgid "Error: Restore of local flags failed!"
-msgstr "Σφάλμα: αποτυχία επαναφοράς των τοπικών σημαιών!"
-
-# @ polylang
-#: ../polylang.php:209
-#, php-format
-msgid "Please move your local flags from %s to %s"
-msgstr "Παρακαλώ μετακινήστε τις τοπικές σημαίες σας από %s σε %s"
-
-# @ default
-#: ../include/calendar.php:106
-#, php-format
-msgctxt "calendar caption"
-msgid "%1$s %2$s"
-msgstr "%1$s %2$s"
-
-# @ default
-#: ../include/calendar.php:132
-#: ../include/calendar.php:140
-#, php-format
-msgid "View posts for %1$s %2$s"
-msgstr "Προβολή άρθρων για %1$s %2$s"
-
-# @ polylang
-#: ../include/media-translations.php:3
-#: ../include/admin-filters.php:194
-#: ../include/admin-filters.php:525
-#: ../include/admin-filters.php:696
-#: ../include/admin-filters.php:714
-#: ../include/post-translations.php:8
-#: ../include/term-translations.php:15
-msgid "Language"
-msgstr "Γλώσσα"
-
-# @ polylang
-#: ../include/media-translations.php:4
-#: ../include/term-translations.php:16
-msgid "Translation"
-msgstr "Μετάφραση"
-
-# @ polylang
-#: ../include/media-translations.php:18
-#: ../include/post-translations.php:10
-#: ../include/post-translations.php:33
-#: ../include/term-translations.php:18
-#: ../include/term-translations.php:65
-msgid "Edit"
-msgstr "Επεξεργασία"
-
-# @ polylang
-#: ../include/media-translations.php:26
-#: ../include/post-translations.php:38
-#: ../include/term-translations.php:54
-msgid "Add new"
-msgstr "Προσθήκη νέου"
-
-# @ polylang
-#: ../include/widget.php:6
-msgid "Language Switcher"
-msgstr "Επιλογέας γλώσσας"
-
-# @ polylang
-#: ../include/widget.php:6
-msgid "Displays a language switcher"
-msgstr "Εμφάνιση επιλογέα γλώσσας"
-
-# @ polylang
-#: ../include/widget.php:73
-msgid "Title:"
-msgstr "Τίτλος:"
-
-# @ polylang
-#: ../include/admin-base.php:50
-#: ../include/admin-base.php:176
-#: ../include/admin.php:290
-#: ../include/admin-filters.php:221
-msgid "Languages"
-msgstr "Γλώσσες"
-
-# @ polylang
-#: ../include/admin-base.php:55
-msgid "About Polylang"
-msgstr "Σχετικά με το Polylang"
-
-# @ polylang
-#: ../include/admin-base.php:149
-msgid "Displays language names"
-msgstr "Εμφάνιση ονομάτων γλώσσας"
-
-# @ polylang
-#: ../include/admin-base.php:150
-msgid "Displays flags"
-msgstr "Εμφάνιση σημαιών"
-
-# @ polylang
-#: ../include/admin-base.php:151
-msgid "Forces link to front page"
-msgstr "Υποχρεωτική παραπομπή συνδέσμου στην αρχική σελίδα"
-
-# @ polylang
-#: ../include/admin-base.php:152
-msgid "Hides the current language"
-msgstr "Απόκρυψη τρέχουσας γλώσσας"
-
-# @ polylang
-#: ../include/admin-base.php:154
-msgid "Displays a language switcher at the end of the menu"
-msgstr "Εμφάνιση επιλογέα γλώσσας στο τέλος του μενού"
-
-# @ polylang
-#: ../include/admin-base.php:155
-msgid "Displays as dropdown"
-msgstr "Εμφάνιση σαν κυλιόμενο μενού"
-
-# @ polylang
-#: ../include/admin-base.php:177
-msgid "Filters content by language"
-msgstr "Φιλτράρισμα περιεχομένου βάση γλώσσας"
-
-# @ polylang
-#: ../include/admin-base.php:184
-msgid "Show all languages"
-msgstr "Εμφάνιση όλων των γλωσσών"
-
-# @ polylang
-#: ../include/admin.php:295
-msgid "Menus"
-msgstr "Μενού"
-
-# @ polylang
-#: ../include/admin.php:297
-msgid "Strings translation"
-msgstr "Μετάφραση συμβολοσειρών"
-
-# @ default
-# @ polylang
-#: ../include/admin.php:298
-#: ../include/admin-filters.php:988
-msgid "Settings"
-msgstr "Ρυθμίσεις"
-
-# @ polylang
-#: ../include/admin.php:317
-msgid "Enter a valid WorPress locale"
-msgstr "Εισάγετε μια έγκυρη τοπικοποίηση Wordpress"
-
-# @ polylang
-#: ../include/admin.php:318
-msgid "The language code must be 2 characters long"
-msgstr "Ο κώδικας γλώσσας θα πρέπει να είναι 2 χαρακτήρες"
-
-# @ polylang
-#: ../include/admin.php:319
-msgid "The language code must be unique"
-msgstr "Ο κώδικας γλώσσας θα πρέπει να είναι μοναδικός"
-
-# @ polylang
-#: ../include/admin.php:320
-msgid "The language must have a name"
-msgstr "Η γλώσσα πρέπει να έχει όνομα"
-
-# @ polylang
-#: ../include/admin.php:321
-msgid "The language was created, but the WordPress language file was not downloaded. Please install it manually."
-msgstr ""
-"Η γλώσσα δημιουργήθηκε αλλά το αρχείο γλώσσας του Wordpress δεν έχει "
-"κατέβει. Παρακαλώ εγκαταστήστε το εσείς."
-
-# @ default
-#: ../include/admin.php:409
-msgid "Site Title"
-msgstr "Τίτλος ιστοσελίδας"
-
-# @ default
-#: ../include/admin.php:410
-msgid "Tagline"
-msgstr "Υπότιτλος"
-
-# @ polylang
-#: ../include/admin.php:428
-msgid "Widget title"
-msgstr "Τίτλος μονάδας"
-
-# @ polylang
-#: ../include/admin-filters.php:176
-#: ../include/admin-filters.php:753
-msgid "Add new translation"
-msgstr "Προσθήκη νέας μετάφρασης"
-
-#: ../include/admin-filters.php:190
-msgid "&mdash; No Change &mdash;"
-msgstr "&mdash; Καμία αλλαγή &mdash;"
-
-# @ polylang
-#: ../include/admin-filters.php:244
-msgid "Page's language:"
-msgstr "Γλώσσα σελίδας:"
-
-# @ polylang
-#: ../include/admin-filters.php:244
-msgid "Post's language:"
-msgstr "Γλώσσα άρθρου:"
-
-# @ default
-#: ../include/admin-filters.php:305
-msgid "(no parent)"
-msgstr "(απουσία μητρικού)"
-
-# @ polylang
-#: ../include/admin-filters.php:536
-#: ../include/admin-filters.php:561
-#: ../include/term-translations.php:6
-#: ../include/term-translations.php:11
-msgid "Translations"
-msgstr "Μεταφράσεις"
-
-# @ polylang
-#: ../include/admin-filters.php:698
-#: ../include/admin-filters.php:717
-msgid "Sets the language"
-msgstr "Ορισμός γλώσσας"
-
-# @ default
-#: ../include/admin-filters.php:879
-msgid "None"
-msgstr "Κανένα"
-
-# @ polylang
-#: ../include/admin-filters.php:910
-msgid "Theme locations and languages"
-msgstr "Γλώσσες και τοποθεσίες θεμάτων"
-
-# @ polylang
-#: ../include/admin-filters.php:916
-#, php-format
-msgid "Please go to the %slanguages page%s to set theme locations and languages"
-msgstr ""
-"Παρακαλώ πηγαίνετε στην %sσελίδα γλώσσας%s για καθορισμό τοποθεσιών και "
-"γλωσσών θέματος"
-
-# @ polylang
-#: ../include/admin-filters.php:931
-msgid "The widget is displayed for:"
-msgstr "Η μονάδα εμφανίζεται για:"
-
-# @ polylang
-#: ../include/admin-filters.php:935
-msgid "All languages"
-msgstr "Όλες οι γλώσσες"
-
-# @ polylang
-#: ../include/admin-filters.php:959
-msgid "Admin language"
-msgstr "Γλώσσα διαχείρισης"
-
-#: ../include/admin-filters.php:964
-msgid "Wordpress default"
-msgstr "Προκαθορισμένο σε Wordpress"
-
-# @ polylang
-#: ../include/admin-filters.php:994
-msgid "Upgrading language files&#8230;"
-msgstr "Αναβάθμιση αρχείων γλώσσας&#8230;"
-
-# @ polylang
-#: ../include/languages-form.php:38
-msgid "Edit language"
-msgstr "Επεξεργασία γλώσσας"
-
-# @ polylang
-#: ../include/languages-form.php:38
-#: ../include/languages-form.php:105
-msgid "Add new language"
-msgstr "Προσθήκη νέας γλώσσας"
-
-# @ polylang
-#: ../include/languages-form.php:60
-msgid "Choose a language"
-msgstr "Επιλογή γλώσσας"
-
-# @ polylang
-#: ../include/languages-form.php:68
-msgid "You can choose a language in the list or directly edit it below."
-msgstr ""
-"Μπορείτε να επιλέξετε μια γλώσσα από την λίστα ή να την επεξεργαστείτε πιο "
-"κάτω."
-
-# @ polylang
-#: ../include/languages-form.php:72
-msgid "Full name"
-msgstr "Πλήρες όνομα"
-
-# @ polylang
-#: ../include/languages-form.php:74
-msgid "The name is how it is displayed on your site (for example: English)."
-msgstr "Το όνομα καθορίζει πως θα εμφανίζεται στην σελίδα σας (πχ: Ελληνικά)."
-
-# @ polylang
-#: ../include/languages-form.php:78
-msgid "Locale"
-msgstr "Τοπικοποίηση"
-
-# @ polylang
-#: ../include/languages-form.php:81
-msgid "Wordpress Locale for the language (for example: en_US). You will need to install the .mo file for this language."
-msgstr ""
-"Τοπικοποίηση Wordpress για την γλώσσα (πχ: en_US). Θα χρειαστεί να "
-"εγκαταστήσετε το αρχείο .mo για αυτή την γλώσσα."
-
-# @ polylang
-#: ../include/languages-form.php:85
-msgid "Language code"
-msgstr "Κώδικας γλώσσας"
-
-# @ polylang
-#: ../include/languages-form.php:87
-msgid "2-letters ISO 639-1 language code (for example: en)"
-msgstr "ISO 639-1 κώδικας γλώσσας 2 χαρακτήρων (πχ: en)"
-
-# @ polylang
-#: ../include/languages-form.php:91
-msgid "Text direction"
-msgstr "Κατεύθυνση κειμένου"
-
-# @ polylang
-#: ../include/languages-form.php:93
-msgid "left to right"
-msgstr "αριστερά προς δεξιά"
-
-# @ polylang
-#: ../include/languages-form.php:95
-msgid "right to left"
-msgstr "δεξιά προς αριστερά"
-
-# @ polylang
-#: ../include/languages-form.php:96
-msgid "Choose the text direction for the language"
-msgstr "Επιλογή κατεύθυνσης κειμένου για γλώσσα"
-
-# @ polylang
-#: ../include/languages-form.php:100
-msgid "Order"
-msgstr "Εντολή"
-
-# @ polylang
-#: ../include/languages-form.php:102
-msgid "Position of the language in the language switcher"
-msgstr "Θέση της γλώσσας στον επιλογέα γλώσσας"
-
-# @ default
-#: ../include/languages-form.php:105
-msgid "Update"
-msgstr "Ενημέρωση"
-
-# @ polylang
-#: ../include/languages-form.php:151
-msgid "Language switcher"
-msgstr "Επιλογέας γλώσσας"
-
-# @ polylang
-#: ../include/languages-form.php:175
-msgid "Clean strings translation database"
-msgstr "Καθαρισμός βάσης δεδομένων συμβολοσειρών μετάφρασης"
-
-# @ polylang
-#: ../include/languages-form.php:191
-msgid "Default language"
-msgstr "Προκαθορισμένη γλώσσα"
-
-# @ polylang
-#: ../include/languages-form.php:203
-msgid "There are posts, pages, categories or tags without language set. Do you want to set them all to default language ?"
-msgstr ""
-"Υπάρχουν άρθρα, σελίδες, κατηγορίες ή ετικέτες χωρίς καθορισμό γλώσσας. "
-"Θέλετε να οριστούν όλα στην προκαθορισμένη γλώσσα;"
-
-# @ polylang
-#: ../include/languages-form.php:211
-msgid "Detect browser language"
-msgstr "Αναγνώριση γλώσσας φυλλομετρητή"
-
-# @ polylang
-#: ../include/languages-form.php:217
-msgid "When the front page is visited, set the language according to the browser preference"
-msgstr ""
-"Όταν καλείται η αρχική σελίδα, να καθορίζεται η γλώσσα βάση των προτιμήσεων "
-"του φυλλομετρητή"
-
-# @ polylang
-#: ../include/languages-form.php:224
-msgid "URL modifications"
-msgstr "Τροποποιήσεις URL"
-
-# @ polylang
-#: ../include/languages-form.php:230
-msgid "The language is set from content. Posts, pages, categories and tags urls are not modified."
-msgstr ""
-"Η γλώσσα ορίσθηκε βάση του περιεχομένου. Οι διευθύνσεις URL των άρθρων, "
-"σελίδων και ετικετών δεν έχουν τροποποιηθεί."
-
-#: ../include/languages-form.php:238
-msgid "The language code, for example /en/, is added to all urls when using pretty permalinks."
-msgstr ""
-"Ο κώδικας γλώσσας, για παράδειγμα /el/, προστίθεται σε όλες τις διευθύνσεις "
-"URL όταν χρησιμοποιούνται ευδιάκριτοι μόνιμοι σύνδεσμοι."
-
-# @ polylang
-#: ../include/languages-form.php:247
-msgid "Remove /language/ in pretty permalinks. Example:"
-msgstr "Αφαίρεση /language/ από ευδιάκριτους μόνιμους συνδέσμους. Παράδειγμα:"
-
-# @ polylang
-#: ../include/languages-form.php:256
-msgid "Keep /language/ in pretty permalinks. Example:"
-msgstr "Διατήρηση /language/ σε ευδιάκριτους μόνιμους συνδέσμους. Παράδειγμα:"
-
-# @ polylang
-#: ../include/languages-form.php:265
-msgid "Hide URL language information for default language"
-msgstr "Απόκρυψη των πληροφοριών γλώσσας από URL, για την προκαθορισμένη γλώσσα"
-
-# @ polylang
-#: ../include/languages-form.php:274
-#, php-format
-msgid "When using static front page, redirect the language page (example: %s) to the front page in the right language"
-msgstr ""
-"Όταν υπάρχει στατική αρχική σελίδα, να γίνεται ανακατεύθυνση της σελίδας "
-"γλώσσας (παράδειγμα: %s) της αρχικής σελίδας στην σωστή γλώσσα"
-
-#: ../include/languages-form.php:281
-msgid "Synchronization"
-msgstr "Συγχρονισμός"
-
-#: ../include/languages-form.php:287
-msgid "Allow to synchronize categories, tags, featured image and other metas between translations of a post or page"
-msgstr ""
-"Να επιτρέπεται ο συγχρονισμός κατηγοριών, ετικετών, χαρακτηριστικών εικόνων "
-"και άλλων μεταδεδομένων μεταξύ των μεταφράσεων ενός άρθρου ή μιας σελίδας"
-
-# @ polylang
-#: ../include/post-translations.php:5
-msgid "ID of pages in other languages:"
-msgstr "ID των σελίδων σε άλλες γλώσσες:"
-
-# @ polylang
-#: ../include/post-translations.php:5
-msgid "ID of posts in other languages:"
-msgstr "ID των άρθρων σε άλλες γλώσσες:"
-
-# @ polylang
-#: ../include/post-translations.php:9
-msgid "Page ID"
-msgstr "ID σελίδας"
-
-# @ polylang
-#: ../include/post-translations.php:9
-msgid "Post ID"
-msgstr "ID άρθρου"
-
-# @ polylang
-#: ../include/about.php:3
+#: include/about.php:3
 #, php-format
 msgid "Polylang is provided with an extensive %sdocumentation%s (in English only). It includes information on how to set up your multilingual site and use it on a daily basis, a FAQ, as well as a documentation for programmers to adapt their plugins and themes."
-msgstr ""
-"Το Polylang παρέχει εκτενή %sτεκμηρίωση%s (μόνο στα Αγγλικά). Περιέχει "
-"πληροφορίες πως να ρυθμίσετε τον πολυγλωσσικό σας ιστοτόπο και να τον "
-"χρησιμοποιήσετε σε καθημερινή βάση, λίστα συχνών ερωτήσεων (FAQ), καθώς και "
-"τεκμηρίωση για προγραμματιστές για προσαρμογή των προσθέτων και θεμάτων "
-"τους."
+msgstr "Το Polylang παρέχει εκτενή %sτεκμηρίωση%s (μόνο στα Αγγλικά). Περιέχει πληροφορίες πως να ρυθμίσετε τον πολυγλωσσικό σας ιστοτόπο και να τον χρησιμοποιήσετε σε καθημερινή βάση, λίστα συχνών ερωτήσεων (FAQ), καθώς και τεκμηρίωση για προγραμματιστές για προσαρμογή των προσθέτων και θεμάτων τους."
 
 # @ polylang
-#: ../include/about.php:8
+#: include/about.php:9
 #, php-format
 msgid "You will also find useful information in the %ssupport forum%s. However don't forget to make a search before posting a new topic."
-msgstr ""
-"Θα βρείτε επίσης χρήσιμες πληροφορίες στο %sφόρουμ%s υποστήριξης. Μην "
-"ξεχνάτε να ψάξετε πρώτα αν έχει απαντηθεί το ερώτημα σας πριν ανοίξετε "
-"καινούργιο θέμα."
+msgstr "Θα βρείτε επίσης χρήσιμες πληροφορίες στο %sφόρουμ%s υποστήριξης. Μην ξεχνάτε να ψάξετε πρώτα αν έχει απαντηθεί το ερώτημα σας πριν ανοίξετε καινούργιο θέμα."
 
 # @ polylang
-#: ../include/about.php:14
+#: include/about.php:16
 #, php-format
 msgid "Polylang is free of charge and is released under the same license as WordPress, the %sGPL%s."
-msgstr ""
-"Το Polylang είναι δωρεάν και διανέμεται κάτω από την ίδια άδεια χρήσης όπως "
-"και το Wordpress, την %sΓενική Άδεια Χρήσης - GPL%s."
+msgstr "Το Polylang είναι δωρεάν και διανέμεται κάτω από την ίδια άδεια χρήσης όπως και το Wordpress, την %sΓενική Άδεια Χρήσης - GPL%s."
 
 # @ polylang
-#: ../include/about.php:18
+#: include/about.php:22
 #, php-format
 msgid "If you wonder how you can help the project, just %sread this%s."
 msgstr "Αν θέλετε να βοηθήσετε, απλά, %sδιαβάστε εδώ%s."
 
 # @ polylang
-#: ../include/about.php:22
+#: include/about.php:27
 msgid "Finally if you like this plugin or if it helps your business, donations to the author are greatly appreciated."
-msgstr ""
-"Τέλος αν σας αρέσει αυτό το πρόσθετο ή αν σας βοηθά στην επιχείρηση σας, οι "
-"δωρεές στο δημιουργό θα εκτιμηθούν ιδιαίτερα. "
-
-#: ../include/core.php:547
-msgid "Search"
-msgstr "Αναζήτηση"
+msgstr "Τέλος αν σας αρέσει αυτό το πρόσθετο ή αν σας βοηθά στην επιχείρηση σας, οι δωρεές στο δημιουργό θα εκτιμηθούν ιδιαίτερα. "
 
 # @ polylang
-#: ../include/term-translations.php:48
-msgid "No untranslated term"
-msgstr "Απουσία αμετάφραστου όρου"
+#: include/admin-base.php:55
+#: include/admin-base.php:185
+#: include/admin-filters.php:250
+#: include/admin.php:23
+#: include/admin.php:318
+#: include/list-table.php:46
+#: polylang.php:270
+msgid "Languages"
+msgstr "Γλώσσες"
 
 # @ polylang
-#: ../include/list-table.php:27
-msgid "Delete"
-msgstr "Διαγραφή"
+#: include/admin-base.php:154
+msgid "Displays language names"
+msgstr "Εμφάνιση ονομάτων γλώσσας"
 
 # @ polylang
-#: ../include/list-table.php:47
-msgid "Code"
-msgstr "Κώδικας"
+#: include/admin-base.php:155
+msgid "Displays flags"
+msgstr "Εμφάνιση σημαιών"
 
 # @ polylang
-#: ../include/list-table.php:49
-msgid "Flag"
-msgstr "Σημαία"
+#: include/admin-base.php:156
+msgid "Forces link to front page"
+msgstr "Υποχρεωτική παραπομπή συνδέσμου στην αρχική σελίδα"
 
 # @ polylang
-#: ../include/list-table.php:50
-msgid "Posts"
-msgstr "Άρθρα"
+#: include/admin-base.php:157
+msgid "Hides the current language"
+msgstr "Απόκρυψη τρέχουσας γλώσσας"
 
 # @ polylang
-#: ../include/list-table.php:105
+#: include/admin-base.php:161
+msgid "Displays a language switcher at the end of the menu"
+msgstr "Εμφάνιση επιλογέα γλώσσας στο τέλος του μενού"
+
+# @ polylang
+#: include/admin-base.php:162
+msgid "Displays as dropdown"
+msgstr "Εμφάνιση σαν κυλιόμενο μενού"
+
+# @ polylang
+#: include/admin-base.php:186
+msgid "Filters content by language"
+msgstr "Φιλτράρισμα περιεχομένου βάση γλώσσας"
+
+# @ polylang
+#: include/admin-base.php:193
+msgid "Show all languages"
+msgstr "Εμφάνιση όλων των γλωσσών"
+
+# @ polylang
+#: include/admin-filters.php:188
+#: include/admin-filters.php:884
+msgid "Add new translation"
+msgstr "Προσθήκη νέας μετάφρασης"
+
+# @ polylang
+#: include/admin-filters.php:216
+#: include/admin-filters.php:274
+#: include/admin-filters.php:608
+#: include/admin-filters.php:824
+#: include/admin-filters.php:842
+#: include/list-table.php:45
+#: include/media-translations.php:5
+#: include/media-translations.php:43
+#: include/post-translations.php:8
+#: include/term-translations.php:15
+#: polylang.php:271
+msgid "Language"
+msgstr "Γλώσσα"
+
+# @ polylang
+#: include/admin-filters.php:623
+#: include/admin-filters.php:658
+#: include/list-table.php:120
+#: include/media-translations.php:40
+#: include/term-translations.php:6
+#: include/term-translations.php:11
+msgid "Translations"
+msgstr "Μεταφράσεις"
+
+# @ polylang
+#: include/admin-filters.php:826
+#: include/admin-filters.php:845
+msgid "Sets the language"
+msgstr "Ορισμός γλώσσας"
+
+# @ polylang
+#: include/admin-filters.php:1078
+msgid "Theme locations and languages"
+msgstr "Γλώσσες και τοποθεσίες θεμάτων"
+
+# @ polylang
+#: include/admin-filters.php:1084
+#, php-format
+msgid "Please go to the %slanguages page%s to set theme locations and languages"
+msgstr "Παρακαλώ πηγαίνετε στην %sσελίδα γλώσσας%s για καθορισμό τοποθεσιών και γλωσσών θέματος"
+
+# @ polylang
+#: include/admin-filters.php:1102
+msgid "The widget is displayed for:"
+msgstr "Η μονάδα εμφανίζεται για:"
+
+# @ polylang
+#: include/admin-filters.php:1106
+#: polylang.php:272
+msgid "All languages"
+msgstr "Όλες οι γλώσσες"
+
+# @ polylang
+#: include/admin-filters.php:1130
+msgid "Admin language"
+msgstr "Γλώσσα διαχείρισης"
+
+#: include/admin-filters.php:1135
+msgid "Wordpress default"
+msgstr "Προκαθορισμένο σε Wordpress"
+
+# @ default
+# @ polylang
+#: include/admin-filters.php:1161
+#: include/admin.php:326
+msgid "Settings"
+msgstr "Ρυθμίσεις"
+
+# @ polylang
+#: include/admin-filters.php:1167
+msgid "Upgrading language files&#8230;"
+msgstr "Αναβάθμιση αρχείων γλώσσας&#8230;"
+
+# @ polylang
+#: include/admin.php:22
+msgid "About Polylang"
+msgstr "Σχετικά με το Polylang"
+
+# @ polylang
+#: include/admin.php:27
+#: include/list-table.php:92
 msgid "Strings translations"
 msgstr "Μετάφραση συμβολοσειρών"
 
 # @ polylang
-#: ../include/list-table.php:131
+#: include/admin.php:323
+msgid "Menus"
+msgstr "Μενού"
+
+# @ polylang
+#: include/admin.php:325
+#: include/list-table.php:91
+msgid "Strings translation"
+msgstr "Μετάφραση συμβολοσειρών"
+
+# @ polylang
+#: include/admin.php:345
+msgid "Enter a valid WorPress locale"
+msgstr "Εισάγετε μια έγκυρη τοπικοποίηση Wordpress"
+
+# @ polylang
+#: include/admin.php:346
+msgid "The language code must be 2 characters long"
+msgstr "Ο κώδικας γλώσσας θα πρέπει να είναι 2 χαρακτήρες"
+
+# @ polylang
+#: include/admin.php:347
+msgid "The language code must be unique"
+msgstr "Ο κώδικας γλώσσας θα πρέπει να είναι μοναδικός"
+
+# @ polylang
+#: include/admin.php:348
+msgid "The language must have a name"
+msgstr "Η γλώσσα πρέπει να έχει όνομα"
+
+# @ polylang
+#: include/admin.php:349
+msgid "The language was created, but the WordPress language file was not downloaded. Please install it manually."
+msgstr "Η γλώσσα δημιουργήθηκε αλλά το αρχείο γλώσσας του Wordpress δεν έχει κατέβει. Παρακαλώ εγκαταστήστε το εσείς."
+
+# @ polylang
+#: include/admin.php:468
+msgid "Widget title"
+msgstr "Τίτλος μονάδας"
+
+# @ polylang
+#: include/base.php:339
+msgid "Taxonomies"
+msgstr ""
+
+# @ polylang
+#: include/base.php:340
+msgid "Custom fields"
+msgstr ""
+
+# @ polylang
+#: include/base.php:341
+msgid "Comment status"
+msgstr ""
+
+# @ polylang
+#: include/base.php:342
+msgid "Ping status"
+msgstr ""
+
+# @ polylang
+#: include/base.php:343
+msgid "Sticky posts"
+msgstr ""
+
+# @ polylang
+#: include/base.php:344
+msgid "Published date"
+msgstr ""
+
+# @ polylang
+#: include/base.php:345
+msgid "Post format"
+msgstr ""
+
+# @ default
+#: include/base.php:346
+msgid "Page parent"
+msgstr ""
+
+# @ polylang
+#: include/base.php:347
+msgid "Page template"
+msgstr ""
+
+# @ polylang
+#: include/base.php:348
+msgid "Page order"
+msgstr ""
+
+# @ polylang
+#: include/base.php:349
+msgid "Featured image"
+msgstr ""
+
+# @ polylang
+#: include/languages-form.php:43
+msgid "Edit language"
+msgstr "Επεξεργασία γλώσσας"
+
+# @ polylang
+#: include/languages-form.php:43
+#: include/languages-form.php:124
+msgid "Add new language"
+msgstr "Προσθήκη νέας γλώσσας"
+
+# @ polylang
+#: include/languages-form.php:65
+msgid "Choose a language"
+msgstr "Επιλογή γλώσσας"
+
+# @ polylang
+#: include/languages-form.php:79
+msgid "You can choose a language in the list or directly edit it below."
+msgstr "Μπορείτε να επιλέξετε μια γλώσσα από την λίστα ή να την επεξεργαστείτε πιο κάτω."
+
+# @ polylang
+#: include/languages-form.php:83
+#: include/list-table.php:63
+msgid "Full name"
+msgstr "Πλήρες όνομα"
+
+# @ polylang
+#: include/languages-form.php:85
+msgid "The name is how it is displayed on your site (for example: English)."
+msgstr "Το όνομα καθορίζει πως θα εμφανίζεται στην σελίδα σας (πχ: Ελληνικά)."
+
+# @ polylang
+#: include/languages-form.php:89
+#: include/list-table.php:64
+msgid "Locale"
+msgstr "Τοπικοποίηση"
+
+# @ polylang
+#: include/languages-form.php:94
+msgid "Wordpress Locale for the language (for example: en_US). You will need to install the .mo file for this language."
+msgstr "Τοπικοποίηση Wordpress για την γλώσσα (πχ: en_US). Θα χρειαστεί να εγκαταστήσετε το αρχείο .mo για αυτή την γλώσσα."
+
+# @ polylang
+#: include/languages-form.php:98
+msgid "Language code"
+msgstr "Κώδικας γλώσσας"
+
+# @ polylang
+#: include/languages-form.php:100
+msgid "2-letters ISO 639-1 language code (for example: en)"
+msgstr "ISO 639-1 κώδικας γλώσσας 2 χαρακτήρων (πχ: en)"
+
+# @ polylang
+#: include/languages-form.php:104
+msgid "Text direction"
+msgstr "Κατεύθυνση κειμένου"
+
+# @ polylang
+#: include/languages-form.php:108
+msgid "left to right"
+msgstr "αριστερά προς δεξιά"
+
+# @ polylang
+#: include/languages-form.php:113
+msgid "right to left"
+msgstr "δεξιά προς αριστερά"
+
+# @ polylang
+#: include/languages-form.php:115
+msgid "Choose the text direction for the language"
+msgstr "Επιλογή κατεύθυνσης κειμένου για γλώσσα"
+
+# @ polylang
+#: include/languages-form.php:119
+#: include/list-table.php:66
+msgid "Order"
+msgstr "Εντολή"
+
+# @ polylang
+#: include/languages-form.php:121
+msgid "Position of the language in the language switcher"
+msgstr "Θέση της γλώσσας στον επιλογέα γλώσσας"
+
+# @ polylang
+#: include/languages-form.php:180
+msgid "Language switcher"
+msgstr "Επιλογέας γλώσσας"
+
+# @ polylang
+#: include/languages-form.php:206
+msgid "Search translations"
+msgstr ""
+
+# @ polylang
+#: include/languages-form.php:215
+msgid "Clean strings translation database"
+msgstr "Καθαρισμός βάσης δεδομένων συμβολοσειρών μετάφρασης"
+
+# @ polylang
+#: include/languages-form.php:231
+msgid "Default language"
+msgstr "Προκαθορισμένη γλώσσα"
+
+# @ polylang
+#: include/languages-form.php:243
+msgid "There are posts, pages, categories or tags without language set. Do you want to set them all to default language ?"
+msgstr "Υπάρχουν άρθρα, σελίδες, κατηγορίες ή ετικέτες χωρίς καθορισμό γλώσσας. Θέλετε να οριστούν όλα στην προκαθορισμένη γλώσσα;"
+
+# @ polylang
+#: include/languages-form.php:251
+msgid "Detect browser language"
+msgstr "Αναγνώριση γλώσσας φυλλομετρητή"
+
+# @ polylang
+#: include/languages-form.php:257
+msgid "When the front page is visited, set the language according to the browser preference"
+msgstr "Όταν καλείται η αρχική σελίδα, να καθορίζεται η γλώσσα βάση των προτιμήσεων του φυλλομετρητή"
+
+# @ polylang
+#: include/languages-form.php:264
+msgid "URL modifications"
+msgstr "Τροποποιήσεις URL"
+
+# @ polylang
+#: include/languages-form.php:270
+msgid "The language is set from content. Posts, pages, categories and tags urls are not modified."
+msgstr "Η γλώσσα ορίσθηκε βάση του περιεχομένου. Οι διευθύνσεις URL των άρθρων, σελίδων και ετικετών δεν έχουν τροποποιηθεί."
+
+#: include/languages-form.php:278
+msgid "The language code, for example /en/, is added to all urls when using pretty permalinks."
+msgstr "Ο κώδικας γλώσσας, για παράδειγμα /el/, προστίθεται σε όλες τις διευθύνσεις URL όταν χρησιμοποιούνται ευδιάκριτοι μόνιμοι σύνδεσμοι."
+
+# @ polylang
+#: include/languages-form.php:287
+msgid "Remove /language/ in pretty permalinks. Example:"
+msgstr "Αφαίρεση /language/ από ευδιάκριτους μόνιμους συνδέσμους. Παράδειγμα:"
+
+# @ polylang
+#: include/languages-form.php:296
+msgid "Keep /language/ in pretty permalinks. Example:"
+msgstr "Διατήρηση /language/ σε ευδιάκριτους μόνιμους συνδέσμους. Παράδειγμα:"
+
+# @ polylang
+#: include/languages-form.php:305
+msgid "Hide URL language information for default language"
+msgstr "Απόκρυψη των πληροφοριών γλώσσας από URL, για την προκαθορισμένη γλώσσα"
+
+# @ polylang
+#: include/languages-form.php:315
+#, php-format
+msgid "When using static front page, redirect the language page (example: %s) to the front page in the right language"
+msgstr "Όταν υπάρχει στατική αρχική σελίδα, να γίνεται ανακατεύθυνση της σελίδας γλώσσας (παράδειγμα: %s) της αρχικής σελίδας στην σωστή γλώσσα"
+
+# @ polylang
+#: include/languages-form.php:324
+msgid "Media"
+msgstr ""
+
+# @ polylang
+#: include/languages-form.php:330
+msgid "Activate languages and translations for media"
+msgstr ""
+
+#: include/languages-form.php:337
+msgid "Synchronization"
+msgstr "Συγχρονισμός"
+
+# @ polylang
+#: include/languages-form.php:351
+msgid "Custom post types"
+msgstr ""
+
+# @ polylang
+#: include/languages-form.php:364
+msgid "Activate languages and translations for custom post types."
+msgstr ""
+
+# @ polylang
+#: include/languages-form.php:372
+msgid "Custom taxonomies"
+msgstr ""
+
+# @ polylang
+#: include/languages-form.php:385
+msgid "Activate languages and translations for custom taxonomies."
+msgstr ""
+
+# @ polylang
+#: include/list-table.php:55
+#: include/media-translations.php:22
+#: include/media-translations.php:60
+#: include/post-translations.php:10
+#: include/post-translations.php:33
+#: include/term-translations.php:18
+#: include/term-translations.php:80
+msgid "Edit"
+msgstr "Επεξεργασία"
+
+# @ polylang
+#: include/list-table.php:56
+msgid "Delete"
+msgstr "Διαγραφή"
+
+# @ polylang
+#: include/list-table.php:65
+msgid "Code"
+msgstr "Κώδικας"
+
+# @ polylang
+#: include/list-table.php:67
+msgid "Flag"
+msgstr "Σημαία"
+
+# @ polylang
+#: include/list-table.php:68
+msgid "Posts"
+msgstr "Άρθρα"
+
+# @ polylang
+#: include/list-table.php:118
 msgid "Name"
 msgstr "Όνομα"
 
 # @ polylang
-#: ../include/list-table.php:132
+#: include/list-table.php:119
 msgid "String"
 msgstr "Συμβολοσειρά"
+
+# @ polylang
+#: include/media-translations.php:6
+#: include/media-translations.php:44
+#: include/term-translations.php:16
+msgid "Translation"
+msgstr "Μετάφραση"
+
+# @ polylang
+#: include/media-translations.php:31
+#: include/media-translations.php:68
+#: include/post-translations.php:38
+#: include/term-translations.php:60
+msgid "Add new"
+msgstr "Προσθήκη νέου"
+
+# @ polylang
+#: include/post-translations.php:5
+msgid "ID of pages in other languages:"
+msgstr "ID των σελίδων σε άλλες γλώσσες:"
+
+# @ polylang
+#: include/post-translations.php:5
+msgid "ID of posts in other languages:"
+msgstr "ID των άρθρων σε άλλες γλώσσες:"
+
+# @ polylang
+#: include/post-translations.php:9
+msgid "Page ID"
+msgstr "ID σελίδας"
+
+# @ polylang
+#: include/post-translations.php:9
+msgid "Post ID"
+msgstr "ID άρθρου"
+
+# @ polylang
+#: include/term-translations.php:48
+msgid "No untranslated term"
+msgstr "Απουσία αμετάφραστου όρου"
+
+# @ polylang
+#: include/widget.php:6
+msgid "Language Switcher"
+msgstr "Επιλογέας γλώσσας"
+
+# @ polylang
+#: include/widget.php:6
+msgid "Displays a language switcher"
+msgstr "Εμφάνιση επιλογέα γλώσσας"
+
+# @ polylang
+#: include/widget.php:69
+msgid "Title:"
+msgstr "Τίτλος:"
+
+# @ polylang
+#. translators: plugin header field 'Description'
+#: polylang.php:0
+msgid "Adds multilingual capability to WordPress"
+msgstr ""
+
+# @ polylang
+#: polylang.php:118
+#, php-format
+msgid "You are using WordPress %s. Polylang requires at least WordPress %s."
+msgstr "Χρησιμοποιείτε WordPress %s. Το Polylang χρειάζεται τουλάχιστον WordPress %s."
+
+# @ polylang
+#: polylang.php:159
+msgid "For some reasons, Polylang could not create a table in your database."
+msgstr "Το Polylang δεν μπόρεσε να δημιουργήσει πίνακα στην βάση δεδομένων σας, για κάποιο λόγο."
+
+# @ polylang
+#: polylang.php:220
+msgid "Polylang has been deactivated because you upgraded from a too old version."
+msgstr ""
+
+# @ polylang
+#: polylang.php:222
+#, php-format
+msgid "Please upgrade first to %s before ugrading to %s."
+msgstr ""
+

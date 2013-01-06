@@ -81,4 +81,3 @@ $languages = array(
 	array('zh', 'zh_HK', '香港'),
 	array('zh', 'zh_TW', '台灣'),
 );
-?>

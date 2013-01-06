@@ -7,7 +7,12 @@ global $wp_rewrite;
 <h2 class="nav-tab-wrapper"><?php
 // display tabs
 foreach ($tabs as $key=>$name)
-	printf('<a href="options-general.php?page=mlang&tab=%s" class="nav-tab %s">%s</a>', $key, $key == $active_tab ? 'nav-tab-active' : '', $name);?>
+	printf(
+		'<a href="options-general.php?page=mlang&tab=%s" class="nav-tab %s">%s</a>',
+		$key,
+		$key == $active_tab ? 'nav-tab-active' : '',
+		$name
+	);?>
 </h2><?php
 
 switch($active_tab) {
@@ -62,7 +67,13 @@ if (isset($_GET['error'])) {?>
 						<option value=""></option><?php
 						include(PLL_INC.'/languages.php');
 						foreach ($languages as $lg) {
-							printf('<option value="%1$s-%2$s-%3$s">%4$s - %2$s</option>'."\n", esc_attr($lg[0]), esc_attr($lg[1]), isset($lg[3]) ? '1' : '0' , esc_html($lg[2]));
+							printf(
+								'<option value="%1$s-%2$s-%3$s">%4$s - %2$s</option>'."\n",
+								esc_attr($lg[0]),
+								esc_attr($lg[1]),
+								isset($lg[3]) ? '1' : '0',
+								esc_html($lg[2])
+							);
 						} ?>
 					</select>
 					<p><?php _e('You can choose a language in the list or directly edit it below.', 'polylang');?></p>
@@ -76,8 +87,10 @@ if (isset($_GET['error'])) {?>
 
 				<div class="form-field form-required">
 					<label for="description"><?php _e('Locale', 'polylang');?></label><?php
-					printf('<input name="description" id="description" type="text" value="%s" size="7" maxlength="7" aria-required="true" />',
-						$action=='edit' ? esc_attr($edit_lang->description) : '');?>
+					printf(
+						'<input name="description" id="description" type="text" value="%s" size="7" maxlength="7" aria-required="true" />',
+						$action=='edit' ? esc_attr($edit_lang->description) : ''
+					);?>
 					<p><?php _e('Wordpress Locale for the language (for example: en_US). You will need to install the .mo file for this language.', 'polylang');?></p>
 				</div>
 
@@ -89,10 +102,16 @@ if (isset($_GET['error'])) {?>
 
 				<div class="form-field">
 					<legend><?php _e('Text direction', 'polylang');?></legend><?php
-					printf('<label><input name="rtl" type="radio" class="tog" value="0" %s /> %s</label>',
-						$rtl ? '' : 'checked="checked"', __('left to right', 'polylang'));
-					printf('<label><input name="rtl" type="radio" class="tog" value="1" %s /> %s</label>',
-						$rtl ? 'checked="checked"' : '', __('right to left', 'polylang'));?>
+					printf(
+						'<label><input name="rtl" type="radio" class="tog" value="0" %s /> %s</label>',
+						$rtl ? '' : 'checked="checked"',
+						__('left to right', 'polylang')
+					);
+					printf(
+						'<label><input name="rtl" type="radio" class="tog" value="1" %s /> %s</label>',
+						$rtl ? 'checked="checked"' : '',
+						__('right to left', 'polylang')
+					);?>
 					<p><?php _e('Choose the text direction for the language', 'polylang');?></p>
 				</div>
 
@@ -109,6 +128,7 @@ if (isset($_GET['error'])) {?>
 		</div><!-- col-wrap -->
 	</div><!-- col-left -->
 </div><!-- col-container -->
+
 <script type="text/javascript">
 	//<![CDATA[
 	jQuery(document).ready( function($) {
@@ -133,12 +153,21 @@ case 'menus': ?>
 		<h3><?php echo esc_html($description); ?></h3>
 		<table class="form-table"><?php
 			foreach ($listlanguages as $language) {?>
-				<tr><?php printf('<th><label for="menu-lang-%1$s-%2$s">%3$s</label></th>', esc_attr($location), esc_attr($language->slug), esc_html($language->name));?>
-					<td><?php printf('<select name="menu-lang[%1$s][%2$s]" id="menu-lang-%1$s-%2$s">', esc_attr($location), esc_attr($language->slug));?>
+				<tr><?php printf(
+						'<th><label for="menu-lang-%1$s-%2$s">%3$s</label></th>',
+						esc_attr($location),
+						esc_attr($language->slug),
+						esc_html($language->name)
+						);?>
+					<td><?php printf(
+							'<select name="menu-lang[%1$s][%2$s]" id="menu-lang-%1$s-%2$s">',
+							esc_attr($location),
+							esc_attr($language->slug)
+						);?>
 						<option value="0"></option><?php
 						foreach ($menus as $menu) {
 							printf(
-								"<option value='%d'%s>%s</option>\n",
+								'<option value="%d"%s>%s</option>\n',
 								esc_attr($menu->term_id),
 								isset($menu_lang[$location][$language->slug]) && $menu_lang[$location][$language->slug] == $menu->term_id ? ' selected="selected"' : '',
 								esc_html($menu->name)
@@ -150,9 +179,13 @@ case 'menus': ?>
 			<tr>
 				<th><?php _e('Language switcher', 'polylang') ?></th>
 				<td><?php
-					foreach ($this->get_switcher_options('menu') as $key => $str)
-						printf('<label><input name="menu-lang[%1$s][%2$s]" type="checkbox" value="1" %3$s /> %4$s</label>',
-							esc_attr($location), esc_attr($key), isset($menu_lang[$location][$key]) && $menu_lang[$location][$key] ? 'checked="checked"' :'', esc_html($str));?>
+					foreach ($this->get_switcher_options('menu') as $k => $str)
+						printf(
+							'<label><input name="menu-lang[%1$s][%2$s]" type="checkbox" value="1" %3$s /> %4$s</label>',
+							esc_attr($location), esc_attr($k),
+							empty($menu_lang[$location][$k]) ? '' : 'checked="checked"',
+							esc_html($str)
+						);?>
 				</td>
 			</tr>
 		</table><?php
@@ -165,10 +198,17 @@ case 'menus': ?>
 break;
 
 // string translations tab
-case 'strings':
+case 'strings': ?>
 
-	$paged = isset($_GET['paged']) ? '&paged='.$_GET['paged'] : '';?>
-	<form id="string-translation" method="post" action="<?php echo esc_url(admin_url('admin.php?page=mlang&tab=strings'.$paged.'&noheader=true'))?>" class="validate">
+	<form id="translations-filter" action="" method="get">
+	<input type="hidden" name="page" value="mlang" />
+	<input type="hidden" name="tab" value="strings" /><?php
+	$string_table->search_box(__('Search translations', 'polylang'), 'translations' );?>
+	</form><?php
+	$paged = isset($_REQUEST['paged']) ? '&paged='.$_REQUEST['paged'] : '';
+	$search = isset($_REQUEST['s']) ? '&s='.$_REQUEST['s'] : '';
+	$url = esc_url(admin_url('admin.php?page=mlang&tab=strings'.$search.$paged.'&noheader=true'));?>
+	<form id="string-translation" method="post" action="<?php echo $url;?>" class="validate">
 	<?php wp_nonce_field('string-translation', '_wpnonce_string-translation');?>
 	<input type="hidden" name="action" value="string-translation" /><?php
 	$string_table->display();
@@ -187,14 +227,14 @@ case 'settings': ?>
 
 	<table class="form-table">
 
-		<tr>
+		<tr valign="top">
 			<th><label for='default_lang'><?php _e('Default language', 'polylang');?></label></th>
 			<td><?php echo $this->dropdown_languages(array('name' => 'default_lang', 'selected' => $options['default_lang']));?></td>
 		</tr><?php
 
 		// posts or terms without language set
 		if ($this->get_objects_with_no_lang() && $options['default_lang']) {?>
-			<tr>
+			<tr valign="top">
 				<th></th>
 				<td>
 					<label style="color: red"><?php
@@ -207,7 +247,7 @@ case 'settings': ?>
 			</tr><?php
 		}?>
 
-		<tr>
+		<tr valign="top">
 			<th><?php _e('Detect browser language', 'polylang');?></th>
 			<td>
 				<label><?php
@@ -220,7 +260,7 @@ case 'settings': ?>
 			</td>
 		</tr>
 
-		<tr>
+		<tr valign="top">
 			<th><?php _e('URL modifications', 'polylang') ?></th>
 			<td scope="row">
 				<label><?php
@@ -271,24 +311,82 @@ case 'settings': ?>
 						'<input name="redirect_lang" type="checkbox" value="1" %s %s/> %s',
 						get_option('page_on_front') ? '' : 'disabled=1',
 						$options['redirect_lang'] ? 'checked="checked"' :'',
-						sprintf(__('When using static front page, redirect the language page (example: %s) to the front page in the right language', 'polylang'), '<code>'.esc_html(home_url('en/')).'</code>')
+						sprintf(
+							__('When using static front page, redirect the language page (example: %s) to the front page in the right language', 'polylang'),
+							'<code>'.esc_html(home_url('en/')).'</code>'
+						)
 					);?>
 				</label>
 			</td>
 		</tr>
 
-		<tr>
-			<th><?php _e('Synchronization', 'polylang') ?></th>
+		<tr valign="top">
+			<th scope="row"><?php _e('Media', 'polylang') ?></th>
 			<td scope="row">
 				<label><?php
 					printf(
-						'<input name="sync" type="checkbox" value="1" %s /> %s',
-						$options['sync'] ? 'checked="checked"' :'',
-						__('Allow to synchronize categories, tags, featured image and other metas between translations of a post or page', 'polylang')
+						'<input name="media_support" type="checkbox" value="1" %s /> %s',
+						$options['media_support'] ? 'checked="checked"' :'',
+						__('Activate languages and translations for media', 'polylang')
 					);?>
 				</label>
 			</td>
 		</tr>
+
+		<tr valign="top">
+			<th scope="row"><?php _e('Synchronization', 'polylang') ?></th>
+			<td scope="row"><ul class="pll_inline_block"><?php
+				foreach ($this->list_metas_to_sync() as $key => $str)
+					printf(
+						'<li><label><input name="sync[%s]" type="checkbox" value="1" %s /> %s</label></li>',
+						$key,
+						in_array($key, $options['sync']) ? 'checked="checked"' :'',
+						$str
+					);?>
+			</ul></td>
+		</tr><?php
+
+		if (!empty($post_types)) {?>
+			<tr valign="top">
+				<th scope="row"><?php _e('Custom post types', 'polylang') ?></th>
+				<td scope="row">
+					<ul class="pll_inline_block"><?php
+						foreach ($post_types as $post_type) {
+							$pt = get_post_type_object($post_type);
+							printf(
+								'<li><label><input name="post_types[%s]" type="checkbox" value="1" %s /> %s</label></li>',
+								$post_type,
+								in_array($post_type, $options['post_types']) ? 'checked="checked"' :'',
+								$pt->labels->name
+							);
+						}?>
+					</ul>
+					<p><?php _e('Activate languages and translations for custom post types.', 'polylang');?></p>
+				</td>
+			</tr><?php
+		}
+
+
+		if (!empty($taxonomies)) {?>
+			<tr valign="top">
+				<th scope="row"><?php _e('Custom taxonomies', 'polylang') ?></th>
+				<td scope="row">
+					<ul class="pll_inline_block"><?php
+						foreach ($taxonomies as $taxonomy) {
+							$tax = get_taxonomy($taxonomy);
+							printf(
+								'<li><label><input name="taxonomies[%s]" type="checkbox" value="1" %s /> %s</label></li>',
+								$taxonomy,
+								in_array($taxonomy, $options['taxonomies']) ? 'checked="checked"' :'',
+								$tax->labels->name
+							);
+						}?>
+					</ul>
+					<p><?php _e('Activate languages and translations for custom taxonomies.', 'polylang');?></p>
+				</td>
+			</tr><?php
+		}?>
+
 
 	</table>
 

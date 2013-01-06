@@ -33,6 +33,7 @@ jQuery(document).ready(function($) {
 		inlineEditTax.revert();
 		var id = inlineEditTax.getId(this);
 		var lang = $("input[name='lang_"+id+"']").attr('value');
+		$("input[name='old_lang']").val(lang);
 		$('#inline_lang_choice option:selected').removeAttr('selected');
 		$('#inline_lang_choice option[value="'+lang+'"]').attr('selected', 'selected');  
 	});

@@ -31,14 +31,18 @@ class Polylang_Admin_Base extends Polylang_Base {
 
 		// set text direction if the user set its own language
 		global $wpdb, $wp_locale;
-		$lang_id = $wpdb->get_var($wpdb->prepare("SELECT t.term_id FROM $wpdb->terms AS t INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id
-			WHERE tt.taxonomy = 'language' AND tt.description = %s LIMIT 1", get_locale())); // no function exists to get term by description
+		$lang_id = $wpdb->get_var($wpdb->prepare("
+			SELECT t.term_id FROM $wpdb->terms AS t
+			INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id
+			WHERE tt.taxonomy = 'language' AND tt.description = %s LIMIT 1",
+			get_locale()
+		)); // no function exists to get term by description
 		if ($lang_id)
 			$wp_locale->text_direction = get_metadata('term', $lang_id, '_rtl', true) ? 'rtl' : 'ltr';
 
 		// set user meta when choosing to filter content by language
  		// $_GET[lang] is used in ajax 'tag suggest' and is numeric when editing a language
-		if (!defined('DOING_AJAX') && isset($_GET['lang']) && $_GET['lang'] && !is_numeric($_GET['lang']))
+		if (!defined('DOING_AJAX') && !empty($_GET['lang']) && !is_numeric($_GET['lang']))
 			update_user_meta(get_current_user_id(), 'pll_filter_content', ($lang = $this->get_language($_GET['lang'])) ? $lang->slug : '');
 
 		// adds the languages in admin bar
@@ -48,7 +52,7 @@ class Polylang_Admin_Base extends Polylang_Base {
 
 	// adds the link to the languages panel in the wordpress admin menu
 	function add_menus() {
-		add_submenu_page('options-general.php', __('Languages', 'polylang'), __('Languages', 'polylang'), 'manage_options', 'mlang',  array(&$this, 'languages_page'));
+		add_submenu_page('options-general.php', $title = __('Languages', 'polylang'), $title, 'manage_options', 'mlang',  array(&$this, 'languages_page'));
 	}
 
 	// setup js scripts & css styles (only on the relevant pages)
@@ -70,7 +74,7 @@ class Polylang_Admin_Base extends Polylang_Base {
 		foreach ($scripts as $script => $v)
 			if (in_array($screen->base, $v[0]) && ($v[2] || $this->get_languages_list()))
 				wp_enqueue_script('pll_'.$script, POLYLANG_URL .'/js/'.$script.$suffix.'.js', $v[1], POLYLANG_VERSION);
-			
+
 		if (in_array($screen->base, array('settings_page_mlang', 'post', 'edit-tags', 'edit', 'upload', 'media')))
 			wp_enqueue_style('polylang_admin', POLYLANG_URL .'/css/admin'.$suffix.'.css', array(), POLYLANG_VERSION);
 	}
@@ -147,14 +151,17 @@ class Polylang_Admin_Base extends Polylang_Base {
 	// FIXME do not include the dropdown in menu yet since I need to work on js
 	function get_switcher_options($type = 'widget', $key ='string') {
 		$options = array(
-			'show_names' => array('string' => __('Displays language names', 'polylang'), 'default' => 1),
-			'show_flags' => array('string' => __('Displays flags', 'polylang'), 'default' => 0),
-			'force_home' => array('string' => __('Forces link to front page', 'polylang'), 'default' => 0),
+			'show_names'   => array('string' => __('Displays language names', 'polylang'), 'default' => 1),
+			'show_flags'   => array('string' => __('Displays flags', 'polylang'), 'default' => 0),
+			'force_home'   => array('string' => __('Forces link to front page', 'polylang'), 'default' => 0),
 			'hide_current' => array('string' => __('Hides the current language', 'polylang'), 'default' => 0),
 		);
-		$menu_options = array('switcher' => array('string' => __('Displays a language switcher at the end of the menu', 'polylang'), 'default' => 0));
-		$widget_options = array('dropdown' => array('string' => __('Displays as dropdown', 'polylang'), 'default' => 0));
-		$options = ($type == 'menu') ? array_merge($menu_options, $options) : array_merge($options, $widget_options);
+
+		$options = array_merge($options, ($type == 'menu') ?
+			array('switcher' => array('string' => __('Displays a language switcher at the end of the menu', 'polylang'), 'default' => 0)) :
+			array('dropdown' => array('string' => __('Displays as dropdown', 'polylang'), 'default' => 0))
+		);
+
 		return array_map(create_function('$v', "return \$v['$key'];"), $options);
 	}
 
@@ -170,7 +177,7 @@ class Polylang_Admin_Base extends Polylang_Base {
 		$url = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
 		// $_GET['lang'] is numeric when editing a language, not when selecting a new language in the filter
-		$selected = isset($_GET['lang']) && $_GET['lang'] && !is_numeric($_GET['lang']) && ($lang = $this->get_language($_GET['lang'])) ? $lang->slug : 
+		$selected = !empty($_GET['lang']) && !is_numeric($_GET['lang']) && ($lang = $this->get_language($_GET['lang'])) ? $lang->slug :
 			(($lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true)) ? $lg : 'all');
 
 		$wp_admin_bar->add_menu(array(
@@ -194,10 +201,8 @@ class Polylang_Admin_Base extends Polylang_Base {
 				'title'  => sprintf('<input name="%s" type="radio" value="1" %s /> %s',
 					$lang->slug, $selected == $lang->slug ? 'checked="checked"' : '', $lang->name),
 				'href'   => add_query_arg('lang', $lang->slug, $url),
-			));			
+			));
 		}
 	}
 
 } // class Polylang_Admin_Base
-
-?>

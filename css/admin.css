@@ -20,6 +20,10 @@
 }
 
 /* strings translation table */
+#translations-filter {
+	margin-top: 16px;
+}
+
 .stringstranslations .column-name {
 	width: 10%;
 }
@@ -36,6 +40,17 @@
 
 .translation input, .translation textarea {
 	width: 72%;
+}
+
+/* settings */
+.pll_inline_block {
+	margin: 0;
+}
+
+.pll_inline_block li {
+	display: inline-block;
+	margin: 0;
+	width: 250px;
 }
 
 /* language columns in edit.php and edit-tags.php */ 

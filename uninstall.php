@@ -23,7 +23,8 @@ class Polylang_Uninstall {
 		$wpdb->termmeta = $wpdb->prefix . 'termmeta'; // registers the termmeta table in wpdb
 
 		// need to register the language taxonomy
-		register_taxonomy('language', apply_filters('pll_get_post_types', get_post_types(array('show_ui' => true))), array('label' => false, 'query_var'=>'lang'));
+		register_taxonomy('language', apply_filters('pll_get_post_types', get_post_types(array('show_ui' => true))),
+			array('label' => false, 'query_var'=>'lang'));
 
 		$languages = get_terms('language', array('hide_empty'=>false));
 
@@ -36,7 +37,14 @@ class Polylang_Uninstall {
 		}
 
 		// delete posts translations
-		$ids = get_posts(array('numberposts'=> -1, 'fields' => 'ids', 'meta_key'=>'_translations', 'post_type'=>'any', 'post_status'=>'any'));
+		$ids = get_posts(array(
+			'numberposts'=> -1,
+			'fields' => 'ids',
+			'meta_key'=>'_translations',
+			'post_type'=>'any',
+			'post_status'=>'any'
+			));
+
 		foreach ($ids as $id)
 			delete_post_meta($id, '_translations');
 
@@ -46,7 +54,7 @@ class Polylang_Uninstall {
 			delete_metadata('term', $id, '_translations');
 			delete_metadata('term', $id, '_language');
 		}
-		
+
 		foreach ($languages as $lang) {
 			delete_metadata('term', $lang->term_id, '_rtl'); // delete rtl meta
 			delete_option('polylang_mo'.$lang->term_id); // delete the string translations
@@ -61,7 +69,6 @@ class Polylang_Uninstall {
 			unset($wpdb->termmeta);
 		}
 
-
 		// delete options
 		delete_option('polylang');
 		delete_option('polylang_nav_menus');
@@ -70,7 +77,4 @@ class Polylang_Uninstall {
 	}
 }
 
-if (class_exists("Polylang_Uninstall"))
-	new Polylang_Uninstall();
-
-?>
+new Polylang_Uninstall();

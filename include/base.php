@@ -9,6 +9,7 @@ abstract class Polylang_Base {
 	protected $taxonomies; // taxonomies to filter by language
 
 	// used to cache results
+	// FIXME use wp_cache ?
 	private $languages_list = array();
 	private $language = array();
 	private $links = array();
@@ -23,20 +24,28 @@ abstract class Polylang_Base {
 
 	// init post types and taxonomies to filter by language
 	function add_post_types_taxonomies() {
-		$post_types = array_merge(PLL_MEDIA_SUPPORT ? array('attachment' => 'attachment') : array(), get_post_types(array('show_ui' => true)));
-		$this->post_types = apply_filters('pll_get_post_types', $post_types);
-		$this->taxonomies = apply_filters('pll_get_taxonomies', get_taxonomies(array('show_ui'=>true)));
+		$post_types = array('post', 'page');
+		if (!empty($this->options['media_support']))
+			$post_types[] = 'attachment';
+		if (!empty($this->options['post_types']))
+			$post_types = array_merge($post_types, $this->options['post_types']);
+		$this->post_types = apply_filters('pll_get_post_types', array_combine($post_types, $post_types), false);
+
+		$taxonomies = array('category', 'post_tag');
+		if (!empty($this->options['taxonomies']))
+			$taxonomies = array_merge($taxonomies, $this->options['taxonomies']);
+		$this->taxonomies = apply_filters('pll_get_taxonomies', array_combine($taxonomies, $taxonomies), false);
 	}
 
 	// returns the list of available languages
 	function get_languages_list($args = array()) {
 		// although get_terms is cached, it is efficient to add our own cache
-		if (isset($this->languages_list[$cache_key = md5(serialize($args))]))
+		// FIXME don't use on admin in case we modify the list of languages!
+		if (!is_admin() && isset($this->languages_list[$cache_key = md5(serialize($args))]))
 			return $this->languages_list[$cache_key];
 
-		$defaults = array('hide_empty' => false, 'orderby'=> 'term_group');
-		$args = wp_parse_args($args, $defaults);		
-		return $this->languages_list[$cache_key] = get_terms('language', $args);
+		$args = wp_parse_args($args, array('hide_empty' => false, 'orderby'=> 'term_group'));
+		return is_admin() ? get_terms('language', $args) : $this->languages_list[$cache_key] = get_terms('language', $args);
 	}
 
 	// retrieves the dropdown list of the languages
@@ -48,11 +57,18 @@ abstract class Polylang_Base {
 		// sort $add_options by value
 		uasort($add_options, create_function('$a, $b', "return \$a['value'] > \$b['value'];" ));
 
-		$out = sprintf('<select name="%1$s" id="%1$s"%2$s>'."\n", esc_attr($name), $class ? ' class="'.esc_attr($class).'"' : '');
+		$out = sprintf(
+			'<select name="%1$s" id="%1$s"%2$s>'."\n",
+			esc_attr($name),
+			$class ? ' class="'.esc_attr($class).'"' : ''
+		);
+
 		foreach ($add_options as $option)
-			$out .= "<option value='" . $option['value'] . "'>" . $option['text'] . "</option>\n";
+			$out .= sprintf('<option value="%s">%s</option>'."\n", $option['value'], $option['text']);
+
 		foreach ($this->get_languages_list($args) as $language) {
-			$out .= sprintf("<option value='%s'%s>%s</option>\n",
+			$out .= sprintf(
+				'<option value="%s"%s>%s</option>\n',
 				esc_attr($language->$value),
 				$language->$value == $selected ? ' selected="selected"' : '',
 				esc_html($language->name)
@@ -73,7 +89,8 @@ abstract class Polylang_Base {
 
 		$lang = (is_numeric($value) || (int) $value) ? get_term((int) $value, 'language') :
 			(is_string($value) ? get_term_by('slug', $value , 'language') : false);
-		return isset($lang) && $lang && !is_wp_error($lang) ? ($this->language[$value] = $lang) : false;
+
+		return !empty($lang) && !is_wp_error($lang) ? ($this->language[$value] = $lang) : false;
 	}
 
 	// saves translations for posts or terms
@@ -88,7 +105,7 @@ abstract class Polylang_Base {
 
 		if (isset($translations) && is_array($translations)) {
 			$translations = array_merge(array($lang->slug => $id), $translations);
-			foreach($translations as $key=>$p)
+			foreach($translations as $p)
 				update_metadata($type, (int) $p, '_translations', $translations);
 		}
 	}
@@ -119,7 +136,7 @@ abstract class Polylang_Base {
 	function get_translations($type, $id) {
 		$type = ($type == 'post' || in_array($type, $this->post_types)) ? 'post' : (($type == 'term' || in_array($type, $this->taxonomies)) ? 'term' : false);
 		// maybe_unserialize due to useless serialization in versions < 0.9
-		return $type ? maybe_unserialize(get_metadata($type, $id, '_translations', true)) : array(); 
+		return $type ? maybe_unserialize(get_metadata($type, $id, '_translations', true)) : array();
 	}
 
 	// store the post language in the database
@@ -157,9 +174,11 @@ abstract class Polylang_Base {
 	function get_term_language($value, $taxonomy = '') {
 		if (is_numeric($value))
 			$term_id = $value;
+
 		elseif (is_string($value) && $taxonomy)
 			$term_id = get_term_by('slug', $value , $taxonomy)->term_id;
-		return isset($term_id) && $term_id ? $this->get_language(get_metadata('term', $term_id, '_language', true)) : false;
+
+		return empty($term_id) ? false : $this->get_language(get_metadata('term', $term_id, '_language', true));
 	}
 
 	// among the term and its translations, returns the id of the term which is in $lang
@@ -174,7 +193,7 @@ abstract class Polylang_Base {
 
 	// adds language information to a link when using pretty permalinks
 	function add_language_to_link($url, $lang) {
-		if (!isset($lang) || !$lang)
+		if (empty($lang))
 			return $url;
 
 		global $wp_rewrite;
@@ -222,8 +241,8 @@ abstract class Polylang_Base {
 		if (isset($this->links[$link]))
 			return $this->links[$link];
 
-		$ok = $tax == 'post_format' || ($this->options['force_lang'] && $GLOBALS['wp_rewrite']->using_permalinks() && in_array($tax, $this->taxonomies));
-		return $this->links[$link] = $ok ? $this->add_language_to_link($link, $this->get_term_language($term->term_id)) : $link;
+		return $this->links[$link] = ($tax == 'post_format' || ($this->options['force_lang'] && $GLOBALS['wp_rewrite']->using_permalinks() && in_array($tax, $this->taxonomies))) ?
+			$this->add_language_to_link($link, $this->get_term_language($term->term_id)) : $link;
 	}
 
 	// returns the html link to the flag if exists
@@ -233,13 +252,12 @@ abstract class Polylang_Base {
 			$url = POLYLANG_URL.$file;
 
 		// overwrite with custom flags
-		if (!is_admin() && ( // never use custom flags on admin side
-			file_exists(PLL_LOCAL_DIR.($file = '/'.$lang->description.'.png')) ||
-			file_exists(PLL_LOCAL_DIR.($file = '/'.$lang->description.'.jpg')) ))
+		// never use custom flags on admin side
+		if (!is_admin() && ( file_exists(PLL_LOCAL_DIR.($file = '/'.$lang->description.'.png')) || file_exists(PLL_LOCAL_DIR.($file = '/'.$lang->description.'.jpg')) ))
 			$url = PLL_LOCAL_URL.$file;
 
 		$title = apply_filters('pll_flag_title', $lang->name, $lang->slug, $lang->description);
-		return isset($url) ? '<img src="'.esc_url($url).'" title="'.esc_attr($title).'" alt="'.esc_attr($lang->name).'" />' : '';
+		return isset($url) ? sprintf('<img src="%s" title="%s" alt="%s" />', esc_url($url), esc_attr($title), esc_attr($lang->name)) : '';
 	}
 
 	// adds clauses to comments query - used in both frontend and admin
@@ -259,7 +277,7 @@ abstract class Polylang_Base {
 	// adds terms clauses to get_terms - used in both frontend and admin
 	function _terms_clauses($clauses, $lang) {
 		global $wpdb;
-		if (isset($lang) && $lang) {
+		if (!empty($lang)) {
 			// the query is coming from Polylang and the $lang is an object
 			if (is_object($lang))
 				$languages = esc_sql($lang->term_id);
@@ -268,8 +286,10 @@ abstract class Polylang_Base {
 			else {
 				$languages = is_array($lang) ? $lang : explode(',', $lang);
 				$languages = "'" . implode("','", array_map( 'sanitize_title_for_query', $languages)) . "'";
-				$languages = $wpdb->get_col("SELECT $wpdb->term_taxonomy.term_id FROM $wpdb->term_taxonomy
-					INNER JOIN $wpdb->terms USING (term_id) WHERE taxonomy = 'language' AND $wpdb->terms.slug IN ($languages)"); // get ids from slugs
+				$languages = $wpdb->get_col(
+					"SELECT $wpdb->term_taxonomy.term_id FROM $wpdb->term_taxonomy
+					INNER JOIN $wpdb->terms USING (term_id)
+					WHERE taxonomy = 'language' AND $wpdb->terms.slug IN ($languages)"); // get ids from slugs
 				$languages = esc_sql(implode(',', $languages));
 			}
 
@@ -281,7 +301,8 @@ abstract class Polylang_Base {
 
 	// returns all page ids *not in* language defined by $lang_id
 	function exclude_pages($lang_id) {
-		$q = array(
+		// 'suppress_filter' is true by default so this query is not filtered by our pre_get_post filter in core.php
+		return get_posts(array(
 			'numberposts' => -1,
 			'post_type'   => array_intersect(get_post_types(array('hierarchical' => 1)), $this->post_types),
 			'fields'      => 'ids',
@@ -291,8 +312,7 @@ abstract class Polylang_Base {
 				'terms'    => $lang_id,
 				'operator' => 'NOT IN'
 			))
-		);
-		return get_posts($q);
+		));
 	}
 
 	// export a mo object in options
@@ -313,5 +333,21 @@ abstract class Polylang_Base {
  		return $mo;
 	}
 
+	// list the post metas to synchronize
+	static function list_metas_to_sync() {
+		return array(
+			'taxonomies'        => __('Taxonomies', 'polylang'),
+			'post_meta'         => __('Custom fields', 'polylang'),
+			'comment_status'    => __('Comment status', 'polylang'),
+			'ping_status'       => __('Ping status', 'polylang'),
+			'sticky_posts'      => __('Sticky posts', 'polylang'),
+			'post_date'         => __('Published date', 'polylang'),
+			'post_format'       => __('Post format', 'polylang'),
+			'post_parent'       => __('Page parent', 'polylang'),
+			'_wp_page_template' => __('Page template', 'polylang'),
+			'menu_order'        => __('Page order', 'polylang'),
+			'_thumbnail_id'     => __('Featured image', 'polylang'),
+		);
+	}
+
 } //class Polylang_Base
-?>

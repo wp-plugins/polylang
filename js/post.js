@@ -263,6 +263,7 @@ jQuery(document).ready(function($) {
 		inlineEditPost.revert();
 		var post_id = inlineEditPost.getId(this);
 		var lang = $("input[name='lang_"+post_id+"']").attr('value');
+		$("input[name='old_lang']").val(lang);
 		$('#post_lang_choice option:selected').removeAttr('selected');
 		$('#post_lang_choice option[value="'+lang+'"]').attr('selected', 'selected');  
 	});
