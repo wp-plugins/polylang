@@ -4,7 +4,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Vitor Carvalho <lightningspirit@gmail.com>\n"
+"Last-Translator: lightningspirit <lightningspirit@gmail.com>\n"
 "Language-Team: \n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -196,55 +196,55 @@ msgstr "Titulo do Widget"
 # @ polylang
 #: include/base.php:339
 msgid "Taxonomies"
-msgstr ""
+msgstr "Taxonomia"
 
 # @ polylang
 #: include/base.php:340
 msgid "Custom fields"
-msgstr ""
+msgstr "Campos personalizados"
 
 # @ polylang
 #: include/base.php:341
 msgid "Comment status"
-msgstr ""
+msgstr "Estado do comentário"
 
 # @ polylang
 #: include/base.php:342
 msgid "Ping status"
-msgstr ""
+msgstr "Estado do ping"
 
 # @ polylang
 #: include/base.php:343
 msgid "Sticky posts"
-msgstr ""
+msgstr "Artigos fixos"
 
 # @ polylang
 #: include/base.php:344
 msgid "Published date"
-msgstr ""
+msgstr "Data de publicação"
 
 # @ polylang
 #: include/base.php:345
 msgid "Post format"
-msgstr ""
+msgstr "Formato do artigo"
 
 #: include/base.php:346
 msgid "Page parent"
-msgstr ""
+msgstr "Página superior"
 
 # @ polylang
 #: include/base.php:347
 msgid "Page template"
-msgstr ""
+msgstr "Modelo da página"
 
 #: include/base.php:348
 msgid "Page order"
-msgstr ""
+msgstr "Ordem da página"
 
 # @ polylang
 #: include/base.php:349
 msgid "Featured image"
-msgstr ""
+msgstr "Imagem de destaque"
 
 #: include/languages-form.php:43
 msgid "Edit language"
@@ -320,7 +320,7 @@ msgstr "Seleccionador de lingua"
 
 #: include/languages-form.php:206
 msgid "Search translations"
-msgstr ""
+msgstr "Procurar traduções"
 
 #: include/languages-form.php:215
 msgid "Clean strings translation database"
@@ -374,12 +374,12 @@ msgstr "Se tiver configurada uma página estática, redirecionar a página da li
 # @ polylang
 #: include/languages-form.php:324
 msgid "Media"
-msgstr ""
+msgstr "Media"
 
 # @ polylang
 #: include/languages-form.php:330
 msgid "Activate languages and translations for media"
-msgstr ""
+msgstr "Activar línguas e traduções para a media"
 
 #: include/languages-form.php:337
 msgid "Synchronization"
@@ -388,22 +388,22 @@ msgstr "Sincronização"
 # @ polylang
 #: include/languages-form.php:351
 msgid "Custom post types"
-msgstr ""
+msgstr "Tipos de conteúdo personalizados"
 
 # @ polylang
 #: include/languages-form.php:364
 msgid "Activate languages and translations for custom post types."
-msgstr ""
+msgstr "Activar línguas e traduções para os tipos de conteúdo personalizados."
 
 # @ polylang
 #: include/languages-form.php:372
 msgid "Custom taxonomies"
-msgstr ""
+msgstr "Taxonomias personalizadas"
 
 # @ polylang
 #: include/languages-form.php:385
 msgid "Activate languages and translations for custom taxonomies."
-msgstr ""
+msgstr "Activar línguas e traduções para taxonomias personalizadas."
 
 #: include/list-table.php:55
 #: include/media-translations.php:22
@@ -488,7 +488,7 @@ msgstr "Título:"
 #. translators: plugin header field 'Description'
 #: polylang.php:0
 msgid "Adds multilingual capability to WordPress"
-msgstr ""
+msgstr "Adiciona capacidades multilíngua ao WordPress"
 
 #: polylang.php:118
 #, php-format
@@ -502,13 +502,13 @@ msgstr "Por algum motivo, o Polylang não conseguiu criar uma tabela na sua base
 # @ polylang
 #: polylang.php:220
 msgid "Polylang has been deactivated because you upgraded from a too old version."
-msgstr ""
+msgstr "O Polylang foi desactivado porque o upgrade foi feito de uma versão muito antiga."
 
 # @ polylang
 #: polylang.php:222
 #, php-format
 msgid "Please upgrade first to %s before ugrading to %s."
-msgstr ""
+msgstr "Por favor, faça primeiro o upgrade para %s antes de fazer o upgrade para %s."
 
 #~ msgid "Error: Restore of local flags failed!"
 #~ msgstr "Erro: O restauro de bandeiras locais falhou."

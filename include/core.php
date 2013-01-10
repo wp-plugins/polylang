@@ -178,8 +178,11 @@ class Polylang_Core extends Polylang_base {
 			}
 		} // options['browser']
 
+		// allow plugin to modify the preferred language (useful for example to have a different fallback than the default language)
+		$slug = apply_filters('pll_preferred_language', isset($pref_lang) ? $pref_lang->slug : false);
+
 		// return default if there is no preferences in the browser or preferences does not match our languages or it is requested not to use the browser preference
-		return isset($pref_lang) ? $pref_lang : $this->get_language($this->options['default_lang']);
+		return ($lang = $this->get_language($slug)) ? $lang : $this->get_language($this->options['default_lang']);
 	}
 
 	// returns the current language

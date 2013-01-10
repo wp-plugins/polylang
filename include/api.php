@@ -24,7 +24,7 @@ function pll_current_language($args = 'slug') {
  */
 function pll_default_language($arg = 'slug') {
 	global $polylang;
-	return !(isset($polylang) && ($options = get_options('polylang')) && $lang = $polylang->get_language($options['default-lang'])) ? false :
+	return !(isset($polylang) && ($options = get_options('polylang')) && isset($options['default-lang']) && $lang = $polylang->get_language($options['default-lang'])) ? false :
 		($args == 'name' ? $lang->name :
 		($args == 'locale' ? $lang->description :
 		$lang->slug));

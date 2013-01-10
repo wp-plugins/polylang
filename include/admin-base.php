@@ -157,10 +157,9 @@ class Polylang_Admin_Base extends Polylang_Base {
 			'hide_current' => array('string' => __('Hides the current language', 'polylang'), 'default' => 0),
 		);
 
-		$options = array_merge($options, ($type == 'menu') ?
-			array('switcher' => array('string' => __('Displays a language switcher at the end of the menu', 'polylang'), 'default' => 0)) :
-			array('dropdown' => array('string' => __('Displays as dropdown', 'polylang'), 'default' => 0))
-		);
+		$options = ($type == 'menu') ?
+			array_merge(array('switcher' => array('string' => __('Displays a language switcher at the end of the menu', 'polylang'), 'default' => 0)), $options) :
+			array_merge($options, array('dropdown' => array('string' => __('Displays as dropdown', 'polylang'), 'default' => 0)));
 
 		return array_map(create_function('$v', "return \$v['$key'];"), $options);
 	}

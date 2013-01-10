@@ -342,7 +342,8 @@ class Polylang_Admin extends Polylang_Admin_Base {
 					$rtl = 0;
 
 				// error messages for data validation
-				$errors[1] = __('Enter a valid WorPress locale', 'polylang');
+				// FIXME no validation for WordPress locale
+				//$errors[1] = __('Enter a valid WorPress locale', 'polylang');
 				$errors[2] = __('The language code must be 2 characters long', 'polylang');
 				$errors[3] = __('The language code must be unique', 'polylang');
 				$errors[4] = __('The language must have a name', 'polylang');
@@ -398,9 +399,12 @@ class Polylang_Admin extends Polylang_Admin_Base {
 	// validates data entered when creating or updating a language
 	function validate_lang($lang = null) {
 		// validate locale
+		// FIXME no validation for WordPress local as it breaks de_DE_Sie
+		/*
 		$loc = $_POST['description'];
 		if ( !preg_match('#^[a-z]{2,3}$#', $loc) && !preg_match('#^[a-z]{2,3}_[A-Z]{2,3}$#', $loc) )
 			$error = 1;
+		*/
 
 		// validate slug length
 		if (!preg_match('#^[a-z]{2,3}$#', $_POST['slug']))

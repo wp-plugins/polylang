@@ -6,46 +6,17 @@ if(!class_exists('WP_List_Table')){
 	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' ); // since WP 3.1
 }
 
-// Just an abstract class with common code for our list tables
-abstract class Polylang_List_Table extends WP_List_Table {
-	function __construct($args = array()) {
-		parent::__construct($args);
-	}
-
-	static function column_default($item, $column_name) {
-		return $item[$column_name];
-	}
-
-	function _prepare_items($data = array(), $per_page, $default_sort = '') {
-		$this->_column_headers = array($this->get_columns(), array(), $this->get_sortable_columns());
-
-		$usort_reorder = function($a, $b) use ($default_sort) {
-			$orderby = !empty($_REQUEST['orderby']) ? $_REQUEST['orderby'] : $default_sort;
-			$result = strcmp($a[$orderby], $b[$orderby]); // determine sort order
-			return (empty($_REQUEST['order']) || $_REQUEST['order'] == 'asc') ? $result : -$result; // send final sort direction to usort
-		};
-
-		if (!empty($default_sort) || !empty($_REQUEST['orderby']))
-			usort($data, $usort_reorder);
-
-		$total_items = count($data);
-		$this->items = array_slice($data, ($this->get_pagenum() - 1) * $per_page, $per_page);
-
-		$this->set_pagination_args(array(
-			'total_items' => $total_items,
-			'per_page'    => $per_page,
-			'total_pages' => ceil($total_items/$per_page)
-		));
-	}
-} // Polylang_List_Table
-
-class Polylang_Languages_Table extends Polylang_List_Table {
+class Polylang_Languages_Table extends WP_List_Table {
 	function __construct() {
 		parent::__construct(array(
 			'singular' => __('Language','polylang'),
 			'plural'   => __('Languages','polylang'),
 			'ajax'     => false
 		));
+	}
+
+	function column_default($item, $column_name) {
+		return $item[$column_name];
 	}
 
 	function column_name($item) {
@@ -81,11 +52,28 @@ class Polylang_Languages_Table extends Polylang_List_Table {
 
 	function prepare_items($data = array()) {
 		$per_page = $this->get_items_per_page('pll_lang_per_page');
-		$this->_prepare_items($data, $per_page, 'name');
+		$this->_column_headers = array($this->get_columns(), array(), $this->get_sortable_columns());
+
+		function usort_reorder($a, $b){
+			$orderby = !empty($_REQUEST['orderby']) ? $_REQUEST['orderby'] : 'name';
+			$result = strcmp($a[$orderby], $b[$orderby]); // determine sort order
+			return (empty($_REQUEST['order']) || $_REQUEST['order'] == 'asc') ? $result : -$result; // send final sort direction to usort
+		};
+
+		usort($data, 'usort_reorder');
+
+		$total_items = count($data);
+		$this->items = array_slice($data, ($this->get_pagenum() - 1) * $per_page, $per_page);
+
+		$this->set_pagination_args(array(
+			'total_items' => $total_items,
+			'per_page'    => $per_page,
+			'total_pages' => ceil($total_items/$per_page)
+		));
 	}
 } // class Polylang_Languages_Table
 
-class Polylang_String_Table extends Polylang_List_Table {
+class Polylang_String_Table extends WP_List_Table {
 	function __construct() {
 		parent::__construct(array(
 			'singular' => __('Strings translation','polylang'),
@@ -94,11 +82,15 @@ class Polylang_String_Table extends Polylang_List_Table {
 		));
 	}
 
-	static function column_string($item) {
+	function column_default($item, $column_name) {
+		return $item[$column_name];
+	}
+
+	function column_string($item) {
 		return format_to_edit($item['string']); // don't interpret special chars for the string column
 	}
 
-	static function column_translations($item) {
+	function column_translations($item) {
 		$out = '';
 		foreach($item['translations'] as $key => $translation) {
 			$input_type = $item['multiline'] ?
@@ -130,6 +122,23 @@ class Polylang_String_Table extends Polylang_List_Table {
 
 	function prepare_items($data = array()) {
 		$per_page = $this->get_items_per_page('pll_strings_per_page');
-		$this->_prepare_items($data, $per_page);
+		$this->_column_headers = array($this->get_columns(), array(), $this->get_sortable_columns());
+
+		function usort_reorder($a, $b){
+			$result = strcmp($a[$_REQUEST['orderby']], $b[$_REQUEST['orderby']]); // determine sort order
+			return (empty($_REQUEST['order']) || $_REQUEST['order'] == 'asc') ? $result : -$result; // send final sort direction to usort
+		};
+
+		if (!empty($_REQUEST['orderby'])) // no sort by default
+			usort($data, 'usort_reorder');
+
+		$total_items = count($data);
+		$this->items = array_slice($data, ($this->get_pagenum() - 1) * $per_page, $per_page);
+
+		$this->set_pagination_args(array(
+			'total_items' => $total_items,
+			'per_page'    => $per_page,
+			'total_pages' => ceil($total_items/$per_page)
+		));
 	}
 } // class Polylang_String_Table

@@ -22,7 +22,7 @@ You write posts, pages and create categories and post tags as usual, and then de
 * A customizable language switcher is provided as a widget or in the nav menu
 * As a bonus, each user can set the WordPress admin language in its profile
 
-= Translators = 
+= Translators =
 
 The plugin admin interface is currently available in 21 languages: English, French, German contributed by [Christian Ries](http://www.singbyfoot.lu), Russian contributed by [yoyurec](http://yoyurec.in.ua) and unostar, Greek contributed by [theodotos](http://www.ubuntucy.org), Dutch contributed by [AlbertGn](http://wordpress.org/support/profile/albertgn), Hebrew contributed by [ArielK](http://www.arielk.net), Polish contributed by [Peter Paciorkiewicz](http://www.paciorkiewicz.pl), Latvian contributed by [@AndyDeGroo](http://twitter.com/AndyDeGroo), Italian contributed by [Luca Barbetti](http://wordpress.org/support/profile/lucabarbetti), Danish contributed by [Compute](http://wordpress.org/support/profile/compute), Spanish contributed by Curro, Portuguese contributed by [Vitor Carvalho](http://vcarvalho.com/), Lithuanian contributed by [Naglis Jonaitis](http://najo.lt/), Turkish contributed by [darchws](http://darch.ws/), Finnish contributed by [Jani Alha](http://www.wysiwyg.fi), Bulgarian contributed by [pavelsof](http://wordpress.org/support/profile/pavelsof), Belarusian contributed by [Alexander Markevitch](http://fourfeathers.by/), Afrikaans contributed by [Kobus Joubert](http://translate3d.com/), Hungarian contributed by Csaba Erdei, Norwegian contributed by [Tom Boersma](http://www.oransje.com/)
 
@@ -96,14 +96,16 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 
 * Add Hungarian translation contributed by Csaba Erdei
 * Add Norwegian translation contributed by [Tom Boersma](http://www.oransje.com/)
+* Code cleaning -> remove compatibility with versions older than 0.8
 * Add support of the WPML config file
 * Add search in the string translations list table
 * Add options to better control the synchronization of various metas for posts
 * It is now possible to synchronize sticky posts and publication dates
-* Add option to disable the multiligual support of media
+* Add option to disable the multilingual support of media
 * Add options to better control the multilingual capability of custom post types and taxonomies
 * Better integration with new media management in WP 3.5
 * Improve menu translation for themes which register a theme location but don't use it in wp_nav_menu (hard coded menu)
+* Add the pll_preferred_language filter allowing plugins to modify the language set by browser preferences detection
 * Bug correction: again the canonical redirection
 * Bug correction: the languages are not correctly displayed after then have been modified using quick edit
 * Bug correction: undefined index notice when saving strings translation when the admin language filter is active

@@ -140,7 +140,7 @@ msgstr "Admin taal"
 
 #: include/admin-filters.php:1135
 msgid "Wordpress default"
-msgstr ""
+msgstr "Wordpress default"
 
 #: include/admin-filters.php:1161
 #: include/admin.php:326
@@ -196,55 +196,55 @@ msgstr "Widget titel"
 # @ polylang
 #: include/base.php:339
 msgid "Taxonomies"
-msgstr ""
+msgstr "Taksonomieë"
 
 # @ polylang
 #: include/base.php:340
 msgid "Custom fields"
-msgstr ""
+msgstr "Persoonlike velde"
 
 # @ polylang
 #: include/base.php:341
 msgid "Comment status"
-msgstr ""
+msgstr "Kommentaar status"
 
 # @ polylang
 #: include/base.php:342
 msgid "Ping status"
-msgstr ""
+msgstr "Ping status"
 
 # @ polylang
 #: include/base.php:343
 msgid "Sticky posts"
-msgstr ""
+msgstr "Sticky posts"
 
 # @ polylang
 #: include/base.php:344
 msgid "Published date"
-msgstr ""
+msgstr "Gepubliseer datum"
 
 # @ polylang
 #: include/base.php:345
 msgid "Post format"
-msgstr ""
+msgstr "Post formaat"
 
 #: include/base.php:346
 msgid "Page parent"
-msgstr ""
+msgstr "Bladsy ouer"
 
 # @ polylang
 #: include/base.php:347
 msgid "Page template"
-msgstr ""
+msgstr "Bladsy sjabloon"
 
 #: include/base.php:348
 msgid "Page order"
-msgstr ""
+msgstr "Bladsy orde"
 
 # @ polylang
 #: include/base.php:349
 msgid "Featured image"
-msgstr ""
+msgstr "Featured prent"
 
 #: include/languages-form.php:43
 msgid "Edit language"
@@ -275,7 +275,7 @@ msgstr "Die naam is hoe dit vertoon word op jou webwerf (byvoorbeeld: Afrikaans)
 #: include/languages-form.php:89
 #: include/list-table.php:64
 msgid "Locale"
-msgstr ""
+msgstr "Locale"
 
 #: include/languages-form.php:94
 msgid "Wordpress Locale for the language (for example: en_US). You will need to install the .mo file for this language."
@@ -320,7 +320,7 @@ msgstr "Taal selektor"
 
 #: include/languages-form.php:206
 msgid "Search translations"
-msgstr ""
+msgstr "Search translations"
 
 #: include/languages-form.php:215
 msgid "Clean strings translation database"
@@ -374,12 +374,12 @@ msgstr "Wanneer 'n statiese voorblad gebruik word, herlei die taal bladsy (byvoo
 # @ polylang
 #: include/languages-form.php:324
 msgid "Media"
-msgstr ""
+msgstr "Media"
 
 # @ polylang
 #: include/languages-form.php:330
 msgid "Activate languages and translations for media"
-msgstr ""
+msgstr "Aktiveer tale en vertalings vir media"
 
 #: include/languages-form.php:337
 msgid "Synchronization"
@@ -388,22 +388,22 @@ msgstr "Sinkronisering"
 # @ polylang
 #: include/languages-form.php:351
 msgid "Custom post types"
-msgstr ""
+msgstr "Persoonlike post tipes"
 
 # @ polylang
 #: include/languages-form.php:364
 msgid "Activate languages and translations for custom post types."
-msgstr ""
+msgstr "Aktiveer tale en vertalings vir persoonlike post tipes."
 
 # @ polylang
 #: include/languages-form.php:372
 msgid "Custom taxonomies"
-msgstr ""
+msgstr "Persoonlike taksonomieë"
 
 # @ polylang
 #: include/languages-form.php:385
 msgid "Activate languages and translations for custom taxonomies."
-msgstr ""
+msgstr "Aktiveer tale en vertalings vir persoonlike taksonomieë."
 
 #: include/list-table.php:55
 #: include/media-translations.php:22
@@ -429,7 +429,7 @@ msgstr "Vlag"
 
 #: include/list-table.php:68
 msgid "Posts"
-msgstr ""
+msgstr "Posts"
 
 #: include/list-table.php:118
 msgid "Name"
@@ -437,7 +437,7 @@ msgstr "Naam"
 
 #: include/list-table.php:119
 msgid "String"
-msgstr ""
+msgstr "String"
 
 #: include/media-translations.php:6
 #: include/media-translations.php:44
@@ -466,7 +466,7 @@ msgstr "Bladsy ID"
 
 #: include/post-translations.php:9
 msgid "Post ID"
-msgstr ""
+msgstr "Post ID"
 
 #: include/term-translations.php:48
 msgid "No untranslated term"
@@ -488,7 +488,7 @@ msgstr "Titel:"
 #. translators: plugin header field 'Description'
 #: polylang.php:0
 msgid "Adds multilingual capability to WordPress"
-msgstr ""
+msgstr "Voeg veeltalige vermoë by WordPress"
 
 #: polylang.php:118
 #, php-format
@@ -502,13 +502,13 @@ msgstr "Vir een of ander rede kon Polylang nie 'n tabel in jou databasis stoor n
 # @ polylang
 #: polylang.php:220
 msgid "Polylang has been deactivated because you upgraded from a too old version."
-msgstr ""
+msgstr "Polylang was gedeaktiveer omdat jy van te ou weergawe af opgegradeer het."
 
 # @ polylang
 #: polylang.php:222
 #, php-format
 msgid "Please upgrade first to %s before ugrading to %s."
-msgstr ""
+msgstr "Gradeer asseblief eers op na %s toe voor jy opgradeer na %s toe."
 
 #~ msgid "Error: Restore of local flags failed!"
 #~ msgstr "Fout: Herstel van plaaslike vlae het misluk!"

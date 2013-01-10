@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Polylang v1.0dev13\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2013-01-06 19:28+0100\n"
+"PO-Revision-Date: 2013-01-09 19:16+0100\n"
 "Last-Translator: F. Demarle\n"
 "Language-Team: \n"
 "Language: \n"
@@ -232,57 +232,57 @@ msgstr "Titre de widget"
 # @ polylang
 #: include/base.php:339
 msgid "Taxonomies"
-msgstr ""
+msgstr "Taxinomies"
 
 # @ polylang
 #: include/base.php:340
 msgid "Custom fields"
-msgstr ""
+msgstr "Champs personnalisés"
 
 # @ polylang
 #: include/base.php:341
 msgid "Comment status"
-msgstr ""
+msgstr "Autorisation des commentaires"
 
 # @ polylang
 #: include/base.php:342
 msgid "Ping status"
-msgstr ""
+msgstr "Autorisation des pings"
 
 # @ polylang
 #: include/base.php:343
 msgid "Sticky posts"
-msgstr ""
+msgstr "Articles mis en avant"
 
 # @ polylang
 #: include/base.php:344
 msgid "Published date"
-msgstr ""
+msgstr "Date de publication"
 
 # @ polylang
 #: include/base.php:345
 msgid "Post format"
-msgstr ""
+msgstr "Format"
 
 # @ polylang
 #: include/base.php:346
 msgid "Page parent"
-msgstr ""
+msgstr "Parent de page"
 
 # @ polylang
 #: include/base.php:347
 msgid "Page template"
-msgstr ""
+msgstr "Modèle de page"
 
 # @ polylang
 #: include/base.php:348
 msgid "Page order"
-msgstr ""
+msgstr "Ordre des pages"
 
 # @ polylang
 #: include/base.php:349
 msgid "Featured image"
-msgstr ""
+msgstr "Image à la une"
 
 # @ polylang
 #: include/languages-form.php:43
@@ -325,7 +325,7 @@ msgstr "Code local"
 # @ polylang
 #: include/languages-form.php:94
 msgid "Wordpress Locale for the language (for example: en_US). You will need to install the .mo file for this language."
-msgstr "Code local utilisé par Wordpress pour la langue (par exemple : fr_FR). Vous aurez besoin d'installer les fichiers .mo correspondant"
+msgstr "Code local utilisé par Wordpress pour la langue (par exemple : fr_FR). Vous aurez besoin d'installer les fichiers .mo correspondant."
 
 # @ polylang
 #: include/languages-form.php:98
@@ -376,7 +376,7 @@ msgstr "Liste des langues"
 # @ polylang
 #: include/languages-form.php:206
 msgid "Search translations"
-msgstr ""
+msgstr "Chercher dans les traductions"
 
 # @ polylang
 #: include/languages-form.php:215
@@ -442,37 +442,37 @@ msgstr "Rediriger la page de langue (exemple: %s) vers la page d'accueil dans la
 # @ polylang
 #: include/languages-form.php:324
 msgid "Media"
-msgstr ""
+msgstr "Médias"
 
 # @ polylang
 #: include/languages-form.php:330
 msgid "Activate languages and translations for media"
-msgstr ""
+msgstr "Activer la gestion des langues et des traductions pour les médias"
 
 # @ polylang
 #: include/languages-form.php:337
 msgid "Synchronization"
-msgstr "Sycnchronisation"
+msgstr "Synchronisation"
 
 # @ polylang
 #: include/languages-form.php:351
 msgid "Custom post types"
-msgstr ""
+msgstr "Types de contenu"
 
 # @ polylang
 #: include/languages-form.php:364
 msgid "Activate languages and translations for custom post types."
-msgstr ""
+msgstr "Activer la gestion des langues et des traductions pour les types de contenu."
 
 # @ polylang
 #: include/languages-form.php:372
 msgid "Custom taxonomies"
-msgstr ""
+msgstr "Taxinomies"
 
 # @ polylang
 #: include/languages-form.php:385
 msgid "Activate languages and translations for custom taxonomies."
-msgstr ""
+msgstr "Activer la gestion des langues et des traductions pour les taxinomies."
 
 # @ polylang
 #: include/list-table.php:55
@@ -533,12 +533,12 @@ msgstr "Ajouter"
 # @ polylang
 #: include/post-translations.php:5
 msgid "ID of pages in other languages:"
-msgstr "ID des pages dans les autres langues"
+msgstr "ID des pages dans les autres langues :"
 
 # @ polylang
 #: include/post-translations.php:5
 msgid "ID of posts in other languages:"
-msgstr "ID des articles dans les autres langues"
+msgstr "ID des articles dans les autres langues :"
 
 # @ polylang
 #: include/post-translations.php:9
@@ -590,11 +590,11 @@ msgstr "Polylang n'a pu crée une table dans votre base de données."
 # @ polylang
 #: polylang.php:220
 msgid "Polylang has been deactivated because you upgraded from a too old version."
-msgstr ""
+msgstr "Polylang a été désactivé parce que vous avez fait une mise à jour depuis une version trop ancienne."
 
 # @ polylang
 #: polylang.php:222
 #, php-format
 msgid "Please upgrade first to %s before ugrading to %s."
-msgstr ""
+msgstr "Mettez à jour d'abord vers %s avant de mettre à jour vers %s."
 
