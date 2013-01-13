@@ -68,8 +68,8 @@ class Polylang_Admin extends Polylang_Admin_Base {
 				$error = $this->validate_lang();
 
 				if ($error == 0) {
-					$r = wp_insert_term($_POST['name'],'language', array('slug'=>$_POST['slug'], 'description'=>$_POST['description']));
-					wp_update_term($r['term_id'], 'language', array('term_group'=>$_POST['term_group'])); // can't set the term group directly in wp_insert_term
+					$r = wp_insert_term($_POST['name'], 'language', array('slug' => $_POST['slug'], 'description' => $_POST['description']));
+					wp_update_term($r['term_id'], 'language', array('term_group' => $_POST['term_group'])); // can't set the term group directly in wp_insert_term
 					update_metadata('term', $r['term_id'], '_rtl', $_POST['rtl']);
 
 					if (!isset($options['default_lang'])) { // if this is the first language created, set it as default language

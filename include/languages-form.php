@@ -88,7 +88,7 @@ if (isset($_GET['error'])) {?>
 				<div class="form-field form-required">
 					<label for="description"><?php _e('Locale', 'polylang');?></label><?php
 					printf(
-						'<input name="description" id="description" type="text" value="%s" size="7" maxlength="7" aria-required="true" />',
+						'<input name="description" id="description" type="text" value="%s" size="40" aria-required="true" />',
 						$action=='edit' ? esc_attr($edit_lang->description) : ''
 					);?>
 					<p><?php _e('Wordpress Locale for the language (for example: en_US). You will need to install the .mo file for this language.', 'polylang');?></p>

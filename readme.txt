@@ -97,7 +97,6 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 * Add Hungarian translation contributed by Csaba Erdei
 * Add Norwegian translation contributed by [Tom Boersma](http://www.oransje.com/)
 * Code cleaning -> remove compatibility with versions older than 0.8
-* Add support of the WPML config file
 * Add search in the string translations list table
 * Add options to better control the synchronization of various metas for posts
 * It is now possible to synchronize sticky posts and publication dates
@@ -106,9 +105,14 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 * Better integration with new media management in WP 3.5
 * Improve menu translation for themes which register a theme location but don't use it in wp_nav_menu (hard coded menu)
 * Add the pll_preferred_language filter allowing plugins to modify the language set by browser preferences detection
+* Add support of the WPML config file
+* Add compatibility with the 'icl_get_languages' and 'icl_link_to_element' functions from the WPML API
+* Add compatibility with YARPP, WordPress SEO
 * Bug correction: again the canonical redirection
 * Bug correction: the languages are not correctly displayed after then have been modified using quick edit
 * Bug correction: undefined index notice when saving strings translation when the admin language filter is active
 * Bug correction: rewrite rules are not correctly flushed when adding / deleting a language (introduced in 0.9.2)
+* Bug correction: the list of pages is displayed when a static font page translation is not translated (now replaced by the list of posts)
+* Bug correction: permalinks are not modified when doing cron and the language code is added to all urls
 
 See changelog.txt for full changelog

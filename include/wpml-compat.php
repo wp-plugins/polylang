@@ -17,22 +17,98 @@ function pll_define_wpml_constants() {
 add_action('pll_language_defined', 'pll_define_wpml_constants');
 
 /*
- * translates a post or a term
+ * link to the home page in the active language
+ */
+if (!function_exists('icl_get_home_url')) {
+	function icl_get_home_url() {
+		return pll_home_url();
+	}
+}
+
+/*
+ * used for building custom language selectors
+ * available only on frontend
+ */
+if (!function_exists('icl_get_languages')) {
+	function icl_get_languages($args = '') {
+		global $polylang;
+		if (!(class_exists('Polylang_Core') && $polylang instanceof Polylang_Core))
+			return array();
+
+		$args = extract(wp_parse_args($args));
+		$orderby = (isset($orderby) && $orderby == 'code') ? 'slug' : (isset($orderby) && $orderby == 'name' ? 'name' : 'id');
+		$order = (!empty($order) && $order == 'desc') ? 'DESC' : 'ASC';
+
+		$arr = array();
+
+		foreach ($polylang->get_languages_list(array('hide_empty' => true, 'orderby' => $orderby, 'order' => $order)) as $lang) {
+			$url = $polylang->get_translation_url($lang);
+
+			if (!$url && !empty($skip_missing))
+				continue;
+
+			$arr[] = array(
+				'id' => $lang->term_id,
+				'active' => isset($polylang->curlang->slug) && $polylang->curlang->slug == $lang->slug ? 1 : 0,
+				'native_name' => $lang->name,
+				'missing' => $url ? 0 : 1,
+				'translated_name' => '', // does not exist in Polylang
+				'language_code' => $lang->slug,
+				'country_flag_url' => $polylang->get_flag($lang, true),
+				'url' => $url ? $url :
+					(empty($link_empty_to) ? $polylang->get_home_url($lang) :
+					str_replace('{$lang}', $lang->slug, $link_empty_to))
+			);
+		}
+		return $arr;
+	}
+}
+
+/*
+ *  used for creating language dependent links in themes
+ */
+if (!function_exists('icl_link_to_element')) {
+	function icl_link_to_element($id, $type = 'post', $text = '', $args = array(), $anchor = '') {
+		global $polylang;
+
+		if ($type == 'tag')
+			$type = 'post_tag';
+
+		if (isset($polylang) && ($lang = pll_current_language()) && $tr_id = $polylang->get_translation($type, $id, $lang))
+			$id = $tr_id;
+
+		if (post_type_exists($type)) {
+			$link = get_permalink($id);
+			if (empty($text))
+				$text = get_the_title($id);
+		}
+		elseif (taxonomy_exists($type)) {
+			$link = get_term_link($id, $type);
+			if (empty($text) && ($term = get_term($id, $type)) && !empty($term) && !is_wp_error($term))
+				$text = $term->name;
+		}
+
+		if (empty($link) || is_wp_error($link))
+			return '';
+
+		if (!empty($args))
+			$link .= (false === strpos($link, '?') ? '?' : '&' ) . http_build_query($args);
+
+		if (!empty($anchor))
+			$link .= '#' . $anchor;
+
+		return sprintf('<a href="%s">%s</a>', $link, $text);
+	}
+}
+
+/*
+ * used for calculating the IDs of objects (usually categories) in the current language
  */
 if (!function_exists('icl_object_id')) {
 	function icl_object_id($id, $type, $return_original_if_missing, $lang = false) {
 		global $polylang;
 		return isset($polylang) && ($lang = $lang ? $lang : pll_current_language()) && ($tr_id = $polylang->get_translation($type, $id, $lang)) ? $tr_id :
 			($return_original_if_missing ? $id : null);
-	}
-}
-
-/*
- * returns the home url in the current language
- */
-if (!function_exists('icl_get_home_url')) {
-	function icl_get_home_url() {
-		return pll_home_url();
 	}
 }
 
@@ -47,7 +123,7 @@ if (!function_exists('icl_register_string')) {
 }
 
 /*
- * translates a string (previously registered with icl_register_string or pll_register_string)
+ * gets the translated value of a string (previously registered with icl_register_string or pll_register_string)
  * the parameters $context and $name are not used by Polylang
  */
 if (!function_exists('icl_t')) {

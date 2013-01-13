@@ -29,12 +29,12 @@ abstract class Polylang_Base {
 			$post_types[] = 'attachment';
 		if (!empty($this->options['post_types']))
 			$post_types = array_merge($post_types, $this->options['post_types']);
-		$this->post_types = apply_filters('pll_get_post_types', array_combine($post_types, $post_types), false);
+		$this->post_types = apply_filters('pll_get_post_types', $post_types, false);
 
 		$taxonomies = array('category', 'post_tag');
 		if (!empty($this->options['taxonomies']))
 			$taxonomies = array_merge($taxonomies, $this->options['taxonomies']);
-		$this->taxonomies = apply_filters('pll_get_taxonomies', array_combine($taxonomies, $taxonomies), false);
+		$this->taxonomies = apply_filters('pll_get_taxonomies', $taxonomies, false);
 	}
 
 	// returns the list of available languages
@@ -247,7 +247,7 @@ abstract class Polylang_Base {
 
 	// returns the html link to the flag if exists
 	// $lang: object
-	function get_flag($lang) {
+	function get_flag($lang, $url_only = false) {
 		if (file_exists(POLYLANG_DIR.($file = '/flags/'.$lang->description.'.png')))
 			$url = POLYLANG_URL.$file;
 
@@ -256,8 +256,14 @@ abstract class Polylang_Base {
 		if (!is_admin() && ( file_exists(PLL_LOCAL_DIR.($file = '/'.$lang->description.'.png')) || file_exists(PLL_LOCAL_DIR.($file = '/'.$lang->description.'.jpg')) ))
 			$url = PLL_LOCAL_URL.$file;
 
-		$title = apply_filters('pll_flag_title', $lang->name, $lang->slug, $lang->description);
-		return isset($url) ? sprintf('<img src="%s" title="%s" alt="%s" />', esc_url($url), esc_attr($title), esc_attr($lang->name)) : '';
+		return empty($url) ? '' :
+			($url_only ? $url :
+			sprintf(
+				'<img src="%s" title="%s" alt="%s" />',
+				esc_url($url),
+				esc_attr(apply_filters('pll_flag_title', $lang->name, $lang->slug, $lang->description)),
+				esc_attr($lang->name)
+			));
 	}
 
 	// adds clauses to comments query - used in both frontend and admin
