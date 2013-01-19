@@ -106,8 +106,9 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 * Improve menu translation for themes which register a theme location but don't use it in wp_nav_menu (hard coded menu)
 * Add the pll_preferred_language filter allowing plugins to modify the language set by browser preferences detection
 * Add support of the WPML config file
-* Add compatibility with the 'icl_get_languages' and 'icl_link_to_element' functions from the WPML API
-* Add compatibility with YARPP, WordPress SEO
+* Add support of 'icl_get_languages' and 'icl_link_to_element' functions from the WPML API
+* Add compatibility with YARPP and improve compatibility with WordPress SEO
+* Change cookie name which conflicts with Quick cache and allow users to overwrite it by defining the constant PLL_COOKIE 
 * Bug correction: again the canonical redirection
 * Bug correction: the languages are not correctly displayed after then have been modified using quick edit
 * Bug correction: undefined index notice when saving strings translation when the admin language filter is active

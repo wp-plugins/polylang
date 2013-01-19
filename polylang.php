@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://polylang.wordpress.com/
-Version: 1.0dev15
+Version: 1.0dev16
 Author: F. Demarle
 Description: Adds multilingual capability to WordPress
 Text Domain: polylang
@@ -29,7 +29,7 @@ Domain Path: /languages
  *
  */
 
-define('POLYLANG_VERSION', '1.0dev15');
+define('POLYLANG_VERSION', '1.0dev16');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
@@ -45,6 +45,9 @@ define('POLYLANG_URL', WP_PLUGIN_URL.'/'.basename(POLYLANG_DIR)); // our url
 
 if (!defined('PLL_LOCAL_URL'))
 	define('PLL_LOCAL_URL', WP_CONTENT_URL.'/polylang'); // default url to access user data such as custom flags
+
+if (!defined('PLL_COOKIE'))
+	define('PLL_COOKIE', 'pll_language');
 
 require_once(PLL_INC.'/base.php');
 
@@ -77,9 +80,9 @@ class Polylang extends Polylang_Base {
 		add_action('admin_init',  array(&$this, 'admin_init'));
 
 		// plugin and widget initialization
-		add_action('setup_theme', array(&$this, 'init'));
+		add_action('setup_theme', array(&$this, 'init'), 1);
 		add_action('widgets_init', array(&$this, 'widgets_init'));
-		add_action('wp_loaded', array(&$this, 'prepare_rewrite_rules'), 20); // after Polylang_base::add_post_types_taxonomies
+		add_action('wp_loaded', array(&$this, 'prepare_rewrite_rules'), 5); // after Polylang_base::add_post_types_taxonomies
 
 		// separate admin and frontend
 		if (is_admin() && isset($_GET['page']) && $_GET['page'] == 'mlang') {
@@ -312,6 +315,7 @@ class Polylang extends Polylang_Base {
 		$types = array_values(array_merge($this->post_types, $this->taxonomies)); // supported post types and taxonomies
 		$types = array_merge(array('date', 'root', 'comments', 'search', 'author', 'language', 'post_format'), $types);
 		$types = apply_filters('pll_rewrite_rules', $types); // allow plugins to add rewrite rules to the language filter
+
 		foreach ($types as $type)
 			add_filter($type . '_rewrite_rules', array(&$this, 'rewrite_rules'));
 

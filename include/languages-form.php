@@ -182,7 +182,8 @@ case 'menus': ?>
 					foreach ($this->get_switcher_options('menu') as $k => $str)
 						printf(
 							'<label><input name="menu-lang[%1$s][%2$s]" type="checkbox" value="1" %3$s /> %4$s</label>',
-							esc_attr($location), esc_attr($k),
+							esc_attr($location),
+							esc_attr($k),
 							empty($menu_lang[$location][$k]) ? '' : 'checked="checked"',
 							esc_html($str)
 						);?>
@@ -339,9 +340,9 @@ case 'settings': ?>
 				foreach ($this->list_metas_to_sync() as $key => $str)
 					printf(
 						'<li><label><input name="sync[%s]" type="checkbox" value="1" %s /> %s</label></li>',
-						$key,
+						esc_attr($key),
 						in_array($key, $options['sync']) ? 'checked="checked"' :'',
-						$str
+						esc_html($str)
 					);?>
 			</ul></td>
 		</tr><?php
@@ -355,9 +356,9 @@ case 'settings': ?>
 							$pt = get_post_type_object($post_type);
 							printf(
 								'<li><label><input name="post_types[%s]" type="checkbox" value="1" %s /> %s</label></li>',
-								$post_type,
+								esc_attr($post_type),
 								in_array($post_type, $options['post_types']) ? 'checked="checked"' :'',
-								$pt->labels->name
+								esc_html($pt->labels->name)
 							);
 						}?>
 					</ul>
@@ -376,9 +377,9 @@ case 'settings': ?>
 							$tax = get_taxonomy($taxonomy);
 							printf(
 								'<li><label><input name="taxonomies[%s]" type="checkbox" value="1" %s /> %s</label></li>',
-								$taxonomy,
+								esc_attr($taxonomy),
 								in_array($taxonomy, $options['taxonomies']) ? 'checked="checked"' :'',
-								$tax->labels->name
+								esc_html($tax->labels->name)
 							);
 						}?>
 					</ul>

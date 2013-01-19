@@ -417,7 +417,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 			foreach (array('menu_order', 'comment_status', 'ping_status') as $property)
 				$post->$property = $from_post->$property;
 
-			if (!empty($this->options['sync']['sticky_posts']) && is_sticky($_GET['from_post']))
+			if (in_array('sticky_posts', $this->options['sync']) && is_sticky($_GET['from_post']))
 				stick_post($post->ID);
 		}
 	}
@@ -425,7 +425,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 	// copy or synchronize terms and metas
 	function copy_post_metas($from, $to, $lang, $sync = false) {
 		// copy or synchronize terms
-		if (!$sync || !empty($this->options['sync']['taxonomies'])) {
+		if (!$sync || in_array('taxonomies', $this->options['sync'])) {
 			foreach ($this->taxonomies as $tax) {
 				$newterms = array();
 				$terms = get_the_terms($from, $tax);
@@ -453,14 +453,14 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		}
 
 		// copy or synchronize post formats
-		if (!$sync || !empty($this->options['sync']['post_format']))
+		if (!$sync || in_array('post_format', $this->options['sync']))
 			($format = get_post_format($from)) ? set_post_format($to, $format) : set_post_format($to, '');
 
 		// copy or synchronize post metas and allow plugins to do the same
 		$metas = get_post_custom($from);
 
 		// get public meta keys (including from translated post in case we just deleted a custom field)
-		if (!$sync || !empty($this->options['sync']['post_meta'])) {
+		if (!$sync || in_array('post_meta', $this->options['sync'])) {
 			foreach ($keys = array_unique(array_merge(array_keys($metas), array_keys(get_post_custom($to)))) as $k => $meta_key)
 				if ('_' == $meta_key[0])
 					unset ($keys[$k]);
@@ -468,7 +468,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 		// add page template and featured image
 		foreach (array('_wp_page_template', '_thumbnail_id') as $meta)
-			if (!$sync || !empty($this->options['sync'][$meta]))
+			if (!$sync || in_array($meta, $this->options['sync']))
 				$keys[] = $meta;
 
 		$keys = array_unique(apply_filters('pll_copy_post_metas', empty($keys) ? array() : $keys, $sync));
@@ -558,7 +558,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 		// prepare some synchronizations
 		foreach (array('comment_status', 'ping_status', 'menu_order', 'post_date') as $property)
-			if (!empty($this->options['sync'][$property]))
+			if (in_array($property, $this->options['sync']))
 				$postarr[$property] = $post->$property;
 
 		// synchronise terms and metas in translations
@@ -570,7 +570,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 			$this->copy_post_metas($post_id, $tr_id, $lang, true);
 
 			// sticky posts
-			if (!empty($this->options['sync']['sticky_posts']))
+			if (in_array('sticky_posts', $this->options['sync']))
 				isset($_REQUEST['sticky']) ? stick_post($tr_id) : unstick_post($tr_id);
 
 			// synchronize comment status, ping status, menu order...
@@ -580,7 +580,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 			// FIXME: optimize the 2 db update in 1
 			// post parent
 			// do not udpate the translation parent if the user set a parent with no translation
-			if (!empty($this->options['sync']['post_parent'])) {
+			if (in_array('post_parent', $this->options['sync'])) {
 				$post_parent = ($parent_id = wp_get_post_parent_id($post_id)) ? $this->get_translation('post', $parent_id, $lang) : 0;
 				if (!($parent_id && !$post_parent))
 					$wpdb->update($wpdb->posts, array('post_parent'=> $post_parent), array( 'ID' => $tr_id ));
@@ -927,7 +927,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		// synchronize translations of this term in all posts
 
 		// STOP synchronisation if unwanted
-		if (empty($this->options['sync']['taxonomies']))
+		if (!in_array('taxonomies', $this->options['sync']))
 			return;
 
 		// get all posts associated to this term

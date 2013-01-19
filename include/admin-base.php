@@ -132,12 +132,12 @@ class Polylang_Admin_Base extends Polylang_Base {
 
 				// try to download ms and continents-cities files if exist (will not return false if failed)
 				// with new files introduced in WP 3.4
-				foreach (array("ms", "continent-cities", "admin", "admin-network") as $file)
+				foreach (array('ms', 'continent-cities', 'admin', 'admin-network') as $file)
 					wp_remote_get($base."$version/messages/$file-$locale.mo", $args + array('filename' => WP_LANG_DIR."/$file-$locale.mo"));
 
 				// try to download theme files if exist (will not return false if failed)
 				// FIXME not updated when the theme is updated outside a core update
-				foreach (array("twentyten", "twentyeleven", "twentytwelve") as $theme)
+				foreach (array('twentyten', 'twentyeleven', 'twentytwelve') as $theme)
 					wp_remote_get($base."$version/messages/$theme/$locale.mo", $args + array('filename' => get_theme_root()."/$theme/languages/$locale.mo"));
 
 				return true;

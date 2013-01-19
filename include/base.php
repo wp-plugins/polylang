@@ -19,7 +19,7 @@ abstract class Polylang_Base {
 		$this->options = get_option('polylang');
 		$this->home = get_option('home');
 
-		add_action('wp_loaded', array(&$this, 'add_post_types_taxonomies')); // must come late to be sure that all post types and taxonomies are registered
+		add_action('wp_loaded', array(&$this, 'add_post_types_taxonomies'), 1); // must come after 'init' to be sure that all post types and taxonomies are registered
 	}
 
 	// init post types and taxonomies to filter by language
@@ -64,7 +64,11 @@ abstract class Polylang_Base {
 		);
 
 		foreach ($add_options as $option)
-			$out .= sprintf('<option value="%s">%s</option>'."\n", $option['value'], $option['text']);
+			$out .= sprintf(
+				'<option value="%s">%s</option>'."\n",
+				esc_attr($option['value']),
+				esc_html($option['text'])
+			);
 
 		foreach ($this->get_languages_list($args) as $language) {
 			$out .= sprintf(

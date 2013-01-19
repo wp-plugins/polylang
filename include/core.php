@@ -33,10 +33,10 @@ class Polylang_Core extends Polylang_base {
 
 		// text domain management
 		if ($this->options['force_lang'] && get_option('permalink_structure')) {
-			add_action('setup_theme', array(&$this, 'setup_theme'), 20); // after Polylang::setup_theme
+			add_action('setup_theme', array(&$this, 'setup_theme'), 5); // after Polylang::setup_theme
 			// need to add filters here when doing cron as 'wp' is too late thanks to Nerdvous
 			// http://wordpress.org/support/topic/plugin-polylang-xml-sitemap-problem?replies=6#post-3705488
-			add_action('wp_loaded', array(&$this, 'add_language_filters'), 20); // after Polylang_Base::add_post_types_taxonomies
+			add_action('wp_loaded', array(&$this, 'add_language_filters'), 5); // after Polylang_Base::add_post_types_taxonomies
 		}
 		else {
 			add_filter('override_load_textdomain', array(&$this, 'mofile'), 10, 3);
@@ -79,8 +79,8 @@ class Polylang_Core extends Polylang_base {
 		// modifies the page link in case the front page is not in the default language
 		add_filter('page_link', array(&$this, 'page_link'), 10, 2);
 
-		// prevents redirection of the homepage
-		add_filter('redirect_canonical', array(&$this, 'stop_redirect_canonical'), 10, 2);
+		// manages the redirection of the homepage
+		add_filter('redirect_canonical', array(&$this, 'redirect_canonical'), 10, 2);
 
 		// adds javascript at the end of the document
 		if (!$GLOBALS['wp_rewrite']->using_permalinks() && (!defined('PLL_SEARCH_FORM_JS') || PLL_SEARCH_FORM_JS))
@@ -134,6 +134,10 @@ class Polylang_Core extends Polylang_base {
 	// returns the language according to browser preference or the default language
 	function get_preferred_language() {
 		// check first is the user was already browsing this site
+		if (isset($_COOKIE[PLL_COOKIE]))
+			return $this->get_language($_COOKIE[PLL_COOKIE]);
+
+		// compatibility with old cookie removed in 1.0
 		if (isset($_COOKIE['wordpress_polylang']))
 			return $this->get_language($_COOKIE['wordpress_polylang']);
 
@@ -338,10 +342,13 @@ class Polylang_Core extends Polylang_base {
 
 		// check there is at least one language defined and sets the current language
 		if ($this->get_languages_list() && $this->curlang = $this->get_current_language()) {
+			// since 1.0: suppress old cookie which conflicts with quick cache
+			if (!headers_sent() && isset($_COOKIE['wordpress_polylang']))
+				setcookie('wordpress_polylang', '', time() - 3600, COOKIEPATH, COOKIE_DOMAIN);
 
 			// set a cookie to remember the language. check headers have not been sent to avoid ugly error
-			if (!headers_sent() && (!isset($_COOKIE['wordpress_polylang']) || $_COOKIE['wordpress_polylang'] != $this->curlang->slug))
-				setcookie('wordpress_polylang', $this->curlang->slug, time() + 31536000 /* 1 year */, COOKIEPATH, COOKIE_DOMAIN);
+			if (!headers_sent() && (!isset($_COOKIE[PLL_COOKIE]) || $_COOKIE[PLL_COOKIE] != $this->curlang->slug))
+				setcookie(PLL_COOKIE, $this->curlang->slug, time() + 31536000 /* 1 year */, COOKIEPATH, COOKIE_DOMAIN);
 
 			if (!($this->options['force_lang'] && $GLOBALS['wp_rewrite']->using_permalinks())) {
 				// set all our language filters and actions
@@ -389,7 +396,8 @@ class Polylang_Core extends Polylang_base {
 		if ($this->options['force_lang'] && $wp_rewrite->using_permalinks())
 			add_filter('_get_page_link', array(&$this, 'post_link'), 10, 2);
 
-		$this->curlang = $this->options['hide_default'] && isset($_COOKIE['wordpress_polylang']) ?
+		// FIXME cookie wordpress_polylang removed since 1.0
+		$this->curlang = $this->options['hide_default'] && (isset($_COOKIE['wordpress_polylang']) || isset($_COOKIE[PLL_COOKIE])) ?
 			$this->get_language($this->options['default_lang']) :
 			$this->curlang = $this->get_preferred_language(); // sets the language according to browser preference or default language
 
@@ -593,11 +601,12 @@ class Polylang_Core extends Polylang_base {
 		return _get_page_link($id);
 	}
 
-	// prevents redirection of the homepage when using page on front
-	function stop_redirect_canonical($redirect_url, $requested_url) {
+	// manages canonical redirection of the homepage when using page on front
+	function redirect_canonical($redirect_url, $requested_url) {
 		global $wp_query;
-		return is_page() && !is_feed() && isset($wp_query->queried_object) && 'page' == get_option('show_on_front') &&
- 			$wp_query->queried_object->ID == get_option('page_on_front') ? false : $redirect_url;
+		if (is_page() && !is_feed() && isset($wp_query->queried_object) && 'page' == get_option('show_on_front') && $wp_query->queried_object->ID == get_option('page_on_front'))
+			return $this->options['redirect_lang'] ? $this->get_home_url() : false;
+		return $redirect_url;
 	}
 
 	// redirects incoming links to the proper URL when adding the language code to all urls
@@ -946,6 +955,8 @@ class Polylang_Core extends Polylang_base {
 				$url = $post_id !== null && ($tr_id = $this->get_post($post_id, $language)) ? get_permalink($tr_id) :
 					$post_id === null && !$force_home ? $this->get_translation_url($language) : null;
 
+				$class = isset($url) ? '' : 'no-translation ';
+
 				$url = apply_filters('pll_the_language_link', $url, $language->slug, $language->description);
 
 				// hide if no translation exists
@@ -954,7 +965,7 @@ class Polylang_Core extends Polylang_base {
 
 				$url = isset($url) ? $url : $this->get_home_url($language); // if the page is not translated, link to the home page
 
-				$class = 'lang-item lang-item-'.esc_attr($language->term_id);
+				$class .= 'lang-item lang-item-'.esc_attr($language->term_id);
 				$class .= $language->term_id == $this->curlang->term_id ? ' current-lang' : '';
 				$class .= $menu ? ' menu-item' : '';
 
