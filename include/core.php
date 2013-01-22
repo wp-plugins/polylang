@@ -34,8 +34,6 @@ class Polylang_Core extends Polylang_base {
 		// text domain management
 		if ($this->options['force_lang'] && get_option('permalink_structure')) {
 			add_action('setup_theme', array(&$this, 'setup_theme'), 5); // after Polylang::setup_theme
-			// need to add filters here when doing cron as 'wp' is too late thanks to Nerdvous
-			// http://wordpress.org/support/topic/plugin-polylang-xml-sitemap-problem?replies=6#post-3705488
 			add_action('wp_loaded', array(&$this, 'add_language_filters'), 5); // after Polylang_Base::add_post_types_taxonomies
 		}
 		else {

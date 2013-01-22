@@ -24,7 +24,7 @@ You write posts, pages and create categories and post tags as usual, and then de
 
 = Translators =
 
-The plugin admin interface is currently available in 21 languages: English, French, German contributed by [Christian Ries](http://www.singbyfoot.lu), Russian contributed by [yoyurec](http://yoyurec.in.ua) and unostar, Greek contributed by [theodotos](http://www.ubuntucy.org), Dutch contributed by [AlbertGn](http://wordpress.org/support/profile/albertgn), Hebrew contributed by [ArielK](http://www.arielk.net), Polish contributed by [Peter Paciorkiewicz](http://www.paciorkiewicz.pl), Latvian contributed by [@AndyDeGroo](http://twitter.com/AndyDeGroo), Italian contributed by [Luca Barbetti](http://wordpress.org/support/profile/lucabarbetti), Danish contributed by [Compute](http://wordpress.org/support/profile/compute), Spanish contributed by Curro, Portuguese contributed by [Vitor Carvalho](http://vcarvalho.com/), Lithuanian contributed by [Naglis Jonaitis](http://najo.lt/), Turkish contributed by [darchws](http://darch.ws/), Finnish contributed by [Jani Alha](http://www.wysiwyg.fi), Bulgarian contributed by [pavelsof](http://wordpress.org/support/profile/pavelsof), Belarusian contributed by [Alexander Markevitch](http://fourfeathers.by/), Afrikaans contributed by [Kobus Joubert](http://translate3d.com/), Hungarian contributed by Csaba Erdei, Norwegian contributed by [Tom Boersma](http://www.oransje.com/)
+The plugin admin interface is currently available in 21 languages: English, French, German contributed by [Christian Ries](http://www.singbyfoot.lu), Russian contributed by [yoyurec](http://yoyurec.in.ua) and unostar, Greek contributed by [theodotos](http://www.ubuntucy.org), Dutch contributed by [AlbertGn](http://wordpress.org/support/profile/albertgn), Hebrew contributed by [ArielK](http://www.arielk.net), Polish contributed by [Peter Paciorkiewicz](http://www.paciorkiewicz.pl), Latvian contributed by [@AndyDeGroo](http://twitter.com/AndyDeGroo), Italian contributed by [Luca Barbetti](http://wordpress.org/support/profile/lucabarbetti), Danish contributed by [Compute](http://wordpress.org/support/profile/compute), Spanish contributed by Curro, Portuguese contributed by [Vitor Carvalho](http://vcarvalho.com/), Lithuanian contributed by [Naglis Jonaitis](http://najo.lt/), Turkish contributed by [darchws](http://darch.ws/), Finnish contributed by [Jani Alha](http://www.wysiwyg.fi), Bulgarian contributed by [pavelsof](http://wordpress.org/support/profile/pavelsof), Belarusian contributed by [Alexander Markevitch](http://fourfeathers.by/), Afrikaans contributed by [Kobus Joubert](http://translate3d.com/), Hungarian contributed by Csaba Erdei, Norwegian contributed by [Tom Boersma](http://www.oransje.com/), Slovak contributed by [Branco (WebHostingGeeks.com)](http://webhostinggeeks.com/user-reviews/)
 
 
 Other [contributions](http://wordpress.org/extend/plugins/polylang/other_notes/) are welcome !
@@ -96,6 +96,7 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 
 * Add Hungarian translation contributed by Csaba Erdei
 * Add Norwegian translation contributed by [Tom Boersma](http://www.oransje.com/)
+* Add Slovak translation contributed by [Branco (WebHostingGeeks.com)](http://webhostinggeeks.com/user-reviews/)
 * Code cleaning -> remove compatibility with versions older than 0.8
 * Add search in the string translations list table
 * Add options to better control the synchronization of various metas for posts
@@ -115,5 +116,6 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 * Bug correction: rewrite rules are not correctly flushed when adding / deleting a language (introduced in 0.9.2)
 * Bug correction: the list of pages is displayed when a static font page translation is not translated (now replaced by the list of posts)
 * Bug correction: permalinks are not modified when doing cron and the language code is added to all urls
+* Bug correction: creating a new term with the same name as a language may modify the language code (slug)
 
 See changelog.txt for full changelog

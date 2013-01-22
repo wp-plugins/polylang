@@ -97,7 +97,7 @@ if (!function_exists('icl_link_to_element')) {
 		if (!empty($anchor))
 			$link .= '#' . $anchor;
 
-		return sprintf('<a href="%s">%s</a>', $link, $text);
+		return sprintf('<a href="%s">%s</a>', esc_url($link), esc_html($text));
 	}
 }
 

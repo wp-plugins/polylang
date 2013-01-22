@@ -40,7 +40,7 @@ if (isset($_GET['error'])) {?>
 		<div class="col-wrap">
 
 			<div class="form-wrap">
-				<h3><?php echo $action=='edit' ? _e('Edit language','polylang') :	_e('Add new language','polylang'); ?></h3><?php
+				<h3><?php echo $action=='edit' ? __('Edit language', 'polylang') :	__('Add new language', 'polylang'); ?></h3><?php
 
 				// displays the add (or edit) language form
 				// The term fields are used as follows :
@@ -206,11 +206,15 @@ case 'strings': ?>
 	<input type="hidden" name="tab" value="strings" /><?php
 	$string_table->search_box(__('Search translations', 'polylang'), 'translations' );?>
 	</form><?php
-	$paged = isset($_REQUEST['paged']) ? '&paged='.$_REQUEST['paged'] : '';
-	$search = isset($_REQUEST['s']) ? '&s='.$_REQUEST['s'] : '';
-	$url = esc_url(admin_url('admin.php?page=mlang&tab=strings'.$search.$paged.'&noheader=true'));?>
-	<form id="string-translation" method="post" action="<?php echo $url;?>" class="validate">
-	<?php wp_nonce_field('string-translation', '_wpnonce_string-translation');?>
+	printf(
+		'<form id="string-translation" method="post" action="%s" class="validate">',
+		esc_url(admin_url(sprintf(
+			'admin.php?page=mlang&tab=strings%s%s&noheader=true',
+			isset($_REQUEST['paged']) ? '&paged='.$_REQUEST['paged'] : '',
+			isset($_REQUEST['s']) ? '&s='.$_REQUEST['s'] : ''
+		)))
+	);
+	wp_nonce_field('string-translation', '_wpnonce_string-translation');?>
 	<input type="hidden" name="action" value="string-translation" /><?php
 	$string_table->display();
 	printf('<label><input name="clean" type="checkbox" value="1" /> %s</label>', __('Clean strings translation database', 'polylang'));

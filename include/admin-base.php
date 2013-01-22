@@ -197,8 +197,12 @@ class Polylang_Admin_Base extends Polylang_Base {
 			$wp_admin_bar->add_menu(array(
 				'parent' => 'languages',
 				'id'     => $lang->slug,
-				'title'  => sprintf('<input name="%s" type="radio" value="1" %s /> %s',
-					$lang->slug, $selected == $lang->slug ? 'checked="checked"' : '', $lang->name),
+				'title'  => sprintf(
+					'<input name="%s" type="radio" value="1" %s /> %s',
+					esc_attr($lang->slug),
+					$selected == $lang->slug ? 'checked="checked"' : '',
+					esc_html($lang->name)
+				),
 				'href'   => add_query_arg('lang', $lang->slug, $url),
 			));
 		}

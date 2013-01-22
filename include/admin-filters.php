@@ -8,7 +8,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		parent::__construct();
 
 		// additionnal filters and actions
-		add_action('admin_init', array(&$this, 'admin_init'));
+		add_action('wp_loaded', array(&$this, 'admin_init'), 5);// after Polylang_Base::add_post_types_taxonomie
 
 		// remove the customize menu section as it is unusable with Polylang
 		add_action('customize_register', array(&$this, 'customize_register'), 20); // since WP 3.4
@@ -172,7 +172,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 		// hidden field containing the post language for quick edit
 		if ($column == $this->get_first_language_column())
-			printf('<input type="hidden" name="lang_%d" value="%s" />', $post_id, $lang->slug);
+			printf('<input type="hidden" name="lang_%d" value="%s" />', esc_attr($post_id), esc_attr($lang->slug));
 
 		// link to edit post (or a translation)
 		if ($id = ($inline && $lang->slug != $_POST['old_lang']) ? ($language->slug == $lang->slug ? $post_id : 0) : $this->get_post($post_id, $language))
@@ -273,7 +273,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		printf("<p><em>%s</em></p>\n<p>%s<br /></p>\n<div id='post-translations' class='translations'>",
 			__('Language', 'polylang'),
 			$this->dropdown_languages(array(
-				'name'     => $post_type == 'attachment' ? "attachments[$post_ID][language]" : 'post_lang_choice',
+				'name'     => $post_type == 'attachment' ? sprintf('attachments[%d][language]', $post_ID) : 'post_lang_choice',
 				'class'    => $post_type == 'attachment' ? 'media_lang_choice' : 'tags-input',
 				'selected' => $lang ? $lang->slug : ''
 			))
@@ -462,7 +462,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		// get public meta keys (including from translated post in case we just deleted a custom field)
 		if (!$sync || in_array('post_meta', $this->options['sync'])) {
 			foreach ($keys = array_unique(array_merge(array_keys($metas), array_keys(get_post_custom($to)))) as $k => $meta_key)
-				if ('_' == $meta_key[0])
+				if (is_protected_meta($meta_key))
 					unset ($keys[$k]);
 		}
 
@@ -868,7 +868,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		$language = $this->get_language(substr($column, 9));
 
 		if ($column == $this->get_first_language_column())
-			printf('<input type="hidden" name="lang_%d" value="%s" />', $term_id, $lang->slug);
+			printf('<input type="hidden" name="lang_%d" value="%s" />', $term_id, esc_attr($lang->slug));
 
 		// link to edit term (or a translation)
 		if ($id = ($inline && $lang->slug != $_POST['old_lang']) ? ($language->slug == $lang->slug ? $term_id : 0) : $this->get_term($term_id, $language))
@@ -979,7 +979,14 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 	// creates the term slug in case the term already exists in another language
 	function pre_term_slug($slug, $taxonomy) {
-		return !$slug && in_array($taxonomy, $this->taxonomies) && ($name = sanitize_title($this->pre_term_name)) && term_exists($name, $taxonomy) ?
+		$name = sanitize_title($this->pre_term_name);
+
+		// if the new term has the same name as a language, we *need* to differentiate the term
+		// see http://core.trac.wordpress.org/ticket/23199
+		if (term_exists($name, 'language') && !term_exists($name, $taxonomy) && (!$slug || $slug == $name))
+			$slug = $name.'-'.$taxonomy; // a convenient slug which may be modified later by the user
+
+		return !$slug && in_array($taxonomy, $this->taxonomies) && term_exists($name, $taxonomy) ?
 			$name.'-'.$this->get_language($_POST['term_lang_choice'])->slug : $slug;
 	}
 
@@ -1139,9 +1146,9 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		// hidden informations to modify the biography form with js
 		foreach ($this->get_languages_list() as $lang)
 			printf('<input type="hidden" class="biography" name="%s-%s" value="%s" />',
-				$lang->slug,
-				$lang->name,
-				get_user_meta($profileuser->ID, 'description_'.$lang->slug, true)
+				esc_attr($lang->slug),
+				esc_attr($lang->name),
+				esc_attr(get_user_meta($profileuser->ID, 'description_'.$lang->slug, true))
 			);
 	}
 

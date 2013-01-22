@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://polylang.wordpress.com/
-Version: 1.0dev16
+Version: 1.0dev17
 Author: F. Demarle
 Description: Adds multilingual capability to WordPress
 Text Domain: polylang
@@ -29,7 +29,7 @@ Domain Path: /languages
  *
  */
 
-define('POLYLANG_VERSION', '1.0dev16');
+define('POLYLANG_VERSION', '1.0dev17');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
@@ -92,7 +92,7 @@ class Polylang extends Polylang_Base {
 		}
 
 		// avoid loading polylang admin filters for frontend ajax requests if 'pll_load_front' is set (thanks to g100g)
-		elseif (is_admin() && !(defined('DOING_AJAX') && isset($_REQUEST['pll_load_front']))) {
+		elseif (defined('DOING_CRON') || (is_admin() && !(defined('DOING_AJAX') && isset($_REQUEST['pll_load_front'])))) {
 			require_once(PLL_INC.'/admin-base.php');
 			require_once(PLL_INC.'/admin-filters.php');
 			$polylang = new Polylang_Admin_Filters();
@@ -123,7 +123,7 @@ class Polylang extends Polylang_Base {
 		if (version_compare($wp_version, PLL_MIN_WP_VERSION , '<'))
 			die (sprintf('<p style = "font-family: sans-serif; font-size: 12px; color: #333; margin: -5px">%s</p>',
 				sprintf(__('You are using WordPress %s. Polylang requires at least WordPress %s.', 'polylang'),
-					$wp_version,
+					esc_html($wp_version),
 					PLL_MIN_WP_VERSION
 				)
 			));
