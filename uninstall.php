@@ -62,10 +62,9 @@ class Polylang_Uninstall {
 		}
 
 		// delete the termmeta table only if it is empty as other plugins may use it
-		$table = $wpdb->termmeta;
-		$count = $wpdb->get_var("SELECT COUNT(*) FROM $table;");
+		$count = $wpdb->get_var("SELECT COUNT(*) FROM $wpdb->termmeta;");
 		if (!$count) {
-			$wpdb->query("DROP TABLE $table;");
+			$wpdb->query("DROP TABLE $wpdb->termmeta;");
 			unset($wpdb->termmeta);
 		}
 

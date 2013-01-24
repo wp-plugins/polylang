@@ -19,7 +19,7 @@ class Polylang_Admin extends Polylang_Admin_Base {
 	function load_page() {
 		// test of $_GET['tab'] avoids displaying the automatically generated screen options on other tabs
 		if ((!defined('PLL_DISPLAY_ABOUT') || PLL_DISPLAY_ABOUT) && (!isset($_GET['tab']) || $_GET['tab'] == 'lang')) {
-			add_meta_box('pll_about_box', __('About Polylang', 'polylang'), create_function('',"include(PLL_INC.'/about.php');"), 'settings_page_mlang', 'normal');
+			add_meta_box('pll_about_box', __('About Polylang', 'polylang'), create_function('', "include(PLL_INC.'/about.php');"), 'settings_page_mlang', 'normal');
 			add_screen_option('per_page', array('label' => __('Languages', 'polylang'), 'default' => 10, 'option' => 'pll_lang_per_page'));
 		}
 

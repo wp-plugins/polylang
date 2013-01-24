@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, i18n, international, l10n, localization
 Requires at least: 3.1
 Tested up to: 3.5
-Stable tag: 0.9.8
+Stable tag: 1.0
 License: GPLv2 or later
 
 Polylang adds multilingual content management support to WordPress.
@@ -92,7 +92,7 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 
 == Changelog ==
 
-= 1.0 =
+= 1.0 (2013-01-24) =
 
 * Add Hungarian translation contributed by Csaba Erdei
 * Add Norwegian translation contributed by [Tom Boersma](http://www.oransje.com/)
@@ -111,7 +111,7 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 * Add compatibility with YARPP and improve compatibility with WordPress SEO
 * Change cookie name which conflicts with Quick cache and allow users to overwrite it by defining the constant PLL_COOKIE 
 * Bug correction: again the canonical redirection
-* Bug correction: the languages are not correctly displayed after then have been modified using quick edit
+* Bug correction: the languages are not correctly displayed after they have been modified using quick edit
 * Bug correction: undefined index notice when saving strings translation when the admin language filter is active
 * Bug correction: rewrite rules are not correctly flushed when adding / deleting a language (introduced in 0.9.2)
 * Bug correction: the list of pages is displayed when a static font page translation is not translated (now replaced by the list of posts)
