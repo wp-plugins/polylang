@@ -827,6 +827,7 @@ class Polylang_Core extends Polylang_base {
 	function wp_nav_menu_args($args) {
 		$menu_lang = get_option('polylang_nav_menus');
 
+/* FIXME breaks more than it solves
 		// attempt to find a theme location if the theme registered one but calls wp_nav_menu only with a harcoded menu
 		if (!$args['theme_location'] && $args['menu']) {
 			$menu = wp_get_nav_menu_object($args['menu']);
@@ -839,7 +840,7 @@ class Polylang_Core extends Polylang_base {
 		// attempt to find a theme location if the theme registered one (only one!) but calls wp_nav_menu without it
 		if (!$args['theme_location'] && ($menus = get_registered_nav_menus()) && count($menus) == 1)
 			$args['theme_location'] = key($menus);
-
+*/
 		if ($args['theme_location'] && isset($menu_lang[$args['theme_location']][$this->curlang->slug]))
 			$args['menu'] = $menu_lang[$args['theme_location']][$this->curlang->slug];
 

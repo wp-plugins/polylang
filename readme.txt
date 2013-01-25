@@ -95,7 +95,8 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 = 1.0.1 =
 
 * Add 2 new API functions : 'pll_is_translated_post_type' and 'pll_is_translated_taxonomy'
-* Bug correction: When using a static front page, the posts page is not filtered by language (introduced in 1.0)
+* Bug correction: when using a static front page, the posts page is not filtered by language (introduced in 1.0)
+* Bug correction: disable translation for hard coded menu as it creates more problems than it solves (introduced in 1.0)
 
 = 1.0 (2013-01-24) =
 
