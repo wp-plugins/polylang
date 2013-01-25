@@ -2,11 +2,12 @@
 
 // setups basic functions used for admin and frontend
 abstract class Polylang_Base {
+	public $post_types; // post types to filter by language
+	public $taxonomies; // taxonomies to filter by language
+
 	protected $options;
 	protected $home;
 	protected $strings = array(); // strings to translate
-	protected $post_types; // post types to filter by language
-	protected $taxonomies; // taxonomies to filter by language
 
 	// used to cache results
 	// FIXME use wp_cache ?

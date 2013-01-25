@@ -76,3 +76,20 @@ function pll__($string) {
 function pll_e($string) {
 	_e($string, 'pll_string');
 }
+
+/*
+ * returns true if Polylang manages languages and translation for this post type
+ */
+function pll_is_translated_post_type($post_type) {
+	global $polylang;
+	return isset($polylang) && in_array($post_type, $polylang->post_types);
+}
+
+/*
+ * returns true if Polylang manages languages and translation for this taxonomy
+ */
+function pll_is_translated_taxonomy($tax) {
+	global $polylang;
+	return isset($polylang) && in_array($tax, $polylang->taxonomies);
+}
+

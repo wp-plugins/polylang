@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://polylang.wordpress.com/
-Version: 1.0
+Version: 1.0.0.1
 Author: F. Demarle
 Description: Adds multilingual capability to WordPress
 Text Domain: polylang
@@ -29,7 +29,7 @@ Domain Path: /languages
  *
  */
 
-define('POLYLANG_VERSION', '1.0');
+define('POLYLANG_VERSION', '1.0.0.1');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
@@ -76,7 +76,6 @@ class Polylang extends Polylang_Base {
 		add_action('wpmu_new_blog', array(&$this, 'wpmu_new_blog'));
 
 		// manages plugin upgrade
-		add_filter('upgrader_post_install', array(&$this, 'post_upgrade'));
 		add_action('admin_init',  array(&$this, 'admin_init'));
 
 		// plugin and widget initialization

@@ -483,7 +483,7 @@ class Polylang_Core extends Polylang_base {
 				$this->page_for_posts = $page_id;
 				$this->curlang = $this->get_post_language($page_id);
 				$query->set('lang', $this->curlang->slug);
-				$query->is_singular = $query->is_page = true;
+				$query->is_singular = $query->is_page = false;
 				$query->is_home = $query->is_posts_page = true;
 			}
 		}
