@@ -271,17 +271,35 @@ abstract class Polylang_Base {
 			));
 	}
 
+	// get languages term_ids or term_taxonomy_ids for use in sql queries
+	function _get_languages_for_sql($lang, $field) {
+		global $wpdb;
+		// the query is coming from Polylang and the $lang is an object
+		if (is_object($lang))
+			return $lang->$field;
+
+		// the query is coming from outside with 'lang' parameter and $lang is a comma separated list of slugs (or an array of slugs)
+		$languages = is_array($lang) ? $lang : explode(',', $lang);
+		$languages = "'" . implode("','", array_map( 'sanitize_title_for_query', $languages)) . "'";
+		$languages = $wpdb->get_col("
+			SELECT $wpdb->term_taxonomy.$field FROM $wpdb->term_taxonomy
+			INNER JOIN $wpdb->terms USING (term_id)
+			WHERE taxonomy = 'language' AND $wpdb->terms.slug IN ($languages)
+		"); // get ids from slugs
+		return implode(',', $languages);
+	}
+
 	// adds clauses to comments query - used in both frontend and admin
 	function _comments_clauses($clauses, $lang) {
 		global $wpdb;
+		if (!empty($lang)) {
+			// if this clause is not already added by WP
+			if (!strpos($clauses['join'], '.ID'))
+				$clauses['join'] .= " JOIN $wpdb->posts ON $wpdb->posts.ID = $wpdb->comments.comment_post_ID";
 
-		// if this clause is not already added by WP
-		if (!strpos($clauses['join'], '.ID'))
-			$clauses['join'] .= " JOIN $wpdb->posts ON $wpdb->posts.ID = $wpdb->comments.comment_post_ID";
-
-		$clauses['join'] .= " INNER JOIN $wpdb->term_relationships AS pll_tr ON pll_tr.object_id = ID";
-		$clauses['where'] .= $wpdb->prepare(" AND pll_tr.term_taxonomy_id = %d", $lang->term_taxonomy_id);
-
+			$clauses['join'] .= " INNER JOIN $wpdb->term_relationships AS pll_tr ON pll_tr.object_id = ID";
+			$clauses['where'] .= $wpdb->prepare(" AND pll_tr.term_taxonomy_id IN (%s)", $this->_get_languages_for_sql($lang, 'term_taxonomy_id'));
+		}
 		return $clauses;
 	}
 
@@ -289,25 +307,8 @@ abstract class Polylang_Base {
 	function _terms_clauses($clauses, $lang) {
 		global $wpdb;
 		if (!empty($lang)) {
-			// the query is coming from Polylang and the $lang is an object
-			if (is_object($lang))
-				$languages = $lang->term_id;
-
-			// the query is coming from outside with 'lang' parameter and $lang is a comma separated list of slugs (or an array of slugs)
-			else {
-				$languages = is_array($lang) ? $lang : explode(',', $lang);
-				$languages = "'" . implode("','", array_map( 'sanitize_title_for_query', $languages)) . "'";
-				$languages = $wpdb->get_col($wpdb->prepare("
-					SELECT $wpdb->term_taxonomy.term_id FROM $wpdb->term_taxonomy
-					INNER JOIN $wpdb->terms USING (term_id)
-					WHERE taxonomy = 'language' AND $wpdb->terms.slug IN (%s)",
-					$languages
-				)); // get ids from slugs
-				$languages = implode(',', $languages);
-			}
-
 			$clauses['join'] .= " LEFT JOIN $wpdb->termmeta AS pll_tm ON t.term_id = pll_tm.term_id";
-			$clauses['where'] .=  $wpdb->prepare(" AND pll_tm.meta_key = '_language' AND pll_tm.meta_value IN (%s)", $languages);
+			$clauses['where'] .=  $wpdb->prepare(" AND pll_tm.meta_key = '_language' AND pll_tm.meta_value IN (%s)", $this->_get_languages_for_sql($lang, 'term_id'));
 		}
 		return $clauses;
 	}

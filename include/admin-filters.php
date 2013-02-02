@@ -56,7 +56,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		// adds actions and filters related to languages when creating, saving or deleting posts and pages
 		add_filter('wp_insert_post_parent', array(&$this, 'wp_insert_post_parent'));
 		add_action('dbx_post_advanced', array(&$this, 'dbx_post_advanced'));
-		add_action('save_post', array(&$this, 'save_post'), 10, 2);
+		add_action('save_post', array(&$this, 'save_post'), 25, 2); // priority 25 to come after acf
 		add_action('before_delete_post', array(&$this, 'delete_post'));
 
 		if ($this->options['media_support']) {
@@ -1154,7 +1154,10 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 	// filters comments by language
 	function comments_clauses($clauses, $query) {
-		if (!empty($_GET['lang']) && $_GET['lang'] != 'all')
+		if (!empty($query->query_vars['lang']))
+			$lang = $query->query_vars['lang'];
+
+		elseif (!empty($_GET['lang']) && $_GET['lang'] != 'all')
 			$lang = $this->get_language($_GET['lang']);
 
 		elseif ($lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true))

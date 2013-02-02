@@ -707,8 +707,8 @@ class Polylang_Core extends Polylang_base {
 	}
 
 	// filters the comments according to the current language mainly for the recent comments widget
-	function comments_clauses($clauses, $comment_query) {
-		return $this->_comments_clauses($clauses, $this->curlang);
+	function comments_clauses($clauses, $query) {
+		return $this->_comments_clauses($clauses, !empty($query->query_vars['lang']) ? $query->query_vars['lang'] : $this->curlang);
 	}
 
 	// modifies the sql request for wp_get_archives an get_adjacent_post to filter by the current language
