@@ -210,7 +210,7 @@ abstract class Polylang_Base {
 
 		// special case for pages which do not accept adding the lang parameter
 		elseif ('_get_page_link' != current_filter())
-			return add_query_arg( 'lang', $lang->slug, $url );
+			return esc_url(add_query_arg( 'lang', $lang->slug, $url ));
 
 		return $url;
 	}

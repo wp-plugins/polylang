@@ -95,8 +95,12 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 = 1.0.2 =
 
 * Add the possibility to query comments by language
+* Add the possibility not to set a cookie by defining PLL_COOKIE to false
+* Add compatibility with the plugin Custom field template (copy and synchronize custom fields)
 * Bug correction: synchronizing custom fields breaks the plugin Advanced Custom Fields
 * Bug correction: 'pll_default_language' broken
+* Bug correction: rewrite rules are not flushed when re-activating the plugin
+* Bug correction: feed urls are not correctly escaped when uding default permalinks
 
 = 1.0.1 (2013-01-28) =
 

@@ -56,7 +56,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		// adds actions and filters related to languages when creating, saving or deleting posts and pages
 		add_filter('wp_insert_post_parent', array(&$this, 'wp_insert_post_parent'));
 		add_action('dbx_post_advanced', array(&$this, 'dbx_post_advanced'));
-		add_action('save_post', array(&$this, 'save_post'), 25, 2); // priority 25 to come after acf
+		add_action('save_post', array(&$this, 'save_post'), 200, 2); // priority 200 to come after advanced custom fields (20) and custom fields template (100)
 		add_action('before_delete_post', array(&$this, 'delete_post'));
 
 		if ($this->options['media_support']) {
@@ -247,7 +247,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 	// adds the Language box in the 'Edit Post' and 'Edit Page' panels (as well as in custom post types panels)
 	function add_meta_boxes($post_type) {
 		if (in_array($post_type, $this->post_types))
-			add_meta_box('ml_box', __('Languages','polylang'), array(&$this,'post_language'), $post_type, 'side', 'high');
+			add_meta_box('ml_box', __('Languages','polylang'), array(&$this, 'post_language'), $post_type, 'side', 'high');
 
 		// replace tag metabox by our own
 		foreach (get_object_taxonomies($post_type) as $tax_name) {

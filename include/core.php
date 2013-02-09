@@ -345,7 +345,8 @@ class Polylang_Core extends Polylang_base {
 				setcookie('wordpress_polylang', '', time() - 3600, COOKIEPATH, COOKIE_DOMAIN);
 
 			// set a cookie to remember the language. check headers have not been sent to avoid ugly error
-			if (!headers_sent() && (!isset($_COOKIE[PLL_COOKIE]) || $_COOKIE[PLL_COOKIE] != $this->curlang->slug))
+			// possibility to set PLL_COOKIE to false will disable cookie although it will break some functionalities
+			if (!headers_sent() && PLL_COOKIE !== false && (!isset($_COOKIE[PLL_COOKIE]) || $_COOKIE[PLL_COOKIE] != $this->curlang->slug))
 				setcookie(PLL_COOKIE, $this->curlang->slug, time() + 31536000 /* 1 year */, COOKIEPATH, COOKIE_DOMAIN);
 
 			if (!($this->options['force_lang'] && $GLOBALS['wp_rewrite']->using_permalinks())) {
@@ -422,8 +423,8 @@ class Polylang_Core extends Polylang_base {
 	function pre_get_posts($query) {
 		// don't make anything if no language has been defined yet
 		// $this->post_types & $this->taxonomies are defined only once the action 'wp_loaded' has been fired
-		// honor suppress_filters
-		if (!$this->get_languages_list() || !did_action('wp_loaded') || $query->get('suppress_filters'))
+		// FIXME honoring suppress_filters breaks adjacent_image_link when post_parent == 0
+		if (!$this->get_languages_list() || !did_action('wp_loaded') /*|| $query->get('suppress_filters')*/)
 			return;
 
 		$qv = $query->query_vars;

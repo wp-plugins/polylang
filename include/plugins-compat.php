@@ -11,6 +11,10 @@ class Polylang_Plugins_Compat{
 		if (is_admin())
 			add_filter('override_load_textdomain', array(&$this, 'wp_seo_override_load_textdomain'), 10, 2);
 
+		// Custom field template
+		// This plugin does check $_REQUEST['post'] to populate the custom fields values
+		add_action('dbx_post_advanced', array(&$this, 'cft_copy'));
+
 	}
 
 	function wp_seo_override_load_textdomain( $return, $domain ) {
@@ -19,6 +23,12 @@ class Polylang_Plugins_Compat{
 			return true;
 		}
 		return $return;
+	}
+
+	function cft_copy() {
+		global $post, $custom_field_template;
+		if (isset($custom_field_template) && !empty($post) && isset($_REQUEST['from_post']) && isset($_REQUEST['new_lang']))
+			$_REQUEST['post'] = $post->ID;
 	}
 
 }
