@@ -396,9 +396,11 @@ class Polylang_Core extends Polylang_base {
 			add_filter('_get_page_link', array(&$this, 'post_link'), 10, 2);
 
 		// FIXME cookie wordpress_polylang removed since 1.0
-		$this->curlang = $this->options['hide_default'] && (isset($_COOKIE['wordpress_polylang']) || isset($_COOKIE[PLL_COOKIE])) ?
+		// test referer in case PLL_COOKIE is set to false
+		// thanks to Ov3rfly http://wordpress.org/support/topic/enhance-feature-when-front-page-is-visited-set-language-according-to-browser
+		$this->curlang = $this->options['hide_default'] && ((isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $this->home) !== false) || isset($_COOKIE['wordpress_polylang']) || isset($_COOKIE[PLL_COOKIE])) ?
 			$this->get_language($this->options['default_lang']) :
-			$this->curlang = $this->get_preferred_language(); // sets the language according to browser preference or default language
+			$this->get_preferred_language(); // sets the language according to browser preference or default language
 
 		// we are already on the right page
 		if ($this->options['default_lang'] == $this->curlang->slug && $this->options['hide_default']) {
@@ -965,7 +967,7 @@ class Polylang_Core extends Polylang_base {
 
 				$url = isset($url) ? $url : $this->get_home_url($language); // if the page is not translated, link to the home page
 
-				$class .= 'lang-item lang-item-'.esc_attr($language->term_id);
+				$class .= sprintf('lang-item lang-item-%d lang-item-%s', esc_attr($language->term_id), esc_attr($language->slug));
 				$class .= $language->term_id == $this->curlang->term_id ? ' current-lang' : '';
 				$class .= $menu ? ' menu-item' : '';
 

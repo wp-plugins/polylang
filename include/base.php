@@ -73,7 +73,7 @@ abstract class Polylang_Base {
 
 		foreach ($this->get_languages_list($args) as $language) {
 			$out .= sprintf(
-				'<option value="%s"%s>%s</option>\n',
+				'<option value="%s"%s>%s</option>'."\n",
 				esc_attr($language->$value),
 				$language->$value == $selected ? ' selected="selected"' : '',
 				esc_html($language->name)
