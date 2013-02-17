@@ -30,9 +30,11 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 			return;
 
 		// add the language and translations columns in 'All Posts', 'All Pages' and 'Media library' panels
-		foreach ($this->options['media_support'] ? array('posts', 'pages', 'media') : array('posts', 'pages') as $type) {
-			add_filter('manage_'.$type.'_columns', array(&$this, 'add_post_column'), 10, 2);
-			add_action('manage_'.$type.'_custom_column', array(&$this, 'post_column'), 10, 2);
+		foreach ($this->post_types as $type) {
+			// use the latest filter late as some plugins purely overwrite what's done by others :(
+			// specific case for media
+			add_filter('manage_'. ($type == 'attachment' ? 'upload' : 'edit-'. $type) .'_columns', array(&$this, 'add_post_column'), 100);
+			add_action('manage_'. ($type == 'attachment' ? 'media' : $type .'_posts') .'_custom_column', array(&$this, 'post_column'), 10, 2);
 		}
 
 		// quick edit and bulk edit
@@ -155,8 +157,8 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 	// test of $columns avoids to add columns (in screen options) in the edit media form which calls the filter too
 	// see get_column_headers in wp-admin/screen.php
 	// FIXME I have the same issue for terms but WP adds columns too
-	function add_post_column($columns, $post_type = '') {
-		return $columns && ($post_type == '' || in_array($post_type, $this->post_types)) ? $this->add_column($columns, 'comments') : $columns;
+	function add_post_column($columns) {
+		return $this->add_column($columns, 'comments');
 	}
 
 	// fills the language and translations columns in the posts, pages and media library tables

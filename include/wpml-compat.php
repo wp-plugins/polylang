@@ -297,25 +297,26 @@ class Polylang_WPML_Config {
 		return $metas;
 	}
 
+	// language and translation management for custom post types
 	function translate_types($types, $hide) {
-		// the author decided to translate the post type so don't allow the user to change this
-		if (!$hide) {
-			foreach ($this->wpml_config['custom-types']['custom-type'] as $pt) {
-				if ($pt['attributes']['translate'] == 1)
-					$types[$pt['value']] = $pt['value'];
-			}
+		foreach ($this->wpml_config['custom-types']['custom-type'] as $pt) {
+			if ($pt['attributes']['translate'] == 1 && !$hide)
+				$types[$pt['value']] = $pt['value'];
+			elseif ($hide)
+				unset ($types[$pt['value']]); // the author decided what to do with the post type so don't allow the user to change this
 		}
 		return $types;
 	}
 
+	// language and translation management for custom taxonomies
 	function translate_taxonomies($taxonomies, $hide) {
-		// the author decided to translate the taxonomy so don't allow the user to change this
-		if (!$hide) {
-			foreach ($this->wpml_config['taxonomies']['taxonomy'] as $tax) {
-				if ($tax['attributes']['translate'] == 1)
-					$taxonomies[$tax['value']] = $tax['value'];
-			}
+		foreach ($this->wpml_config['taxonomies']['taxonomy'] as $tax) {
+			if ($tax['attributes']['translate'] == 1 && !$hide)
+				$taxonomies[$tax['value']] = $tax['value'];
+			elseif ($hide)
+				unset ($types[$tax['value']]); // the author decided what to do with the taxonomy so don't allow the user to change this
 		}
+
 		return $taxonomies;
 	}
 
