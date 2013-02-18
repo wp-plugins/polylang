@@ -59,7 +59,7 @@ function pll_home_url() {
  */
 function pll_register_string($name, $string, $multiline = false) {
 	global $polylang;
-	if (isset($polylang) && is_admin())
+	if (class_exists('Polylang_Admin_Base') && $polylang instanceof Polylang_Admin_Base)
 		$polylang->register_string($name, $string, $multiline);
 }
 

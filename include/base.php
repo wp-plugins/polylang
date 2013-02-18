@@ -298,7 +298,7 @@ abstract class Polylang_Base {
 				$clauses['join'] .= " JOIN $wpdb->posts ON $wpdb->posts.ID = $wpdb->comments.comment_post_ID";
 
 			$clauses['join'] .= " INNER JOIN $wpdb->term_relationships AS pll_tr ON pll_tr.object_id = ID";
-			$clauses['where'] .= $wpdb->prepare(" AND pll_tr.term_taxonomy_id IN (%s)", $this->_get_languages_for_sql($lang, 'term_taxonomy_id'));
+			$clauses['where'] .= " AND pll_tr.term_taxonomy_id IN (" . $this->_get_languages_for_sql($lang, 'term_taxonomy_id') . ")";
 		}
 		return $clauses;
 	}
@@ -308,7 +308,7 @@ abstract class Polylang_Base {
 		global $wpdb;
 		if (!empty($lang)) {
 			$clauses['join'] .= " LEFT JOIN $wpdb->termmeta AS pll_tm ON t.term_id = pll_tm.term_id";
-			$clauses['where'] .=  $wpdb->prepare(" AND pll_tm.meta_key = '_language' AND pll_tm.meta_value IN (%s)", $this->_get_languages_for_sql($lang, 'term_id'));
+			$clauses['where'] .=  " AND pll_tm.meta_key = '_language' AND pll_tm.meta_value IN (" . $this->_get_languages_for_sql($lang, 'term_id') . ")";
 		}
 		return $clauses;
 	}
