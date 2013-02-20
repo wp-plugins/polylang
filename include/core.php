@@ -398,7 +398,7 @@ class Polylang_Core extends Polylang_base {
 		// FIXME cookie wordpress_polylang removed since 1.0
 		// test referer in case PLL_COOKIE is set to false
 		// thanks to Ov3rfly http://wordpress.org/support/topic/enhance-feature-when-front-page-is-visited-set-language-according-to-browser
-		$this->curlang = $this->options['hide_default'] && ((isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $this->home) !== false) || isset($_COOKIE['wordpress_polylang']) || isset($_COOKIE[PLL_COOKIE])) ?
+		$this->curlang = $this->options['hide_default'] && ((isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $this->home) !== false)) ?
 			$this->get_language($this->options['default_lang']) :
 			$this->get_preferred_language(); // sets the language according to browser preference or default language
 
@@ -433,6 +433,12 @@ class Polylang_Core extends Polylang_base {
 
 		// users may want to display content in a different language than the current one by setting it explicitely in the query
 		if (!$this->first_query && $this->curlang && !empty($qv['lang']))
+			return;
+
+		// detect our exclude pages query and returns to avoid conflicts
+		// this test should be sufficient
+		if (isset($qv['tax_query'][0]['taxonomy']) && $qv['tax_query'][0]['taxonomy'] == 'language' &&
+			isset($qv['tax_query'][0]['operator']) && $qv['tax_query'][0]['operator'] == 'NOT IN')
 			return;
 
 		global $wp_rewrite;
