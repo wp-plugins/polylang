@@ -399,7 +399,7 @@ class Polylang_Admin extends Polylang_Admin_Base {
 	// validates data entered when creating or updating a language
 	function validate_lang($lang = null) {
 		// validate locale
-		// FIXME no validation for WordPress local as it breaks de_DE_Sie
+		// FIXME no validation for WordPress locale as it breaks de_DE_Sie
 		/*
 		$loc = $_POST['description'];
 		if ( !preg_match('#^[a-z]{2,3}$#', $loc) && !preg_match('#^[a-z]{2,3}_[A-Z]{2,3}$#', $loc) )
@@ -472,6 +472,9 @@ class Polylang_Admin extends Polylang_Admin_Base {
 					$this->register_string(__('Widget title', 'polylang'), $title);
 			}
 		}
+
+		// allow plugins to modify our list of strings, mainly for use by our Polylang_WPML_Compat class
+		$this->strings = apply_filters('pll_get_strings', $this->strings);
 		return $this->strings;
 	}
 

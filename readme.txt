@@ -100,6 +100,8 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 * Now a returning visitor is redirected to its preferred language when visiting the front page in the default language
 * Add compatibility with the plugin Custom field template (copy and synchronize custom fields)
 * Improve compatibility with plugins or themes which overwrite columns in posts list table
+* Add the filter 'pll_get_flag'
+* Add support of 'icl_unregister_string' function from the WPML API
 * Bug correction: synchronizing custom fields breaks the plugin Advanced Custom Fields
 * Bug correction: 'pll_default_language' broken
 * Bug correction: rewrite rules are not flushed when re-activating the plugin
@@ -107,6 +109,7 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 * Bug correction: notice Undefined index: media_support
 * Bug correction: custom post types and taxonomies set in wpml-config.xml are not hidden
 * Bug correction: get_terms cannot query multiple languages
+* Bug correction: 'icl_register_string' is now persistant as in WPML (fixes Nextgen gallery translations which were not working)
 
 = 1.0.1 (2013-01-28) =
 

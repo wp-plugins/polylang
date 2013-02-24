@@ -261,14 +261,14 @@ abstract class Polylang_Base {
 		if (!is_admin() && ( file_exists(PLL_LOCAL_DIR.($file = '/'.$lang->description.'.png')) || file_exists(PLL_LOCAL_DIR.($file = '/'.$lang->description.'.jpg')) ))
 			$url = PLL_LOCAL_URL.$file;
 
-		return empty($url) ? '' :
+		return apply_filters('pll_get_flag', empty($url) ? '' :
 			($url_only ? $url :
 			sprintf(
 				'<img src="%s" title="%s" alt="%s" />',
 				esc_url($url),
 				esc_attr(apply_filters('pll_flag_title', $lang->name, $lang->slug, $lang->description)),
 				esc_attr($lang->name)
-			));
+			)));
 	}
 
 	// get languages term_ids or term_taxonomy_ids for use in sql queries

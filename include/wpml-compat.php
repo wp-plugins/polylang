@@ -118,7 +118,17 @@ if (!function_exists('icl_object_id')) {
  */
 if (!function_exists('icl_register_string')) {
 	function icl_register_string($context, $name, $string) {
-		pll_register_string($name, $string);
+		$GLOBALS['polylang_wpml_compat']->register_string($context, $name, $string);
+	}
+}
+
+/*
+ * removes a string from the "strings translation" panel
+ * the parameter $context is not used by Polylang
+ */
+if (!function_exists('icl_unregister_string')) {
+	function icl_unregister_string($context, $name) {
+		$GLOBALS['polylang_wpml_compat']->unregister_string($context, $name);
 	}
 }
 
@@ -131,6 +141,73 @@ if (!function_exists('icl_t')) {
 		return pll__($string);
 	}
 }
+
+/*
+ * undocumented function used by NextGen Gallery
+ * seems to be used to both register and translate a string
+ * the parameters $context and $bool are not used by Polylang
+ */
+if (!function_exists('icl_translate')) {
+	function icl_translate($context, $name, $string, $bool) {
+		$GLOBALS['polylang_wpml_compat']->register_string($context, $name, $string);
+		return pll__($string);
+	}
+}
+
+/*
+ * registers strings in a persistant way as done by WPML
+ */
+class Polylang_WPML_Compat {
+	private $strings; // used for cache
+
+	function __construct() {
+		add_action('pll_get_strings', array(&$this, 'get_strings'));
+	}
+
+	// the persistant register_string function
+	function register_string($context, $name, $string) {
+		if (empty($this->strings))
+			$this->strings = get_option('polylang_wpml_strings');
+
+		if (empty($this->strings))
+			$this->strings = array();
+
+		// registers the string if it does not exist yet
+		// $context not used today but save it just in case
+		$to_register = array('context' => $context, 'name'=> $name, 'string' => $string, 'multiline' => false);
+		if (!in_array($to_register, $this->strings) && $to_register['string']) {
+			$this->strings[] = $to_register;
+			update_option('polylang_wpml_strings', $this->strings);
+		}
+	}
+
+	// removes a string from the registered strings list
+	function unregister_string($context, $name) {
+		if (empty($this->strings))
+			$this->strings = get_option('polylang_wpml_strings');
+
+		if (empty($this->strings))
+			$this->strings = array();
+
+		foreach ($this->strings as $key=>$string) {
+			if ($string['context'] == $context && $string['name'] == $name) {
+				unset($this->strings[$key]);
+				update_option('polylang_wpml_strings', $this->strings);
+			}
+		}
+	}
+
+	// adds strings registered by icl_register_string to those registered by pll_register_string
+	function get_strings($strings) {
+		if (empty($this->strings))
+			$this->strings = get_option('polylang_wpml_strings');
+
+		return empty($this->strings) ? $strings : array_merge($strings, $this->strings);
+	}
+}
+
+global $polylang_wpml_compat;
+$polylang_wpml_compat = new Polylang_WPML_Compat();
 
 /*
  * reads and interprets the file wpml-config.xml
