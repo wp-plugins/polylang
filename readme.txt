@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, i18n, international, l10n, localization
 Requires at least: 3.1
 Tested up to: 3.5
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 
 Polylang adds multilingual content management support to WordPress.
@@ -92,7 +92,7 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 
 == Changelog ==
 
-= 1.0.2 =
+= 1.0.2 (2013-02-26) =
 
 * Add Catalan translation contributed by [Núria Martínez Berenguer](http://nuriamb.capa.webfactional.com)
 * Add the possibility to query comments by language

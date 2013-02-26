@@ -141,7 +141,7 @@ abstract class Polylang_Base {
 	function get_translations($type, $id) {
 		$type = ($type == 'post' || in_array($type, $this->post_types)) ? 'post' : (($type == 'term' || in_array($type, $this->taxonomies)) ? 'term' : false);
 		// maybe_unserialize due to useless serialization in versions < 0.9
-		return $type ? maybe_unserialize(get_metadata($type, $id, '_translations', true)) : array();
+		return $type && ($meta = get_metadata($type, $id, '_translations', true)) ? maybe_unserialize($meta) : array();
 	}
 
 	// store the post language in the database
