@@ -1,1 +1,20 @@
-jQuery(document).ready(function(a){var b=a("#description").parent();var c=a("#description").clone();var d=b.children(".description").clone();b.children().remove();a(".biography").each(function(){lang=a(this).attr("name").split("-");desc=c.clone();desc.attr("name","description_"+lang[0]);desc.html(a(this).attr("value"));b.append("<div>"+lang[1]+"</div");b.append(desc)});b.append("<br />");b.append(d)})
+jQuery(document).ready(function($) {
+	// biography
+	// FIXME there is probably a more efficient way to do this
+	var td = $('#description').parent();
+	var d = $('#description').clone();
+	var span = td.children('.description').clone();
+	td.children().remove();
+
+	$('.biography').each( function(){
+		lang = $(this).attr('name').split('-');
+		desc = d.clone();
+		desc.attr('name', 'description_'+lang[0]);
+		desc.html($(this).attr('value'));
+		td.append('<div>'+lang[1]+'</div');
+		td.append(desc);
+	});
+
+	td.append('<br />');
+	td.append(span);
+});
