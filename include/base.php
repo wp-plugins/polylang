@@ -276,7 +276,7 @@ abstract class Polylang_Base {
 		global $wpdb;
 		// the query is coming from Polylang and the $lang is an object
 		if (is_object($lang))
-			return $lang->$field;
+			return $field == 'term_id' ? "'" . $lang->$field . "'" : $lang->$field;
 
 		// the query is coming from outside with 'lang' parameter and $lang is a comma separated list of slugs (or an array of slugs)
 		$languages = is_array($lang) ? $lang : explode(',', $lang);
@@ -286,6 +286,10 @@ abstract class Polylang_Base {
 			INNER JOIN $wpdb->terms USING (term_id)
 			WHERE taxonomy = 'language' AND $wpdb->terms.slug IN ($languages)
 		"); // get ids from slugs
+
+		if ($field == 'term_id')
+			$languages = array_map(create_function('$v', 'return "\'" . $v . "\'";'), $languages);
+
 		return implode(',', $languages);
 	}
 

@@ -137,7 +137,7 @@ class Polylang_Admin_Base extends Polylang_Base {
 
 				// try to download theme files if exist (will not return false if failed)
 				// FIXME not updated when the theme is updated outside a core update
-				foreach (array('twentyten', 'twentyeleven', 'twentytwelve') as $theme)
+				foreach (array('twentyten', 'twentyeleven', 'twentytwelve', 'twentythirteen') as $theme)
 					wp_remote_get($base."$version/messages/$theme/$locale.mo", $args + array('filename' => get_theme_root()."/$theme/languages/$locale.mo"));
 
 				return true;
@@ -188,8 +188,9 @@ class Polylang_Admin_Base extends Polylang_Base {
 		$wp_admin_bar->add_menu(array(
 			'parent' => 'languages',
 			'id'     => 'all',
-			'title'  => sprintf('<input name="all" type="radio" value="1" %s /> %s',
-				$selected == 'all' ? 'checked="checked"' : '', __('Show all languages', 'polylang')),
+			'title'  => sprintf('<input name="language" type="radio" value="all" %s /> %s',
+				$selected == 'all' ? 'checked="checked"' : '',
+				__('Show all languages', 'polylang')),
 			'href'   => add_query_arg('lang', 'all', $url),
 		));
 
@@ -198,7 +199,7 @@ class Polylang_Admin_Base extends Polylang_Base {
 				'parent' => 'languages',
 				'id'     => $lang->slug,
 				'title'  => sprintf(
-					'<input name="%s" type="radio" value="1" %s /> %s',
+					'<input name="language" type="radio" value="%s" %s /> %s',
 					esc_attr($lang->slug),
 					$selected == $lang->slug ? 'checked="checked"' : '',
 					esc_html($lang->name)

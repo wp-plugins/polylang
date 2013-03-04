@@ -435,6 +435,10 @@ class Polylang_Core extends Polylang_base {
 		if (!$this->first_query && $this->curlang && !empty($qv['lang']))
 			return;
 
+		// don't filters post types not in our list
+		if (isset($qv['post_type']) && !in_array($qv['post_type'], $this->post_types))
+			return;
+
 		// detect our exclude pages query and returns to avoid conflicts
 		// this test should be sufficient
 		if (isset($qv['tax_query'][0]['taxonomy']) && $qv['tax_query'][0]['taxonomy'] == 'language' &&
@@ -513,7 +517,7 @@ class Polylang_Core extends Polylang_base {
 			$query->set_404();
 
 		// sets the language in case we hide the default language
-		if ($this->options['hide_default'] && !isset($qv['lang']) && ($is_archive || is_search() || (count($query->query) == 1 && !empty($qv['feed'])) ))
+		if ($this->options['hide_default'] && !isset($qv['lang']) && ($is_archive || $query->is_search || (count($query->query) == 1 && !empty($qv['feed'])) ))
 			$query->set('lang', $this->options['default_lang']);
 
 		// allow filtering recent posts and secondary queries by the current language

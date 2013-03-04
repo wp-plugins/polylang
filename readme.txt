@@ -92,6 +92,11 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 
 == Changelog ==
 
+= 1.0.3 =
+
+* Bug correction: custom menus are not displayed on search page (introduced in 1.0.2)
+* Bug correction: sql error when filtering terms by language (introduced in 1.0.2)
+
 = 1.0.2 (2013-02-26) =
 
 * Add Catalan translation contributed by [Núria Martínez Berenguer](http://nuriamb.capa.webfactional.com)
