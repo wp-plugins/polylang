@@ -450,7 +450,7 @@ class Polylang_Core extends Polylang_base {
 
 		// special case for wp-signup.php & wp-activate.php
 		// stripos for case insensitive file systems
-		if (is_home() && false === stripos($_SERVER['SCRIPT_NAME'], $wp_rewrite->index)) {
+		if (false === stripos($_SERVER['SCRIPT_NAME'], $wp_rewrite->index)) {
 			$this->curlang = $this->get_preferred_language();
 			return;
 		}
