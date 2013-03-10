@@ -416,7 +416,7 @@ class Polylang_Core extends Polylang_base {
 		// don't redirect if $_POST is not empty as it could break other plugins
 		// don't forget the query string which may be added by plugins
 		elseif (is_string($redirect = $this->get_home_url($this->curlang)) && empty($_POST)) {
-			wp_redirect($_SERVER['QUERY_STRING'] ? $redirect . ($wp_rewrite->using_permalinks() ? '?' : '&') . $_SERVER['QUERY_STRING'] : $redirect);
+			wp_redirect(empty($_SERVER['QUERY_STRING']) ? $redirect : $redirect . ($wp_rewrite->using_permalinks() ? '?' : '&') . $_SERVER['QUERY_STRING']);
 			exit;
 		}
 	}
@@ -425,8 +425,9 @@ class Polylang_Core extends Polylang_base {
 	function pre_get_posts($query) {
 		// don't make anything if no language has been defined yet
 		// $this->post_types & $this->taxonomies are defined only once the action 'wp_loaded' has been fired
-		// FIXME honoring suppress_filters breaks adjacent_image_link when post_parent == 0
-		if (!$this->get_languages_list() || !did_action('wp_loaded') /*|| $query->get('suppress_filters')*/)
+		// don't honor suppress_filters as it breaks adjacent_image_link when post_parent == 0
+		// but honor our pll_suppress_filter
+		if (!$this->get_languages_list() || !did_action('wp_loaded') || $query->get('pll_suppress_filter'))
 			return;
 
 		$qv = $query->query_vars;
@@ -435,14 +436,13 @@ class Polylang_Core extends Polylang_base {
 		if (!$this->first_query && $this->curlang && !empty($qv['lang']))
 			return;
 
-		// don't filters post types not in our list
-		if (isset($qv['post_type']) && !in_array($qv['post_type'], $this->post_types))
-			return;
+		$is_post_type = isset($qv['post_type']) && (
+			in_array($qv['post_type'], $this->post_types) ||
+			(is_array($qv['post_type']) && array_intersect($qv['post_type'], $this->post_types))
+		);
 
-		// detect our exclude pages query and returns to avoid conflicts
-		// this test should be sufficient
-		if (isset($qv['tax_query'][0]['taxonomy']) && $qv['tax_query'][0]['taxonomy'] == 'language' &&
-			isset($qv['tax_query'][0]['operator']) && $qv['tax_query'][0]['operator'] == 'NOT IN')
+		// don't filters post types not in our list
+		if (isset($qv['post_type']) && !$is_post_type)
 			return;
 
 		global $wp_rewrite;
@@ -500,11 +500,6 @@ class Polylang_Core extends Polylang_base {
 				$query->is_home = $query->is_posts_page = true;
 			}
 		}
-
-		$is_post_type = isset($qv['post_type']) && (
-			in_array($qv['post_type'], $this->post_types) ||
-			(is_array($qv['post_type']) && array_intersect($qv['post_type'], $this->post_types))
-		);
 
 		// FIXME to generalize as I probably forget things
 		$is_archive = (count($query->query) == 1 && !empty($qv['paged'])) ||
@@ -574,6 +569,9 @@ class Polylang_Core extends Polylang_base {
 
 	// filters categories and post tags by language when needed
 	function terms_clauses($clauses, $taxonomies, $args) {
+		if (!empty($args['pll_suppress_filter']))
+			return $clauses;
+
 		// does nothing except on taxonomies which are filterable
 		foreach ($taxonomies as $tax) {
 			if (!in_array($tax, $this->taxonomies))

@@ -94,12 +94,16 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 
 = 1.0.3 =
 
+* Add Catalan translation contributed by [Núria Martínez Berenguer](http://nuriamb.capa.webfactional.com)
+* Improve compatibility with WordPress SEO (sitemap for categories and tags)
 * Bug correction: custom menus are not displayed on search page (introduced in 1.0.2)
 * Bug correction: sql error when filtering terms by language (introduced in 1.0.2)
+* Bug correction: SSL doesn't work properly
+* Bug correction: php notice on IIS servers
+* Bug correction: clicking on the radio button in the language switcher does not work in Chrome
 
 = 1.0.2 (2013-02-26) =
 
-* Add Catalan translation contributed by [Núria Martínez Berenguer](http://nuriamb.capa.webfactional.com)
 * Add the possibility to query comments by language
 * Add the possibility not to set a cookie by defining PLL_COOKIE to false (Polylang may not work as expected on some pages)
 * Now a returning visitor is redirected to its preferred language when visiting the front page in the default language

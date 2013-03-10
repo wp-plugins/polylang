@@ -179,32 +179,27 @@ class Polylang_Admin_Base extends Polylang_Base {
 		$selected = !empty($_GET['lang']) && !is_numeric($_GET['lang']) && ($lang = $this->get_language($_GET['lang'])) ? $lang->slug :
 			(($lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true)) ? $lg : 'all');
 
+		$all_item = array((object) array('slug' => 'all', 'name' => __('Show all languages', 'polylang')));
+
 		$wp_admin_bar->add_menu(array(
 			'id'     => 'languages',
 			'title'  => __('Languages', 'polylang'),
 			'meta'  => array('title' => __('Filters content by language', 'polylang')),
 		));
 
-		$wp_admin_bar->add_menu(array(
-			'parent' => 'languages',
-			'id'     => 'all',
-			'title'  => sprintf('<input name="language" type="radio" value="all" %s /> %s',
-				$selected == 'all' ? 'checked="checked"' : '',
-				__('Show all languages', 'polylang')),
-			'href'   => add_query_arg('lang', 'all', $url),
-		));
-
-		foreach ($this->get_languages_list() as $lang) {
+		foreach (array_merge($all_item, $this->get_languages_list()) as $lang) {
+			$href = add_query_arg('lang', $lang->slug, $url);
 			$wp_admin_bar->add_menu(array(
 				'parent' => 'languages',
 				'id'     => $lang->slug,
 				'title'  => sprintf(
-					'<input name="language" type="radio" value="%s" %s /> %s',
+					'<input name="language" type="radio" onclick="location.href=%s" value="%s" %s /> %s',
+					"'" . $href . "'", // onclick is needed for Chrome browser, thanks to RavanH for the bug report and fix
 					esc_attr($lang->slug),
 					$selected == $lang->slug ? 'checked="checked"' : '',
 					esc_html($lang->name)
 				),
-				'href'   => add_query_arg('lang', $lang->slug, $url),
+				'href'   => $href,
 			));
 		}
 	}

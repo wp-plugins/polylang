@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://polylang.wordpress.com/
-Version: 1.0.2.1
+Version: 1.0.2.3
 Author: F. Demarle
 Description: Adds multilingual capability to WordPress
 Text Domain: polylang
@@ -29,7 +29,7 @@ Domain Path: /languages
  *
  */
 
-define('POLYLANG_VERSION', '1.0.2.1');
+define('POLYLANG_VERSION', '1.0.2.3');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
@@ -41,10 +41,10 @@ if (!defined('PLL_LOCAL_DIR'))
 if (file_exists(PLL_LOCAL_DIR.'/pll-config.php'))
 	include_once(PLL_LOCAL_DIR.'/pll-config.php'); // includes local config file if exists
 
-define('POLYLANG_URL', WP_PLUGIN_URL.'/'.basename(POLYLANG_DIR)); // our url
+define('POLYLANG_URL', plugins_url('/'.basename(POLYLANG_DIR))); // our url. Don't use WP_PLUGIN_URL http://wordpress.org/support/topic/ssl-doesnt-work-properly
 
 if (!defined('PLL_LOCAL_URL'))
-	define('PLL_LOCAL_URL', WP_CONTENT_URL.'/polylang'); // default url to access user data such as custom flags
+	define('PLL_LOCAL_URL', content_url('/polylang')); // default url to access user data such as custom flags
 
 if (!defined('PLL_COOKIE'))
 	define('PLL_COOKIE', 'pll_language'); // cookie name. no cookie will be used if set to false

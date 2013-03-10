@@ -38,12 +38,13 @@ class Polylang_Uninstall {
 
 		// delete posts translations
 		$ids = get_posts(array(
-			'numberposts'=> -1,
-			'fields' => 'ids',
-			'meta_key'=>'_translations',
-			'post_type'=>'any',
-			'post_status'=>'any'
-			));
+			'numberposts' => -1,
+			'nopaging'    => true,
+			'fields'      => 'ids',
+			'meta_key'    => '_translations',
+			'post_type'   => 'any',
+			'post_status' => 'any'
+		));
 
 		foreach ($ids as $id)
 			delete_post_meta($id, '_translations');

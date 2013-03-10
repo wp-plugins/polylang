@@ -934,11 +934,12 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 		// get all posts associated to this term
 		$posts = get_posts(array(
-			'numberposts'=> -1,
-			'post_type'  => 'any',
-			'post_status'=> 'any',
-			'fields'     => 'ids',
-			'tax_query'  => array(array(
+			'numberposts' => -1,
+			'nopaging'    => true,
+			'post_type'   => 'any',
+			'post_status' => 'any',
+			'fields'      => 'ids',
+			'tax_query'   => array(array(
 				'taxonomy' => $taxonomy,
 				'field'    => 'id',
 				'terms'    => array_merge(array($term_id), array_values($translations)),

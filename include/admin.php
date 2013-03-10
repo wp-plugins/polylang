@@ -96,7 +96,14 @@ class Polylang_Admin extends Polylang_Admin_Base {
 					$lang_slug = $lang->slug;
 
 					// update the language slug in posts meta
-					$posts = get_posts(array('numberposts'=>-1, 'fields' => 'ids', 'meta_key'=>'_translations', 'post_type'=>'any', 'post_status'=>'any'));
+					$posts = get_posts(array(
+						'numberposts' => -1,
+						'nopaging'    => true,
+						'fields'      => 'ids',
+						'meta_key'    => '_translations',
+						'post_type'   => 'any',
+						'post_status' => 'any'
+					));
 					$this->delete_translations('post', $posts, $lang_slug);
 
 					// update the language slug in categories & post tags meta
@@ -173,6 +180,7 @@ class Polylang_Admin extends Polylang_Admin_Base {
 						// update the language slug in posts meta
 						$posts = get_posts(array(
 							'numberposts' => -1,
+							'nopaging'    => true,
 							'fields'      => 'ids',
 							'meta_key'    => '_translations',
 							'post_type'   => 'any',
@@ -425,6 +433,7 @@ class Polylang_Admin extends Polylang_Admin_Base {
 	function get_objects_with_no_lang() {
 		$posts = get_posts(array(
 			'numberposts' => -1,
+			'nopaging'    => true,
 			'post_type'   => $this->post_types,
 			'post_status' => 'any',
 			'fields'      => 'ids',
