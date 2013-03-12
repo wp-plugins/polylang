@@ -291,7 +291,8 @@ class Polylang_WPML_Config {
 				}
 				if (isset($value))
 					$tagRef = $value;
-			}					}
+			}
+		}
 
 		return $found;
 	}

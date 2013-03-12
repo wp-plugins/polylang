@@ -503,7 +503,7 @@ class Polylang_Core extends Polylang_base {
 
 		// FIXME to generalize as I probably forget things
 		$is_archive = (count($query->query) == 1 && !empty($qv['paged'])) ||
-			!empty($qv['m']) ||
+			!empty($qv['m']) || !empty($qv['year']) || // need to test year due to post rewrite rule conflict when using date and name permalinks
 			!empty($qv['author']) ||
 			(isset($qv['post_type']) && is_post_type_archive() && $is_post_type);
 

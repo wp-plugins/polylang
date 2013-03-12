@@ -100,8 +100,9 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 * Bug correction: sql error when filtering terms by language (introduced in 1.0.2)
 * Bug correction: SSL doesn't work properly
 * Bug correction: php notice on IIS servers
-* Bug correction: clicking on the radio button in the language switcher does not work in Chrome
+* Bug correction: clicking on the radio buttons in the admin language switcher does not work in Chrome
 * Bug correction: on multisite, the signup page is redirected to the home page
+* Bug correction: date archives are not correctly filtered for the default language when hiding the language code and using date and name permalinks
 
 = 1.0.2 (2013-02-26) =
 
