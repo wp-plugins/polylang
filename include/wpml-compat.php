@@ -226,7 +226,7 @@ class Polylang_WPML_Config {
 		add_action('plugins_loaded', array(&$this, 'init'));
 	}
 
-	function xml_parse($xml) {
+	function xml_parse($xml, $context) {
 		$parser = xml_parser_create();
 		xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
 		xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
@@ -241,18 +241,20 @@ class Polylang_WPML_Config {
 			array('custom-fields', 'custom-field'),
 			array('custom-types','custom-type'),
 			array('taxonomies','taxonomy'),
-			array('admin_texts','key')
+			array('admin-texts','key')
 		);
 
 		foreach ($keys as $k) {
-			if (isset($arr[$k[0]]) && !isset($arr[$k[0]][$k[1]][0])) {
-				$elem = $arr[$k[0]][$k[1]];
-				unset($arr[$k[0]][$k[1]]);
-				$arr[$k[0]][$k[1]][0] = $elem;
+			if (isset($arr[$k[0]])) {
+				if (!isset($arr[$k[0]][$k[1]][0])) {
+					$elem = $arr[$k[0]][$k[1]];
+					unset($arr[$k[0]][$k[1]]);
+					$arr[$k[0]][$k[1]][0] = $elem;
+				}
+
+				$this->wpml_config[$k[0]][$context] = $arr[$k[0]];
 			}
 		}
-
-		$this->wpml_config = array_merge_recursive($this->wpml_config, $arr);
 	}
 
 	function xml_parse_recursive() {
@@ -302,16 +304,16 @@ class Polylang_WPML_Config {
 
 		// child theme
 		if (($template = get_template_directory()) != ($stylesheet = get_stylesheet_directory()) && file_exists($file = $stylesheet.'/wpml-config.xml'))
-			$this->xml_parse(file_get_contents($file)); // FIXME fopen + fread + fclose quicker ?
+			$this->xml_parse(file_get_contents($file), get_stylesheet()); // FIXME fopen + fread + fclose quicker ?
 
 		// theme
 		if (file_exists($file = $template.'/wpml-config.xml'))
- 			$this->xml_parse(file_get_contents($file));
+ 			$this->xml_parse(file_get_contents($file), get_template());
 
 		// plugins
 		foreach (get_option('active_plugins') as $plugin) {
-			if (file_exists($file = WP_PLUGIN_DIR.'/'.dirname($plugin).'/wpml-config.xml'))
-				$this->xml_parse(file_get_contents($file));
+			if (file_exists($file = dirname(POLYLANG_DIR).'/'.dirname($plugin).'/wpml-config.xml'))
+				$this->xml_parse(file_get_contents($file), dirname($plugin));
 		}
 
 		if (isset($this->wpml_config['custom-fields']))
@@ -326,19 +328,22 @@ class Polylang_WPML_Config {
 		if (!isset($this->wpml_config['admin-texts']))
 			return;
 
-		foreach ($this->wpml_config['admin-texts'] as $keys)
-			$this->strings = $this->admin_texts_recursive($keys);
+		foreach ($this->wpml_config['admin-texts'] as $context => $arr)
+			foreach ($arr as $keys)
+				$this->strings[$context] = $this->admin_texts_recursive($keys);
 
-		foreach ($this->strings as $option_name=>$value) {
-			if (is_admin()) {
-				$option = get_option($option_name);
-				if (is_string($option) && $value == 1)
-					pll_register_string($option_name, $option);
-				if (is_array($option) && is_array($value))
-					$this->register_string_recursive($value, $option);
+		foreach ($this->strings as $context=>$options) {
+			foreach ($options as $option_name=>$value) {
+				if (is_admin()) {
+					$option = get_option($option_name);
+					if (is_string($option) && $value == 1)
+						icl_register_string($context, $option_name, $option);
+					if (is_array($option) && is_array($value))
+						$this->register_string_recursive($context, $value, $option);
+				}
+				else
+					add_filter('option_'.$option_name, array(&$this, 'translate_strings'));
 			}
-			else
-				add_filter('option_'.$option_name, array(&$this, 'translate_strings'));
 		}
 	}
 
@@ -354,53 +359,65 @@ class Polylang_WPML_Config {
 		return $strings;
 	}
 
-	function register_string_recursive($strings, $options) {
+	function register_string_recursive($context, $strings, $options) {
 		foreach ($options as $name=>$value) {
 			if (isset($strings[$name])) {
 				if (is_string($value) && $strings[$name] == 1)
-					pll_register_string($name, $value);
+					icl_register_string($context, $name, $value);
 				if (is_array($value) && is_array($strings[$name]))
-					$this->register_string_recursive($strings[$name], $value);
+					$this->register_string_recursive($context, $strings[$name], $value);
 			}
 		}
 	}
 
 	function copy_post_metas($metas, $sync) {
-		foreach ($this->wpml_config['custom-fields']['custom-field'] as $cf) {
-			if (!$sync || $cf['attributes']['action'] == 'copy')
-				$metas[] = $cf['value'];
-			elseif ($sync && $cf['attributes']['action'] == 'translate')
-				$metas = array_diff($metas,  array($cf)); // do not synchronize
+		foreach ($this->wpml_config['custom-fields'] as $context) {
+			foreach ($context['custom-field'] as $cf) {
+				if (!$sync && in_array($cf['attributes']['action'], array('copy', 'translate')))
+					$metas[] = $cf['value'];
+				elseif ($sync && $cf['attributes']['action'] != 'copy')
+					$metas = array_diff($metas,  array($cf['value'])); // do not synchronize
+			}
 		}
 		return $metas;
 	}
 
 	// language and translation management for custom post types
 	function translate_types($types, $hide) {
-		foreach ($this->wpml_config['custom-types']['custom-type'] as $pt) {
-			if ($pt['attributes']['translate'] == 1 && !$hide)
-				$types[$pt['value']] = $pt['value'];
-			elseif ($hide)
-				unset ($types[$pt['value']]); // the author decided what to do with the post type so don't allow the user to change this
+		foreach ($this->wpml_config['custom-types'] as $context) {
+			foreach ($context['custom-type'] as $pt) {
+				if ($pt['attributes']['translate'] == 1 && !$hide)
+					$types[$pt['value']] = $pt['value'];
+				elseif ($hide)
+					unset ($types[$pt['value']]); // the author decided what to do with the post type so don't allow the user to change this
+			}
 		}
 		return $types;
 	}
 
 	// language and translation management for custom taxonomies
 	function translate_taxonomies($taxonomies, $hide) {
-		foreach ($this->wpml_config['taxonomies']['taxonomy'] as $tax) {
-			if ($tax['attributes']['translate'] == 1 && !$hide)
-				$taxonomies[$tax['value']] = $tax['value'];
-			elseif ($hide)
-				unset ($types[$tax['value']]); // the author decided what to do with the taxonomy so don't allow the user to change this
+		foreach ($this->wpml_config['taxonomies'] as $context) {
+			foreach ($context['taxonomy'] as $tax) {
+				if ($tax['attributes']['translate'] == 1 && !$hide)
+					$taxonomies[$tax['value']] = $tax['value'];
+				elseif ($hide)
+					unset ($types[$tax['value']]); // the author decided what to do with the taxonomy so don't allow the user to change this
+			}
 		}
 
 		return $taxonomies;
 	}
 
 	function translate_strings($value) {
-		$option = substr(current_filter(), 7);
-		return is_array($value) ? $this->translate_strings_recursive($this->strings[$option], $value) : pll__($value);
+		if (is_array($value)) {
+			$option = substr(current_filter(), 7);
+			foreach ($this->strings as $context=>$options) {
+				if (array_key_exists($option, $options))
+					return $this->translate_strings_recursive($options[$option], $value);
+			}
+		}
+		return pll__($value);
 	}
 
 	function translate_strings_recursive($strings, $values) {

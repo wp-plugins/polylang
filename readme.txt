@@ -24,7 +24,7 @@ You write posts, pages and create categories and post tags as usual, and then de
 
 = Translators =
 
-The plugin admin interface is currently available in 24 languages: English, French, German contributed by [Christian Ries](http://www.singbyfoot.lu), Russian contributed by [yoyurec](http://yoyurec.in.ua) and unostar, Greek contributed by [theodotos](http://www.ubuntucy.org), Dutch contributed by [AlbertGn](http://wordpress.org/support/profile/albertgn), Hebrew contributed by [ArielK](http://www.arielk.net), Polish contributed by [Peter Paciorkiewicz](http://www.paciorkiewicz.pl), Latvian contributed by [@AndyDeGroo](http://twitter.com/AndyDeGroo), Italian contributed by [Luca Barbetti](http://wordpress.org/support/profile/lucabarbetti), Danish contributed by [Compute](http://wordpress.org/support/profile/compute), Spanish contributed by Curro, Portuguese contributed by [Vitor Carvalho](http://vcarvalho.com/), Lithuanian contributed by [Naglis Jonaitis](http://najo.lt/), Turkish contributed by [darchws](http://darch.ws/), Finnish contributed by [Jani Alha](http://www.wysiwyg.fi), Bulgarian contributed by [pavelsof](http://wordpress.org/support/profile/pavelsof), Belarusian contributed by [Alexander Markevitch](http://fourfeathers.by/), Afrikaans contributed by [Kobus Joubert](http://translate3d.com/), Hungarian contributed by Csaba Erdei, Norwegian contributed by [Tom Boersma](http://www.oransje.com/), Slovak contributed by [Branco (WebHostingGeeks.com)](http://webhostinggeeks.com/user-reviews/), Swedish contributed by [matsii](http://wordpress.org/support/profile/matsii), Catalan contributed by [Núria Martínez Berenguer](http://nuriamb.capa.webfactional.com)
+The plugin admin interface is currently available in 25 languages: English, French, German contributed by [Christian Ries](http://www.singbyfoot.lu), Russian contributed by [yoyurec](http://yoyurec.in.ua) and unostar, Greek contributed by [theodotos](http://www.ubuntucy.org), Dutch contributed by [AlbertGn](http://wordpress.org/support/profile/albertgn), Hebrew contributed by [ArielK](http://www.arielk.net), Polish contributed by [Peter Paciorkiewicz](http://www.paciorkiewicz.pl), Latvian contributed by [@AndyDeGroo](http://twitter.com/AndyDeGroo), Italian contributed by [Luca Barbetti](http://wordpress.org/support/profile/lucabarbetti), Danish contributed by [Compute](http://wordpress.org/support/profile/compute), Spanish contributed by Curro, Portuguese contributed by [Vitor Carvalho](http://vcarvalho.com/), Lithuanian contributed by [Naglis Jonaitis](http://najo.lt/), Turkish contributed by [darchws](http://darch.ws/), Finnish contributed by [Jani Alha](http://www.wysiwyg.fi), Bulgarian contributed by [pavelsof](http://wordpress.org/support/profile/pavelsof), Belarusian contributed by [Alexander Markevitch](http://fourfeathers.by/), Afrikaans contributed by [Kobus Joubert](http://translate3d.com/), Hungarian contributed by Csaba Erdei, Norwegian contributed by [Tom Boersma](http://www.oransje.com/), Slovak contributed by [Branco (WebHostingGeeks.com)](http://webhostinggeeks.com/user-reviews/), Swedish contributed by [matsii](http://wordpress.org/support/profile/matsii), Catalan contributed by [Núria Martínez Berenguer](http://nuriamb.capa.webfactional.com), Ukrainian contributed by [cmd soft](http://www.cmd-soft.com/)
 
 
 Other [contributions](http://wordpress.org/extend/plugins/polylang/other_notes/) are welcome !
@@ -75,7 +75,7 @@ You can subscribe to the tag ['polylang-dev'](http://wordpress.org/tags/polylang
 
 = Translate the admin interface =
 
-Polylang is already available in 24 languages. It's very easy to add a new one! Download [poedit](http://www.poedit.net/download.php) (available for Windows, Mac OS X and Linux). Rename the file polylang.pot found in the polylang/languages directory into something like polylang-your_locale.po. Open the file with poedit and start translating (keeping strange codes such as %s, %1$s as is). Once done, just save and you will get two files polylang-your_locale.po and polylang-your_locale.mo that you can send to the author. The translation will be included with the next release and will be covered by the same license as Polylang (GPLv2 or later).
+Polylang is already available in 25 languages. It's very easy to add a new one! Download [poedit](http://www.poedit.net/download.php) (available for Windows, Mac OS X and Linux). Rename the file polylang.pot found in the polylang/languages directory into something like polylang-your_locale.po. Open the file with poedit and start translating (keeping strange codes such as %s, %1$s as is). Once done, just save and you will get two files polylang-your_locale.po and polylang-your_locale.mo that you can send to the author. The translation will be included with the next release and will be covered by the same license as Polylang (GPLv2 or later).
 
 = Communicate =
 
@@ -95,6 +95,7 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 = 1.0.3 =
 
 * Add Catalan translation contributed by [Núria Martínez Berenguer](http://nuriamb.capa.webfactional.com)
+* Add Ukrainian translation contributed by [cmd soft](http://www.cmd-soft.com/)
 * Improve compatibility with WordPress SEO (sitemap for categories and tags)
 * Bug correction: custom menus are not displayed on search page (introduced in 1.0.2)
 * Bug correction: sql error when filtering terms by language (introduced in 1.0.2)
@@ -103,6 +104,7 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 * Bug correction: clicking on the radio buttons in the admin language switcher does not work in Chrome
 * Bug correction: on multisite, the signup page is redirected to the home page
 * Bug correction: date archives are not correctly filtered for the default language when hiding the language code and using date and name permalinks
+* Bug correction: only one wpml-config.xml file is parsed
 
 = 1.0.2 (2013-02-26) =
 
