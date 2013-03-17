@@ -7,7 +7,7 @@ class Polylang_Uninstall {
 
 		// check if it is a multisite uninstall - if so, run the uninstall function for each blog id
 		if (is_multisite()) {
-			foreach ($wpdb->get_col($wpdb->prepare("SELECT blog_id FROM $wpdb->blogs")) as $blog_id) {
+			foreach ($wpdb->get_col("SELECT blog_id FROM $wpdb->blogs") as $blog_id) {
 				switch_to_blog($blog_id);
 				$this->uninstall();
 			}
@@ -23,7 +23,8 @@ class Polylang_Uninstall {
 		$wpdb->termmeta = $wpdb->prefix . 'termmeta'; // registers the termmeta table in wpdb
 
 		// need to register the language taxonomy
-		register_taxonomy('language', apply_filters('pll_get_post_types', get_post_types(array('show_ui' => true))), array('label' => false, 'query_var'=>'lang'));
+		register_taxonomy('language', apply_filters('pll_get_post_types', get_post_types(array('show_ui' => true))),
+			array('label' => false, 'query_var'=>'lang'));
 
 		$languages = get_terms('language', array('hide_empty'=>false));
 
@@ -36,7 +37,15 @@ class Polylang_Uninstall {
 		}
 
 		// delete posts translations
-		$ids = get_posts(array('numberposts'=> -1, 'fields' => 'ids', 'meta_key'=>'_translations', 'post_type'=>'any', 'post_status'=>'any'));
+		$ids = get_posts(array(
+			'numberposts' => -1,
+			'nopaging'    => true,
+			'fields'      => 'ids',
+			'meta_key'    => '_translations',
+			'post_type'   => 'any',
+			'post_status' => 'any'
+		));
+
 		foreach ($ids as $id)
 			delete_post_meta($id, '_translations');
 
@@ -46,7 +55,7 @@ class Polylang_Uninstall {
 			delete_metadata('term', $id, '_translations');
 			delete_metadata('term', $id, '_language');
 		}
-		
+
 		foreach ($languages as $lang) {
 			delete_metadata('term', $lang->term_id, '_rtl'); // delete rtl meta
 			delete_option('polylang_mo'.$lang->term_id); // delete the string translations
@@ -54,23 +63,19 @@ class Polylang_Uninstall {
 		}
 
 		// delete the termmeta table only if it is empty as other plugins may use it
-		$table = $wpdb->termmeta;
-		$count = $wpdb->get_var("SELECT COUNT(*) FROM $table;");
+		$count = $wpdb->get_var("SELECT COUNT(*) FROM $wpdb->termmeta;");
 		if (!$count) {
-			$wpdb->query($wpdb->prepare("DROP TABLE $table;"));
+			$wpdb->query("DROP TABLE $wpdb->termmeta;");
 			unset($wpdb->termmeta);
 		}
-
 
 		// delete options
 		delete_option('polylang');
 		delete_option('polylang_nav_menus');
 		delete_option('polylang_widgets');
 		delete_option('widget_polylang'); // automatically created by WP
+		delete_option('polylang_wpml_strings'); // strings registered with icl_register_string
 	}
 }
 
-if (class_exists("Polylang_Uninstall"))
-	new Polylang_Uninstall();
-
-?>
+new Polylang_Uninstall();
