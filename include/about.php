@@ -20,7 +20,7 @@ printf(
 echo ' ';
 printf(
 	__('If you wonder how you can help the project, just %sread this%s.', 'polylang'),
-	'<a href="http://wordpress.org/extend/plugins/polylang/other_notes/">',
+	'<a href="http://polylang.wordpress.com/documentation/contribute/">',
 	'</a>'
 );
 echo ' ';

@@ -1,6 +1,6 @@
 <?php
 
-class Polylang_Plugins_Compat{
+class Polylang_Plugins_Compat {
 	function __construct() {
 		// YARPP
 		// just makes YARPP aware of the language taxonomy (after Polylang registered it)
@@ -30,7 +30,7 @@ class Polylang_Plugins_Compat{
 	// removes the language filter for the taxonomy sitemaps
 	function wpseo_remove_terms_filter($args) {
 		if (defined('WPSEO_VERSION') && isset($GLOBALS['wp_query']->query['sitemap']))
-			$args['pll_suppress_filter'] = 1;
+			$args['lang'] = 0;
 		return $args;
 	}
 

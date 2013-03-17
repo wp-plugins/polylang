@@ -320,7 +320,7 @@ abstract class Polylang_Base {
 	// returns all page ids *not in* language defined by $lang_id
 	function exclude_pages($lang_id) {
 		return get_posts(array(
-			'pll_suppress_filter' => 1, // so this query is not filtered by our pre_get_post filter in core.php
+			'lang' => 0, // so this query is not filtered by our pre_get_post filter in core.php
 			'numberposts' => -1,
 			'nopaging'    => true,
 			'post_type'   => array_intersect(get_post_types(array('hierarchical' => 1)), $this->post_types),

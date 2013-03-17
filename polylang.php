@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://polylang.wordpress.com/
-Version: 1.0.2.5
+Version: 1.0.3
 Author: F. Demarle
 Description: Adds multilingual capability to WordPress
 Text Domain: polylang
@@ -29,7 +29,7 @@ Domain Path: /languages
  *
  */
 
-define('POLYLANG_VERSION', '1.0.2.5');
+define('POLYLANG_VERSION', '1.0.3');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
@@ -169,8 +169,7 @@ class Polylang extends Polylang_Base {
 		register_taxonomy('language', null , array('label' => false, 'query_var'=>'lang'));
 
 		// defines default values for options in case this is the first installation
-		$options = get_option('polylang');
-		if (!$options) {
+		if (!get_option('polylang')) {
 			$options['browser'] = 1; // default language for the front page is set by browser preference
 			$options['rewrite'] = 1; // remove /language/ in permalinks (was the opposite before 0.7.2)
 			$options['hide_default'] = 0; // do not remove URL language information for default language
@@ -180,9 +179,10 @@ class Polylang extends Polylang_Base {
 			$options['sync'] = array_keys($this->list_metas_to_sync()); // synchronisation is enabled by default
 			$options['post_types'] = array_values(get_post_types(array('_builtin' => false, 'show_ui => true')));
 			$options['taxonomies'] = array_values(get_taxonomies(array('_builtin' => false, 'show_ui => true')));
+			$options['version'] = POLYLANG_VERSION;
+
+			update_option('polylang', $options);
 		}
-		$options['version'] = POLYLANG_VERSION;
-		update_option('polylang', $options);
 
 		// add our rewrite rules
 		$this->add_post_types_taxonomies();
@@ -282,7 +282,7 @@ class Polylang extends Polylang_Base {
 				'all_items' => __('All languages', 'polylang'),
 			),
 			'public' => false, // avoid displaying the 'like post tags text box' in the quick edit
-			'query_var'=>'lang',
+			'query_var' => 'lang',
 			'update_count_callback' => '_update_post_term_count'
 		));
 

@@ -164,13 +164,12 @@ class Polylang_WPML_Compat {
 		add_action('pll_get_strings', array(&$this, 'get_strings'));
 	}
 
-	// the persistant register_string function
+	// unlike pll_register_string, icl_register_string stores the sting in database
+	// so we need to do the same as some plugins or themes may expect this
+	// we use a serialized option to do this
 	function register_string($context, $name, $string) {
 		if (empty($this->strings))
-			$this->strings = get_option('polylang_wpml_strings');
-
-		if (empty($this->strings))
-			$this->strings = array();
+			$this->strings = get_option('polylang_wpml_strings', array());
 
 		// registers the string if it does not exist yet
 		// $context not used today but save it just in case
@@ -184,10 +183,7 @@ class Polylang_WPML_Compat {
 	// removes a string from the registered strings list
 	function unregister_string($context, $name) {
 		if (empty($this->strings))
-			$this->strings = get_option('polylang_wpml_strings');
-
-		if (empty($this->strings))
-			$this->strings = array();
+			$this->strings = get_option('polylang_wpml_strings', array());
 
 		foreach ($this->strings as $key=>$string) {
 			if ($string['context'] == $context && $string['name'] == $name) {
@@ -316,6 +312,10 @@ class Polylang_WPML_Config {
 				$this->xml_parse(file_get_contents($file), dirname($plugin));
 		}
 
+		// custom
+		if (file_exists($file = PLL_LOCAL_DIR.'/wpml-config.xml'))
+ 			$this->xml_parse(file_get_contents($file), 'polylang');
+
 		if (isset($this->wpml_config['custom-fields']))
 			add_filter('pll_copy_post_metas', array(&$this, 'copy_post_metas'), 10, 2);
 
@@ -328,18 +328,19 @@ class Polylang_WPML_Config {
 		if (!isset($this->wpml_config['admin-texts']))
 			return;
 
+		// get a cleaner array for easy manipulation
 		foreach ($this->wpml_config['admin-texts'] as $context => $arr)
 			foreach ($arr as $keys)
 				$this->strings[$context] = $this->admin_texts_recursive($keys);
 
 		foreach ($this->strings as $context=>$options) {
 			foreach ($options as $option_name=>$value) {
-				if (is_admin()) {
+				if (defined('DOING_CRON') || (is_admin() && !(defined('DOING_AJAX') && isset($_REQUEST['pll_load_front'])))) { // backend
 					$option = get_option($option_name);
 					if (is_string($option) && $value == 1)
-						icl_register_string($context, $option_name, $option);
-					if (is_array($option) && is_array($value))
-						$this->register_string_recursive($context, $value, $option);
+						pll_register_string($option_name, $option); // FIXME ready to use $context
+					elseif (is_array($option) && is_array($value))
+						$this->register_string_recursive($context, $value, $option); // for a serialized option
 				}
 				else
 					add_filter('option_'.$option_name, array(&$this, 'translate_strings'));
@@ -347,6 +348,7 @@ class Polylang_WPML_Config {
 		}
 	}
 
+	// arranges strings in a cleaner way
 	function admin_texts_recursive($keys) {
 		if (!isset($keys[0])) {
 			$elem = $keys;
@@ -359,12 +361,13 @@ class Polylang_WPML_Config {
 		return $strings;
 	}
 
+	// recursively registers strings for a serialized option
 	function register_string_recursive($context, $strings, $options) {
 		foreach ($options as $name=>$value) {
 			if (isset($strings[$name])) {
 				if (is_string($value) && $strings[$name] == 1)
-					icl_register_string($context, $name, $value);
-				if (is_array($value) && is_array($strings[$name]))
+					pll_register_string($option_name, $option); // FIXME ready to use $context
+				elseif (is_array($value) && is_array($strings[$name]))
 					$this->register_string_recursive($context, $strings[$name], $value);
 			}
 		}
@@ -409,23 +412,25 @@ class Polylang_WPML_Config {
 		return $taxonomies;
 	}
 
+	// translates the strings for an option
 	function translate_strings($value) {
 		if (is_array($value)) {
 			$option = substr(current_filter(), 7);
 			foreach ($this->strings as $context=>$options) {
 				if (array_key_exists($option, $options))
-					return $this->translate_strings_recursive($options[$option], $value);
+					return $this->translate_strings_recursive($options[$option], $value); // for a serialized option
 			}
 		}
 		return pll__($value);
 	}
 
+	// recursively translates strings for a serialized option
 	function translate_strings_recursive($strings, $values) {
 		foreach ($values as $name=>$value) {
 			if (isset($strings[$name])) {
 				if (is_string($value) && $strings[$name] == 1)
 					$values[$name] = pll__($value);
-				if (is_array($value) && is_array($strings[$name]))
+				elseif (is_array($value) && is_array($strings[$name]))
 					$value = $this->translate_strings_recursive($strings[$name], $value);
 			}
 		}

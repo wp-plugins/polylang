@@ -426,11 +426,14 @@ class Polylang_Core extends Polylang_base {
 		// don't make anything if no language has been defined yet
 		// $this->post_types & $this->taxonomies are defined only once the action 'wp_loaded' has been fired
 		// don't honor suppress_filters as it breaks adjacent_image_link when post_parent == 0
-		// but honor our pll_suppress_filter
-		if (!$this->get_languages_list() || !did_action('wp_loaded') || $query->get('pll_suppress_filter'))
+		if (!$this->get_languages_list() || !did_action('wp_loaded'))
 			return;
 
 		$qv = $query->query_vars;
+
+		// do not filter if lang is set to an empty value
+		if (isset($qv['lang']) && !$qv['lang'])
+			return;
 
 		// users may want to display content in a different language than the current one by setting it explicitely in the query
 		if (!$this->first_query && $this->curlang && !empty($qv['lang']))
@@ -569,9 +572,6 @@ class Polylang_Core extends Polylang_base {
 
 	// filters categories and post tags by language when needed
 	function terms_clauses($clauses, $taxonomies, $args) {
-		if (!empty($args['pll_suppress_filter']))
-			return $clauses;
-
 		// does nothing except on taxonomies which are filterable
 		foreach ($taxonomies as $tax) {
 			if (!in_array($tax, $this->taxonomies))
@@ -579,7 +579,7 @@ class Polylang_Core extends Polylang_base {
 		}
 
 		// adds our clauses to filter by language
-		return $this->_terms_clauses($clauses, !empty($args['lang']) ? $args['lang'] : $this->curlang);
+		return $this->_terms_clauses($clauses, isset($args['lang']) ? $args['lang'] : $this->curlang);
 	}
 
 	// meta in the html head section
@@ -719,7 +719,7 @@ class Polylang_Core extends Polylang_base {
 
 	// filters the comments according to the current language mainly for the recent comments widget
 	function comments_clauses($clauses, $query) {
-		return $this->_comments_clauses($clauses, !empty($query->query_vars['lang']) ? $query->query_vars['lang'] : $this->curlang);
+		return $this->_comments_clauses($clauses, isset($query->query_vars['lang']) ? $query->query_vars['lang'] : $this->curlang);
 	}
 
 	// modifies the sql request for wp_get_archives an get_adjacent_post to filter by the current language
