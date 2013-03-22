@@ -4,7 +4,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: F. Demarle\n"
+"Last-Translator: Branco  <brradenovich@gmail.com>\n"
 "Language-Team: \n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-KeywordsList: _e;__;_x\n"
 "X-Poedit-Basepath: .\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.5.5\n"
 "X-Poedit-SearchPath-0: ..\n"
 "X-Poedit-SearchPath-1: ../include\n"
 
@@ -353,7 +353,7 @@ msgstr "Jazyk je nastavená od obsahu. Príspevkov, stránok, kategórií a zna�
 
 #: include/languages-form.php:278
 msgid "The language code, for example /en/, is added to all urls when using pretty permalinks."
-msgstr "Kód jazyka, napríklad/en /, sa pridá do všetky adresy URL, pri použití pekná permalinks."
+msgstr "Kód jazyka, napríklad/en/, sa pridá do všetky adresy URL, pri použití pekná permalinks."
 
 #: include/languages-form.php:287
 msgid "Remove /language/ in pretty permalinks. Example:"
@@ -518,10 +518,10 @@ msgstr ""
 #~ msgstr "Prosím presunúť svoje miestne vlajky od %s do %s"
 
 #~ msgid "%1$s %2$s"
-#~ msgstr "%1$ s %2$ s"
+#~ msgstr "%1$s %2$s"
 
 #~ msgid "View posts for %1$s %2$s"
-#~ msgstr "Zobraziť príspevky pre %1$ s %2$ s"
+#~ msgstr "View posts for %1$s %2$s"
 
 #~ msgid "Site Title"
 #~ msgstr "Názov lokality"

@@ -92,6 +92,12 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 
 == Changelog ==
 
+= 1.0.4 =
+
+* Bug correction: page preview does not work when adding the language code to all urls
+* Bug correction: error when a post type or taxonomy label is not a string
+* Bug correction: admin text section of wpml-config.xml (introduced in 1.0.3)
+
 = 1.0.3 (2013-03-17) =
 
 * Add Catalan translation contributed by [Núria Martínez Berenguer](http://nuriamb.capa.webfactional.com)

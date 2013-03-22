@@ -260,9 +260,9 @@ class Polylang_Core extends Polylang_base {
 			// thanks to Gonçalo Peres for pointing out the issue with queries unknown to WP
 			// http://wordpress.org/support/topic/plugin-polylang-language-homepage-redirection-problem-and-solution-but-incomplete?replies=4#post-2729566
 			if (str_replace('www.', '', home_url('/')) == trailingslashit((is_ssl() ? 'https://' : 'http://').str_replace('www.', '', $_SERVER['HTTP_HOST']).str_replace(array($wp_rewrite->index, '?'.$_SERVER['QUERY_STRING']), array('', ''), $_SERVER['REQUEST_URI']))) {
-				// take care to post preview http://wordpress.org/support/topic/static-frontpage-url-parameter-url-language-information
-				if (isset($_GET['preview']) && isset($_GET['p']) && $lg = $this->get_post_language($_GET['p']))
-					$this->curlang = $lg ? $lg : $this->get_language($this->options['default_lang']);
+				// take care to post & page preview http://wordpress.org/support/topic/static-frontpage-url-parameter-url-language-information
+				if (isset($_GET['preview']) && ( (isset($_GET['p']) && $id = $_GET['p']) || (isset($_GET['page_id']) && $id = $_GET['page_id']) ))
+					$this->curlang = ($lg = $this->get_post_language($id)) ? $lg : $this->get_language($this->options['default_lang']);
 				else
 					$this->home_requested();
 			}
@@ -323,7 +323,7 @@ class Polylang_Core extends Polylang_base {
 	// translates post types and taxonomies labels once the language is known
 	function translate_labels($type) {
 		foreach($type->labels as $key=>$label)
-			if (isset($this->labels[$label]))
+			if (is_string($label) && isset($this->labels[$label]))
 				$type->labels->$key = isset($this->labels[$label]['context']) ?
 					_x($label, $this->labels[$label]['context'], $this->labels[$label]['domain']) :
 					__($label, $this->labels[$label]['domain']);

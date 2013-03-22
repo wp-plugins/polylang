@@ -366,7 +366,7 @@ class Polylang_WPML_Config {
 		foreach ($options as $name=>$value) {
 			if (isset($strings[$name])) {
 				if (is_string($value) && $strings[$name] == 1)
-					pll_register_string($option_name, $option); // FIXME ready to use $context
+					pll_register_string($name, $value); // FIXME ready to use $context
 				elseif (is_array($value) && is_array($strings[$name]))
 					$this->register_string_recursive($context, $strings[$name], $value);
 			}
