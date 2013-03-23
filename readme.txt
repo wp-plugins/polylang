@@ -94,6 +94,7 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 
 = 1.0.4 =
 
+* Now compatible with languages files stored in wp-content/languages/themes
 * Bug correction: page preview does not work when adding the language code to all urls
 * Bug correction: error when a post type or taxonomy label is not a string
 * Bug correction: admin text section of wpml-config.xml (introduced in 1.0.3)

@@ -355,9 +355,12 @@ class Polylang_Core extends Polylang_base {
 
 				// now we can load text domains with the right language
 				$new_locale = get_locale();
-				foreach ($this->list_textdomains as $textdomain)
-					load_textdomain( $textdomain['domain'], str_replace($this->default_locale, $new_locale, $textdomain['mo']));
-
+				foreach ($this->list_textdomains as $textdomain) {
+					$mo = str_replace("{$this->default_locale}.mo", "{$new_locale}.mo", $textdomain['mo']);
+					// since WP3.5 themes may store languages files in /wp-content/languages/themes
+					$mo = file_exists($mo) ? $mo : WP_LANG_DIR . "/themes/{$textdomain['domain']}-{$new_locale}.mo";
+					load_textdomain($textdomain['domain'], $mo);
+				}
 				// reinitializes wp_locale for weekdays and months, as well as for text direction
 				unset($GLOBALS['wp_locale']);
 				$GLOBALS['wp_locale'] = new WP_Locale();
