@@ -263,6 +263,11 @@ class Polylang_Core extends Polylang_base {
 				// take care to post & page preview http://wordpress.org/support/topic/static-frontpage-url-parameter-url-language-information
 				if (isset($_GET['preview']) && ( (isset($_GET['p']) && $id = $_GET['p']) || (isset($_GET['page_id']) && $id = $_GET['page_id']) ))
 					$this->curlang = ($lg = $this->get_post_language($id)) ? $lg : $this->get_language($this->options['default_lang']);
+
+				// take care to (unattached) attachments
+				elseif (isset($_GET['attachment_id']) && $id = $_GET['attachment_id'])
+					$this->curlang = ($lg = $this->get_post_language($id)) ? $lg : $this->get_preferred_language();
+
 				else
 					$this->home_requested();
 			}
@@ -283,6 +288,7 @@ class Polylang_Core extends Polylang_base {
 				add_action('wp', array(&$this, 'check_language_code_in_url')); // before Wordpress redirect_canonical
 		}
 
+		$GLOBALS['text_direction'] = get_metadata('term', $this->curlang->term_id, '_rtl', true) ? 'rtl' : 'ltr';
 		$GLOBALS['l10n']['pll_string'] = $this->mo_import($this->curlang);
 		do_action('pll_language_defined');
 	}
