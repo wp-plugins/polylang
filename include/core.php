@@ -740,7 +740,8 @@ class Polylang_Core extends Polylang_base {
 	// modifies the sql request for wp_get_archives and get_adjacent_post to filter by the current language
 	function posts_where($sql) {
 		global $wpdb;
-		return $sql . $wpdb->prepare(" AND pll_tr.term_taxonomy_id IN (%s)", $this->curlang->term_taxonomy_id);
+		preg_match("#post_type = '([^']+)'#", $sql, $matches);	// find the queried post type
+		return !empty($matches[1]) && in_array($matches[1], $this->post_types) ? $sql . $wpdb->prepare(" AND pll_tr.term_taxonomy_id IN (%s)", $this->curlang->term_taxonomy_id) : $sql;
 	}
 
 	// modifies the author and date links to add the language parameter (as well as feed link)

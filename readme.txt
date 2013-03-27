@@ -100,6 +100,7 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 * Bug correction: admin text section of wpml-config.xml (introduced in 1.0.3)
 * Bug correction: infinite redirect loop when querying an unattached media and the language code is added to all urls
 * Bug correction: the text direction is not set from Polylang options when the language code is added to all urls
+* Bug correction: get_adjacent_post is filtered by language even for post types without language
 
 = 1.0.3 (2013-03-17) =
 
