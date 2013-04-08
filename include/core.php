@@ -232,7 +232,7 @@ class Polylang_Core extends Polylang_base {
 	function pre_comment_on_post($post_id) {
 		$this->curlang = $this->get_post_language($post_id);
 		add_filter('page_link', array(&$this, 'page_link'), 10, 2); // useful when posting a comment on static front page in non default language
-		$this->add_post_term_link_filters(); 	// useful to redirect to correct post comment url when adding the language to all url
+		$this->add_post_term_link_filters(); // useful to redirect to correct post comment url when adding the language to all url
 	}
 
 	// sets the language when it is always included in the url
@@ -241,7 +241,6 @@ class Polylang_Core extends Polylang_base {
 			return;
 
 		global $wp_rewrite;
-
 		// special case for ajax request
 		if (isset($_REQUEST['pll_load_front']))
 			$this->curlang = empty($_REQUEST['lang']) ? $this->get_preferred_language() : $this->get_language($_REQUEST['lang']);
@@ -513,11 +512,10 @@ class Polylang_Core extends Polylang_base {
 			}
 		}
 
-		// FIXME to generalize as I probably forget things
 		$is_archive = (count($query->query) == 1 && !empty($qv['paged'])) ||
-			!empty($qv['m']) || !empty($qv['year']) || // need to test year due to post rewrite rule conflict when using date and name permalinks
-			!empty($qv['author']) ||
-			(isset($qv['post_type']) && is_post_type_archive() && $is_post_type);
+			$query->is_date ||
+			$query->is_author ||
+			(isset($qv['post_type']) && $query->is_post_type_archive && $is_post_type);
 
 		// sets 404 when the language is not set for archives needing the language in the url
 		if (!$this->options['hide_default'] && !isset($qv['lang']) && !$wp_rewrite->using_permalinks() && $is_archive)
@@ -896,7 +894,7 @@ class Polylang_Core extends Polylang_base {
 
 	// filters the home url to get the right language
 	function home_url($url, $path) {
-		if (!did_action('template_redirect') || rtrim($url,'/') != $this->home)
+		if (!(did_action('template_redirect') || did_action('login_init')) || rtrim($url,'/') != $this->home)
 			return $url;
 
 		$theme = get_theme_root();
@@ -912,7 +910,7 @@ class Polylang_Core extends Polylang_base {
 			if ($trace['function'] == 'get_search_form')
 				$is_get_search_form = true;
 
-			if ($trace['function'] == 'wp_nav_menu' ||
+			if ($trace['function'] == 'wp_nav_menu' || $trace['function'] == 'login_footer' ||
 				// direct call from the theme
 				( !$is_get_search_form && isset($trace['file']) && strpos($trace['file'], $theme) !== false && in_array($trace['function'], array('home_url', 'get_home_url', 'bloginfo', 'get_bloginfo')) ))
 				// remove trailing slash if there is none in requested url
@@ -924,7 +922,7 @@ class Polylang_Core extends Polylang_base {
 
 	// returns the home url in the right language
 	function get_home_url($language = '', $is_search = false) {
-		if ($language == '')
+		if (empty($language))
 			$language = $this->curlang;
 
 		if (isset($this->home_urls[$language->slug][$is_search]))

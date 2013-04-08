@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, i18n, international, l10n, localization
 Requires at least: 3.1
 Tested up to: 3.5
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv2 or later
 
 Polylang adds multilingual content management support to WordPress.
@@ -24,7 +24,7 @@ You write posts, pages and create categories and post tags as usual, and then de
 
 = Translators =
 
-The plugin admin interface is currently available in 25 languages: English, French, German contributed by [Christian Ries](http://www.singbyfoot.lu), Russian contributed by [yoyurec](http://yoyurec.in.ua) and unostar, Greek contributed by [theodotos](http://www.ubuntucy.org), Dutch contributed by [AlbertGn](http://wordpress.org/support/profile/albertgn), Hebrew contributed by [ArielK](http://www.arielk.net), Polish contributed by [Peter Paciorkiewicz](http://www.paciorkiewicz.pl), Latvian contributed by [@AndyDeGroo](http://twitter.com/AndyDeGroo), Italian contributed by [Luca Barbetti](http://wordpress.org/support/profile/lucabarbetti), Danish contributed by [Compute](http://wordpress.org/support/profile/compute), Spanish contributed by Curro, Portuguese contributed by [Vitor Carvalho](http://vcarvalho.com/), Lithuanian contributed by [Naglis Jonaitis](http://najo.lt/), Turkish contributed by [darchws](http://darch.ws/), Finnish contributed by [Jani Alha](http://www.wysiwyg.fi), Bulgarian contributed by [pavelsof](http://wordpress.org/support/profile/pavelsof), Belarusian contributed by [Alexander Markevitch](http://fourfeathers.by/), Afrikaans contributed by [Kobus Joubert](http://translate3d.com/), Hungarian contributed by Csaba Erdei, Norwegian contributed by [Tom Boersma](http://www.oransje.com/), Slovak contributed by [Branco (WebHostingGeeks.com)](http://webhostinggeeks.com/user-reviews/), Swedish contributed by [matsii](http://wordpress.org/support/profile/matsii), Catalan contributed by [Núria Martínez Berenguer](http://nuriamb.capa.webfactional.com), Ukrainian contributed by [cmd soft](http://www.cmd-soft.com/)
+The plugin admin interface is currently available in 26 languages: English, French, German contributed by [Christian Ries](http://www.singbyfoot.lu), Russian contributed by [yoyurec](http://yoyurec.in.ua) and unostar, Greek contributed by [theodotos](http://www.ubuntucy.org), Dutch contributed by [AlbertGn](http://wordpress.org/support/profile/albertgn), Hebrew contributed by [ArielK](http://www.arielk.net), Polish contributed by [Peter Paciorkiewicz](http://www.paciorkiewicz.pl), Latvian contributed by [@AndyDeGroo](http://twitter.com/AndyDeGroo), Italian contributed by [Luca Barbetti](http://wordpress.org/support/profile/lucabarbetti), Danish contributed by [Compute](http://wordpress.org/support/profile/compute), Spanish contributed by Curro, Portuguese contributed by [Vitor Carvalho](http://vcarvalho.com/), Lithuanian contributed by [Naglis Jonaitis](http://najo.lt/), Turkish contributed by [darchws](http://darch.ws/), Finnish contributed by [Jani Alha](http://www.wysiwyg.fi), Bulgarian contributed by [pavelsof](http://wordpress.org/support/profile/pavelsof), Belarusian contributed by [Alexander Markevitch](http://fourfeathers.by/), Afrikaans contributed by [Kobus Joubert](http://translate3d.com/), Hungarian contributed by Csaba Erdei, Norwegian contributed by [Tom Boersma](http://www.oransje.com/), Slovak contributed by [Branco (WebHostingGeeks.com)](http://webhostinggeeks.com/user-reviews/), Swedish contributed by [matsii](http://wordpress.org/support/profile/matsii), Catalan contributed by [Núria Martínez Berenguer](http://nuriamb.capa.webfactional.com), Ukrainian contributed by [cmd soft](http://www.cmd-soft.com/), Estonian contributed by [Ahto Naris](http://profiles.wordpress.org/ahtonaris/)
 
 
 Other [contributions](http://polylang.wordpress.com/documentation/contribute/) are welcome !
@@ -92,8 +92,9 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 
 == Changelog ==
 
-= 1.0.4 =
+= 1.0.4 (2013-04-08) =
 
+* Add Estonian translation contributed by [Ahto Naris](http://profiles.wordpress.org/ahtonaris/)
 * Now compatible with languages files stored in wp-content/languages/themes
 * Bug correction: page preview does not work when adding the language code to all urls
 * Bug correction: error when a post type or taxonomy label is not a string
@@ -101,6 +102,8 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 * Bug correction: infinite redirect loop when querying an unattached media and the language code is added to all urls
 * Bug correction: the text direction is not set from Polylang options when the language code is added to all urls
 * Bug correction: get_adjacent_post is filtered by language even for post types without language
+* Bug correction: the home url is not not in the correct language in wp-login.php
+* Bug correction: the language is not correctly set when using date and name permalinks (introduced in 1.0.3)
 
 = 1.0.3 (2013-03-17) =
 
