@@ -173,7 +173,7 @@ class Polylang_WPML_Compat {
 
 		// registers the string if it does not exist yet
 		// $context not used today but save it just in case
-		$to_register = array('context' => $context, 'name'=> $name, 'string' => $string, 'multiline' => false);
+		$to_register = array('context' => $context, 'name'=> $name, 'string' => $string, 'multiline' => false, 'icl' => true);
 		if (!in_array($to_register, $this->strings) && $to_register['string']) {
 			$this->strings[] = $to_register;
 			update_option('polylang_wpml_strings', $this->strings);
@@ -335,10 +335,10 @@ class Polylang_WPML_Config {
 
 		foreach ($this->strings as $context=>$options) {
 			foreach ($options as $option_name=>$value) {
-				if (defined('DOING_CRON') || (is_admin() && !(defined('DOING_AJAX') && isset($_REQUEST['pll_load_front'])))) { // backend
+				if ($GLOBALS['polylang']->is_admin) { // backend
 					$option = get_option($option_name);
 					if (is_string($option) && $value == 1)
-						pll_register_string($option_name, $option); // FIXME ready to use $context
+						pll_register_string($option_name, $option, $context);
 					elseif (is_array($option) && is_array($value))
 						$this->register_string_recursive($context, $value, $option); // for a serialized option
 				}
@@ -366,7 +366,7 @@ class Polylang_WPML_Config {
 		foreach ($options as $name=>$value) {
 			if (isset($strings[$name])) {
 				if (is_string($value) && $strings[$name] == 1)
-					pll_register_string($name, $value); // FIXME ready to use $context
+					pll_register_string($name, $value, $context);
 				elseif (is_array($value) && is_array($strings[$name]))
 					$this->register_string_recursive($context, $strings[$name], $value);
 			}

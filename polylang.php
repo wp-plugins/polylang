@@ -2,8 +2,8 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://polylang.wordpress.com/
-Version: 1.0.4
-Author: F. Demarle
+Version: 1.1dev10
+Author: Frédéric Demarle
 Description: Adds multilingual capability to WordPress
 Text Domain: polylang
 Domain Path: /languages
@@ -29,7 +29,7 @@ Domain Path: /languages
  *
  */
 
-define('POLYLANG_VERSION', '1.0.4');
+define('POLYLANG_VERSION', '1.1dev10');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
@@ -49,6 +49,9 @@ if (!defined('PLL_LOCAL_URL'))
 if (!defined('PLL_COOKIE'))
 	define('PLL_COOKIE', 'pll_language'); // cookie name. no cookie will be used if set to false
 
+if (!defined('PLL_SEARCH_FORM_JS') && version_compare($GLOBALS['wp_version'], '3.6', '<'))
+	define('PLL_SEARCH_FORM_JS', false); // the search form js is no more needed in WP 3.6+ except if the search form is hardcoded elsewhere than in searchform.php
+
 require_once(PLL_INC.'/base.php');
 
 // controls the plugin, deals with activation, deactivation, upgrades, initialization as well as rewrite rules
@@ -63,7 +66,7 @@ class Polylang extends Polylang_Base {
 		register_deactivation_hook( __FILE__, array(&$this, 'deactivate'));
 
 		// stopping here if we upgraded from a too old version
-		if (($options = get_option('polylang')) && version_compare($options['version'], '0.8', '<')) {
+		if ($this->options && version_compare($this->options['version'], '0.8', '<')) {
 			add_action('all_admin_notices', array(&$this, 'admin_notices'));
 			return;
 		}
@@ -90,8 +93,7 @@ class Polylang extends Polylang_Base {
 			$polylang = new Polylang_Admin();
 		}
 
-		// avoid loading polylang admin filters for frontend ajax requests if 'pll_load_front' is set (thanks to g100g)
-		elseif (defined('DOING_CRON') || (is_admin() && !(defined('DOING_AJAX') && isset($_REQUEST['pll_load_front'])))) {
+		elseif ($this->is_admin) {
 			require_once(PLL_INC.'/admin-base.php');
 			require_once(PLL_INC.'/admin-filters.php');
 			$polylang = new Polylang_Admin_Filters();
@@ -100,10 +102,17 @@ class Polylang extends Polylang_Base {
 		else {
 			require_once(PLL_INC.'/core.php');
 			$polylang = new Polylang_Core();
+
+			// auto translate posts and terms ids in term
+			if (!defined('PLL_AUTO_TRANSLATE') || PLL_AUTO_TRANSLATE)
+				require_once(PLL_INC.'/auto-translate.php');
 		}
 
 		// loads the API
 		require_once(PLL_INC.'/api.php');
+
+		// nav menus
+		require_once(PLL_INC.'/nav-menu.php');
 
 		// WPML API + wpml-config.xml
 		if (!defined('PLL_WPML_COMPAT') || PLL_WPML_COMPAT)
@@ -220,6 +229,7 @@ class Polylang extends Polylang_Base {
 
 	// displays a notice when ugrading from a too old version
 	function admin_notices() {
+		load_plugin_textdomain('polylang', false, basename(POLYLANG_DIR).'/languages');
 		printf(
 			'<div class="error"><p>%s</p><p>%s</p></div>',
 			__('Polylang has been deactivated because you upgraded from a too old version.', 'polylang'),
@@ -233,33 +243,83 @@ class Polylang extends Polylang_Base {
 
 	// manage upgrade even when it is done manually
 	function admin_init() {
-		$options = get_option('polylang');
-		if (version_compare($options['version'], POLYLANG_VERSION, '<')) {
 
-			if (version_compare($options['version'], '0.9', '<'))
-				$options['sync'] = defined('PLL_SYNC') && !PLL_SYNC ? 0 : 1; // the option replaces PLL_SYNC in 0.9
+		if (version_compare($this->options['version'], POLYLANG_VERSION, '<')) {
 
-			if (version_compare($options['version'], '1.0', '<')) {
+			if (version_compare($this->options['version'], '0.9', '<'))
+				$this->options['sync'] = defined('PLL_SYNC') && !PLL_SYNC ? 0 : 1; // the option replaces PLL_SYNC in 0.9
+
+			if (version_compare($this->options['version'], '1.0', '<')) {
 				// the option replaces PLL_MEDIA_SUPPORT in 1.0
-				$options['media_support'] = defined('PLL_MEDIA_SUPPORT') && !PLL_MEDIA_SUPPORT ? 0 : 1;
+				$this->options['media_support'] = defined('PLL_MEDIA_SUPPORT') && !PLL_MEDIA_SUPPORT ? 0 : 1;
 
 				// split the synchronization options in 1.0
-				$options['sync'] = empty($options['sync']) ? array() : array_keys($this->list_metas_to_sync());
+				$this->options['sync'] = empty($this->options['sync']) ? array() : array_keys($this->list_metas_to_sync());
 
 				// set default values for post types and taxonomies to translate
-				$options['post_types'] = array_values(get_post_types(array('_builtin' => false, 'show_ui => true')));
-				$options['taxonomies'] = array_values(get_taxonomies(array('_builtin' => false, 'show_ui => true')));
+				$this->options['post_types'] = array_values(get_post_types(array('_builtin' => false, 'show_ui => true')));
+				$this->options['taxonomies'] = array_values(get_taxonomies(array('_builtin' => false, 'show_ui => true')));
 
 				flush_rewrite_rules(); // rewrite rules have been modified in 1.0
 			}
 
-			if (version_compare($options['version'], '1.0.2', '<'))
+			if (version_compare($this->options['version'], '1.0.2', '<'))
 				// set the option again in case it was not in 1.0
-				if (!isset($options['media_support']))
-					$options['media_support'] = defined('PLL_MEDIA_SUPPORT') && !PLL_MEDIA_SUPPORT ? 0 : 1;
+				if (!isset($this->options['media_support']))
+					$this->options['media_support'] = defined('PLL_MEDIA_SUPPORT') && !PLL_MEDIA_SUPPORT ? 0 : 1;
 
-			$options['version'] = POLYLANG_VERSION;
-			update_option('polylang', $options);
+			if (version_compare($this->options['version'], '1.1', '<')) {
+				// update strings register with icl_register_string
+				$strings = get_option('polylang_wpml_strings');
+				if ($strings) {
+					foreach ($strings as $key => $string)
+						$strings[$key]['icl'] = 1;
+					update_option('polylang_wpml_strings', $strings);
+				}
+
+				// move polylang_widgets options
+				if ($widgets = get_option('polylang_widgets')) {
+					$this->options['widgets'] = $widgets;
+					delete_option('polylang_widgets');
+				}
+
+				// update nav menus
+				if ($menu_lang = get_option('polylang_nav_menus')) {
+
+					foreach ($menu_lang as $location => $arr) {
+						if (!in_array($location, array_keys(get_registered_nav_menus())))
+							continue;
+
+						$switch_options = array_slice($arr, -5, 5);
+						$translations = array_diff_key($arr, $switch_options);
+
+						foreach ($this->get_languages_list() as $lang) {
+							$menu_locations[$location.(pll_default_language() == $lang->slug ? '' : '#' . $lang->slug)] = empty($translations[$lang->slug]) ? 0 : $translations[$lang->slug];
+
+							// create the menu items
+							if (!empty($switch_options['switcher'])) {
+								$menu_item_db_id = wp_update_nav_menu_item($translations[$lang->slug], 0, array(
+									'menu-item-title' => __('Language switcher', 'polylang'),
+									'menu-item-url' => '#',
+									'menu-item-status' => 'publish'
+								));
+
+								update_post_meta($menu_item_db_id, '_pll_menu_item', 1);
+								foreach (array('hide_current', 'force_home', 'show_flags', 'show_names') as $opt)
+									update_post_meta($menu_item_db_id, '_pll_menu_item_'.$opt, empty($switch_options[$opt]) ? 0 : 1);
+							}
+						}
+					}
+
+					if (!empty($menu_locations))
+						set_theme_mod('nav_menu_locations', $menu_locations);
+
+					delete_option('polylang_nav_menus');
+				}
+			}
+
+			$this->options['version'] = POLYLANG_VERSION;
+			update_option('polylang', $this->options);
 		}
 	}
 
@@ -267,9 +327,8 @@ class Polylang extends Polylang_Base {
 	function init() {
 		global $wpdb;
 		$wpdb->termmeta = $wpdb->prefix . 'termmeta'; // registers the termmeta table in wpdb
-		$options = get_option('polylang');
 
-		if (is_admin())
+		if ($this->is_admin)
 			load_plugin_textdomain('polylang', false, basename(POLYLANG_DIR).'/languages'); // plugin i18n, only needed for backend
 
 		// registers the language taxonomy
@@ -289,7 +348,7 @@ class Polylang extends Polylang_Base {
 		// optionaly removes 'language' in permalinks so that we get http://www.myblog/en/ instead of http://www.myblog/language/en/
 		// language information always in front of the uri ('with_front' => false)
 		// the 3rd parameter structure has been modified in WP 3.4
-		add_permastruct('language', $options['rewrite'] ? '%language%' : 'language/%language%',
+		add_permastruct('language', $this->options['rewrite'] ? '%language%' : 'language/%language%',
 			version_compare($GLOBALS['wp_version'], '3.4' , '<') ? false : array('with_front' => false));
 	}
 
@@ -336,21 +395,20 @@ class Polylang extends Polylang_Base {
 			return array();
 
 		global $wp_rewrite;
-		$options = get_option('polylang');
 		$always_rewrite = in_array($filter, array('date', 'root', 'comments', 'author', 'post_format'));
 		$newrules = array();
 
 		foreach ($this->get_languages_list() as $language)
-			if (!$options['hide_default'] || $options['default_lang'] != $language->slug)
+			if (!$this->options['hide_default'] || $this->options['default_lang'] != $language->slug)
 				$languages[] = $language->slug;
 
 		if (isset($languages))
-			$slug = $wp_rewrite->root . ($options['rewrite'] ? '' : 'language/') . '('.implode('|', $languages).')/';
+			$slug = $wp_rewrite->root . ($this->options['rewrite'] ? '' : 'language/') . '('.implode('|', $languages).')/';
 
 		foreach ($rules as $key => $rule) {
 			// we don't need the lang parameter for post types and taxonomies
 			// moreover adding it would create issues for pages and taxonomies
-			if ($options['force_lang'] && in_array($filter, array_merge($this->post_types, $this->taxonomies))) {
+			if ($this->options['force_lang'] && in_array($filter, array_merge($this->post_types, $this->taxonomies))) {
 				if (isset($slug))
 					$newrules[$slug.str_replace($wp_rewrite->root, '', $key)] = str_replace(
 						array('[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '[1]'),
@@ -358,7 +416,7 @@ class Polylang extends Polylang_Base {
 						$rule
 					); // hopefully it is sufficient!
 
-				if ($options['hide_default']) {
+				if ($this->options['hide_default']) {
 					$newrules[$key] = $rules[$key];
 					// unset only if we hide the code for the default language as check_language_code_in_url will do its job in other cases
 					unset($rules[$key]);
@@ -366,7 +424,7 @@ class Polylang extends Polylang_Base {
 			}
 
 			// rewrite rules filtered by language
-			elseif ($always_rewrite || (strpos($rule, 'post_type=') && !strpos($rule, 'name=')) || ($filter != 'rewrite_rules_array' && $options['force_lang'])) {
+			elseif ($always_rewrite || (strpos($rule, 'post_type=') && !strpos($rule, 'name=')) || ($filter != 'rewrite_rules_array' && $this->options['force_lang'])) {
 				if (isset($slug))
 					$newrules[$slug.str_replace($wp_rewrite->root, '', $key)] = str_replace(
 						array('[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '[1]', '?'),
@@ -374,8 +432,8 @@ class Polylang extends Polylang_Base {
 						$rule
 					); // should be enough!
 
-				if ($options['hide_default'])
-					$newrules[$key] = str_replace('?', '?lang='.$options['default_lang'].'&', $rule);
+				if ($this->options['hide_default'])
+					$newrules[$key] = str_replace('?', '?lang='.$this->options['default_lang'].'&', $rule);
 
 				unset($rules[$key]); // now useless
 			}

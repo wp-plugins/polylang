@@ -50,17 +50,7 @@ class Polylang_Admin extends Polylang_Admin_Base {
 
 	// the languages panel
 	function languages_page() {
-		$options = get_option('polylang');
-
-		// for nav menus form
-		$locations = get_registered_nav_menus();
-		$menus = wp_get_nav_menus();
-		$menu_lang = get_option('polylang_nav_menus');
-
-		// for widgets
-		$widget_lang = get_option('polylang_widgets', array()); // returns empty array if not set yet
-
-		$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
+		$action = isset($_REQUEST['pll_action']) ? $_REQUEST['pll_action'] : '';
 
 		switch ($action) {
 			case 'add':
@@ -72,9 +62,9 @@ class Polylang_Admin extends Polylang_Admin_Base {
 					wp_update_term($r['term_id'], 'language', array('term_group' => $_POST['term_group'])); // can't set the term group directly in wp_insert_term
 					update_metadata('term', $r['term_id'], '_rtl', $_POST['rtl']);
 
-					if (!isset($options['default_lang'])) { // if this is the first language created, set it as default language
-						$options['default_lang'] = $_POST['slug'];
-						update_option('polylang', $options);
+					if (!isset($this->options['default_lang'])) { // if this is the first language created, set it as default language
+						$this->options['default_lang'] = $_POST['slug'];
+						update_option('polylang', $this->options);
 					}
 
 					flush_rewrite_rules(); // refresh rewrite rules
@@ -116,19 +106,13 @@ class Polylang_Admin extends Polylang_Admin_Base {
 							$this->delete_term_language($id); // delete language of this term
 					}
 
-					// delete menus locations
-					foreach (array_keys($locations) as $location) {
-						if (isset($menu_lang[$location][$lang_slug]))
-							unset($menu_lang[$location][$lang_slug]);
-					}
-					update_option('polylang_nav_menus', $menu_lang);
-
 					// delete language option in widgets
-					foreach ($widget_lang as $key=>$slug) {
-						if ($slug == $lang_slug)
-							unset ($widget_lang[$key]);
+					if (!empty($this->options['widgets'])) {
+						foreach ($this->options['widgets'] as $key=>$slug) {
+							if ($slug == $lang_slug)
+								unset($this->options['widgets'][$key]);
+						}
 					}
-					update_option('polylang_widgets', $widget_lang);
 
 					// delete users options
 					foreach (get_users(array('fields' => 'ID')) as $user_id) {
@@ -145,14 +129,14 @@ class Polylang_Admin extends Polylang_Admin_Base {
 					wp_delete_term($lang_id, 'language');
 
 					// oops ! we deleted the default language...
-					if ($options['default_lang'] == $lang_slug)	{
+					if ($this->options['default_lang'] == $lang_slug)	{
 						if ($listlanguages = $this->get_languages_list())
-							$options['default_lang'] = $listlanguages[0]->slug; // arbitrary choice...
+							$this->options['default_lang'] = $listlanguages[0]->slug; // arbitrary choice...
 						else
-							unset($options['default_lang']);
-						update_option('polylang', $options);
+							unset($this->options['default_lang']);
 					}
 
+					update_option('polylang', $this->options);
 					flush_rewrite_rules(); // refresh rewrite rules
 				}
 				wp_redirect('admin.php?page=mlang'); // to refresh the page (possible thanks to the $_GET['noheader']=true)
@@ -192,28 +176,18 @@ class Polylang_Admin extends Polylang_Admin_Base {
 						$terms = get_terms($this->taxonomies, array('get'=>'all', 'fields'=>'ids'));
 						$this->update_translations('term', $terms, $old_slug);
 
-						// update menus locations
-						foreach (array_keys($locations) as $location) {
-							if (isset($menu_lang[$location][$old_slug])) {
-								$menu_lang[$location][$_POST['slug']] = $menu_lang[$location][$old_slug];
-								unset($menu_lang[$location][$old_slug]);
-							}
-						}
-						update_option('polylang_nav_menus', $menu_lang);
-
 						// update language option in widgets
-						foreach ($widget_lang as $key=>$lang) {
+						foreach ($this->options['widgets'] as $key=>$lang) {
 							if ($lang == $old_slug)
-								$widget_lang[$key] = $_POST['slug'];
+								$this->options['widgets'][$key] = $_POST['slug'];
 						}
-						update_option('polylang_widgets', $widget_lang);
 
 						// update the default language option if necessary
-						if ($options['default_lang'] == $old_slug) {
-							$options['default_lang'] = $_POST['slug'];
-							update_option('polylang', $options);
-						}
+						if ($this->options['default_lang'] == $old_slug)
+							$this->options['default_lang'] = $_POST['slug'];
 					}
+
+					update_option('polylang', $this->options);
 
 					// and finally update the language itself
 					$args = array(
@@ -232,44 +206,45 @@ class Polylang_Admin extends Polylang_Admin_Base {
 				exit;
 				break;
 
-			case 'nav-menus':
-				check_admin_referer( 'nav-menus-lang', '_wpnonce_nav-menus-lang' );
-
-				$menu_lang = $_POST['menu-lang'];
-				foreach (array_keys($locations) as $location)
-					foreach (array_keys($this->get_switcher_options('menu')) as $key)
-						$menu_lang[$location][$key] = isset($menu_lang[$location][$key]) ? 1 : 0;
-
-				update_option('polylang_nav_menus', $menu_lang);
-				break;
-
 			case 'string-translation':
-				check_admin_referer( 'string-translation', '_wpnonce_string-translation' );
+				if (!empty($_REQUEST['submit'])) {
+					check_admin_referer( 'string-translation', '_wpnonce_string-translation' );
+					$strings = $this->get_strings();
 
-				$strings = $this->get_strings();
+					foreach ($this->get_languages_list() as $language) {
+						if(empty($_POST['translation'][$language->name])) // in case the language filter is active (thanks to John P. Bloch)
+							continue;
 
-				foreach ($this->get_languages_list() as $language) {
-					if(empty($_POST['translation'][$language->name])) // in case the language filter is active (thanks to John P. Bloch)
-						continue;
+						$mo = $this->mo_import($language);
 
-					$mo = $this->mo_import($language);
+						foreach ($_POST['translation'][$language->name] as $key=>$translation) {
+							$mo->add_entry($mo->make_entry($strings[$key]['string'], stripslashes($translation)));
+						}
+						$mo->add_entry($mo->make_entry('', '')); // empty string translation, just in case
 
-					foreach ($_POST['translation'][$language->name] as $key=>$translation) {
-						$mo->add_entry($mo->make_entry($strings[$key]['string'], stripslashes($translation)));
+						// clean database
+						if (!empty($_POST['clean'])) {
+							$new_mo = new MO();
+							foreach ($strings as $string)
+								$new_mo->add_entry($mo->make_entry($string['string'], $mo->translate($string['string'])));
+						}
+						$this->mo_export(isset($new_mo) ? $new_mo : $mo, $language);
 					}
-					$mo->add_entry($mo->make_entry('', '')); // empty string translation, just in case
+				}
 
-					// clean database
-					if (!empty($_POST['clean'])) {
-						$new_mo = new MO();
-						foreach ($strings as $string)
-							$new_mo->add_entry($mo->make_entry($string['string'], $mo->translate($string['string'])));
-					}
-					$this->mo_export(isset($new_mo) ? $new_mo : $mo, $language);
+				if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete' && !empty($_REQUEST['strings']) && function_exists('icl_unregister_string')) {
+					check_admin_referer( 'string-translation', '_wpnonce_string-translation' );
+					$strings = $this->get_strings();
+
+					foreach ($_REQUEST['strings'] as $key)
+						icl_unregister_string($strings[$key]['context'], $strings[$key]['name']);
 				}
 
 				// to refresh the page (possible thanks to the $_GET['noheader']=true)
-				wp_redirect('admin.php?page=mlang&tab=strings'.(isset($_GET['s']) ? '&s='.$_GET['s'] : ''). (isset($_GET['paged']) ? '&paged='.$_GET['paged'] : ''));
+				$url = 'admin.php?page=mlang&tab=strings';
+				foreach(array('s', 'paged', 'group') as $qv)
+					$url = empty($_REQUEST[$qv]) ? $url : $url . '&' . $qv . '=' . $_REQUEST[$qv];
+				wp_redirect($url);
 				exit;
 				break;
 
@@ -278,15 +253,15 @@ class Polylang_Admin extends Polylang_Admin_Base {
 
 				foreach(array('default_lang', 'force_lang', 'rewrite') as $key)
 					if (isset($_POST[$key]))
-						$options[$key] = $_POST[$key];
+						$this->options[$key] = $_POST[$key];
 
 				foreach (array('browser', 'hide_default', 'redirect_lang', 'media_support') as $key)
-					$options[$key] = isset($_POST[$key]) ? 1 : 0;
+					$this->options[$key] = isset($_POST[$key]) ? 1 : 0;
 
 				foreach (array('sync', 'post_types', 'taxonomies') as $key)
-					$options[$key] = empty($_POST[$key]) ? array() : array_keys($_POST[$key], 1);
+					$this->options[$key] = empty($_POST[$key]) ? array() : array_keys($_POST[$key], 1);
 
-				update_option('polylang', $options);
+				update_option('polylang', $this->options);
 
 				// refresh rewrite rules in case rewrite,  hide_default, post types or taxonomies options have been modified
 				// it seems useless to refresh permastruct here
@@ -295,7 +270,7 @@ class Polylang_Admin extends Polylang_Admin_Base {
 				// fills existing posts & terms with default language
 				if (isset($_POST['fill_languages']) && $nolang = $this->get_objects_with_no_lang()) {
 					global $wpdb;
-					$lang = $this->get_language($options['default_lang']);
+					$lang = $this->get_language($this->options['default_lang']);
 
 					$values = array();
 					foreach ($nolang['posts'] as $post_id)
@@ -314,7 +289,7 @@ class Polylang_Admin extends Polylang_Admin_Base {
 						$wpdb->query("INSERT INTO $wpdb->termmeta (term_id, meta_key, meta_value) VALUES " . implode(',', $values));
 
 				}
-				wp_redirect('admin.php?page=mlang&tab=settings');
+				wp_redirect('admin.php?page=mlang&tab=settings&updated=true'); // updated=true interpreted by WP
 				exit;
 				break;
 
@@ -327,9 +302,6 @@ class Polylang_Admin extends Polylang_Admin_Base {
 
 		// only if at least one language has been created
 		if ($listlanguages = $this->get_languages_list()) {
-			if (current_theme_supports('menus'))
-				$tabs['menus'] = __('Menus','polylang'); // don't display the menu tab if the active theme does not support nav menus
-
 			$tabs['strings'] = __('Strings translation','polylang');
 			$tabs['settings'] = __('Settings', 'polylang');
 		}
@@ -358,22 +330,20 @@ class Polylang_Admin extends Polylang_Admin_Base {
 				$errors[5] = __('The language was created, but the WordPress language file was not downloaded. Please install it manually.', 'polylang');
 				break;
 
-			case 'menus':
-				// default values
-				foreach (array_keys($locations) as $key)
-					if (isset($menu_lang[$key]))
-						$menu_lang[$key] = wp_parse_args($menu_lang[$key], $this->get_switcher_options('menu', 'default'));
-				break;
-
 			case 'strings':
 				// get the strings to translate
 				$data = $this->get_strings();
-				if (!empty($_REQUEST['s'])) {
-					foreach ($data as $key=>$row) {
-						if (stripos($row['name'], $_REQUEST['s']) === false && stripos($row['string'], $_REQUEST['s']) === false)
-							unset ($data[$key]);
-					}
+
+				$selected = empty($_REQUEST['group']) ? -1 : $_REQUEST['group'];
+				foreach ($data as $key=>$row) {
+					$groups[] = $row['context']; // get the groups
+
+					// filter for search string
+					if (($selected !=-1 && $row['context'] != $selected) || (!empty($_REQUEST['s']) && stripos($row['name'], $_REQUEST['s']) === false && stripos($row['string'], $_REQUEST['s']) === false))
+						unset ($data[$key]);
 				}
+
+				$groups = array_unique($groups);
 
 				// load translations
 				foreach ($listlanguages as $language) {
@@ -388,7 +358,7 @@ class Polylang_Admin extends Polylang_Admin_Base {
 					}
 				}
 
-				$string_table = new Polylang_String_Table();
+				$string_table = new Polylang_String_Table($groups, $selected);
 				$string_table->prepare_items($data);
 				break;
 
@@ -453,16 +423,14 @@ class Polylang_Admin extends Polylang_Admin_Base {
 	}
 
 	function &get_strings() {
-		global $wp_registered_widgets;
-		$languages = get_option('polylang_widgets');
-
 		// WP strings
-		$this->register_string(__('Site Title'), get_option('blogname'));
-		$this->register_string(__('Tagline'), get_option('blogdescription'));
-		$this->register_string(__('Date Format'), get_option('date_format'));
-		$this->register_string(__('Time Format'), get_option('time_format'));
+		$this->register_string(__('Site Title'), get_option('blogname'), 'WordPress');
+		$this->register_string(__('Tagline'), get_option('blogdescription'), 'WordPress');
+		$this->register_string(__('Date Format'), get_option('date_format'), 'WordPress');
+		$this->register_string(__('Time Format'), get_option('time_format'), 'WordPress');
 
 		// widgets titles
+		global $wp_registered_widgets;
 		$sidebars = wp_get_sidebars_widgets();
 		foreach ($sidebars as $sidebar => $widgets) {
 			if ($sidebar == 'wp_inactive_widgets' || !isset($widgets))
@@ -477,8 +445,8 @@ class Polylang_Admin extends Polylang_Admin_Base {
 				$widget_settings = $wp_registered_widgets[$widget]['callback'][0]->get_settings();
 				$number = $wp_registered_widgets[$widget]['params'][0]['number'];
 				// don't enable widget title translation if the widget is visible in only one language or if there is no title
-				if (empty($languages[$widget]) && isset($widget_settings[$number]['title']) && $title = $widget_settings[$number]['title'])
-					$this->register_string(__('Widget title', 'polylang'), $title);
+				if (empty($this->options['widgets'][$widget]) && isset($widget_settings[$number]['title']) && $title = $widget_settings[$number]['title'])
+					$this->register_string(__('Widget title', 'polylang'), $title, 'Widget');
 			}
 		}
 

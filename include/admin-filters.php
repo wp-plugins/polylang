@@ -10,9 +10,6 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		// additionnal filters and actions
 		add_action('wp_loaded', array(&$this, 'admin_init'), 5);// after Polylang_Base::add_post_types_taxonomie
 
-		// remove the customize menu section as it is unusable with Polylang
-		add_action('customize_register', array(&$this, 'customize_register'), 20); // since WP 3.4
-
 		// refresh rewrite rules if the 'page_on_front' option is modified
 		add_action('update_option_page_on_front', 'flush_rewrite_rules');
 
@@ -106,12 +103,6 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 		// ajax response for edit term form
 		add_action('wp_ajax_term_lang_choice', array(&$this,'term_lang_choice'));
-
-		// filter _wp_auto_add_pages_to_menu by language
-		add_action('transition_post_status', array(&$this, 'auto_add_pages_to_menu'), 5, 3); // before _wp_auto_add_pages_to_menu
-
-		// modifies the theme location nav menu metabox
-		add_filter('admin_head-nav-menus.php', array(&$this, 'nav_menu_theme_locations'));
 
 		// widgets languages filter
 		add_action('in_widget_form', array(&$this, 'in_widget_form'));
@@ -1055,58 +1046,8 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		$x->send();
 	}
 
-	// filter _wp_auto_add_pages_to_menu by language
-	function auto_add_pages_to_menu( $new_status, $old_status, $post ) {
-		if ('publish' != $new_status || 'publish' == $old_status || 'page' != $post->post_type || ! empty($post->post_parent))
-			return;
-
-		$lang = $this->get_post_language($post->ID);
-		$menu_lang = get_option('polylang_nav_menus');
-
-		if (!$lang || !$menu_lang)
-			return;
-
-		// get all the menus in the post language
-		$menus = array();
-		foreach ($menu_lang as $menu) {
-			if (isset($menu[$lang->slug]))
-				$menus[] = $menu[$lang->slug];
-		}
-		$menus = implode(',', $menus);
-
-		add_filter('option_nav_menu_options', create_function('$a', "\$a['auto_add'] = array_intersect(\$a['auto_add'], array($menus)); return \$a;"));
-	}
-
-	// modifies the theme location nav menu metabox
-	// thanks to: http://wordpress.stackexchange.com/questions/2770/how-to-add-a-custom-metabox-to-the-menu-management-admin-screen
-	function nav_menu_theme_locations() {
-		// only if the theme supports nav menus and a nav menu exists
-		if ( ! current_theme_supports( 'menus' ) || ! $metabox = &$GLOBALS['wp_meta_boxes']['nav-menus']['side']['default']['nav-menu-theme-locations'] )
-			return;
-
-		$metabox['callback'] = array(&$this, 'nav_menu_language');
-		$metabox['title'] = __('Theme locations and languages', 'polylang');
-	}
-
-	// displays a message to redirect to the languages options page
-	function nav_menu_language() {
-		printf('<p class="howto">%s</p>',
-			sprintf (__('Please go to the %slanguages page%s to set theme locations and languages', 'polylang'),
-				'<a href="' . esc_url(admin_url('options-general.php?page=mlang&tab=menus')) . '">',
-				'</a>'
-			)
-		);
-	}
-
-	// FIXME remove the customize menu section as it is currently unusable with Polylang
-	function customize_register() {
-		$GLOBALS['wp_customize']->remove_section('nav'); // since WP 3.4
-	}
-
 	// modifies the widgets forms to add our language dropdwown list
 	function in_widget_form($widget) {
-		$widget_lang = get_option('polylang_widgets');
-
 		printf('<p><label for="%1$s">%2$s%3$s</label></p>',
 			esc_attr( $widget->id.'_lang_choice'),
 			__('The widget is displayed for:', 'polylang'),
@@ -1114,16 +1055,15 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 				'name'        => $widget->id.'_lang_choice',
 				'class'       => 'tags-input',
 				'add_options' => array(array('value' => 0, 'text' => __('All languages', 'polylang'))),
-				'selected'    => isset($widget_lang[$widget->id]) ? $widget_lang[$widget->id] : ''
+				'selected'    => empty($this->options['widgets'][$widget->id]) ? '' : $this->options['widgets'][$widget->id]
 			))
 		);
 	}
 
 	// called when widget options are saved
 	function widget_update_callback($instance, $new_instance, $old_instance, $widget) {
-		$widget_lang = get_option('polylang_widgets');
-		$widget_lang[$widget->id] = $_POST[$widget->id.'_lang_choice'];
-		update_option('polylang_widgets', $widget_lang);
+		$this->options['widgets'][$widget->id] = $_POST[$widget->id.'_lang_choice'];
+		update_option('polylang', $this->options);
 		return $instance;
 	}
 

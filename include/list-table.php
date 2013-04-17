@@ -11,7 +11,7 @@ class Polylang_Languages_Table extends WP_List_Table {
 		parent::__construct(array(
 			'singular' => __('Language','polylang'),
 			'plural'   => __('Languages','polylang'),
-			'ajax'     => false
+			'ajax'	 => false
 		));
 	}
 
@@ -31,22 +31,22 @@ class Polylang_Languages_Table extends WP_List_Table {
 
   function get_columns() {
 		return array(
-			'name'        => __('Full name', 'polylang'),
+			'name'		=> __('Full name', 'polylang'),
 			'description' => __('Locale', 'polylang'),
-			'slug'        => __('Code', 'polylang'),
+			'slug'		=> __('Code', 'polylang'),
 			'term_group'  => __('Order', 'polylang'),
-			'flag'        => __('Flag', 'polylang'),
-			'count'       => __('Posts', 'polylang')
+			'flag'		=> __('Flag', 'polylang'),
+			'count'	   => __('Posts', 'polylang')
 		);
 	}
 
 	function get_sortable_columns() {
 		return array(
-			'name'        => array('name', true), // sorted by name by default
+			'name'		=> array('name', true), // sorted by name by default
 			'description' => array('description', false),
-			'slug'        => array('slug', false),
+			'slug'		=> array('slug', false),
 			'term_group'  => array('term_group', false),
-			'count'       => array('count', false)
+			'count'	   => array('count', false)
 		);
 	}
 
@@ -67,23 +67,36 @@ class Polylang_Languages_Table extends WP_List_Table {
 
 		$this->set_pagination_args(array(
 			'total_items' => $total_items,
-			'per_page'    => $per_page,
+			'per_page'	=> $per_page,
 			'total_pages' => ceil($total_items/$per_page)
 		));
 	}
 } // class Polylang_Languages_Table
 
 class Polylang_String_Table extends WP_List_Table {
-	function __construct() {
+	private $groups;
+
+	function __construct($groups = array(), $group_selected) {
 		parent::__construct(array(
 			'singular' => __('Strings translation','polylang'),
 			'plural'   => __('Strings translations','polylang'),
-			'ajax'     => false
+			'ajax'	 => false
 		));
+
+		$this->groups = &$groups;
+		$this->group_selected = $group_selected;
 	}
 
 	function column_default($item, $column_name) {
 		return $item[$column_name];
+	}
+
+	function column_cb($item){
+		return sprintf(
+			'<input type="checkbox" name="strings[]" value="%s" %s />',
+			$item['row'],
+			empty($item['icl']) ? 'disabled = 1' : ''
+		);
 	}
 
 	function column_string($item) {
@@ -105,8 +118,10 @@ class Polylang_String_Table extends WP_List_Table {
 		return $out;
 	}
 
-  function get_columns() {
+	function get_columns() {
 		return array(
+			'cb'           => '<input type="checkbox" />', //checkbox
+			'context'      => __('Group', 'polylang'),
 			'name'         => __('Name', 'polylang'),
 			'string'       => __('String', 'polylang'),
 			'translations' => __('Translations', 'polylang'),
@@ -115,8 +130,9 @@ class Polylang_String_Table extends WP_List_Table {
 
 	function get_sortable_columns() {
 		return array(
-			'name'   => array('name', false),
-			'string' => array('string', false),
+			'context' => array('context', false),
+			'name'    => array('name', false),
+			'string'  => array('string', false),
 		);
 	}
 
@@ -137,8 +153,39 @@ class Polylang_String_Table extends WP_List_Table {
 
 		$this->set_pagination_args(array(
 			'total_items' => $total_items,
-			'per_page'    => $per_page,
+			'per_page'	=> $per_page,
 			'total_pages' => ceil($total_items/$per_page)
 		));
+	}
+
+	function get_bulk_actions() {
+		return array('delete' => __('Delete','polylang'));
+	}
+
+	function extra_tablenav($which) {
+		echo '<div class="alignleft actions">';
+
+		if ('top' == $which) {
+			echo '<select name="group">'."\n";
+			printf(
+				'<option value="-1"%s>%s</option>'."\n",
+				$this->group_selected == -1 ? ' selected="selected"' : '',
+				__('View all groups', 'polylang')
+			);
+
+			foreach ($this->groups as $group) {
+				printf(
+					'<option value="%s"%s>%s</option>'."\n",
+					esc_attr($group),
+					$this->group_selected == $group ? ' selected="selected"' : '',
+					esc_html($group)
+				);
+			}
+			echo "</select>\n";
+
+			submit_button( __( 'Filter' ), 'button', false, false, array( 'id' => 'post-query-submit' ) );
+		}
+
+		echo '</div>';
 	}
 } // class Polylang_String_Table

@@ -20,16 +20,16 @@
 }
 
 /* strings translation table */
-#translations-filter .search-box {
+#string-translation .search-box {
 	margin: 16px 0 8px 0;
 }
 
-.stringstranslations .column-name {
+.stringstranslations .column-name, .stringstranslations .column-context {
 	width: 10%;
 }
 
 .stringstranslations .column-string {
-	width: 36%;
+	width: 33%;
 }
 
 .translation label {

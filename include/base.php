@@ -4,9 +4,12 @@
 abstract class Polylang_Base {
 	public $post_types; // post types to filter by language
 	public $taxonomies; // taxonomies to filter by language
+	public $is_ajax_on_front;
+	public $is_admin;
 
 	protected $options;
 	protected $home;
+	protected $using_permalinks;
 	protected $strings = array(); // strings to translate
 
 	// used to cache results
@@ -16,9 +19,15 @@ abstract class Polylang_Base {
 	private $links = array();
 
 	function __construct() {
+		// avoid loading polylang admin filters for frontend ajax requests if 'pll_load_front' is set (thanks to g100g)
+		// FIXME I need to permit plugins to overwrite this
+		$this->is_ajax_on_front = defined('DOING_AJAX') && isset($_REQUEST['pll_load_front']);
+		$this->is_admin = defined('DOING_CRON') || (is_admin() && !$this->is_ajax_on_front);
+
 		// init options often needed
 		$this->options = get_option('polylang');
 		$this->home = get_option('home');
+		$this->using_permalinks = (bool) get_option('permalink_structure');
 
 		add_action('wp_loaded', array(&$this, 'add_post_types_taxonomies'), 1); // must come after 'init' to be sure that all post types and taxonomies are registered
 	}
@@ -32,7 +41,7 @@ abstract class Polylang_Base {
 			$post_types = array_merge($post_types, $this->options['post_types']);
 		$this->post_types = apply_filters('pll_get_post_types', array_combine($post_types, $post_types), false);
 
-		$taxonomies = array('category', 'post_tag');
+		$taxonomies = array('category', 'post_tag', 'nav_menu');
 		if (!empty($this->options['taxonomies']))
 			$taxonomies = array_merge($taxonomies, $this->options['taxonomies']);
 		$this->taxonomies = apply_filters('pll_get_taxonomies', array_combine($taxonomies, $taxonomies), false);
@@ -42,11 +51,13 @@ abstract class Polylang_Base {
 	function get_languages_list($args = array()) {
 		// although get_terms is cached, it is efficient to add our own cache
 		// FIXME don't use on admin in case we modify the list of languages!
-		if (!is_admin() && isset($this->languages_list[$cache_key = md5(serialize($args))]))
+		if ($this->is_admin && isset($this->languages_list[$cache_key = md5(serialize($args))]))
 			return $this->languages_list[$cache_key];
 
 		$args = wp_parse_args($args, array('hide_empty' => false, 'orderby'=> 'term_group'));
-		return is_admin() ? get_terms('language', $args) : $this->languages_list[$cache_key] = get_terms('language', $args);
+		$languages = get_terms('language', $args);
+		$languages = empty($languages) || is_wp_error($languages) ? array() : $languages;
+		return isset($cache_key) ? ($this->languages_list[$cache_key] = $languages) : $languages;
 	}
 
 	// retrieves the dropdown list of the languages
@@ -202,7 +213,7 @@ abstract class Polylang_Base {
 			return $url;
 
 		global $wp_rewrite;
-		if ($wp_rewrite->using_permalinks()) {
+		if ($this->using_permalinks) {
 			$base = $this->options['rewrite'] ? '' : 'language/';
 			$slug = $this->options['default_lang'] == $lang->slug && $this->options['hide_default'] ? '' : $base.$lang->slug.'/';
 			return esc_url(str_replace($this->home.'/'.$wp_rewrite->root, $this->home.'/'.$wp_rewrite->root.$slug, $url));
@@ -218,7 +229,7 @@ abstract class Polylang_Base {
 	// optionally rewrite posts, pages links to filter them by language
 	// rewrite post format (and optionally categories and post tags) archives links to filter them by language
 	function add_post_term_link_filters() {
-		if ($this->options['force_lang'] && $GLOBALS['wp_rewrite']->using_permalinks()) {
+		if ($this->options['force_lang'] && $this->using_permalinks) {
 			foreach (array('post_link', '_get_page_link', 'post_type_link') as $filter)
 				add_filter($filter, array(&$this, 'post_link'), 10, 2);
 		}
@@ -246,7 +257,7 @@ abstract class Polylang_Base {
 		if (isset($this->links[$link]))
 			return $this->links[$link];
 
-		return $this->links[$link] = ($tax == 'post_format' || ($this->options['force_lang'] && $GLOBALS['wp_rewrite']->using_permalinks() && in_array($tax, $this->taxonomies))) ?
+		return $this->links[$link] = ($tax == 'post_format' || ($this->options['force_lang'] && $this->using_permalinks && in_array($tax, $this->taxonomies))) ?
 			$this->add_language_to_link($link, $this->get_term_language($term->term_id)) : $link;
 	}
 
@@ -258,7 +269,7 @@ abstract class Polylang_Base {
 
 		// overwrite with custom flags
 		// never use custom flags on admin side
-		if (!is_admin() && ( file_exists(PLL_LOCAL_DIR.($file = '/'.$lang->description.'.png')) || file_exists(PLL_LOCAL_DIR.($file = '/'.$lang->description.'.jpg')) ))
+		if (!$this->is_admin && ( file_exists(PLL_LOCAL_DIR.($file = '/'.$lang->description.'.png')) || file_exists(PLL_LOCAL_DIR.($file = '/'.$lang->description.'.jpg')) ))
 			$url = PLL_LOCAL_URL.$file;
 
 		return apply_filters('pll_get_flag', empty($url) ? '' :

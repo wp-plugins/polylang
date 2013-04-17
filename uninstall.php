@@ -71,8 +71,6 @@ class Polylang_Uninstall {
 
 		// delete options
 		delete_option('polylang');
-		delete_option('polylang_nav_menus');
-		delete_option('polylang_widgets');
 		delete_option('widget_polylang'); // automatically created by WP
 		delete_option('polylang_wpml_strings'); // strings registered with icl_register_string
 	}

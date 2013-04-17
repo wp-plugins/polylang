@@ -148,7 +148,6 @@ class Polylang_Admin_Base extends Polylang_Base {
 	}
 
 	// returns options available for the language switcher (menu or widget)
-	// FIXME do not include the dropdown in menu yet since I need to work on js
 	function get_switcher_options($type = 'widget', $key ='string') {
 		$options = array(
 			'show_names'   => array('string' => __('Displays language names', 'polylang'), 'default' => 1),
@@ -157,16 +156,21 @@ class Polylang_Admin_Base extends Polylang_Base {
 			'hide_current' => array('string' => __('Hides the current language', 'polylang'), 'default' => 0),
 		);
 
-		$options = ($type == 'menu') ?
-			array_merge(array('switcher' => array('string' => __('Displays a language switcher at the end of the menu', 'polylang'), 'default' => 0)), $options) :
-			array_merge($options, array('dropdown' => array('string' => __('Displays as dropdown', 'polylang'), 'default' => 0)));
+		if ($type != 'menu')
+			$options['dropdown'] = array('string' => __('Displays as dropdown', 'polylang'), 'default' => 0);
 
 		return array_map(create_function('$v', "return \$v['$key'];"), $options);
 	}
 
 	// register strings for translation making sure it is not duplicate or empty
-	function register_string($name, $string, $multiline = false) {
-		$to_register = array('name'=> $name, 'string' => $string, 'multiline' => $multiline);
+	function register_string($name, $string, $context = 'polylang', $multiline = false) {
+		// backward compatibility with Polylang older than 1.1
+		if (is_bool($context)) {
+			$multiline = $context;
+			$context = 'polylang';
+		}
+
+		$to_register = compact('name', 'string', 'context', 'multiline');
 		if (!in_array($to_register, $this->strings) && $to_register['string'])
 			$this->strings[] = $to_register;
 	}
