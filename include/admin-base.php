@@ -127,19 +127,27 @@ class Polylang_Admin_Base extends Polylang_Base {
 			// try to download the file
 			foreach ($versions as $version) {
 				$resp = wp_remote_get($base."$version/messages/$locale.mo", $args + array('filename' => $mofile));
-				if (is_wp_error($resp) || 200 != $resp['response']['code'])
+				if (is_wp_error($resp) || 200 != $resp['response']['code']) {
+					unlink($mofile); // otherwise we download a gzipped 404 page
 					continue;
-
+				}
 				// try to download ms and continents-cities files if exist (will not return false if failed)
 				// with new files introduced in WP 3.4
-				foreach (array('ms', 'continent-cities', 'admin', 'admin-network') as $file)
-					wp_remote_get($base."$version/messages/$file-$locale.mo", $args + array('filename' => WP_LANG_DIR."/$file-$locale.mo"));
-
+				foreach (array('ms', 'continents-cities', 'admin', 'admin-network') as $file) {
+					$resp = wp_remote_get($base."$version/messages/$file-$locale.mo", $args + array('filename' => WP_LANG_DIR."/$file-$locale.mo"));
+					if (is_wp_error($resp) || 200 != $resp['response']['code'])
+						unlink(WP_LANG_DIR."/$file-$locale.mo");
+				}
 				// try to download theme files if exist (will not return false if failed)
 				// FIXME not updated when the theme is updated outside a core update
-				foreach (array('twentyten', 'twentyeleven', 'twentytwelve', 'twentythirteen') as $theme)
-					wp_remote_get($base."$version/messages/$theme/$locale.mo", $args + array('filename' => get_theme_root()."/$theme/languages/$locale.mo"));
+				foreach (array('twentyten', 'twentyeleven', 'twentytwelve', 'twentythirteen') as $theme) {
+					if (!is_dir($theme_dir = get_theme_root()."/$theme/languages"))
+						continue; // the theme is not present
 
+					$resp = wp_remote_get($base."$version/messages/$theme/$locale.mo", $args + array('filename' => "$theme_dir/$locale.mo"));
+					if (is_wp_error($resp) || 200 != $resp['response']['code'])
+						unlink("$theme_dir/$locale.mo");
+				}
 				return true;
 			}
 		}

@@ -3,10 +3,12 @@ class Polylang_Nav_Menu {
 
 	public function __construct() {
 		if ($GLOBALS['polylang']->is_admin) {
+			// integration in the WP menu interface
 			add_action('admin_init', array(&$this, 'admin_init'), 20); // ater update
 			add_action('admin_enqueue_scripts', array(&$this, 'admin_enqueue_scripts'));
 			add_action('wp_update_nav_menu_item', array( &$this, 'wp_update_nav_menu_item' ), 10, 3 );
 
+			// translation of menus based on chosen locations
 			$theme = get_option( 'stylesheet' );
 			add_filter("pre_update_option_theme_mods_$theme", array($this, 'update_nav_menu_locations'));
 
@@ -15,6 +17,7 @@ class Polylang_Nav_Menu {
 		}
 
 		else {
+			// split the language switcher menu item in several language menu items
 			add_filter('wp_nav_menu_objects', array(&$this, 'wp_nav_menu_objects'));
 			add_filter('nav_menu_link_attributes', array(&$this, 'nav_menu_link_attributes'), 10, 3);
 
@@ -23,6 +26,7 @@ class Polylang_Nav_Menu {
 		}
 	}
 
+	// add the language switcher metabox and create new nav menu locations
 	public function admin_init(){
 		// FIXME is it possible to choose the order (after theme locations) ?
 		add_meta_box('pll_lang_switch_box', __('Language switcher', 'polylang'), array( &$this, 'lang_switch' ), 'nav-menus', 'side', 'high');
@@ -39,6 +43,8 @@ class Polylang_Nav_Menu {
 	}
 
 	// language switcher metabox
+	// The checkbox and all hidden fields are important
+	// thanks to John Morris and his very interesting post http://www.johnmorrisonline.com/how-to-add-a-fully-functional-custom-meta-box-to-wordpress-navigation-menus/
 	public function lang_switch() {
 		global $_nav_menu_placeholder, $nav_menu_selected_id;
 		$_nav_menu_placeholder = 0 > $_nav_menu_placeholder ? $_nav_menu_placeholder - 1 : -1;?>
@@ -72,7 +78,6 @@ class Polylang_Nav_Menu {
 			return;
 
 		$suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
-
 		wp_enqueue_script('pll_nav_menu', POLYLANG_URL .'/js/nav-menu'.$suffix.'.js', array('jquery'), POLYLANG_VERSION);
 
 		// the strings for the options
@@ -81,59 +86,59 @@ class Polylang_Nav_Menu {
 
 		$data['strings'][] = __('Language switcher', 'polylang'); // the title
 
+		// get all language switcher menu items
 		$items = get_posts(array(
 			'numberposts' => -1,
 			'nopaging'    => true,
 			'post_type'   => 'nav_menu_item',
 			'fields'      => 'ids',
-			'meta_query'  => array(array(
-				'key'   => '_pll_menu_item',
-				'value' => 1,
-			))
+			'meta_key'    => '_pll_menu_item'
 		));
 
+		// the options values for the language switcher
 		$data['val'] = array();
-		foreach ($items as $item) {
-			foreach (array('hide_current','force_home','show_flags','show_names') as $opt)
-				$data['val'][$item][$opt] = get_post_meta($item, '_pll_menu_item_'.$opt, true);
-		}
+		foreach ($items as $item)
+			$data['val'][$item] = get_post_meta($item, '_pll_menu_item', true);
 
+		// send all these data to javascript
 		wp_localize_script('pll_nav_menu', 'pll_data', $data);
 	}
 
-	// save our menu item data
+	// save our menu item options
 	function wp_update_nav_menu_item( $menu_id = 0, $menu_item_db_id = 0, $menu_item_data = array() ) {
 		if (empty($_POST['menu-item-title'][$menu_item_db_id]) || $_POST['menu-item-title'][$menu_item_db_id] != __('Language switcher', 'polylang'))
 			return;
 
 		foreach (array('hide_current','force_home','show_flags','show_names') as $opt)
-			update_post_meta($menu_item_db_id, '_pll_menu_item_'.$opt, empty($_POST['menu-item-'.$opt][$menu_item_db_id]) ? 0 : 1);
+			$options[$opt] = empty($_POST['menu-item-'.$opt][$menu_item_db_id]) ? 0 : 1;
 
-		update_post_meta($menu_item_db_id, '_pll_menu_item', 1);
+		update_post_meta($menu_item_db_id, '_pll_menu_item', $options); // allow us to easily identify our nav menu item
 	}
 
 	// assign menu languages and translations based on locations
 	function update_nav_menu_locations($mods) {
-		global $polylang;
-		$default = pll_default_language();
+		if (isset($mods['nav_menu_locations'])) {
+			global $polylang;
+			$default = pll_default_language();
+			$arr = array();
 
-		$arr = array();
-		foreach ($mods['nav_menu_locations'] as $loc => $menu) {
-			if (!strpos($loc, '#'))
-				$arr[$loc][$default] = $menu;
-			elseif ($pos = strpos($loc, '#')) {
-				$arr[substr($loc, 0, $pos)][substr($loc, $pos+1)] = $menu;
+			// extract language and menu from locations
+			foreach ($mods['nav_menu_locations'] as $loc => $menu) {
+				if (!strpos($loc, '#'))
+					$arr[$loc][$default] = $menu;
+				elseif ($pos = strpos($loc, '#')) {
+					$arr[substr($loc, 0, $pos)][substr($loc, $pos+1)] = $menu;
+				}
+			}
+
+			// assign menus language and translations
+			foreach ($arr as $loc => $translations) {
+				foreach ($translations as $lang=>$menu) {
+					$polylang->set_term_language($menu, $lang);
+					$polylang->save_translations('term', $menu, $translations);
+				}
 			}
 		}
-
-		// assign menus language and translations
-		foreach ($arr as $loc => $translations) {
-			foreach ($translations as $lang=>$menu) {
-				$polylang->set_term_language($menu, $lang);
-				$polylang->save_translations('term', $menu, $translations);
-			}
-		}
-
 		return $mods;
 	}
 
@@ -155,15 +160,8 @@ class Polylang_Nav_Menu {
 		$new_items = array();
 
 		foreach ($items as $key => $item) {
-			if (get_post_meta($item->ID, '_pll_menu_item', true))
-				$new_items = array_merge($new_items, $polylang->the_languages(array(
-					'menu' => 1,
-					'item' => $item,
-					'show_flags' => get_post_meta($item->ID, '_pll_menu_item_show_flags', true),
-					'show_names' => get_post_meta($item->ID, '_pll_menu_item_show_names', true),
-					'force_home' => get_post_meta($item->ID, '_pll_menu_item_force_home', true),
-					'hide_if_no_translation' => get_post_meta($item->ID, '_pll_menu_item_hide_current', true),
-				)));
+			if ($options = get_post_meta($item->ID, '_pll_menu_item', true))
+				$new_items = array_merge($new_items, $polylang->the_languages(array_merge(array('menu' => 1, 'item' => $item), $options)));
 			else
 				$new_items[] = $item;
 		}

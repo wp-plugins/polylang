@@ -102,6 +102,9 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 * Better integration of the multilingual nav menus (everything is now integrated in the menus page of WordPress
 * The language switcher is now a menu item which can be placed everywhere in a nav menu
 * Posts or terms created from frontend are now assigned the current language (or another one if specified in the variable 'lang')
+* Improve the compatibility with Jetpack infinite scroll
+* Bug correction: continents-cities-xx_XX.mo not downloaded
+* Bug correction: a gzipped 404 page is downloaded when a mo file does not exist on WordPress languages files repository
 * Tests done with WP 3.6 beta 1 and Twenty thirteen
 
 See changelog.txt for full changelog

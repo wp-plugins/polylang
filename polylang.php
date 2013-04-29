@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://polylang.wordpress.com/
-Version: 1.1dev10
+Version: 1.1dev12
 Author: Frédéric Demarle
 Description: Adds multilingual capability to WordPress
 Text Domain: polylang
@@ -29,7 +29,7 @@ Domain Path: /languages
  *
  */
 
-define('POLYLANG_VERSION', '1.1dev10');
+define('POLYLANG_VERSION', '1.1dev12');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
@@ -292,21 +292,20 @@ class Polylang extends Polylang_Base {
 
 						$switch_options = array_slice($arr, -5, 5);
 						$translations = array_diff_key($arr, $switch_options);
+						$has_switcher = array_shift($switch_options);
 
 						foreach ($this->get_languages_list() as $lang) {
 							$menu_locations[$location.(pll_default_language() == $lang->slug ? '' : '#' . $lang->slug)] = empty($translations[$lang->slug]) ? 0 : $translations[$lang->slug];
 
 							// create the menu items
-							if (!empty($switch_options['switcher'])) {
+							if (!empty($has_switcher)) {
 								$menu_item_db_id = wp_update_nav_menu_item($translations[$lang->slug], 0, array(
 									'menu-item-title' => __('Language switcher', 'polylang'),
 									'menu-item-url' => '#',
 									'menu-item-status' => 'publish'
 								));
 
-								update_post_meta($menu_item_db_id, '_pll_menu_item', 1);
-								foreach (array('hide_current', 'force_home', 'show_flags', 'show_names') as $opt)
-									update_post_meta($menu_item_db_id, '_pll_menu_item_'.$opt, empty($switch_options[$opt]) ? 0 : 1);
+								update_post_meta($menu_item_db_id, '_pll_menu_item', $switch_options);
 							}
 						}
 					}

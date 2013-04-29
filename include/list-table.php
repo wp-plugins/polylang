@@ -20,8 +20,8 @@ class Polylang_Languages_Table extends WP_List_Table {
 	}
 
 	function column_name($item) {
-		$edit_link = esc_url(admin_url('admin.php?page=mlang&amp;action=edit&amp;lang=' . $item['term_id']));
-		$delete_link = wp_nonce_url('?page=mlang&amp;action=delete&amp;noheader=true&amp;lang=' . $item['term_id'], 'delete-lang');
+		$edit_link = esc_url(admin_url('admin.php?page=mlang&amp;pll_action=edit&amp;lang=' . $item['term_id']));
+		$delete_link = wp_nonce_url('?page=mlang&amp;pll_action=delete&amp;noheader=true&amp;lang=' . $item['term_id'], 'delete-lang');
 		$actions = array(
 			'edit'   => '<a href="' . $edit_link . '">' . __('Edit','polylang') . '</a>',
 			'delete' => '<a href="' . $delete_link .'">' . __('Delete','polylang') .'</a>'

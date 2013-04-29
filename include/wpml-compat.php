@@ -219,7 +219,7 @@ class Polylang_WPML_Config {
 	private $strings;
 
 	function __construct() {
-		add_action('plugins_loaded', array(&$this, 'init'));
+		add_action('plugins_loaded', array(&$this, 'init'), 1);
 	}
 
 	function xml_parse($xml, $context) {

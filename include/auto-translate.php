@@ -97,7 +97,7 @@ class Polylang_Auto_Translate {
 			foreach ($qv['tax_query'] as $key => $q) {
 				$arr = array();
 				$field = empty($q['field']) ? 'id' : $q['field'];
-				foreach (explode(',', $q['terms']) as $t)
+				foreach ( (array) $q['terms'] as $t)
 					$arr[] = (($tag = get_term_by($field, $t, $taxonomy)) && ($tr_id = pll_get_term($tag->term_id)) && !is_wp_error($tr = get_term($tr_id, $taxonomy))) ?
 						$tr->$field : $t;
 
