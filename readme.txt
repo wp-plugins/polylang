@@ -13,7 +13,7 @@ Polylang adds multilingual content management support to WordPress.
 
 = Features  =
 
-You write posts, pages and create categories and post tags as usual, and then define the language for each of them. The translation is optional. The plugin does not integrate automatic or professional translation.
+Polylang allows you to create a bilingual or multilingual WordPress site. You write posts, pages and create categories and post tags as usual, and then define the language for each of them. The translation is optional. The plugin does not integrate automatic or professional translation.
 
 * You can have as many languages as you want. RTL languages are supported. WordPress languages files are automatically downloaded and updated.
 * You can translate posts, pages, media, categories, post tags, menus, widgets... Custom post types, custom taxonomies, sticky posts and post formats, RSS feeds and all default WordPress widgets are supported.
@@ -102,9 +102,9 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 * Better integration of the multilingual nav menus (everything is now integrated in the menus page of WordPress
 * The language switcher is now a menu item which can be placed everywhere in a nav menu
 * Posts or terms created from frontend are now assigned the current language (or another one if specified in the variable 'lang')
-* Improve the compatibility with Jetpack infinite scroll
 * Bug correction: continents-cities-xx_XX.mo not downloaded
 * Bug correction: a gzipped 404 page is downloaded when a mo file does not exist on WordPress languages files repository
+* Bug correction: post_date_gmt not synchronized together with post_date (can break Jetpack infinite scroll)
 * Tests done with WP 3.6 beta 1 and Twenty thirteen
 
 See changelog.txt for full changelog

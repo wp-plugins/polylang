@@ -16,9 +16,6 @@ class Polylang_Plugins_Compat {
 
 		// Custom field template
 		add_action('dbx_post_advanced', array(&$this, 'cft_copy'));
-
-		// Jetpack infinite scroll
-		add_filter('infinite_scroll_ajax_url', create_function('$url', "return add_query_arg(array('lang' => pll_current_language()), \$url);"));
 	}
 
 	// Unfortunately WPSEO loads the text domain before Polylang is able to modify the locale
@@ -44,7 +41,6 @@ class Polylang_Plugins_Compat {
 		if (isset($custom_field_template) && !empty($post) && isset($_REQUEST['from_post']) && isset($_REQUEST['new_lang']))
 			$_REQUEST['post'] = $post->ID;
 	}
-
 }
 
 new Polylang_Plugins_Compat();

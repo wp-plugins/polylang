@@ -554,6 +554,9 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 			if (in_array($property, $this->options['sync']))
 				$postarr[$property] = $post->$property;
 
+		if (in_array('post_date', $this->options['sync']))
+			$post_arr['post_date_gmt'] = $post->post_date_gmt;
+
 		// synchronise terms and metas in translations
 		foreach ($translations as $lang => $tr_id) {
 			if (!$tr_id)
