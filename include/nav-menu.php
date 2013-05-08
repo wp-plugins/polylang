@@ -6,7 +6,8 @@ class Polylang_Nav_Menu {
 			// integration in the WP menu interface
 			add_action('admin_init', array(&$this, 'admin_init'), 20); // ater update
 			add_action('admin_enqueue_scripts', array(&$this, 'admin_enqueue_scripts'));
-			add_action('wp_update_nav_menu_item', array( &$this, 'wp_update_nav_menu_item' ), 10, 3 );
+			add_action('wp_update_nav_menu_item', array(&$this, 'wp_update_nav_menu_item'), 10, 3);
+			add_filter('wp_get_nav_menu_items', array(&$this, 'wp_get_nav_menu_items'));
 
 			// translation of menus based on chosen locations
 			$theme = get_option( 'stylesheet' );
@@ -44,7 +45,7 @@ class Polylang_Nav_Menu {
 
 	// language switcher metabox
 	// The checkbox and all hidden fields are important
-	// thanks to John Morris and his very interesting post http://www.johnmorrisonline.com/how-to-add-a-fully-functional-custom-meta-box-to-wordpress-navigation-menus/
+	// thanks to John Morris for his very interesting post http://www.johnmorrisonline.com/how-to-add-a-fully-functional-custom-meta-box-to-wordpress-navigation-menus/
 	public function lang_switch() {
 		global $_nav_menu_placeholder, $nav_menu_selected_id;
 		$_nav_menu_placeholder = 0 > $_nav_menu_placeholder ? $_nav_menu_placeholder - 1 : -1;?>
@@ -58,7 +59,7 @@ class Polylang_Nav_Menu {
 						</label>
 						<input type="hidden" class="menu-item-type" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-type]" value="custom">
 						<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php _e('Language switcher', 'polylang'); ?>">
-						<input type="hidden" class="menu-item-url" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-url]" value="#">
+						<input type="hidden" class="menu-item-url" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-url]" value="#pll_switcher">
 	   				</li>
 	   			</ul>
 	   		</div>
@@ -106,13 +107,29 @@ class Polylang_Nav_Menu {
 
 	// save our menu item options
 	function wp_update_nav_menu_item( $menu_id = 0, $menu_item_db_id = 0, $menu_item_data = array() ) {
-		if (empty($_POST['menu-item-title'][$menu_item_db_id]) || $_POST['menu-item-title'][$menu_item_db_id] != __('Language switcher', 'polylang'))
+		if (empty($_POST['menu-item-url'][$menu_item_db_id]) || $_POST['menu-item-url'][$menu_item_db_id] != '#pll_switcher')
 			return;
 
-		foreach (array('hide_current','force_home','show_flags','show_names') as $opt)
-			$options[$opt] = empty($_POST['menu-item-'.$opt][$menu_item_db_id]) ? 0 : 1;
+		$options = array('hide_current' => 0,'force_home' => 0 ,'show_flags' => 0 ,'show_names' => 1); // default values
+		// our jQuery form has not been displayed
+		if (empty($_POST['menu-item-pll-detect'][$menu_item_db_id])) {
+			if (!get_post_meta($menu_item_db_id, '_pll_menu_item', true)) // our options were never saved
+				update_post_meta($menu_item_db_id, '_pll_menu_item', $options);
+		}
+		else {
+			foreach ($options as $opt=>$v)
+				$options[$opt] = empty($_POST['menu-item-'.$opt][$menu_item_db_id]) ? 0 : 1;
+			update_post_meta($menu_item_db_id, '_pll_menu_item', $options); // allow us to easily identify our nav menu item
+		}
 
-		update_post_meta($menu_item_db_id, '_pll_menu_item', $options); // allow us to easily identify our nav menu item
+	}
+
+	// translates the language switcher menu items title in case the user swirhces the admin language
+	function wp_get_nav_menu_items($items) {
+			foreach ($items as $item)
+				if ($item->url == '#pll_switcher')
+					$item->post_title = __('Language switcher', 'polylang');
+		return $items;
 	}
 
 	// assign menu languages and translations based on locations
@@ -177,11 +194,11 @@ class Polylang_Nav_Menu {
 		return $atts;
 	}
 
-	// gets the menu in the correct language
+	// get the menu in the correct language
 	function get_nav_menu($term) {
 		global $polylang;
 		remove_filter('get_nav_menu', array($this, 'get_nav_menu'), 1); // avoid infinite loop
-		$term = get_term(pll_get_term($term->term_id), 'nav_menu');
+		$term = ($tr = pll_get_term($term->term_id)) ? get_term($tr, 'nav_menu') : $term; // get the translation if exists
 		add_filter('get_nav_menu', array($this, 'get_nav_menu'), 1);
 		return $term;
 	}

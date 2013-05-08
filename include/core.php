@@ -986,7 +986,7 @@ class Polylang_Core extends Polylang_base {
 				$flag = $show_flags ? $this->get_flag($language) : '';
 				$name = $show_names || !$show_flags ? esc_html($display_names_as == 'slug' ? $language->slug : $language->name) : '';
 
-				if ($menu) {
+				if ($menu && isset($item)) {
 					$i = clone $item;
 					$i->title = $show_flags && $show_names ? $flag.'&nbsp;'.$name : $flag.$name;
 					$i->url = $url;
@@ -1006,7 +1006,7 @@ class Polylang_Core extends Polylang_base {
 
 		$output = apply_filters('pll_the_languages', $output, $args);
 
-		if(!$echo || $menu)
+		if(!$echo || ($menu && isset($item)))
 			return $output;
 		echo $output;
 	}

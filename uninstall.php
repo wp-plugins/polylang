@@ -49,7 +49,7 @@ class Polylang_Uninstall {
 		foreach ($ids as $id)
 			delete_post_meta($id, '_translations');
 
-		// delete menu language switcher options
+		// delete menu language switchers
 		$ids = get_posts(array(
 			'numberposts' => -1,
 			'nopaging'    => true,
@@ -59,7 +59,7 @@ class Polylang_Uninstall {
 		));
 
 		foreach ($ids as $id)
-			delete_post_meta($id, '_pll_menu_item');
+			wp_delete_post($id, true);
 
 		// delete terms translations
 		$ids = get_terms(apply_filters('pll_get_taxonomies', get_taxonomies(array('show_ui'=>true))), array('get'=>'all', 'fields'=>'ids'));

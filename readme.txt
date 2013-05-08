@@ -105,6 +105,6 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 * Bug correction: continents-cities-xx_XX.mo not downloaded
 * Bug correction: a gzipped 404 page is downloaded when a mo file does not exist on WordPress languages files repository
 * Bug correction: post_date_gmt not synchronized together with post_date (can break Jetpack infinite scroll)
-* Tests done with WP 3.6 beta 1 and Twenty thirteen
+* Tests done with WP 3.6 beta 2 and Twenty thirteen
 
 See changelog.txt for full changelog

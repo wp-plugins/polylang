@@ -164,7 +164,7 @@ class Polylang_WPML_Compat {
 		add_action('pll_get_strings', array(&$this, 'get_strings'));
 	}
 
-	// unlike pll_register_string, icl_register_string stores the sting in database
+	// unlike pll_register_string, icl_register_string stores the string in database
 	// so we need to do the same as some plugins or themes may expect this
 	// we use a serialized option to do this
 	function register_string($context, $name, $string) {
@@ -172,7 +172,6 @@ class Polylang_WPML_Compat {
 			$this->strings = get_option('polylang_wpml_strings', array());
 
 		// registers the string if it does not exist yet
-		// $context not used today but save it just in case
 		$to_register = array('context' => $context, 'name'=> $name, 'string' => $string, 'multiline' => false, 'icl' => true);
 		if (!in_array($to_register, $this->strings) && $to_register['string']) {
 			$this->strings[] = $to_register;
