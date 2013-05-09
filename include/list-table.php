@@ -94,7 +94,7 @@ class Polylang_String_Table extends WP_List_Table {
 	function column_cb($item){
 		return sprintf(
 			'<input type="checkbox" name="strings[]" value="%s" %s />',
-			$item['row'],
+			esc_attr($item['row']),
 			empty($item['icl']) ? 'disabled = 1' : ''
 		);
 	}

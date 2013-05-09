@@ -161,7 +161,7 @@ class Polylang_Nav_Menu {
 
 	// filter _wp_auto_add_pages_to_menu by language
 	function auto_add_pages_to_menu( $new_status, $old_status, $post ) {
-		if ('publish' != $new_status || 'publish' == $old_status || 'page' != $post->post_type || ! empty($post->post_parent) || !($lang = $this->get_post_language($post->ID)))
+		if ('publish' != $new_status || 'publish' == $old_status || 'page' != $post->post_type || ! empty($post->post_parent) || !($lang = $GLOBALS['polylang']->get_post_language($post->ID)))
 			return;
 
 		// get all the menus in the post language
