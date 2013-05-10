@@ -29,7 +29,7 @@ class Polylang_Nav_Menu {
 
 	// add the language switcher metabox and create new nav menu locations
 	public function admin_init(){
-		// FIXME is it possible to choose the order (after theme locations) ?
+		// FIXME is it possible to choose the order (after theme locations in WP3.5 and older) ?
 		add_meta_box('pll_lang_switch_box', __('Language switcher', 'polylang'), array( &$this, 'lang_switch' ), 'nav-menus', 'side', 'high');
 
 		// create new nav menu locations except for all non-default language (only on admin side)
@@ -183,7 +183,6 @@ class Polylang_Nav_Menu {
 				$new_items[] = $item;
 		}
 
-		unset($items); // free some memory
 		return $new_items;
 	}
 

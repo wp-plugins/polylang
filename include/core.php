@@ -666,7 +666,7 @@ class Polylang_Core extends Polylang_base {
 	function wp_print_footer_scripts() {
 		// modifies the search form since filtering get_search_form won't work if the template uses searchform.php (prior to WP 3.6) or the search form is hardcoded
 		// don't use directly e[0] just in case there is somewhere else an element named 's'
-		// check before if the hidden input has not already been introduced by get_search_form (FIXME: is there a way to improve this ?
+		// check before if the hidden input has not already been introduced by get_search_form (FIXME: is there a way to improve this) ?
 		// thanks to AndyDeGroo for improving the code for compatility with old browsers
 		// http://wordpress.org/support/topic/development-of-polylang-version-08?replies=6#post-2645559
 

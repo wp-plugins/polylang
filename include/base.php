@@ -20,7 +20,7 @@ abstract class Polylang_Base {
 
 	function __construct() {
 		// avoid loading polylang admin filters for frontend ajax requests if 'pll_load_front' is set (thanks to g100g)
-		// FIXME I need to permit plugins to overwrite this
+		// FIXME should I permit plugins to overwrite this?
 		$this->is_ajax_on_front = defined('DOING_AJAX') && isset($_REQUEST['pll_load_front']);
 		$this->is_admin = defined('DOING_CRON') || (is_admin() && !$this->is_ajax_on_front);
 
@@ -51,7 +51,7 @@ abstract class Polylang_Base {
 	function get_languages_list($args = array()) {
 		// although get_terms is cached, it is efficient to add our own cache
 		// FIXME don't use on admin in case we modify the list of languages!
-		if ($this->is_admin && isset($this->languages_list[$cache_key = md5(serialize($args))]))
+		if (!$this->is_admin && isset($this->languages_list[$cache_key = md5(serialize($args))]))
 			return $this->languages_list[$cache_key];
 
 		$args = wp_parse_args($args, array('hide_empty' => false, 'orderby'=> 'term_group'));
