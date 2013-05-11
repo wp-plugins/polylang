@@ -92,6 +92,10 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 
 == Changelog ==
 
+= 1.1.1 =
+
+* Bug correction: rtl text direction not set when adding the language code to all urls (introduced in 1.1)
+
 = 1.1 (2013-05-10) =
 
 * When adding the language to all urls, the language is now defined in (plugins_loaded, 1) for better compatibility with some plugins (WordPress SEO)

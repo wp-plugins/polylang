@@ -292,6 +292,7 @@ class Polylang_Core extends Polylang_base {
 				add_action('wp', array(&$this, 'check_language_code_in_url')); // before Wordpress redirect_canonical
 		}
 
+		$GLOBALS['wpdb']->termmeta = $GLOBALS['wpdb']->prefix . 'termmeta'; // registers the termmeta table in wpdb
 		$GLOBALS['text_direction'] = get_metadata('term', $this->curlang->term_id, '_rtl', true) ? 'rtl' : 'ltr';
 		$GLOBALS['l10n']['pll_string'] = $this->mo_import($this->curlang);
 		do_action('pll_language_defined');
