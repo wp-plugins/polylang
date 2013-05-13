@@ -94,6 +94,8 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 
 = 1.1.1 =
 
+* Move nav menu language switcher split from 'wp_nav_menu_objects' to  'wp_get_nav_menu_items' filter
+* Add the filter 'pll_redirect_home'
 * Bug correction: rtl text direction not set when adding the language code to all urls (introduced in 1.1)
 
 = 1.1 (2013-05-10) =

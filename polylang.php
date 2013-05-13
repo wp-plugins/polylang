@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://polylang.wordpress.com/
-Version: 1.1.0.1
+Version: 1.1.0.4
 Author: Frédéric Demarle
 Description: Adds multilingual capability to WordPress
 Text Domain: polylang
@@ -29,7 +29,7 @@ Domain Path: /languages
  *
  */
 
-define('POLYLANG_VERSION', '1.1.0.1');
+define('POLYLANG_VERSION', '1.1.0.4');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
@@ -72,7 +72,7 @@ class Polylang extends Polylang_Base {
 		}
 
 		// stopping here if we are going to deactivate the plugin (avoids breaking rewrite rules)
-		if (isset($_GET['action']) && $_GET['action'] == 'deactivate' && isset($_GET['plugin']) && $_GET['plugin'] == 'polylang/polylang.php')
+		if (isset($_GET['action'], $_GET['plugin']) && $_GET['action'] == 'deactivate' && $_GET['plugin'] == 'polylang/polylang.php')
 			return;
 
 		// blog creation on multisite

@@ -38,7 +38,7 @@ class Polylang_Plugins_Compat {
 	// Custom field template does check $_REQUEST['post'] to populate the custom fields values
 	function cft_copy() {
 		global $post, $custom_field_template;
-		if (isset($custom_field_template) && !empty($post) && isset($_REQUEST['from_post']) && isset($_REQUEST['new_lang']))
+		if (isset($custom_field_template, $_REQUEST['from_post'], $_REQUEST['new_lang']) && !empty($post))
 			$_REQUEST['post'] = $post->ID;
 	}
 }

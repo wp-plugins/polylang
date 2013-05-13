@@ -436,8 +436,11 @@ class Polylang_Core extends Polylang_base {
 		// don't redirect if $_POST is not empty as it could break other plugins
 		// don't forget the query string which may be added by plugins
 		elseif (is_string($redirect = $this->get_home_url($this->curlang)) && empty($_POST)) {
-			wp_redirect(empty($_SERVER['QUERY_STRING']) ? $redirect : $redirect . ($this->using_permalinks ? '?' : '&') . $_SERVER['QUERY_STRING']);
-			exit;
+			$redirect = empty($_SERVER['QUERY_STRING']) ? $redirect : $redirect . ($this->using_permalinks ? '?' : '&') . $_SERVER['QUERY_STRING'];
+			if ($redirect = apply_filters('pll_redirect_home', $redirect)) {
+				wp_redirect($redirect);
+				exit;
+			}
 		}
 	}
 
@@ -945,7 +948,7 @@ class Polylang_Core extends Polylang_base {
 			'dropdown'               => 0, // display as list and not as dropdown
 			'echo'                   => 1, // echoes the list
 			'hide_if_empty'          => 1, // hides languages with no posts (or pages)
-			'menu'                   => 0, // not for nav menu
+			'menu'                   => 0, // not for nav menu (this argument is deprecated since v1.1.1)
 			'show_flags'             => 0, // don't show flags
 			'show_names'             => 1, // show language names
 			'display_names_as'       => 'name', // valid options are slug and name
@@ -963,6 +966,8 @@ class Polylang_Core extends Polylang_base {
 			$output = '';
 
 			foreach ($this->get_languages_list(array('hide_empty' => $hide_if_empty)) as $language) {
+				$classes = array();
+
 				// hide current language
 				if ($this->curlang->term_id == $language->term_id && $hide_current)
 					continue;
@@ -970,7 +975,8 @@ class Polylang_Core extends Polylang_base {
 				$url = $post_id !== null && ($tr_id = $this->get_post($post_id, $language)) ? get_permalink($tr_id) :
 					$post_id === null && !$force_home ? $this->get_translation_url($language) : null;
 
-				$class = isset($url) ? '' : 'no-translation ';
+				if (!isset($url))
+					$classes[] = 'no-translation ';
 
 				$url = apply_filters('pll_the_language_link', $url, $language->slug, $language->description);
 
@@ -980,34 +986,38 @@ class Polylang_Core extends Polylang_base {
 
 				$url = isset($url) ? $url : $this->get_home_url($language); // if the page is not translated, link to the home page
 
-				$class .= sprintf('lang-item lang-item-%d lang-item-%s', esc_attr($language->term_id), esc_attr($language->slug));
-				$class .= $language->term_id == $this->curlang->term_id ? ' current-lang' : '';
-				$class .= $menu ? ' menu-item' : '';
+				array_push($classes, 'lang-item', 'lang-item-' . esc_attr($language->term_id), 'lang-item-' . esc_attr($language->slug));
+				if ($language->term_id == $this->curlang->term_id)
+					$classes[] = 'current-lang';
 
 				$flag = $show_flags ? $this->get_flag($language) : '';
 				$name = $show_names || !$show_flags ? esc_html($display_names_as == 'slug' ? $language->slug : $language->name) : '';
 
-				if ($menu && isset($item)) {
+				if (isset($item)) {
 					$i = clone $item;
 					$i->title = $show_flags && $show_names ? $flag.'&nbsp;'.$name : $flag.$name;
 					$i->url = $url;
 					$i->lang = $language->slug; // save this for use in nav_menu_link_attributes
-					$i->classes = $class;
+					$i->classes = $classes;
 					$output[] = $i;
 				}
-				else
+				else {
+					if ($menu)
+						$classes[] = 'menu-item'; // backward compatibility
+
 					$output .= sprintf("<li class='%s'><a hreflang='%s' href='%s'>%s</a></li>\n",
-						$class,
+						implode(' ', $classes),
 						esc_attr($language->slug),
 						esc_url($url),
 						$show_flags && $show_names ? $flag.'&nbsp;'.$name : $flag.$name
 					);
+				}
 			}
 		}
 
 		$output = apply_filters('pll_the_languages', $output, $args);
 
-		if(!$echo || ($menu && isset($item)))
+		if (!$echo || isset($item))
 			return $output;
 		echo $output;
 	}

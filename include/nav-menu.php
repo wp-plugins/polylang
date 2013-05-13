@@ -5,20 +5,10 @@ class Polylang_Nav_Menu {
 		if ($GLOBALS['polylang']->is_admin) {
 			// integration in the WP menu interface
 			add_action('admin_init', array(&$this, 'admin_init'), 20); // ater update
-			add_action('admin_enqueue_scripts', array(&$this, 'admin_enqueue_scripts'));
-			add_action('wp_update_nav_menu_item', array(&$this, 'wp_update_nav_menu_item'), 10, 3);
-			add_filter('wp_get_nav_menu_items', array(&$this, 'wp_get_nav_menu_items'));
-
-			// translation of menus based on chosen locations
-			$theme = get_option( 'stylesheet' );
-			add_filter("pre_update_option_theme_mods_$theme", array($this, 'update_nav_menu_locations'));
-
-			// filter _wp_auto_add_pages_to_menu by language
-			add_action('transition_post_status', array(&$this, 'auto_add_pages_to_menu'), 5, 3); // before _wp_auto_add_pages_to_menu
 		}
-
 		else {
 			// split the language switcher menu item in several language menu items
+			add_filter('wp_get_nav_menu_items', array(&$this, 'wp_get_nav_menu_items'));
 			add_filter('wp_nav_menu_objects', array(&$this, 'wp_nav_menu_objects'));
 			add_filter('nav_menu_link_attributes', array(&$this, 'nav_menu_link_attributes'), 10, 3);
 
@@ -29,14 +19,29 @@ class Polylang_Nav_Menu {
 
 	// add the language switcher metabox and create new nav menu locations
 	public function admin_init(){
+		global $_wp_registered_nav_menus, $polylang;
+
+		if (!($languages = $polylang->get_languages_list()))
+			return;
+
+		add_action('admin_enqueue_scripts', array(&$this, 'admin_enqueue_scripts'));
+		add_action('wp_update_nav_menu_item', array(&$this, 'wp_update_nav_menu_item'), 10, 3);
+		add_filter('wp_get_nav_menu_items', array(&$this, 'translate_switcher_title'));
+
+		// translation of menus based on chosen locations
+		$theme = get_option( 'stylesheet' );
+		add_filter("pre_update_option_theme_mods_$theme", array($this, 'update_nav_menu_locations'));
+
+		// filter _wp_auto_add_pages_to_menu by language
+		add_action('transition_post_status', array(&$this, 'auto_add_pages_to_menu'), 5, 3); // before _wp_auto_add_pages_to_menu
+
 		// FIXME is it possible to choose the order (after theme locations in WP3.5 and older) ?
 		add_meta_box('pll_lang_switch_box', __('Language switcher', 'polylang'), array( &$this, 'lang_switch' ), 'nav-menus', 'side', 'high');
 
 		// create new nav menu locations except for all non-default language (only on admin side)
-		global $_wp_registered_nav_menus, $polylang;
 		if (isset($_wp_registered_nav_menus)) {
 			foreach ($_wp_registered_nav_menus as $loc => $name)
-				foreach ($polylang->get_languages_list() as $lang)
+				foreach ($languages as $lang)
 					$arr[$loc . (pll_default_language() == $lang->slug ? '' : '#' . $lang->slug)] = $name . ' ' . $lang->name;
 
 			$_wp_registered_nav_menus = $arr;
@@ -125,10 +130,10 @@ class Polylang_Nav_Menu {
 	}
 
 	// translates the language switcher menu items title in case the user swirhces the admin language
-	function wp_get_nav_menu_items($items) {
-			foreach ($items as $item)
-				if ($item->url == '#pll_switcher')
-					$item->post_title = __('Language switcher', 'polylang');
+	function translate_switcher_title($items) {
+		foreach ($items as $item)
+			if ($item->url == '#pll_switcher')
+				$item->post_title = __('Language switcher', 'polylang');
 		return $items;
 	}
 
@@ -172,21 +177,64 @@ class Polylang_Nav_Menu {
 	}
 
 	// split the one item of backend in several items on frontend
-	function wp_nav_menu_objects($items) {
+	// take care to menu_order as it is used later in wp_nav_menu
+	function wp_get_nav_menu_items($items) {
 		global $polylang;
 		$new_items = array();
+		$offset = 0;
 
 		foreach ($items as $key => $item) {
-			if ($options = get_post_meta($item->ID, '_pll_menu_item', true))
-				$new_items = array_merge($new_items, $polylang->the_languages(array_merge(array('menu' => 1, 'item' => $item), $options)));
-			else
+			if ($options = get_post_meta($item->ID, '_pll_menu_item', true)) {
+				$i = 0;
+
+				foreach ($lang_items = $polylang->the_languages(array_merge(array('item' => $item), $options)) as $lang_item)
+					$lang_item->menu_order += $offset + $i++;
+
+				$offset += $i - 1;
+				$new_items = array_merge($new_items, $lang_items);
+			}
+			else {
+				$item->menu_order += $offset;
 				$new_items[] = $item;
+			}
 		}
 
 		return $new_items;
 	}
 
+	function get_ancestors($item) {
+		$ids = array();
+		$_anc_id = (int) $item->db_id;
+		while(($_anc_id = get_post_meta($_anc_id, '_menu_item_menu_item_parent', true)) && !in_array($_anc_id, $ids))
+			$ids[] = $_anc_id;
+		return $ids;
+	}
+
+	// remove current-menu and current-menu-ancestor classes to lang switcher when not on the home page
+	function wp_nav_menu_objects($items) {
+		$r_ids = $k_ids = array();
+
+		foreach ($items as $item) {
+			if (in_array('current-lang', $item->classes)) {
+				$item->classes = array_diff($item->classes, array('current-menu-item'));
+				$r_ids = array_merge($r_ids, $this->get_ancestors($item)); // remove the classes for these ancestors
+			}
+			elseif (in_array('current-menu-item', $item->classes))
+				$k_ids = array_merge($k_ids, $this->get_ancestors($item)); // keep the classes for these ancestors
+		}
+
+		$r_ids = array_diff($r_ids, $k_ids);
+
+		foreach ($items as $item) {
+			if (in_array($item->db_id, $r_ids))
+				$item->classes = array_diff($item->classes, array('current-menu-ancestor', 'current-menu-parent', 'current_page_parent', 'current_page_ancestor'));
+		}
+
+		return $items;
+	}
+
 	// hreflang attribute for the language switcher menu items
+	// available since WP3.6
 	function nav_menu_link_attributes($atts, $item, $args) {
 		if (isset($item->lang))
 			$atts['hreflang'] = $item->lang;
