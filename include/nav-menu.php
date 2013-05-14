@@ -5,6 +5,9 @@ class Polylang_Nav_Menu {
 		if ($GLOBALS['polylang']->is_admin) {
 			// integration in the WP menu interface
 			add_action('admin_init', array(&$this, 'admin_init'), 20); // ater update
+
+			// remove the customize menu section as it is unusable with Polylang
+			add_action('customize_register', array(&$this, 'customize_register'), 20); // since WP 3.4
 		}
 		else {
 			// split the language switcher menu item in several language menu items
@@ -175,6 +178,12 @@ class Polylang_Nav_Menu {
 
 		add_filter('option_nav_menu_options', create_function('$a', "\$a['auto_add'] = array_intersect(\$a['auto_add'], array($menus)); return \$a;"));
 	}
+
+	// FIXME remove the customize menu section as it is currently unusable with Polylang
+	function customize_register() {
+		$GLOBALS['wp_customize']->remove_section('nav'); // since WP 3.4
+	}
+
 
 	// split the one item of backend in several items on frontend
 	// take care to menu_order as it is used later in wp_nav_menu

@@ -502,7 +502,8 @@ class Polylang_Core extends Polylang_base {
 
 		// sets is_home on translated home page when it displays posts
 		// is_home must be true on page 2, 3... too
-		if (!$this->page_on_front && is_tax('language') && (count($query->query) == 1 || (is_paged() && count($query->query) == 2))) {
+		// as well as when searching an empty string: http://wordpress.org/support/topic/plugin-polylang-polylang-breaks-search-in-spun-theme
+		if (!$this->page_on_front && is_tax('language') && (count($query->query) == 1 || (is_paged() && count($query->query) == 2) || (isset($query->query['s']) && !$query->query['s']))) {
 			$this->curlang = $this->get_language(get_query_var('lang')); // sets the language now otherwise it will be too late to filter sticky posts !
 			$query->is_home = true;
 			$query->is_archive = $query->is_tax = false;
