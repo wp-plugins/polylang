@@ -924,7 +924,7 @@ class Polylang_Core extends Polylang_base {
 				{}
 
 			else
-				$this->set_post_language($post_id, get_current_language());
+				$this->set_post_language($post_id, $this->get_current_language());
 		}
 	}
 
@@ -939,7 +939,7 @@ class Polylang_Core extends Polylang_base {
 				{}
 
 			else
-				$this->set_term_language($term_id, get_current_language());
+				$this->set_term_language($term_id, $this->get_current_language());
 		}
 	}
 

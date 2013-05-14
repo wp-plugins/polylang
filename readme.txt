@@ -99,6 +99,7 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 * Bug correction: rtl text direction not set when adding the language code to all urls (introduced in 1.1)
 * Bug correction: hide again navigation panel in theme customizer as it still doesn't work
 * Bug correction: is_home not set on translated page when searching an empty string
+* Bug correction: fatal error when creating a post or term from frontend (introduced in 1.1)
 
 = 1.1 (2013-05-10) =
 
