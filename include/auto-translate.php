@@ -6,6 +6,7 @@
 class Polylang_Auto_Translate {
 	function __construct() {
 		add_action('pre_get_posts', array(&$this, 'pre_get_posts')); // after Polylang
+		add_filter('get_terms_args', array(&$this, 'get_terms_args'), 10, 2);
 	}
 
 	function pre_get_posts($query) {
@@ -130,6 +131,17 @@ class Polylang_Auto_Translate {
 				$qv[$key] = $arr;
 			}
 		}
+	}
+
+	function get_terms_args($args, $taxonomies) {
+		global $polylang;
+		if (!empty($args['include']) && array_intersect($taxonomies, $polylang->taxonomies)) {
+			foreach($args['include'] as $id)
+				$arr[] = ($tr = pll_get_term($id)) ? $tr : $id;
+
+			$args['include'] = $arr;
+		}
+		return $args;
 	}
 }
 

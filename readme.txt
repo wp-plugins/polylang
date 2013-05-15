@@ -96,6 +96,7 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 
 * Move nav menu language switcher split from 'wp_nav_menu_objects' to  'wp_get_nav_menu_items' filter
 * Add the filter 'pll_redirect_home'
+* Automatically translate ids in 'include' argument of 'get_terms' (useful for the menus in the Suffusion theme)
 * Bug correction: rtl text direction not set when adding the language code to all urls (introduced in 1.1)
 * Bug correction: hide again navigation panel in theme customizer as it still doesn't work
 * Bug correction: is_home not set on translated page when searching an empty string
