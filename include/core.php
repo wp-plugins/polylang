@@ -200,7 +200,7 @@ class Polylang_Core extends Polylang_base {
 			return $this->curlang;
 
 		// no language set for 404
-		if (is_404() || current_filter() == 'login_init')
+		if (is_404() || current_filter() == 'login_init' || (is_attachment() && !$this->options['media_support']))
 			return $this->get_preferred_language();
 
 		if ($var = get_query_var('lang'))

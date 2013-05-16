@@ -10,7 +10,9 @@ class Polylang_Auto_Translate {
 	}
 
 	function pre_get_posts($query) {
-		if (!$lang = pll_current_language())
+		// don't make anything if no language has been defined yet
+		// $this->post_types & $this->taxonomies are defined only once the action 'wp_loaded' has been fired
+		if (!$this->get_languages_list() || !$lang = pll_current_language() || !did_action('wp_loaded'))
 			return;
 
 		global $wpdb, $polylang;

@@ -101,6 +101,8 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 * Bug correction: hide again navigation panel in theme customizer as it still doesn't work
 * Bug correction: is_home not set on translated page when searching an empty string
 * Bug correction: fatal error when creating a post or term from frontend (introduced in 1.1)
+* Bug correction: attachments may load a wrong language when media translation was enabled then disabled
+* Bug correction: warning when querying posts before the action 'wp_loaded' has been fired (in auto-translate.php)
 
 = 1.1 (2013-05-10) =
 
