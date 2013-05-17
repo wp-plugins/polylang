@@ -97,12 +97,14 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 * Move nav menu language switcher split from 'wp_nav_menu_objects' to  'wp_get_nav_menu_items' filter
 * Add the filter 'pll_redirect_home'
 * Automatically translate ids in 'include' argument of 'get_terms' (useful for the menus in the Suffusion theme)
+* Add compatibility with Jetpack infinite scroll
 * Bug correction: rtl text direction not set when adding the language code to all urls (introduced in 1.1)
 * Bug correction: hide again navigation panel in theme customizer as it still doesn't work
 * Bug correction: is_home not set on translated page when searching an empty string
 * Bug correction: fatal error when creating a post or term from frontend (introduced in 1.1)
 * Bug correction: attachments may load a wrong language when media translation was enabled then disabled
 * Bug correction: warning when querying posts before the action 'wp_loaded' has been fired (in auto-translate.php)
+* Bug correction: potential issue if other plugins use the filter 'get_nav_menu'
 
 = 1.1 (2013-05-10) =
 
@@ -116,7 +118,7 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 * Posts or terms created from frontend are now assigned the current language (or another one if specified in the variable 'lang')
 * Bug correction: continents-cities-xx_XX.mo not downloaded
 * Bug correction: a gzipped 404 page is downloaded when a mo file does not exist on WordPress languages files repository
-* Bug correction: post_date_gmt not synchronized together with post_date (can break Jetpack infinite scroll)
+* Bug correction: post_date_gmt not synchronized together with post_date
 * Tests done with WP 3.6 beta 2 and Twenty thirteen
 
 See changelog.txt for full changelog

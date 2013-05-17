@@ -462,13 +462,13 @@ class Polylang_Core extends Polylang_base {
 		if (!$this->first_query && $this->curlang && !empty($qv['lang']))
 			return;
 
-		$is_post_type = isset($qv['post_type']) && (
+		$is_post_type = !empty($qv['post_type']) && (
 			in_array($qv['post_type'], $this->post_types) ||
 			(is_array($qv['post_type']) && array_intersect($qv['post_type'], $this->post_types))
 		);
 
 		// don't filters post types not in our list
-		if (isset($qv['post_type']) && !$is_post_type)
+		if (!empty($qv['post_type']) && !$is_post_type)
 			return;
 
 		$this->first_query = false;
@@ -531,7 +531,7 @@ class Polylang_Core extends Polylang_base {
 		$is_archive = (count($query->query) == 1 && !empty($qv['paged'])) ||
 			$query->is_date ||
 			$query->is_author ||
-			(isset($qv['post_type']) && $query->is_post_type_archive && $is_post_type);
+			(!empty($qv['post_type']) && $query->is_post_type_archive && $is_post_type);
 
 		// sets 404 when the language is not set for archives needing the language in the url
 		if (!$this->options['hide_default'] && !isset($qv['lang']) && !$this->using_permalinks && $is_archive)
@@ -543,12 +543,12 @@ class Polylang_Core extends Polylang_base {
 
 		// allow filtering recent posts and secondary queries by the current language
 		// take care not to break queries for non visible post types such as nav_menu_items, attachments...
-		if (/*$query->is_home && */$this->curlang && (!isset($qv['post_type']) || $is_post_type ))
+		if (/*$query->is_home && */$this->curlang && (empty($qv['post_type']) || $is_post_type ))
 			$query->set('lang', $this->curlang->slug);
 
 		// remove pages query when the language is set unless we do a search
 		// FIXME is only search broken by this ?
-		if (!empty($qv['lang']) && !isset($qv['post_type']) && !is_search())
+		if (!empty($qv['lang']) && empty($qv['post_type']) && !$query->is_search)
 			$query->set('post_type', 'post');
 
 		// unset the is_archive flag for language pages to prevent loading the archive template

@@ -1,6 +1,5 @@
 <?php
 class Polylang_Nav_Menu {
-
 	public function __construct() {
 		if ($GLOBALS['polylang']->is_admin) {
 			// integration in the WP menu interface
@@ -251,11 +250,15 @@ class Polylang_Nav_Menu {
 	}
 
 	// get the menu in the correct language
+	// avoid infinite loop and http://core.trac.wordpress.org/ticket/9968
 	function get_nav_menu($term) {
-		global $polylang;
-		remove_filter('get_nav_menu', array($this, 'get_nav_menu'), 1); // avoid infinite loop
-		$term = ($tr = pll_get_term($term->term_id)) ? get_term($tr, 'nav_menu') : $term; // get the translation if exists
-		add_filter('get_nav_menu', array($this, 'get_nav_menu'), 1);
+		static $once = false;
+		if (!$once && $tr = pll_get_term($term->term_id)) {
+			$once = true; // breaks the loop
+			$term = get_term($tr, 'nav_menu');
+			$once = false; // for the next call
+		}
+
 		return $term;
 	}
 }

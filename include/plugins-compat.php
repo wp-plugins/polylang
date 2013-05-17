@@ -16,6 +16,9 @@ class Polylang_Plugins_Compat {
 
 		// Custom field template
 		add_action('dbx_post_advanced', array(&$this, 'cft_copy'));
+
+		// Jetpack infinite scroll
+		add_filter('pre_get_posts', array(&$this, 'jetpack_infinite_scroll'));
 	}
 
 	// Unfortunately WPSEO loads the text domain before Polylang is able to modify the locale
@@ -40,6 +43,15 @@ class Polylang_Plugins_Compat {
 		global $post, $custom_field_template;
 		if (isset($custom_field_template, $_REQUEST['from_post'], $_REQUEST['new_lang']) && !empty($post))
 			$_REQUEST['post'] = $post->ID;
+	}
+
+	// Currently it is not possible to set the language in ajax url so let's use our cookie
+	function jetpack_infinite_scroll($query) {
+		if (isset($_GET['infinity'], $_GET['page'])) {
+			$query->set('lang', $GLOBALS['polylang']->get_preferred_language()->slug);
+			if (empty($qv['post_type']) && !$query->is_search)
+				$query->set('post_type', 'post');
+		}
 	}
 }
 
