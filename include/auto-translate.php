@@ -10,11 +10,6 @@ class Polylang_Auto_Translate {
 	}
 
 	function pre_get_posts($query) {
-		// don't make anything if no language has been defined yet
-		// $this->post_types & $this->taxonomies are defined only once the action 'wp_loaded' has been fired
-		if (!$this->get_languages_list() || !$lang = pll_current_language() || !did_action('wp_loaded'))
-			return;
-
 		global $wpdb, $polylang;
 		$qv = &$query->query_vars;
 
@@ -80,31 +75,35 @@ class Polylang_Auto_Translate {
 			}
 		}
 
-		// custom taxonomies
-		// according to codex, this type of query is deprecated as of WP 3.1 but it does not appear in WP 3.5 source code
-		foreach (array_diff($polylang->taxonomies, array('category', 'post_tag')) as $taxonomy) {
-			$tax = get_taxonomy($taxonomy);
-			$arr = array();
-			if (!empty($qv[$tax->query_var])) {
-				$sep = strpos($qv[$tax->query_var], ',') !== false ? ',' : '+'; // two possible separators
-				foreach (explode($sep, $qv[$tax->query_var]) as $slug)
-					$arr[] = (($tag = get_term_by('slug', $slug, $taxonomy)) && ($tr_id = pll_get_term($tag->term_id)) && !is_wp_error($tr = get_term($tr_id, $taxonomy))) ?
-						$tr->slug : $slug;
-
-				$qv[$tax->query_var] = implode($sep, $arr);
-			}
-		}
-
-		// tax_query since WP 3.1
-		if (!empty($qv['tax_query']) && is_array($qv['tax_query'])) {
-			foreach ($qv['tax_query'] as $key => $q) {
+		if (is_array($polylang->taxonomies)) {
+			// custom taxonomies
+			// according to codex, this type of query is deprecated as of WP 3.1 but it does not appear in WP 3.5 source code
+			foreach (array_diff($polylang->taxonomies, array('category', 'post_tag')) as $taxonomy) {
+				$tax = get_taxonomy($taxonomy);
 				$arr = array();
-				$field = empty($q['field']) ? 'id' : $q['field'];
-				foreach ( (array) $q['terms'] as $t)
-					$arr[] = (($tag = get_term_by($field, $t, $q['taxonomy'])) && ($tr_id = pll_get_term($tag->term_id)) && !is_wp_error($tr = get_term($tr_id, $q['taxonomy']))) ?
-						$tr->$field : $t;
+				if (!empty($qv[$tax->query_var])) {
+					$sep = strpos($qv[$tax->query_var], ',') !== false ? ',' : '+'; // two possible separators
+					foreach (explode($sep, $qv[$tax->query_var]) as $slug)
+						$arr[] = (($tag = get_term_by('slug', $slug, $taxonomy)) && ($tr_id = pll_get_term($tag->term_id)) && !is_wp_error($tr = get_term($tr_id, $taxonomy))) ?
+							$tr->slug : $slug;
 
-				$qv['tax_query'][$key]['terms'] = implode(',', $arr);
+					$qv[$tax->query_var] = implode($sep, $arr);
+				}
+			}
+
+			// tax_query since WP 3.1
+			if (!empty($qv['tax_query']) && is_array($qv['tax_query'])) {
+				foreach ($qv['tax_query'] as $key => $q) {
+					if (in_array($q['taxonomy'], $polylang->taxonomies)) {
+						$arr = array();
+						$field = empty($q['field']) ? 'id' : $q['field'];
+						foreach ( (array) $q['terms'] as $t)
+							$arr[] = (($tag = get_term_by($field, $t, $q['taxonomy'])) && ($tr_id = pll_get_term($tag->term_id)) && !is_wp_error($tr = get_term($tr_id, $q['taxonomy']))) ?
+								$tr->$field : $t;
+
+						$qv['tax_query'][$key]['terms'] = implode(',', $arr);
+					}
+				}
 			}
 		}
 
@@ -137,7 +136,8 @@ class Polylang_Auto_Translate {
 
 	function get_terms_args($args, $taxonomies) {
 		global $polylang;
-		if (!empty($args['include']) && array_intersect($taxonomies, $polylang->taxonomies)) {
+
+		if (!empty($args['include']) && is_array($polylang->taxonomies) && array_intersect($taxonomies, $polylang->taxonomies)) {
 			foreach($args['include'] as $id)
 				$arr[] = ($tr = pll_get_term($id)) ? $tr : $id;
 
