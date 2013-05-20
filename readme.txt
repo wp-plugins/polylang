@@ -105,6 +105,7 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 * Bug correction: attachments may load a wrong language when media translation was enabled then disabled
 * Bug correction: warning when querying posts before the action 'wp_loaded' has been fired (in auto-translate.php)
 * Bug correction: potential issue if other plugins use the filter 'get_nav_menu'
+* Tests done with WP 3.6 beta 3 and Twenty thirteen
 
 = 1.1 (2013-05-10) =
 

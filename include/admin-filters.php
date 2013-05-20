@@ -165,7 +165,8 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 		// hidden field containing the post language for quick edit
 		if ($column == $this->get_first_language_column())
-			printf('<input type="hidden" name="lang_%d" value="%s" />', esc_attr($post_id), esc_attr($lang->slug));
+			printf('<div class="hidden" id="lang_%d">%s</div>', esc_attr($post_id), esc_html($lang->slug));
+
 
 		// link to edit post (or a translation)
 		if ($id = ($inline && $lang->slug != $_POST['old_lang']) ? ($language->slug == $lang->slug ? $post_id : 0) : $this->get_post($post_id, $language))
@@ -862,7 +863,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		$language = $this->get_language(substr($column, 9));
 
 		if ($column == $this->get_first_language_column())
-			printf('<input type="hidden" name="lang_%d" value="%s" />', $term_id, esc_attr($lang->slug));
+			printf('<div class="hidden" id="lang_%d">%s</div>', esc_attr($term_id), esc_html($lang->slug));
 
 		// link to edit term (or a translation)
 		if ($id = ($inline && $lang->slug != $_POST['old_lang']) ? ($language->slug == $lang->slug ? $term_id : 0) : $this->get_term($term_id, $language))

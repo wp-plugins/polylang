@@ -43,7 +43,7 @@ jQuery(document).ready(function($) {
 						value: 1
 					});
 					if ((typeof(pll_data.val[item]) != 'undefined' && pll_data.val[item][ids[i]] == 1) || (typeof(pll_data.val[item]) == 'undefined' && ids[i] == 'show_names')) // show_names as default value
-						cb.attr('checked', 'checked');
+						cb.prop('checked', true);
 					label.prepend(cb);
 				}
 			});

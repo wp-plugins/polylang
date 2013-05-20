@@ -872,14 +872,19 @@ class Polylang_Core extends Polylang_base {
 		$is_get_search_form = false;
 
 		// FIXME can I decrease the size of the array to improve speed?
-		foreach (array_reverse(debug_backtrace(/*!DEBUG_BACKTRACE_PROVIDE_OBJECT|DEBUG_BACKTRACE_IGNORE_ARGS*/)) as $trace) {
+		foreach ($traces = array_reverse(debug_backtrace(/*!DEBUG_BACKTRACE_PROVIDE_OBJECT|DEBUG_BACKTRACE_IGNORE_ARGS*/)) as $key => $trace) {
 			// searchform.php is not passed through get_search_form filter prior to WP 3.6
-			if (isset($trace['file']) && strpos($trace['file'], 'searchform.php'))
-				return $this->using_permalinks && version_compare($GLOBALS['wp_version'], '3.6', '<') ? $this->get_home_url($this->curlang, true) : $url;
+			if (isset($trace['file']) && strpos($trace['file'], 'searchform.php') && version_compare($GLOBALS['wp_version'], '3.6', '<'))
+				return $this->using_permalinks ? $this->get_home_url($this->curlang, true) : $url;
 
 			// don't interfere with get_search_form filter which I prefer to use when possible
-			if ($trace['function'] == 'get_search_form')
+			if ($trace['function'] == 'get_search_form') {
 				$is_get_search_form = true;
+
+				// searchform.php since WP3.6
+				if (isset($traces[$key+2]['file']) && strpos($traces[$key+2]['file'], 'searchform.php'))
+					return $url;
+			}
 
 			if ($trace['function'] == 'wp_nav_menu' || $trace['function'] == 'login_footer' ||
 				// direct call from the theme

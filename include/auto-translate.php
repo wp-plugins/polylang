@@ -75,7 +75,7 @@ class Polylang_Auto_Translate {
 			}
 		}
 
-		if (is_array($polylang->taxonomies)) {
+		if (isset($polylang->taxonomies) && is_array($polylang->taxonomies)) {
 			// custom taxonomies
 			// according to codex, this type of query is deprecated as of WP 3.1 but it does not appear in WP 3.5 source code
 			foreach (array_diff($polylang->taxonomies, array('category', 'post_tag')) as $taxonomy) {
@@ -137,7 +137,7 @@ class Polylang_Auto_Translate {
 	function get_terms_args($args, $taxonomies) {
 		global $polylang;
 
-		if (!empty($args['include']) && is_array($polylang->taxonomies) && array_intersect($taxonomies, $polylang->taxonomies)) {
+		if (!empty($args['include']) && isset($polylang->taxonomies) && is_array($polylang->taxonomies) && array_intersect($taxonomies, $polylang->taxonomies)) {
 			foreach($args['include'] as $id)
 				$arr[] = ($tr = pll_get_term($id)) ? $tr : $id;
 

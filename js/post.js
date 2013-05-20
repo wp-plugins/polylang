@@ -34,10 +34,7 @@ pll_tagBox = {
 		if ( !thetags.length )
 			return;
 
-// FIXME: why this modification ?
-//		disabled = thetags.prop('disabled'); // 3.3
-//		disabled = thetags.attr('disabled'); // 3.1
-		disabled = thetags.attr('disabled');
+		disabled = thetags.prop('disabled');
 
 		current_tags = thetags.val().split(',');
 		tagchecklist.empty();
@@ -233,10 +230,10 @@ jQuery(document).ready(function($) {
 				}
 			});
 
-			// modifies the language in the tag cloud	
+			// modifies the language in the tag cloud
 			$('.tagcloud-link').each(function() {
 				var id = $(this).attr('id');
-				pll_tagBox.get(id, 0); 			
+				pll_tagBox.get(id, 0);
 			});
 
 			// modifies the language in the tags suggestion input
@@ -244,7 +241,7 @@ jQuery(document).ready(function($) {
 		});
 	});
 
-	// Tag box			
+	// Tag box
 	// copy paste WP code
 	// replacing tagsdiv by pll-tagsdiv and tagBox by pll_tagBox
 	if ( $('#pll-tagsdiv-post_tag').length ) {
@@ -259,13 +256,13 @@ jQuery(document).ready(function($) {
 	}
 
 	// quick edit
-	jQuery("a.editinline").live("click", function() {
+	$('#the-list').on('click', 'a.editinline', function(){
 		inlineEditPost.revert();
 		var post_id = inlineEditPost.getId(this);
-		var lang = $("input[name='lang_"+post_id+"']").attr('value');
+		var lang = $('#lang_'+post_id).html();
 		$("input[name='old_lang']").val(lang);
-		$('#post_lang_choice option:selected').removeAttr('selected');
-		$('#post_lang_choice option[value="'+lang+'"]').attr('selected', 'selected');  
+		$('#post_lang_choice option:selected').removeProp('selected');
+		$('#post_lang_choice option[value="'+lang+'"]').attr('selected', 'selected'); // FIXME why prop('selected', true) does not work?
 	});
 
 	// ajax for changing the media's language

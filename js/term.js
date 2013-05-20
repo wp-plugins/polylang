@@ -29,12 +29,12 @@ jQuery(document).ready(function($) {
 	});
 
 	// quick edit
-	jQuery("a.editinline").live("click", function() {
+	$('#the-list').on('click', 'a.editinline', function(){
 		inlineEditTax.revert();
 		var id = inlineEditTax.getId(this);
-		var lang = $("input[name='lang_"+id+"']").attr('value');
+		var lang = $('#lang_'+id).html();
 		$("input[name='old_lang']").val(lang);
-		$('#inline_lang_choice option:selected').removeAttr('selected');
-		$('#inline_lang_choice option[value="'+lang+'"]').attr('selected', 'selected');  
+		$('#inline_lang_choice option:selected').removeProp('selected');
+		$('#inline_lang_choice option[value="'+lang+'"]').attr('selected', 'selected'); // FIXME why prop('selected', true) does not work?
 	});
 });
