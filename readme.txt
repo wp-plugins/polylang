@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, i18n, international, l10n, localization
 Requires at least: 3.1
 Tested up to: 3.6
-Stable tag: 1.1
+Stable tag: 1.1.1
 License: GPLv2 or later
 
 Polylang adds multilingual content management support to WordPress.
@@ -92,7 +92,7 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 
 == Changelog ==
 
-= 1.1.1 =
+= 1.1.1 (2013-05-20) =
 
 * Move nav menu language switcher split from 'wp_nav_menu_objects' to  'wp_get_nav_menu_items' filter
 * Add the filter 'pll_redirect_home'
@@ -107,6 +107,7 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 * Bug correction: potential issue if other plugins use the filter 'get_nav_menu'
 * Bug correction: interference between language inline edit and search in admin list tables
 * Bug correction: auto-translate breaks queries tax_query when the 'field' is set to 'id'
+* Bug correction: search is not filtered by language for default permalinks (introduced in 1.1)
 * Tests done with WP 3.6 beta 3 and Twenty thirteen
 
 = 1.1 (2013-05-10) =

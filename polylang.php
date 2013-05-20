@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://polylang.wordpress.com/
-Version: 1.1.0.12
+Version: 1.1.1
 Author: Frédéric Demarle
 Description: Adds multilingual capability to WordPress
 Text Domain: polylang
@@ -29,7 +29,7 @@ Domain Path: /languages
  *
  */
 
-define('POLYLANG_VERSION', '1.1.0.12');
+define('POLYLANG_VERSION', '1.1.1');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
@@ -49,7 +49,7 @@ if (!defined('PLL_LOCAL_URL'))
 if (!defined('PLL_COOKIE'))
 	define('PLL_COOKIE', 'pll_language'); // cookie name. no cookie will be used if set to false
 
-if (!defined('PLL_SEARCH_FORM_JS') && version_compare($GLOBALS['wp_version'], '3.6', '<'))
+if (!defined('PLL_SEARCH_FORM_JS') && !version_compare($GLOBALS['wp_version'], '3.6', '<'))
 	define('PLL_SEARCH_FORM_JS', false); // the search form js is no more needed in WP 3.6+ except if the search form is hardcoded elsewhere than in searchform.php
 
 require_once(PLL_INC.'/base.php');
