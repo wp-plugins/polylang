@@ -232,5 +232,3 @@ class Polylang_Widget_Calendar extends WP_Widget_Calendar {
 			return apply_filters( 'get_calendar',  $calendar_output );
 	}
 }
-
-?>
