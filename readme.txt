@@ -92,6 +92,12 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 
 == Changelog ==
 
+= 1.1.2 =
+
+* Posts and terms now inherit parent's language if created outside the standard WordPress ui
+* Bug correction: no language is set for a (translated custom taxonomy) term when added from the a (non tranlated) custom post type edit page
+* Bug correction: warning if 'get_terms' is called with a non-array 'include' argument (introduced in 1.1.1)
+
 = 1.1.1 (2013-05-20) =
 
 * Move nav menu language switcher split from 'wp_nav_menu_objects' to  'wp_get_nav_menu_items' filter

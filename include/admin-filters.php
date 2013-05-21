@@ -511,6 +511,9 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		elseif ($this->get_post_language($post_id))
 			{} // avoids breaking the language if post is updated outside the edit post page (thanks to Gonçalo Peres)
 
+		elseif (($parent_id = wp_get_post_parent_id($post_id)) && $parent_lang = $this->get_post_language($parent_id))
+			$this->set_post_language($post_id, $parent_lang);
+
 		else
 			$this->set_post_language($post_id, $this->get_preferred_language());
 
@@ -907,6 +910,16 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		}
 		elseif (isset($_POST['post_lang_choice']))
 			$this->set_term_language($term_id, $_POST['post_lang_choice']);
+
+		elseif ($this->get_term_language($term_id))
+			{} // avoids breaking the language if the term is updated outside the edit post or edit tag pages
+
+		// sets language from term parent if exists thanks to Scott Kingsley Clark
+		elseif (($term = get_term($term_id, $taxonomy)) && !empty($term->parent) && $parent_lang = $this->get_term_language($term->parent))
+			$this->set_term_language($term_id, $parent_lang);
+
+		else
+			$this->set_term_language($term_id, $this->get_preferred_language());
 
 		if (!isset($_POST['term_tr_lang']))
 			return;

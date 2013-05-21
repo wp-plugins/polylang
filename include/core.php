@@ -924,6 +924,9 @@ class Polylang_Core extends Polylang_base {
 			elseif ($this->get_post_language($post_id))
 				{}
 
+			elseif (($parent_id = wp_get_post_parent_id($post_id)) && $parent_lang = $this->get_post_language($parent_id))
+				$this->set_post_language($post_id, $parent_lang);
+
 			else
 				$this->set_post_language($post_id, $this->get_current_language());
 		}
@@ -938,6 +941,9 @@ class Polylang_Core extends Polylang_base {
 
 			elseif ($this->get_term_language($term_id))
 				{}
+
+			elseif (($term = get_term($term_id, $taxonomy)) && !empty($term->parent) && $parent_lang = $this->get_term_language($term->parent))
+				$this->set_term_language($term_id, $parent_lang);
 
 			else
 				$this->set_term_language($term_id, $this->get_current_language());

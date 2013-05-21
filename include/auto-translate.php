@@ -138,7 +138,7 @@ class Polylang_Auto_Translate {
 		global $polylang;
 
 		if (!empty($args['include']) && isset($polylang->taxonomies) && is_array($polylang->taxonomies) && array_intersect($taxonomies, $polylang->taxonomies)) {
-			foreach($args['include'] as $id)
+			foreach(wp_parse_id_list($args['include']) as $id)
 				$arr[] = ($tr = pll_get_term($id)) ? $tr : $id;
 
 			$args['include'] = $arr;
