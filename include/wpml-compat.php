@@ -146,11 +146,35 @@ if (!function_exists('icl_t')) {
  * undocumented function used by NextGen Gallery
  * seems to be used to both register and translate a string
  * the parameters $context and $bool are not used by Polylang
+ * FIXME: tested only with NextGen gallery
  */
 if (!function_exists('icl_translate')) {
 	function icl_translate($context, $name, $string, $bool) {
 		$GLOBALS['polylang_wpml_compat']->register_string($context, $name, $string);
 		return pll__($string);
+	}
+}
+
+/*
+ * undocumented function used by Types
+ * FIXME: tested only with Types
+ * probably incomplete as Types locks the custom fields for a new post, but not when edited
+ * this is probably linked to the fact that WPML has always an original post in the default language and not Polylang :)
+ */
+if (!function_exists('wpml_get_copied_fields_for_post_edit')) {
+	function wpml_get_copied_fields_for_post_edit() {
+		if (empty($_GET['from_post']))
+			return array();
+
+		// don't know what WPML does but Polylang does copy all public meta keys by default
+		foreach ($keys = array_unique(array_keys(get_post_custom($_GET['from_post']))) as $k => $meta_key)
+			if (is_protected_meta($meta_key))
+				unset ($keys[$k]);
+
+		// apply our filter and fill the expected output (see /types/embedded/includes/fields-post.php)
+		$arr['fields'] = array_unique(apply_filters('pll_copy_post_metas', empty($keys) ? array() : $keys, false));
+		$arr['original_post_id'] = (int) $_GET['from_post'];
+		return $arr;
 	}
 }
 

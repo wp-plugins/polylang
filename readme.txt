@@ -95,6 +95,7 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 = 1.1.2 =
 
 * Posts and terms now inherit parent's language if created outside the standard WordPress ui
+* Improve the compatibility with the plugin Types
 * Bug correction: no language is set for a (translated custom taxonomy) term when added from the a (non tranlated) custom post type edit page
 * Bug correction: warning if 'get_terms' is called with a non-array 'include' argument (introduced in 1.1.1)
 
