@@ -126,6 +126,12 @@ class Polylang_Auto_Translate {
 		foreach (array('post__in', 'post__not_in') as $key) {
 			$arr = array();
 			if (!empty($qv[$key])) {
+				// post__in used by the 2 functions below
+				// useless to filter them as output is already in the right language and would result in performance loss
+				foreach (debug_backtrace() as $trace)
+					if (in_array($trace['function'], array('wp_nav_menu', 'gallery_shortcode')))
+						return;
+
 				foreach ($qv[$key] as $p)
 					$arr[] = ($tr = pll_get_post($p)) ? $tr : $p;
 

@@ -55,7 +55,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		// adds actions and filters related to languages when creating, saving or deleting posts and pages
 		add_filter('wp_insert_post_parent', array(&$this, 'wp_insert_post_parent'));
 		add_action('dbx_post_advanced', array(&$this, 'dbx_post_advanced'));
-		add_action('save_post', array(&$this, 'save_post'), 200, 2); // priority 200 to come after advanced custom fields (20) and custom fields template (100)
+		add_action('save_post', array(&$this, 'save_post'), 21, 2); // priority 21 to come after advanced custom fields (20) and before the event calendar which breaks everything after 25
 		add_action('before_delete_post', array(&$this, 'delete_post'));
 
 		if ($this->options['media_support']) {
@@ -418,6 +418,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 	function copy_post_metas($from, $to, $lang, $sync = false) {
 		// copy or synchronize terms
 		if (!$sync || in_array('taxonomies', $this->options['sync'])) {
+			// FIXME quite a lot of query in foreach
 			foreach ($this->taxonomies as $tax) {
 				$newterms = array();
 				$terms = get_the_terms($from, $tax);
@@ -527,6 +528,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 		// make sure we get save terms in the right language (especially tags with same name in different languages)
 		if ($_POST['post_lang_choice']) {
+			// FIXME quite a lot of query in foreach
 			foreach ($this->taxonomies as $tax) {
 				$terms = get_the_terms($post_id, $tax);
 				if (is_array($terms)) {
@@ -953,6 +955,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		));
 
 		// associate translated term to translated post
+		// FIXME quite a lot of query in foreach
 		foreach ($this->get_languages_list() as $language) {
 			if ($translated_term = $this->get_term($term_id, $language)) {
 				foreach ($posts as $post_id) {

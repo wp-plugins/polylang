@@ -39,12 +39,14 @@ abstract class Polylang_Base {
 			$post_types[] = 'attachment';
 		if (!empty($this->options['post_types']))
 			$post_types = array_merge($post_types, $this->options['post_types']);
-		$this->post_types = apply_filters('pll_get_post_types', array_combine($post_types, $post_types), false);
+		$post_types = apply_filters('pll_get_post_types', array_combine($post_types, $post_types), false);
+		$this->post_types = array_intersect($post_types, get_post_types()); // only valid registered post types
 
 		$taxonomies = array('category', 'post_tag', 'nav_menu');
 		if (!empty($this->options['taxonomies']))
 			$taxonomies = array_merge($taxonomies, $this->options['taxonomies']);
-		$this->taxonomies = apply_filters('pll_get_taxonomies', array_combine($taxonomies, $taxonomies), false);
+		$taxonomies = apply_filters('pll_get_taxonomies', array_combine($taxonomies, $taxonomies), false);
+		$this->taxonomies = array_intersect($taxonomies, get_taxonomies()); // only valid registered taxonomies
 	}
 
 	// returns the list of available languages

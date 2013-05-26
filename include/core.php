@@ -586,7 +586,7 @@ class Polylang_Core extends Polylang_base {
 	function option_sticky_posts($posts) {
 		if ($this->curlang && !empty($posts)) {
 			foreach ($posts as $key=>$post_id) {
-				if ($this->get_post_language($post_id)->term_id != $this->curlang->term_id)
+				if ($this->get_post_language($post_id)->term_id != $this->curlang->term_id) // FIXME query in foreach
 					unset($posts[$key]);
 			}
 		}
@@ -596,10 +596,8 @@ class Polylang_Core extends Polylang_base {
 	// filters categories and post tags by language when needed
 	function terms_clauses($clauses, $taxonomies, $args) {
 		// does nothing except on taxonomies which are filterable
-		foreach ($taxonomies as $tax) {
-			if (!in_array($tax, $this->taxonomies))
-				return $clauses;
-		}
+		if (!array_intersect($taxonomies, $this->taxonomies))
+			return $clauses;
 
 		// adds our clauses to filter by language
 		return $this->_terms_clauses($clauses, isset($args['lang']) ? $args['lang'] : $this->curlang);

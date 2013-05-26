@@ -114,7 +114,6 @@ if (!function_exists('icl_object_id')) {
 
 /*
  * registers a string for translation in the "strings translation" panel
- * the parameter $context is not used by Polylang
  */
 if (!function_exists('icl_register_string')) {
 	function icl_register_string($context, $name, $string) {
@@ -124,7 +123,6 @@ if (!function_exists('icl_register_string')) {
 
 /*
  * removes a string from the "strings translation" panel
- * the parameter $context is not used by Polylang
  */
 if (!function_exists('icl_unregister_string')) {
 	function icl_unregister_string($context, $name) {
