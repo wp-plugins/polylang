@@ -92,7 +92,7 @@ abstract class Polylang_Base {
 				esc_html($language->name)
 			);
 		}
-		$out .= "</select>\n";
+		$out .= '</select>'."\n";
 		return $out;
 	}
 

@@ -44,14 +44,14 @@ if (!function_exists('icl_get_languages')) {
 		foreach ($polylang->get_languages_list(array('hide_empty' => true, 'orderby' => $orderby, 'order' => $order)) as $lang) {
 			$url = $polylang->get_translation_url($lang);
 
-			if (!$url && !empty($skip_missing))
+			if (empty($url) && !empty($skip_missing))
 				continue;
 
 			$arr[] = array(
 				'id' => $lang->term_id,
 				'active' => isset($polylang->curlang->slug) && $polylang->curlang->slug == $lang->slug ? 1 : 0,
 				'native_name' => $lang->name,
-				'missing' => $url ? 0 : 1,
+				'missing' => empty($url) ? 1 : 0,
 				'translated_name' => '', // does not exist in Polylang
 				'language_code' => $lang->slug,
 				'country_flag_url' => $polylang->get_flag($lang, true),

@@ -11,7 +11,7 @@ class Polylang_Languages_Table extends WP_List_Table {
 		parent::__construct(array(
 			'singular' => __('Language','polylang'),
 			'plural'   => __('Languages','polylang'),
-			'ajax'	 => false
+			'ajax'	   => false
 		));
 	}
 
@@ -22,21 +22,20 @@ class Polylang_Languages_Table extends WP_List_Table {
 	function column_name($item) {
 		$edit_link = esc_url(admin_url('admin.php?page=mlang&amp;pll_action=edit&amp;lang=' . $item['term_id']));
 		$delete_link = wp_nonce_url('?page=mlang&amp;pll_action=delete&amp;noheader=true&amp;lang=' . $item['term_id'], 'delete-lang');
-		$actions = array(
-			'edit'   => '<a href="' . $edit_link . '">' . __('Edit','polylang') . '</a>',
-			'delete' => '<a href="' . $delete_link .'">' . __('Delete','polylang') .'</a>'
-		);
-		return $item['name'] . $this->row_actions($actions);
+		return $item['name'] . $this->row_actions(array(
+			'edit'   => sprintf('<a href="%s">%s</a>', $edit_link,  __('Edit','polylang')),
+			'delete' => sprintf('<a href="%s">%s</a>', $delete_link,  __('Delete','polylang'))
+		));
 	}
 
   function get_columns() {
 		return array(
-			'name'		=> __('Full name', 'polylang'),
+			'name'        => __('Full name', 'polylang'),
 			'description' => __('Locale', 'polylang'),
-			'slug'		=> __('Code', 'polylang'),
+			'slug'        => __('Code', 'polylang'),
 			'term_group'  => __('Order', 'polylang'),
-			'flag'		=> __('Flag', 'polylang'),
-			'count'	   => __('Posts', 'polylang')
+			'flag'        => __('Flag', 'polylang'),
+			'count'       => __('Posts', 'polylang')
 		);
 	}
 
@@ -95,7 +94,7 @@ class Polylang_String_Table extends WP_List_Table {
 		return sprintf(
 			'<input type="checkbox" name="strings[]" value="%s" %s />',
 			esc_attr($item['row']),
-			empty($item['icl']) ? 'disabled = 1' : ''
+			empty($item['icl']) ? 'disabled' : ''
 		);
 	}
 
@@ -181,7 +180,7 @@ class Polylang_String_Table extends WP_List_Table {
 					esc_html($group)
 				);
 			}
-			echo "</select>\n";
+			echo '</select>'."\n";
 
 			submit_button( __( 'Filter' ), 'button', false, false, array( 'id' => 'post-query-submit' ) );
 		}

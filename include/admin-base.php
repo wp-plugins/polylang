@@ -198,12 +198,12 @@ class Polylang_Admin_Base extends Polylang_Base {
 		));
 
 		foreach (array_merge($all_item, $this->get_languages_list()) as $lang) {
-			$href = add_query_arg('lang', $lang->slug, $url);
+			$href = esc_url(add_query_arg('lang', $lang->slug, $url));
 			$wp_admin_bar->add_menu(array(
 				'parent' => 'languages',
 				'id'     => $lang->slug,
 				'title'  => sprintf(
-					'<input name="language" type="radio" onclick="location.href=%s" value="%s" %s /> %s',
+					'<input name="language" type="radio" onclick="location.href=%s" value="%s" %s /> %s', // FIXME this works but produces invalid html
 					"'" . $href . "'", // onclick is needed for Chrome browser, thanks to RavanH for the bug report and fix
 					esc_attr($lang->slug),
 					$selected == $lang->slug ? 'checked="checked"' : '',

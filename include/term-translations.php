@@ -3,7 +3,7 @@
 
 if (isset($term_id)) {
 	// edit term form?>
-	<th scope="row" valign="top"><?php _e('Translations', 'polylang');?></th>
+	<th scope="row"><?php _e('Translations', 'polylang');?></th>
 	<td><?php
 }
 else {

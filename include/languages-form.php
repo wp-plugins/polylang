@@ -7,7 +7,7 @@
 // display tabs
 foreach ($tabs as $key=>$name)
 	printf(
-		'<a href="options-general.php?page=mlang&tab=%s" class="nav-tab %s">%s</a>',
+		'<a href="options-general.php?page=mlang&amp;tab=%s" class="nav-tab %s">%s</a>',
 		$key,
 		$key == $active_tab ? 'nav-tab-active' : '',
 		$name
@@ -79,27 +79,27 @@ if (isset($_GET['error'])) {?>
 				</div>
 
 				<div class="form-field form-required">
-					<label for="name"><?php _e('Full name', 'polylang');?></label>
-					<input name="name" id="name" type="text" value="<?php if ($action=='edit') echo esc_attr($edit_lang->name);?>" size="40" aria-required="true" />
+					<label for="lang_name"><?php _e('Full name', 'polylang');?></label>
+					<input name="name" id="lang_name" type="text" value="<?php if ($action=='edit') echo esc_attr($edit_lang->name);?>" size="40" aria-required="true" />
 					<p><?php _e('The name is how it is displayed on your site (for example: English).', 'polylang');?></p>
 				</div>
 
 				<div class="form-field form-required">
-					<label for="description"><?php _e('Locale', 'polylang');?></label><?php
+					<label for="lang_locale"><?php _e('Locale', 'polylang');?></label><?php
 					printf(
-						'<input name="description" id="description" type="text" value="%s" size="40" aria-required="true" />',
+						'<input name="description" id="lang_locale" type="text" value="%s" size="40" aria-required="true" />',
 						$action=='edit' ? esc_attr($edit_lang->description) : ''
 					);?>
 					<p><?php _e('Wordpress Locale for the language (for example: en_US). You will need to install the .mo file for this language.', 'polylang');?></p>
 				</div>
 
 				<div class="form-field">
-					<label for="slug"><?php _e('Language code', 'polylang');?></label>
-					<input name="slug" id="slug" type="text" value="<?php if ($action=='edit') echo esc_attr($edit_lang->slug);?>" size="3" maxlength="3"/>
+					<label for="lang_slug"><?php _e('Language code', 'polylang');?></label>
+					<input name="slug" id="lang_slug" type="text" value="<?php if ($action=='edit') echo esc_attr($edit_lang->slug);?>" size="3" maxlength="3"/>
 					<p><?php _e('2-letters ISO 639-1 language code (for example: en)', 'polylang');?></p>
 				</div>
 
-				<div class="form-field">
+				<div class="form-field"><fieldset>
 					<legend><?php _e('Text direction', 'polylang');?></legend><?php
 					printf(
 						'<label><input name="rtl" type="radio" value="0" %s /> %s</label>',
@@ -112,11 +112,11 @@ if (isset($_GET['error'])) {?>
 						__('right to left', 'polylang')
 					);?>
 					<p><?php _e('Choose the text direction for the language', 'polylang');?></p>
-				</div>
+				</fieldset></div>
 
 				<div class="form-field">
-					<label for="term_group"><?php _e('Order', 'polylang');?></label>
-					<input name="term_group" id="term_group" type="text" value="<?php if ($action=='edit') echo esc_attr($edit_lang->term_group);?>" />
+					<label for="lang_order"><?php _e('Order', 'polylang');?></label>
+					<input name="term_group" id="lang_order" type="text" value="<?php if ($action=='edit') echo esc_attr($edit_lang->term_group);?>" />
 					<p><?php _e('Position of the language in the language switcher', 'polylang');?></p>
 				</div>
 
@@ -157,20 +157,20 @@ break;
 case 'settings': ?>
 
 <div class="form-wrap">
-	<form id="options-lang" method="post" action="admin.php?page=mlang&tab=settings&noheader=true" class="validate">
+	<form id="options-lang" method="post" action="admin.php?page=mlang&amp;tab=settings&amp;noheader=true" class="validate">
 	<?php wp_nonce_field('options-lang', '_wpnonce_options-lang');?>
 	<input type="hidden" name="pll_action" value="options" />
 
 	<table class="form-table">
 
-		<tr valign="top">
+		<tr>
 			<th><label for='default_lang'><?php _e('Default language', 'polylang');?></label></th>
 			<td><?php echo $this->dropdown_languages(array('name' => 'default_lang', 'selected' => $this->options['default_lang']));?></td>
 		</tr><?php
 
 		// posts or terms without language set
 		if ($this->get_objects_with_no_lang() && $this->options['default_lang']) {?>
-			<tr valign="top">
+			<tr>
 				<th></th>
 				<td>
 					<label style="color: red"><?php
@@ -183,7 +183,7 @@ case 'settings': ?>
 			</tr><?php
 		}?>
 
-		<tr valign="top">
+		<tr>
 			<th><?php _e('Detect browser language', 'polylang');?></th>
 			<td>
 				<label><?php
@@ -196,9 +196,9 @@ case 'settings': ?>
 			</td>
 		</tr>
 
-		<tr valign="top">
-			<th><?php _e('URL modifications', 'polylang') ?></th>
-			<td scope="row">
+		<tr>
+			<th scope="row"><?php _e('URL modifications', 'polylang') ?></th>
+			<td>
 				<label><?php
 					printf(
 						'<input name="force_lang" type="radio" value="0" %s /> %s',
@@ -209,7 +209,7 @@ case 'settings': ?>
 				<label><?php
 					printf(
 						'<input name="force_lang" type="radio" value="1" %s %s/> %s',
-						$this->using_permalinks ? '' : 'disabled=1',
+						$this->using_permalinks ? '' : 'disabled',
 						$this->options['force_lang'] ? 'checked="checked"' :'',
 						__('The language code, for example /en/, is added to all urls when using pretty permalinks.', 'polylang')
 					);?>
@@ -218,7 +218,7 @@ case 'settings': ?>
 				<label><?php
 					printf(
 						'<input name="rewrite" type="radio" value="1" %s %s/> %s %s',
-						$this->using_permalinks ? '' : 'disabled=1',
+						$this->using_permalinks ? '' : 'disabled',
 						$this->options['rewrite'] ? 'checked="checked"' : '',
 						__('Remove /language/ in pretty permalinks. Example:', 'polylang'),
 						'<code>'.esc_html(home_url('en/')).'</code>'
@@ -227,7 +227,7 @@ case 'settings': ?>
 				<label><?php
 					printf(
 						'<input name="rewrite" type="radio" value="0" %s %s/> %s %s',
-						$this->using_permalinks ? '' : 'disabled=1',
+						$this->using_permalinks ? '' : 'disabled',
 						$this->options['rewrite'] ? '' : 'checked="checked"',
 						 __('Keep /language/ in pretty permalinks. Example:', 'polylang'),
 						'<code>'.esc_html(home_url('language/en/')).'</code>'
@@ -245,7 +245,7 @@ case 'settings': ?>
 				<label><?php
 					printf(
 						'<input name="redirect_lang" type="checkbox" value="1" %s %s/> %s',
-						get_option('page_on_front') ? '' : 'disabled=1',
+						get_option('page_on_front') ? '' : 'disabled',
 						$this->options['redirect_lang'] ? 'checked="checked"' :'',
 						sprintf(
 							__('When using static front page, redirect the language page (example: %s) to the front page in the right language', 'polylang'),
@@ -256,9 +256,9 @@ case 'settings': ?>
 			</td>
 		</tr>
 
-		<tr valign="top">
+		<tr>
 			<th scope="row"><?php _e('Media', 'polylang') ?></th>
-			<td scope="row">
+			<td>
 				<label><?php
 					printf(
 						'<input name="media_support" type="checkbox" value="1" %s /> %s',
@@ -269,9 +269,9 @@ case 'settings': ?>
 			</td>
 		</tr>
 
-		<tr valign="top">
+		<tr>
 			<th scope="row"><?php _e('Synchronization', 'polylang') ?></th>
-			<td scope="row"><ul class="pll_inline_block"><?php
+			<td><ul class="pll_inline_block"><?php
 				foreach ($this->list_metas_to_sync() as $key => $str)
 					printf(
 						'<li><label><input name="sync[%s]" type="checkbox" value="1" %s /> %s</label></li>',
@@ -283,9 +283,9 @@ case 'settings': ?>
 		</tr><?php
 
 		if (!empty($post_types)) {?>
-			<tr valign="top">
+			<tr>
 				<th scope="row"><?php _e('Custom post types', 'polylang') ?></th>
-				<td scope="row">
+				<td>
 					<ul class="pll_inline_block"><?php
 						foreach ($post_types as $post_type) {
 							$pt = get_post_type_object($post_type);
@@ -303,9 +303,9 @@ case 'settings': ?>
 		}
 
 		if (!empty($taxonomies)) {?>
-			<tr valign="top">
+			<tr>
 				<th scope="row"><?php _e('Custom taxonomies', 'polylang') ?></th>
-				<td scope="row">
+				<td>
 					<ul class="pll_inline_block"><?php
 						foreach ($taxonomies as $taxonomy) {
 							$tax = get_taxonomy($taxonomy);

@@ -608,7 +608,7 @@ class Polylang_Core extends Polylang_base {
 		// outputs references to translated pages (if exists) in the html head section
 		foreach ($this->get_languages_list() as $language) {
 			if ($language->slug != $this->curlang->slug && $url = $this->get_translation_url($language))
-				printf("<link hreflang='%s' href='%s' rel='alternate' />\n", esc_attr($language->slug), esc_url($url));
+				printf('<link hreflang="%s" href="%s" rel="alternate" />'."\n", esc_attr($language->slug), esc_url($url));
 		}
 	}
 
@@ -962,6 +962,7 @@ class Polylang_Core extends Polylang_base {
 			'hide_if_no_translation' => 0, // don't hide the link if there is no translation
 			'hide_current'           => 0, // don't hide current language
 			'post_id'                => null, // if not null, link to translations of post defined by post_id
+			'raw'                    => 0, // set this to true to build your own custom language switcher
 		);
 		extract(wp_parse_args($args, $defaults));
 
@@ -972,58 +973,69 @@ class Polylang_Core extends Polylang_base {
 			$output = '';
 
 			foreach ($this->get_languages_list(array('hide_empty' => $hide_if_empty)) as $language) {
-				$classes = array();
+				$id = (int) $language->term_id;
+				$slug = $language->slug;
 
 				// hide current language
-				if ($this->curlang->term_id == $language->term_id && $hide_current)
+				if ($this->curlang->term_id == $id && $hide_current)
 					continue;
 
 				$url = $post_id !== null && ($tr_id = $this->get_post($post_id, $language)) ? get_permalink($tr_id) :
 					$post_id === null && !$force_home ? $this->get_translation_url($language) : null;
 
-				if (!isset($url))
-					$classes[] = 'no-translation ';
-
-				$url = apply_filters('pll_the_language_link', $url, $language->slug, $language->description);
+				$no_translation = empty($url); // keep this for future
+				$url = apply_filters('pll_the_language_link', $url, $slug, $language->description);
 
 				// hide if no translation exists
-				if (!isset($url) && $hide_if_no_translation)
+				if (empty($url) && $hide_if_no_translation)
 					continue;
 
-				$url = isset($url) ? $url : $this->get_home_url($language); // if the page is not translated, link to the home page
+				$url = empty($url) ? $this->get_home_url($language) : $url ; // if the page is not translated, link to the home page
 
-				array_push($classes, 'lang-item', 'lang-item-' . esc_attr($language->term_id), 'lang-item-' . esc_attr($language->slug));
-				if ($language->term_id == $this->curlang->term_id)
-					$classes[] = 'current-lang';
+				$name = $show_names || !$show_flags || $raw ? esc_html($display_names_as == 'slug' ? $slug : $language->name) : '';
+				$flag = $show_flags || $raw ? $this->get_flag($language, $raw) : '';
+				$current_lang = $id == $this->curlang->term_id;
 
-				$flag = $show_flags ? $this->get_flag($language) : '';
-				$name = $show_names || !$show_flags ? esc_html($display_names_as == 'slug' ? $language->slug : $language->name) : '';
+				if (!empty($raw))
+					$output[] = compact('id', 'slug', 'name', 'url', 'flag', 'current_lang', 'no_translation');
 
-				if (isset($item)) {
-					$i = clone $item;
-					$i->title = $show_flags && $show_names ? $flag.'&nbsp;'.$name : $flag.$name;
-					$i->url = $url;
-					$i->lang = $language->slug; // save this for use in nav_menu_link_attributes
-					$i->classes = $classes;
-					$output[] = $i;
-				}
 				else {
-					if ($menu)
-						$classes[] = 'menu-item'; // backward compatibility
+					// classes
+					$classes = array('lang-item', 'lang-item-' . esc_attr($id), 'lang-item-' . esc_attr($slug));
+					if ($no_translation)
+						$classes[] = 'no-translation';
+					if ($current_lang)
+						$classes[] = 'current-lang';
 
-					$output .= sprintf("<li class='%s'><a hreflang='%s' href='%s'>%s</a></li>\n",
-						implode(' ', $classes),
-						esc_attr($language->slug),
-						esc_url($url),
-						$show_flags && $show_names ? $flag.'&nbsp;'.$name : $flag.$name
-					);
+					// menu item
+					if (!empty($item)) {
+						$i = clone $item;
+						$i->title = $show_flags && $show_names ? $flag.'&nbsp;'.$name : $flag.$name;
+						$i->url = $url;
+						$i->lang = $slug; // save this for use in nav_menu_link_attributes
+						$i->classes = $classes;
+						$output[] = $i;
+					}
+
+					// widget or standard output
+					else {
+						if ($menu)
+							$classes[] = 'menu-item'; // backward compatibility
+
+						$output .= sprintf('<li class="%s"><a hreflang="%s" href="%s">%s</a></li>'."\n",
+							implode(' ', $classes),
+							esc_attr($slug),
+							esc_url($url),
+							$show_flags && $show_names ? $flag.'&nbsp;'.$name : $flag.$name
+						);
+					}
 				}
 			}
 		}
 
 		$output = apply_filters('pll_the_languages', $output, $args);
 
-		if (!$echo || isset($item))
+		if (!$echo || !empty($raw) || !empty($item))
 			return $output;
 		echo $output;
 	}
