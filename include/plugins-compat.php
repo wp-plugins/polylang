@@ -9,9 +9,7 @@ class Polylang_Plugins_Compat {
 		add_action('init', create_function('',"\$GLOBALS['wp_taxonomies']['language']->yarpp_support = 1;"), 20);
 
 		// WordPress SEO by Yoast
-		if ($polylang->is_admin)
-			add_filter('override_load_textdomain', array(&$this, 'wpseo_override_load_textdomain'), 10, 2);
-
+		add_filter('override_load_textdomain', array(&$this, 'wpseo_override_load_textdomain'), 10, 2);
 		add_filter('get_terms_args', array(&$this, 'wpseo_remove_terms_filter'));
 		add_filter('pll_home_url_white_list', create_function('$arr', "return array_merge(\$arr, array(array('file' => 'wordpress-seo')));"));
 
