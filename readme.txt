@@ -95,7 +95,7 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 = 1.1.2 =
 
 * Posts and terms now inherit parent's language if created outside the standard WordPress ui
-* Improve the compatibility with the plugins Types and The Events Calendar
+* Improve the compatibility with the plugins Types and The Events Calendar, and again with WordPress SEO
 * Improve performance
 * Improve html validation
 * Add 'raw' argument to 'pll_the_languages'

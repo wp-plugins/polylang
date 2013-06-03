@@ -13,6 +13,7 @@ class Polylang_Plugins_Compat {
 			add_filter('override_load_textdomain', array(&$this, 'wpseo_override_load_textdomain'), 10, 2);
 
 		add_filter('get_terms_args', array(&$this, 'wpseo_remove_terms_filter'));
+		add_filter('pll_home_url_white_list', create_function('$arr', "return array_merge(\$arr, array(array('file' => 'wordpress-seo')));"));
 
 		// Custom field template
 		add_action('dbx_post_advanced', array(&$this, 'cft_copy'));

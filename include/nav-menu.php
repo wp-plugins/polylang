@@ -193,13 +193,20 @@ class Polylang_Nav_Menu {
 
 		foreach ($items as $key => $item) {
 			if ($options = get_post_meta($item->ID, '_pll_menu_item', true)) {
+				extract($options);
 				$i = 0;
 
-				foreach ($lang_items = $polylang->the_languages(array_merge(array('item' => $item), $options)) as $lang_item)
+				foreach ($polylang->the_languages(array_merge(array('raw' => 1), $options)) as $language) {
+					extract($language);
+					$lang_item = clone $item;
+					$lang_item->title = $show_flags && $show_names ? $flag.'&nbsp;'.$name : ($show_flags ? $flag : $name);
+					$lang_item->url = $url;
+					$lang_item->lang = $slug; // save this for use in nav_menu_link_attributes
+					$lang_item->classes = $classes;
 					$lang_item->menu_order += $offset + $i++;
-
+					$new_items[] = $lang_item;
+				}
 				$offset += $i - 1;
-				$new_items = array_merge($new_items, $lang_items);
 			}
 			else {
 				$item->menu_order += $offset;
