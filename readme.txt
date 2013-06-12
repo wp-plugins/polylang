@@ -99,6 +99,7 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 * Improve performance
 * Improve html validation
 * Add 'raw' argument to 'pll_the_languages'
+* Add the filter 'pll_translation_url'
 * Bug correction: no language is set for a (translated custom taxonomy) term when added from a (non tranlated) custom post type edit page
 * Bug correction: warning if 'get_terms' is called with a non-array 'include' argument (introduced in 1.1.1)
 

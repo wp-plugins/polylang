@@ -399,14 +399,13 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		return isset($_GET['from_post'], $_GET['new_lang']) && ($id = wp_get_post_parent_id($_GET['from_post'])) && ($parent = $this->get_translation('post', $id, $_GET['new_lang'])) ? $parent : $post_parent;
 	}
 
-	// copy page template, menu order, comment and ping status when using "Add new" (translation)
+	// copy post metas, menu order, comment and ping status when using "Add new" (translation)
 	// the hook was probably not intended for that but did not find a better one
-	// copy the meta '_wp_page_template' in save_post is not sufficient (the dropdown list in the metabox is not updated)
-	// We need to set $post->page_template (and so need to wait for the availability of $post)
 	function dbx_post_advanced() {
 		if (isset($_GET['from_post'], $_GET['new_lang'])) {
 			global $post;
-			$post->page_template = get_post_meta($_GET['from_post'], '_wp_page_template', true);
+
+			$this->copy_post_metas($_GET['from_post'], $post->ID, $_GET['new_lang']);
 
 			$from_post = get_post($_GET['from_post']);
 			foreach (array('menu_order', 'comment_status', 'ping_status') as $property)
@@ -520,11 +519,6 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 		else
 			$this->set_post_language($post_id, $this->get_preferred_language());
-
-		// the hook is called when the post is created
-		// let's use it translate terms and copy metas when using "Add new" (translation)
-		if (isset($_GET['from_post'], $_GET['new_lang']))
-			$this->copy_post_metas($_GET['from_post'], $post_id, $_GET['new_lang']);
 
 		if (!isset($_POST['post_lang_choice']))
 			return;

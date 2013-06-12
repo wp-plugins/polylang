@@ -839,7 +839,7 @@ class Polylang_Core extends Polylang_base {
 		elseif (is_home() || is_tax('language') )
 			$url = $this->get_home_url($language);
 
-		return $this->translation_url[$language->slug] = (isset($url) && !is_wp_error($url) ? $url : null);
+		return $this->translation_url[$language->slug] = apply_filters('pll_translation_url', (isset($url) && !is_wp_error($url) ? $url : null), $language->slug);
 	}
 
 	// filters the widgets according to the current language
