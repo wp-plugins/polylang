@@ -973,7 +973,7 @@ class Polylang_Core extends Polylang_base {
 			$output = $this->dropdown_languages(array('hide_empty' => $hide_if_empty, 'selected' => $this->curlang->slug));
 
 		else {
-			$output = '';
+			$output = !empty($raw) ? array() : '';
 
 			foreach ($this->get_languages_list(array('hide_empty' => $hide_if_empty)) as $language) {
 				$id = (int) $language->term_id;

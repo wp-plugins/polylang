@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, i18n, international, l10n, localization
 Requires at least: 3.1
 Tested up to: 3.6
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: GPLv2 or later
 
 Polylang adds multilingual content management support to WordPress.
@@ -92,7 +92,7 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 
 == Changelog ==
 
-= 1.1.2 =
+= 1.1.2 (2013-06-18) =
 
 * Posts and terms now inherit parent's language if created outside the standard WordPress ui
 * Improve the compatibility with the plugins Types and The Events Calendar, and again with WordPress SEO
@@ -102,6 +102,7 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 * Add the filter 'pll_translation_url'
 * Bug correction: no language is set for a (translated custom taxonomy) term when added from a (non tranlated) custom post type edit page
 * Bug correction: warning if 'get_terms' is called with a non-array 'include' argument (introduced in 1.1.1)
+* Bug correction: warning if the menu language switcher has nothing to display
 
 = 1.1.1 (2013-05-20) =
 
