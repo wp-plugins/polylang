@@ -76,6 +76,7 @@ $languages = array(
 	array('uk', 'uk', 'Українська'),
 	array('ur', 'ur', 'اردو', 'rtl'),
 	array('uz', 'uz_UZ', 'Oʻzbek'),
+	array('vec', 'vec', 'Vèneto'),
 	array('vi', 'vi', 'Tiếng Việt'),
 	array('zh', 'zh_CN', '中文'),
 	array('zh', 'zh_HK', '香港'),

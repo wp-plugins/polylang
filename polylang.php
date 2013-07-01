@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://polylang.wordpress.com/
-Version: 1.1.2
+Version: 1.1.2.1
 Author: Frédéric Demarle
 Description: Adds multilingual capability to WordPress
 Text Domain: polylang
@@ -29,7 +29,7 @@ Domain Path: /languages
  *
  */
 
-define('POLYLANG_VERSION', '1.1.2');
+define('POLYLANG_VERSION', '1.1.2.1');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
@@ -404,6 +404,10 @@ class Polylang extends Polylang_Base {
 		if (isset($languages))
 			$slug = $wp_rewrite->root . ($this->options['rewrite'] ? '' : 'language/') . '('.implode('|', $languages).')/';
 
+		// for custom post type archives
+		$cpts = array_intersect($this->post_types, get_post_types(array('_builtin' => false)));
+		$cpts = $cpts ? '#post_type=('.implode('|', $cpts).')#' : '';
+
 		foreach ($rules as $key => $rule) {
 			// we don't need the lang parameter for post types and taxonomies
 			// moreover adding it would create issues for pages and taxonomies
@@ -423,7 +427,7 @@ class Polylang extends Polylang_Base {
 			}
 
 			// rewrite rules filtered by language
-			elseif ($always_rewrite || (strpos($rule, 'post_type=') && !strpos($rule, 'name=')) || ($filter != 'rewrite_rules_array' && $this->options['force_lang'])) {
+			elseif ($always_rewrite || ($cpts && preg_match($cpts, $rule) && !strpos($rule, 'name=')) || ($filter != 'rewrite_rules_array' && $this->options['force_lang'])) {
 				if (isset($slug))
 					$newrules[$slug.str_replace($wp_rewrite->root, '', $key)] = str_replace(
 						array('[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '[1]', '?'),
