@@ -984,7 +984,7 @@ class Polylang_Core extends Polylang_base {
 					continue;
 
 				$url = $post_id !== null && ($tr_id = $this->get_post($post_id, $language)) ? get_permalink($tr_id) :
-					$post_id === null && !$force_home ? $this->get_translation_url($language) : null;
+					($post_id === null && !$force_home ? $this->get_translation_url($language) : null);
 
 				$no_translation = empty($url); // keep this for future
 				$url = apply_filters('pll_the_language_link', $url, $slug, $language->description);

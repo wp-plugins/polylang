@@ -96,6 +96,7 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 
 * Add Venetian language contributed by Michele Brunelli
 * Bug correction: wrong rewrite rules for non translated custom post type archives
+* Bug correction: 'post_id' parameter of pll_the_languages does not work
 
 = 1.1.2 (2013-06-18) =
 
