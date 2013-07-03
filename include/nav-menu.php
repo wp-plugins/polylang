@@ -230,11 +230,11 @@ class Polylang_Nav_Menu {
 		$r_ids = $k_ids = array();
 
 		foreach ($items as $item) {
-			if (in_array('current-lang', $item->classes)) {
+			if (is_array($item->classes) && in_array('current-lang', $item->classes)) {
 				$item->classes = array_diff($item->classes, array('current-menu-item'));
 				$r_ids = array_merge($r_ids, $this->get_ancestors($item)); // remove the classes for these ancestors
 			}
-			elseif (in_array('current-menu-item', $item->classes))
+			elseif (is_array($item->classes) && in_array('current-menu-item', $item->classes))
 				$k_ids = array_merge($k_ids, $this->get_ancestors($item)); // keep the classes for these ancestors
 		}
 
