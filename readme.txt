@@ -92,12 +92,14 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 
 == Changelog ==
 
-= 1.1.3 =
+= 1.1.3 (2013-07-21) =
 
 * Add Venetian language contributed by Michele Brunelli
 * Bug correction: wrong rewrite rules for non translated custom post type archives
 * Bug correction: 'post_id' parameter of pll_the_languages does not work
-* Bug correction: warning in wp_nav_menu_objects with artisteer generated themes
+* Bug correction: warning in wp_nav_menu_objects with Artisteer generated themes
+* Bug correction: warning when used together with theme my login plugin
+* Bug correction: language slug is modified and translations are lost when creating a nav menu with the same name as a language
 
 = 1.1.2 (2013-06-18) =
 

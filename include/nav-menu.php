@@ -7,6 +7,9 @@ class Polylang_Nav_Menu {
 
 			// remove the customize menu section as it is unusable with Polylang
 			add_action('customize_register', array(&$this, 'customize_register'), 20); // since WP 3.4
+
+			// protection against #24802
+			add_filter('pre_insert_term', array(&$this, 'pre_insert_term'), 10, 2);
 		}
 		else {
 			// split the language switcher menu item in several language menu items
@@ -183,6 +186,18 @@ class Polylang_Nav_Menu {
 		$GLOBALS['wp_customize']->remove_section('nav'); // since WP 3.4
 	}
 
+	// FIXME prevents sharing a menu term with a language term by renaming the nav menu before its creation
+	// to avoid http://core.trac.wordpress.org/ticket/24802
+	// and http://wordpress.org/support/topic/all-connection-between-elements-lost
+	function pre_insert_term($name, $taxonomy) {
+		if ($taxonomy = 'nav_menu') {
+			global $polylang;
+			foreach ($polylang->get_languages_list() as $language)
+				if ($name == $language->name)
+					$name = $name . '-menu';
+		}
+		return $name;
+	}
 
 	// split the one item of backend in several items on frontend
 	// take care to menu_order as it is used later in wp_nav_menu

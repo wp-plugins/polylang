@@ -204,8 +204,10 @@ class Polylang_Core extends Polylang_base {
 		if (is_404() || current_filter() == 'login_init' || (is_attachment() && !$this->options['media_support']))
 			return $this->get_preferred_language();
 
-		if ($var = get_query_var('lang'))
-			$lang = $this->get_language(reset(explode(',',$var))); // choose the first queried language
+		if ($var = get_query_var('lang')) {
+			$lang = explode(',',$var);
+			$lang = $this->get_language(reset($lang)); // choose the first queried language
+		}
 
 		// Ajax thanks to g100g
 		elseif ($this->is_ajax_on_front)
@@ -344,6 +346,10 @@ class Polylang_Core extends Polylang_base {
 	// as done by xili_language: load text domains and reinitialize wp_locale with the action 'wp'
 	// as done by qtranslate: define the locale with the action 'plugins_loaded', but in this case, the language must be specified in the url.
 	function load_textdomains() {
+		// prevents calling the function 2 times (occurs with theme my login plugin)
+		if (empty($this->list_textdomains))
+			return;
+
 		// our override_load_textdomain filter has done its job. let's remove it before calling load_textdomain
 		remove_filter('override_load_textdomain', array(&$this, 'mofile'));
 		remove_filter('gettext', array(&$this, 'gettext'), 10, 3);
