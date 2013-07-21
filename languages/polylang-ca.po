@@ -1,0 +1,589 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: polylang\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-08-19 20:12+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Núria Martínez Berenguer <nuria.trad@gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2: nplural=n>1;\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: _e;__;_x\n"
+"X-Poedit-Basepath: .\n"
+"X-Generator: Poedit 1.5.4\n"
+"X-Poedit-SearchPath-0: ..\n"
+"X-Poedit-SearchPath-1: ../include\n"
+
+#: include/about.php:3
+#, php-format
+msgid ""
+"Polylang is provided with an extensive %sdocumentation%s (in English only). "
+"It includes information on how to set up your multilingual site and use it "
+"on a daily basis, a FAQ, as well as a documentation for programmers to adapt "
+"their plugins and themes."
+msgstr ""
+"Polylang es distribueix amb una %sdocumentació%s extensa (només en anglès). "
+"Inclou informació de com crear un lloc web multilingüe i com fer-ne un ús "
+"diari, una pàgina de preguntes freqüents, així com informació per tal que "
+"els programadors puguin adaptar-ne els plugins i temes."
+
+#: include/about.php:9
+#, php-format
+msgid ""
+"You will also find useful information in the %ssupport forum%s. However "
+"don't forget to make a search before posting a new topic."
+msgstr ""
+"També trobaràs informació d'interès als %sfòrums de suport%s. Però abans de "
+"crear un nou tema, no oblidis fer-ne una cerca."
+
+#: include/about.php:16
+#, php-format
+msgid ""
+"Polylang is free of charge and is released under the same license as "
+"WordPress, the %sGPL%s."
+msgstr ""
+"Polylang és gratuit i es distribueix sota la mateixa llicència que "
+"WordPress, %sGPL%s."
+
+#: include/about.php:22
+#, php-format
+msgid "If you wonder how you can help the project, just %sread this%s."
+msgstr "Si vols saber com ajudar al projecte, llegeix %saixò%s."
+
+#: include/about.php:27
+msgid ""
+"Finally if you like this plugin or if it helps your business, donations to "
+"the author are greatly appreciated."
+msgstr ""
+"Finalment, si t'agrada aquest plugin i el trobes útil per al teu negoci, "
+"pots fer-ne un donatiu. L'autor t'ho agrairà enormement."
+
+#: include/admin-base.php:55 include/admin-base.php:190
+#: include/admin-filters.php:243 include/admin.php:23 include/admin.php:301
+#: include/list-table.php:13 polylang.php:339
+msgid "Languages"
+msgstr "Idiomes"
+
+#: include/admin-base.php:153
+msgid "Displays language names"
+msgstr "Mostra els noms dels idiomes"
+
+#: include/admin-base.php:154
+msgid "Displays flags"
+msgstr "Mostra les banderes"
+
+#: include/admin-base.php:155
+msgid "Forces link to front page"
+msgstr "Força un enllaç cap a la pàgina principal"
+
+#: include/admin-base.php:156
+msgid "Hides the current language"
+msgstr "Oculta l'idioma actual"
+
+#: include/admin-base.php:160
+msgid "Displays as dropdown"
+msgstr "Mostra com a menú desplegable"
+
+#: include/admin-base.php:191
+msgid "Filters content by language"
+msgstr "Filtra el contingut per idioma"
+
+#: include/admin-base.php:186
+msgid "Show all languages"
+msgstr "Mostra tots els idiomes"
+
+#: include/admin-filters.php:181 include/admin-filters.php:877
+msgid "Add new translation"
+msgstr "Afegeix traducció nova"
+
+#: include/admin-filters.php:209 include/admin-filters.php:267
+#: include/admin-filters.php:601 include/admin-filters.php:817
+#: include/admin-filters.php:835 include/list-table.php:12
+#: include/media-translations.php:5 include/media-translations.php:43
+#: include/post-translations.php:8 include/term-translations.php:15
+#: polylang.php:340
+msgid "Language"
+msgstr "Idioma"
+
+#: include/admin-filters.php:616 include/admin-filters.php:651
+#: include/list-table.php:127 include/media-translations.php:40
+#: include/term-translations.php:6 include/term-translations.php:11
+msgid "Translations"
+msgstr "Traduccions"
+
+#: include/admin-filters.php:819 include/admin-filters.php:838
+msgid "Sets the language"
+msgstr "Estableix l'idioma"
+
+#: include/admin-filters.php:1053
+msgid "The widget is displayed for:"
+msgstr "El widget es mostra per a:"
+
+#: include/admin-filters.php:1057 polylang.php:341
+msgid "All languages"
+msgstr "Tots els idiomes"
+
+#: include/admin-filters.php:1080
+msgid "Admin language"
+msgstr "Idioma de l'administrador"
+
+#: include/admin-filters.php:1085
+msgid "Wordpress default"
+msgstr "Opció per defecte de Wordpress"
+
+#: include/admin-filters.php:1114 include/admin.php:306
+msgid "Settings"
+msgstr "Paràmetres"
+
+#: include/admin-filters.php:1120
+msgid "Upgrading language files&#8230;"
+msgstr "S'estan actualitzant els arxius d'idioma&#8230;"
+
+#: include/admin.php:22
+msgid "About Polylang"
+msgstr "Sobre Polylang"
+
+#: include/admin.php:27 include/list-table.php:82
+msgid "Strings translations"
+msgstr "Traduccions de cadenes"
+
+#: include/admin.php:305 include/list-table.php:81
+msgid "Strings translation"
+msgstr "Traducció de cadenes"
+
+#: include/admin.php:345
+msgid "Enter a valid WorPress locale"
+msgstr "Introdueix un codi d'idioma i regió vàlid de WordPress"
+
+#: include/admin.php:346
+msgid "The language code must be 2 characters long"
+msgstr "El codi d'idioma ha de ser de 2 caràcters"
+
+#: include/admin.php:328
+msgid "The language code must be unique"
+msgstr "El codi d'idioma ha de ser únic"
+
+#: include/admin.php:329
+msgid "The language must have a name"
+msgstr "L'idioma ha de tenir un nom"
+
+#: include/admin.php:330
+msgid ""
+"The language was created, but the WordPress language file was not "
+"downloaded. Please install it manually."
+msgstr ""
+"S'ha creat l'idioma, però l'arxiu d'aquest idioma de WordPress no s'ha "
+"descarregat. Si us plau, instal·la'l manualment."
+
+#: include/admin.php:449
+msgid "Widget title"
+msgstr "Títol del widget"
+
+# @ polylang
+#: include/base.php:368
+msgid "Taxonomies"
+msgstr "Taxonomies"
+
+# @ polylang
+#: include/base.php:369
+msgid "Custom fields"
+msgstr "Camps personalitzats"
+
+# @ polylang
+#: include/base.php:370
+msgid "Comment status"
+msgstr "Estat del comentari"
+
+# @ polylang
+#: include/base.php:371
+msgid "Ping status"
+msgstr "Estat dels pings"
+
+# @ polylang
+#: include/base.php:372
+msgid "Sticky posts"
+msgstr "Entrades adherides (sticky)"
+
+# @ polylang
+#: include/base.php:373
+msgid "Published date"
+msgstr "Data de publicació"
+
+# @ polylang
+#: include/base.php:374
+msgid "Post format"
+msgstr "Format de l'entrada"
+
+#: include/base.php:375
+msgid "Page parent"
+msgstr "Pàgina mare"
+
+# @ polylang
+#: include/base.php:376
+msgid "Page template"
+msgstr "Plantilla de la pàgina"
+
+#: include/base.php:377
+msgid "Page order"
+msgstr "Ordre de la pàgina"
+
+# @ polylang
+#: include/base.php:378
+msgid "Featured image"
+msgstr "Imatge destacada"
+
+#: include/languages-form.php:42
+msgid "Edit language"
+msgstr "Edita idioma"
+
+#: include/languages-form.php:42 include/languages-form.php:123
+msgid "Add new language"
+msgstr "Afegeix idioma"
+
+#: include/languages-form.php:64
+msgid "Choose a language"
+msgstr "Tria idioma"
+
+#: include/languages-form.php:78
+msgid "You can choose a language in the list or directly edit it below."
+msgstr "Pots triar un idioma de la llista o editar-lo directament a sota"
+
+#: include/languages-form.php:82 include/list-table.php:34
+msgid "Full name"
+msgstr "Nom complet"
+
+#: include/languages-form.php:84
+msgid "The name is how it is displayed on your site (for example: English)."
+msgstr "El nom és el que apareix al teu lloc web (per exemple: català)"
+
+#: include/languages-form.php:88 include/list-table.php:35
+msgid "Locale"
+msgstr "Codi d'idioma i regió (locale)"
+
+#: include/languages-form.php:93
+msgid ""
+"Wordpress Locale for the language (for example: en_US). You will need to "
+"install the .mo file for this language."
+msgstr ""
+"Codi d'idioma i regió de Wordpress (per exemple: ca_ES). Hauràs d'instal·lar "
+"l'arxiu .mo per a aquest idioma"
+
+#: include/languages-form.php:97
+msgid "Language code"
+msgstr "Codi d'idioma"
+
+#: include/languages-form.php:99
+msgid "2-letters ISO 639-1 language code (for example: en)"
+msgstr "Codi d'idioma ISO 639-1 de 2 lletres (per exemple: ca)"
+
+#: include/languages-form.php:103
+msgid "Text direction"
+msgstr "Direcció del text"
+
+#: include/languages-form.php:107
+msgid "left to right"
+msgstr "d'esquerra a dreta"
+
+#: include/languages-form.php:112
+msgid "right to left"
+msgstr "de dreta a esquerra"
+
+#: include/languages-form.php:114
+msgid "Choose the text direction for the language"
+msgstr "Tria la direcció del text de l'idioma "
+
+#: include/languages-form.php:118 include/list-table.php:37
+msgid "Order"
+msgstr "Ordre"
+
+#: include/languages-form.php:120
+msgid "Position of the language in the language switcher"
+msgstr "Posició al selector d'idioma"
+
+#: include/nav-menu.php:28 include/nav-menu.php:51 include/nav-menu.php:54
+#: include/nav-menu.php:82 include/nav-menu.php:106 polylang.php:302
+msgid "Language switcher"
+msgstr "Selector d'idioma"
+
+#: include/languages-form.php:148
+msgid "Search translations"
+msgstr "Cerca traduccions"
+
+#: include/languages-form.php:151
+msgid "Clean strings translation database"
+msgstr "Neteja la base de dades de traduccions de cadenes"
+
+#: include/languages-form.php:167
+msgid "Default language"
+msgstr "Idioma predeterminat"
+
+#: include/languages-form.php:179
+msgid ""
+"There are posts, pages, categories or tags without language set. Do you want "
+"to set them all to default language ?"
+msgstr ""
+"Hi ha entrades, pàgines, categories o etiquetes sense idioma establert. Per "
+"establir-hi l'idioma predeterminat, marca aquesta casella."
+
+#: include/languages-form.php:187
+msgid "Detect browser language"
+msgstr "Detecta l'idioma del navegador"
+
+#: include/languages-form.php:193
+msgid ""
+"When the front page is visited, set the language according to the browser "
+"preference"
+msgstr ""
+"Estableix l'idioma d'acord amb les preferències del navegador quan es visita "
+"la pàgina principal"
+
+#: include/languages-form.php:200
+msgid "URL modifications"
+msgstr "Modificacions d'URL"
+
+#: include/languages-form.php:206
+msgid ""
+"The language is set from content. Posts, pages, categories and tags urls are "
+"not modified."
+msgstr ""
+"L'idioma s'estableix per al contingut. Les URL de les entrades, pàgines, "
+"categories i etiquetes no seran modificades"
+
+#: include/languages-form.php:214
+msgid ""
+"The language code, for example /en/, is added to all urls when using pretty "
+"permalinks."
+msgstr ""
+"El codi d'idioma, per exemple /ca/, s'afegeix a totes les URLs en fer "
+"enllaços permanents"
+
+#: include/languages-form.php:223
+msgid "Remove /language/ in pretty permalinks. Example:"
+msgstr "Treu /idioma/ als enllaços permanents amigables. Exemple:"
+
+#: include/languages-form.php:232
+msgid "Keep /language/ in pretty permalinks. Example:"
+msgstr "Mantén /idioma/ als enllaços permanents amigables: Exemple:"
+
+#: include/languages-form.php:241
+msgid "Hide URL language information for default language"
+msgstr "Oculta la informació d'idioma de l'URL a l'idioma predeterminat"
+
+#: include/languages-form.php:251
+#, php-format
+msgid ""
+"When using static front page, redirect the language page (example: %s) to "
+"the front page in the right language"
+msgstr ""
+"En fer servir una pàgina principal estàtica, redirigeix la pàgina d'idioma "
+"(per exemple: %s) a la pàgina d'inici en l'idioma correcte"
+
+# @ polylang
+#: include/languages-form.php:260
+msgid "Media"
+msgstr "Mitjans"
+
+# @ polylang
+#: include/languages-form.php:266
+msgid "Activate languages and translations for media"
+msgstr "Activa idiomes i traduccions per als mitjans"
+
+#: include/languages-form.php:273
+msgid "Synchronization"
+msgstr "Sincronització"
+
+# @ polylang
+#: include/languages-form.php:287
+msgid "Custom post types"
+msgstr "Tipus d'entrada personalitzats"
+
+# @ polylang
+#: include/languages-form.php:300
+msgid "Activate languages and translations for custom post types."
+msgstr "Activa idiomes i traduccions per a tipus d'entrada personalitzats."
+
+# @ polylang
+#: include/languages-form.php:307
+msgid "Custom taxonomies"
+msgstr "Taxonomies personalitzades"
+
+# @ polylang
+#: include/languages-form.php:320
+msgid "Activate languages and translations for custom taxonomies."
+msgstr "Activa idiomes i traduccions per a taxonomies personalitzades."
+
+#: include/list-table.php:26 include/media-translations.php:22
+#: include/media-translations.php:60 include/post-translations.php:10
+#: include/post-translations.php:33 include/term-translations.php:18
+#: include/term-translations.php:80
+msgid "Edit"
+msgstr "Edita"
+
+#: include/list-table.php:27 include/list-table.php:162
+msgid "Delete"
+msgstr "Elimina"
+
+#: include/list-table.php:36
+msgid "Code"
+msgstr "Codi"
+
+#: include/list-table.php:38
+msgid "Flag"
+msgstr "Bandera"
+
+#: include/list-table.php:39
+msgid "Posts"
+msgstr "Entrades"
+
+#: include/list-table.php:125
+msgid "Name"
+msgstr "Nom"
+
+#: include/list-table.php:126
+msgid "String"
+msgstr "Cadena"
+
+#: include/media-translations.php:6 include/media-translations.php:44
+#: include/term-translations.php:16
+msgid "Translation"
+msgstr "Traducció"
+
+#: include/media-translations.php:31 include/media-translations.php:68
+#: include/post-translations.php:38 include/term-translations.php:60
+msgid "Add new"
+msgstr "Afegeix"
+
+#: include/post-translations.php:5
+msgid "ID of pages in other languages:"
+msgstr "ID de pàgines en altres idiomes:"
+
+#: include/post-translations.php:5
+msgid "ID of posts in other languages:"
+msgstr "ID d'entrades en altres idiomes:"
+
+#: include/post-translations.php:9
+msgid "Page ID"
+msgstr "ID de pàgina"
+
+#: include/post-translations.php:9
+msgid "Post ID"
+msgstr "ID d'entrada"
+
+#: include/term-translations.php:48
+msgid "No untranslated term"
+msgstr "No hi ha termes sense traduir"
+
+#: include/widget.php:6
+msgid "Language Switcher"
+msgstr "Selector d'idioma"
+
+#: include/widget.php:6
+msgid "Displays a language switcher"
+msgstr "Mostra un selector d'idioma"
+
+#: include/widget.php:69
+msgid "Title:"
+msgstr "Títol:"
+
+# @ polylang
+#. translators: plugin header field 'Description'
+#: polylang.php:0
+msgid "Adds multilingual capability to WordPress"
+msgstr "Afegeix capacitat multilingüística a Wordpress"
+
+#: polylang.php:133
+#, php-format
+msgid "You are using WordPress %s. Polylang requires at least WordPress %s."
+msgstr ""
+"Estàs fent servir WordPress %s. Polylang requereix, com a mínim, WordPress "
+"%s."
+
+#: polylang.php:174
+msgid "For some reasons, Polylang could not create a table in your database."
+msgstr ""
+"Per alguna raó, Polylang no ha pogut crear una taula a la teva base de dades."
+
+# @ polylang
+#: polylang.php:235
+msgid ""
+"Polylang has been deactivated because you upgraded from a too old version."
+msgstr ""
+"S'ha desactivat Polylang perquè l'has actualitzat des d'una versió massa "
+"antiga."
+
+# @ polylang
+#: polylang.php:237
+#, php-format
+msgid "Please upgrade first to %s before ugrading to %s."
+msgstr "Actualitza'l primer a %s abans d'actualizar-lo a %s."
+
+# @ polylang
+#: include/list-table.php:124
+msgid "Group"
+msgstr "Grup"
+
+# @ polylang
+#: include/list-table.php:173
+msgid "View all groups"
+msgstr "Mostra tots els grups"
+
+#~ msgid "Displays a language switcher at the end of the menu"
+#~ msgstr "Mostra un selector d'idioma al final del menú"
+
+#~ msgid "Theme locations and languages"
+#~ msgstr "Idiomes i localitzacions del tema"
+
+#~ msgid ""
+#~ "Please go to the %slanguages page%s to set theme locations and languages"
+#~ msgstr ""
+#~ "Ves a %spàgina d'idiomes%s per establir els idiomes i localitzacions del "
+#~ "tema"
+
+#~ msgid "Menus"
+#~ msgstr "Menús"
+
+#~ msgid "Error: Restore of local flags failed!"
+#~ msgstr "Error: ha fallat el restabliment de les banderes d'idioma!"
+
+#~ msgid "Please move your local flags from %s to %s"
+#~ msgstr "Mou les banderes d'idioma de %s a %s"
+
+#~ msgid "%1$s %2$s"
+#~ msgstr "%1$s %2$s"
+
+#~ msgid "View posts for %1$s %2$s"
+#~ msgstr "Mostra entrades per a %1$s %2$s"
+
+#~ msgid "Site Title"
+#~ msgstr "Títol del lloc web"
+
+#~ msgid "Tagline"
+#~ msgstr "Descripció"
+
+#~ msgid "&mdash; No Change &mdash;"
+#~ msgstr "&mdash; Sense canvis &mdash;"
+
+#~ msgid "Page's language:"
+#~ msgstr "Idioma de la pàgina:"
+
+#~ msgid "Post's language:"
+#~ msgstr "Idioma de l'entrada:"
+
+#~ msgid "None"
+#~ msgstr "Cap"
+
+#~ msgid "Update"
+#~ msgstr "Actualitza"
+
+#~ msgid ""
+#~ "Allow to synchronize categories, tags, featured image and other metas "
+#~ "between translations of a post or page"
+#~ msgstr ""
+#~ "Permet sincronitzar categories, etiquetes, imatges destacades i altres "
+#~ "metas entre traduccions d'una entrada o pàgina"
+
+#~ msgid "Search"
+#~ msgstr "Cerca"

@@ -3,7 +3,7 @@
 
 if (isset($term_id)) {
 	// edit term form?>
-	<th scope="row" valign="top"><?php _e('Translations', 'polylang');?></th>
+	<th scope="row"><?php _e('Translations', 'polylang');?></th>
 	<td><?php
 }
 else {
@@ -43,25 +43,40 @@ else {
 								printf('<option value="%s">%s</option>', esc_attr($translation->term_id), esc_html($translation->name));?>
 						</select>
 					</td><?php
-				} 
+				}
 				else
 					echo '<td>'.__('No untranslated term', 'polylang').'</td>';
 
 				// do not display the add new link in add term form ($term_id not set !!!)
 				if (isset($term_id))
-					printf('<td class="tr-edit-column"><a href="%1$s">%2$s</a></td>',
-						esc_url(admin_url(sprintf('edit-tags.php?taxonomy=%1$s&from_tag=%2$d&new_lang=%3$s', $taxonomy, $term_id, $language->slug))),
+					printf(
+						'<td class="tr-edit-column"><a href="%1$s">%2$s</a></td>',
+						esc_url(admin_url(sprintf(
+							'edit-tags.php?taxonomy=%1$s&from_tag=%2$d&new_lang=%3$s',
+							$taxonomy,
+							$term_id,
+							$language->slug
+						))),
 						__('Add new','polylang')
 					);
 			}
 
 			// a translation exists
 			else {
-				printf('<td><input type="hidden" name="term_tr_lang[%s]" value="%d" />%s</td>',
-					esc_attr($language->slug), esc_attr($translation->term_id) ,esc_html($translation->name));					
+				printf(
+					'<td><input type="hidden" name="term_tr_lang[%s]" value="%d" />%s</td>',
+					esc_attr($language->slug),
+					esc_attr($translation->term_id),
+					esc_html($translation->name)
+				);
 				if (isset($term_id))
-					printf('<td class="tr-edit-column"><a href="%1$s">%2$s</a></td>',
-						esc_url(admin_url(sprintf('edit-tags.php?action=edit&amp;taxonomy=%1$s&tag_ID=%2$d', $taxonomy, $translation->term_id))),
+					printf(
+						'<td class="tr-edit-column"><a href="%1$s">%2$s</a></td>',
+						esc_url(admin_url(sprintf(
+							'edit-tags.php?action=edit&amp;taxonomy=%1$s&tag_ID=%2$d',
+							$taxonomy,
+							$translation->term_id
+						))),
 						__('Edit','polylang')
 					);
 			} ?>
