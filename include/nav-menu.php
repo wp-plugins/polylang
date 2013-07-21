@@ -190,7 +190,7 @@ class Polylang_Nav_Menu {
 	// to avoid http://core.trac.wordpress.org/ticket/24802
 	// and http://wordpress.org/support/topic/all-connection-between-elements-lost
 	function pre_insert_term($name, $taxonomy) {
-		if ($taxonomy = 'nav_menu') {
+		if ('nav_menu' == $taxonomy) {
 			global $polylang;
 			foreach ($polylang->get_languages_list() as $language)
 				if ($name == $language->name)
