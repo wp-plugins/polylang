@@ -746,13 +746,15 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 			if (!in_array($tax, $this->taxonomies))
 				return $clauses;
 
+		if (function_exists('get_current_screen'))
+			$screen = get_current_screen(); // since WP 3.1, may not be available the first time(s) get_terms is called
+
+		if (isset($screen) && 'nav-menus' == $screen->base && in_array('nav_menu', $taxonomies))
+			return $clauses;
 
 		// if get_terms is queried with a 'lang' parameter
 		if (!empty($args['lang']))
 			return $this->_terms_clauses($clauses, $args['lang']);
-
-		if (function_exists('get_current_screen'))
-			$screen = get_current_screen(); // since WP 3.1, may not be available the first time(s) get_terms is called
 
 		// does nothing in Languages and dasboard admin panels
 		if (isset($screen) && in_array($screen->base, array('toplevel_page_mlang', 'dashboard')))
