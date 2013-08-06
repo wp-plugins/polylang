@@ -347,8 +347,10 @@ class Polylang_Core extends Polylang_base {
 	// as done by qtranslate: define the locale with the action 'plugins_loaded', but in this case, the language must be specified in the url.
 	function load_textdomains() {
 		// prevents calling the function 2 times (occurs with theme my login plugin)
-		if (empty($this->list_textdomains))
+		static $once = false;
+		if ($once)
 			return;
+		$once = true;
 
 		// our override_load_textdomain filter has done its job. let's remove it before calling load_textdomain
 		remove_filter('override_load_textdomain', array(&$this, 'mofile'));

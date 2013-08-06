@@ -749,6 +749,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 		if (function_exists('get_current_screen'))
 			$screen = get_current_screen(); // since WP 3.1, may not be available the first time(s) get_terms is called
 
+		// don't filter nav menus on nav menus screen
 		if (isset($screen) && 'nav-menus' == $screen->base && in_array('nav_menu', $taxonomies))
 			return $clauses;
 

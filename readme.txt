@@ -96,6 +96,7 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 
 * Add simplified Chinese language contributed by [Changmeng Hu](http://www.wpdaxue.com)
 * Bug correction: nav menu locations are lost when using the admin language filter
+* Bug correction: the cookie is not set when adding the language code to all urls (introduced in 1.1.3)
 
 = 1.1.3 (2013-07-21) =
 
