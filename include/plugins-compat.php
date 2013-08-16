@@ -18,6 +18,9 @@ class Polylang_Plugins_Compat {
 
 		// Jetpack infinite scroll
 		add_filter('pre_get_posts', array(&$this, 'jetpack_infinite_scroll'));
+
+		// Aqua Resizer
+		add_filter('pll_home_url_black_list', create_function('$arr', "return array_merge(\$arr, array(array('function' => 'aq_resize')));"));
 	}
 
 	// Unfortunately WPSEO loads the text domain before Polylang is able to modify the locale
