@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, i18n, international, l10n, localization
 Requires at least: 3.1
 Tested up to: 3.6
-Stable tag: 1.1.3
+Stable tag: 1.1.4
 License: GPLv2 or later
 
 Polylang adds multilingual content management support to WordPress.
@@ -92,7 +92,7 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 
 == Changelog ==
 
-= 1.1.4 =
+= 1.1.4 (2013-08-16) =
 
 * Add simplified Chinese language contributed by [Changmeng Hu](http://www.wpdaxue.com)
 * Add Indonesian language contributed by [ajoull](http://wordpress.org/support/profile/ajoull)
