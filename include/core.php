@@ -708,10 +708,16 @@ class Polylang_Core extends Polylang_base {
 	// adds the language information in the search form
 	// does not work if searchform.php (prior to WP 3.6) is used or if the search form is hardcoded in another template file
 	function get_search_form($form) {
-		if ($form)
-			$form = $this->using_permalinks ?
-				str_replace(trailingslashit($this->home), $this->get_home_url($this->curlang, true), $form) :
-				str_replace('</form>', '<input type="hidden" name="lang" value="'.esc_attr($this->curlang->slug).'" /></form>', $form);
+		if ($form) {
+			if ($this->using_permalinks) {
+				preg_match('#<form.+>#', $form, $matches);
+				$old = reset($matches);
+				$new = str_replace(trailingslashit($this->home), $this->get_home_url($this->curlang, true), $old);
+				$form = str_replace($old, $new, $form);
+			}
+			else
+				$form = str_replace('</form>', '<input type="hidden" name="lang" value="'.esc_attr($this->curlang->slug).'" /></form>', $form);
+		}
 
 		return $form;
 	}
