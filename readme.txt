@@ -95,6 +95,7 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 = 1.1.5 =
 
 * Add compatibility with Aqua Resizer (often used in porfolio themes)
+* Add support of 'icl_get_default_language' function from the WPML API
 * Bug correction: urls are modified in search forms
 
 = 1.1.4 (2013-08-16) = 

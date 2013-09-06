@@ -177,6 +177,15 @@ if (!function_exists('wpml_get_copied_fields_for_post_edit')) {
 }
 
 /*
+ * undocumented function used by Warp 6 by Yootheme
+ */
+if (!function_exists('icl_get_default_language')) {
+	function icl_get_default_language() {
+		return pll_default_language();
+	}
+}
+
+/*
  * registers strings in a persistant way as done by WPML
  */
 class Polylang_WPML_Compat {
