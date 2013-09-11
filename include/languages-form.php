@@ -95,7 +95,7 @@ if (isset($_GET['error'])) {?>
 
 				<div class="form-field">
 					<label for="lang_slug"><?php _e('Language code', 'polylang');?></label>
-					<input name="slug" id="lang_slug" type="text" value="<?php if ($action=='edit') echo esc_attr($edit_lang->slug);?>" size="3" maxlength="3"/>
+					<input name="slug" id="lang_slug" type="text" value="<?php if ($action=='edit') echo esc_attr($edit_lang->slug);?>" size="40" />
 					<p><?php _e('2-letters ISO 639-1 language code (for example: en)', 'polylang');?></p>
 				</div>
 

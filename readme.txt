@@ -96,6 +96,8 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 
 * Add compatibility with Aqua Resizer (often used in porfolio themes)
 * Add support of 'icl_get_default_language' function from the WPML API
+* Remove the 3 characters limitation for the language code
+* Change default names for zh_CN, zh_HK, zh_TW 
 * Bug correction: urls are modified in search forms
 
 = 1.1.4 (2013-08-16) = 
