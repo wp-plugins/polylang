@@ -1,5 +1,4 @@
 <?php
-global $wp_rewrite;
 // displays the Languages admin panel
 ?>
 <div class="wrap">
@@ -7,7 +6,12 @@ global $wp_rewrite;
 <h2 class="nav-tab-wrapper"><?php
 // display tabs
 foreach ($tabs as $key=>$name)
-	printf('<a href="options-general.php?page=mlang&tab=%s" class="nav-tab %s">%s</a>', $key, $key == $active_tab ? 'nav-tab-active' : '', $name);?>
+	printf(
+		'<a href="options-general.php?page=mlang&amp;tab=%s" class="nav-tab %s">%s</a>',
+		$key,
+		$key == $active_tab ? 'nav-tab-active' : '',
+		$name
+	);?>
 </h2><?php
 
 switch($active_tab) {
@@ -35,7 +39,7 @@ if (isset($_GET['error'])) {?>
 		<div class="col-wrap">
 
 			<div class="form-wrap">
-				<h3><?php echo $action=='edit' ? _e('Edit language','polylang') :	_e('Add new language','polylang'); ?></h3><?php
+				<h3><?php echo $action=='edit' ? __('Edit language', 'polylang') :	__('Add new language', 'polylang'); ?></h3><?php
 
 				// displays the add (or edit) language form
 				// The term fields are used as follows :
@@ -49,11 +53,11 @@ if (isset($_GET['error'])) {?>
 				<?php wp_nonce_field('add-lang', '_wpnonce_add-lang');
 
 				if ($action=='edit') {?>
-					<input type="hidden" name="action" value="update" />
+					<input type="hidden" name="pll_action" value="update" />
 					<input type="hidden" name="lang_id" value="<?php echo esc_attr($edit_lang->term_id);?>" /><?php
 				}
 				else { ?>
-					<input type="hidden" name="action" value="add" /><?php
+					<input type="hidden" name="pll_action" value="add" /><?php
 				}?>
 
 				<div class="form-field">
@@ -62,43 +66,57 @@ if (isset($_GET['error'])) {?>
 						<option value=""></option><?php
 						include(PLL_INC.'/languages.php');
 						foreach ($languages as $lg) {
-							printf('<option value="%1$s-%2$s-%3$s">%4$s - %2$s</option>'."\n", esc_attr($lg[0]), esc_attr($lg[1]), isset($lg[3]) ? '1' : '0' , esc_html($lg[2]));
+							printf(
+								'<option value="%1$s-%2$s-%3$s">%4$s - %2$s</option>'."\n",
+								esc_attr($lg[0]),
+								esc_attr($lg[1]),
+								isset($lg[3]) ? '1' : '0',
+								esc_html($lg[2])
+							);
 						} ?>
 					</select>
 					<p><?php _e('You can choose a language in the list or directly edit it below.', 'polylang');?></p>
 				</div>
 
 				<div class="form-field form-required">
-					<label for="name"><?php _e('Full name', 'polylang');?></label>
-					<input name="name" id="name" type="text" value="<?php if ($action=='edit') echo esc_attr($edit_lang->name);?>" size="40" aria-required="true" />
+					<label for="lang_name"><?php _e('Full name', 'polylang');?></label>
+					<input name="name" id="lang_name" type="text" value="<?php if ($action=='edit') echo esc_attr($edit_lang->name);?>" size="40" aria-required="true" />
 					<p><?php _e('The name is how it is displayed on your site (for example: English).', 'polylang');?></p>
 				</div>
 
 				<div class="form-field form-required">
-					<label for="description"><?php _e('Locale', 'polylang');?></label><?php
-					printf('<input name="description" id="description" type="text" value="%s" size="7" maxlength="7" aria-required="true" />',
-						$action=='edit' ? esc_attr($edit_lang->description) : '');?>
+					<label for="lang_locale"><?php _e('Locale', 'polylang');?></label><?php
+					printf(
+						'<input name="description" id="lang_locale" type="text" value="%s" size="40" aria-required="true" />',
+						$action=='edit' ? esc_attr($edit_lang->description) : ''
+					);?>
 					<p><?php _e('Wordpress Locale for the language (for example: en_US). You will need to install the .mo file for this language.', 'polylang');?></p>
 				</div>
 
 				<div class="form-field">
-					<label for="slug"><?php _e('Language code', 'polylang');?></label>
-					<input name="slug" id="slug" type="text" value="<?php if ($action=='edit') echo esc_attr($edit_lang->slug);?>" size="3" maxlength="3"/>
+					<label for="lang_slug"><?php _e('Language code', 'polylang');?></label>
+					<input name="slug" id="lang_slug" type="text" value="<?php if ($action=='edit') echo esc_attr($edit_lang->slug);?>" size="40" />
 					<p><?php _e('2-letters ISO 639-1 language code (for example: en)', 'polylang');?></p>
 				</div>
 
-				<div class="form-field">
+				<div class="form-field"><fieldset>
 					<legend><?php _e('Text direction', 'polylang');?></legend><?php
-					printf('<label><input name="rtl" type="radio" class="tog" value="0" %s /> %s</label>',
-						$rtl ? '' : 'checked="checked"', __('left to right', 'polylang'));
-					printf('<label><input name="rtl" type="radio" class="tog" value="1" %s /> %s</label>',
-						$rtl ? 'checked="checked"' : '', __('right to left', 'polylang'));?>
+					printf(
+						'<label><input name="rtl" type="radio" value="0" %s /> %s</label>',
+						$rtl ? '' : 'checked="checked"',
+						__('left to right', 'polylang')
+					);
+					printf(
+						'<label><input name="rtl" type="radio" value="1" %s /> %s</label>',
+						$rtl ? 'checked="checked"' : '',
+						__('right to left', 'polylang')
+					);?>
 					<p><?php _e('Choose the text direction for the language', 'polylang');?></p>
-				</div>
+				</fieldset></div>
 
 				<div class="form-field">
-					<label for="term_group"><?php _e('Order', 'polylang');?></label>
-					<input name="term_group" id="term_group" type="text" value="<?php if ($action=='edit') echo esc_attr($edit_lang->term_group);?>" />
+					<label for="lang_order"><?php _e('Order', 'polylang');?></label>
+					<input name="term_group" id="lang_order" type="text" value="<?php if ($action=='edit') echo esc_attr($edit_lang->term_group);?>" />
 					<p><?php _e('Position of the language in the language switcher', 'polylang');?></p>
 				</div>
 
@@ -109,6 +127,7 @@ if (isset($_GET['error'])) {?>
 		</div><!-- col-wrap -->
 	</div><!-- col-left -->
 </div><!-- col-container -->
+
 <script type="text/javascript">
 	//<![CDATA[
 	jQuery(document).ready( function($) {
@@ -121,56 +140,13 @@ if (isset($_GET['error'])) {?>
 </script><?php
 break;
 
-// menu tab
-case 'menus': ?>
-
-<div class="form-wrap">
-	<form id="nav-menus-lang" method="post" action="admin.php?page=mlang&tab=menus" class="validate">
-	<?php wp_nonce_field('nav-menus-lang', '_wpnonce_nav-menus-lang');?>
-	<input type="hidden" name="action" value="nav-menus" /><?php
-
-	foreach ( $locations as $location => $description ) {?>
-		<h3><?php echo esc_html($description); ?></h3>
-		<table class="form-table"><?php
-			foreach ($listlanguages as $language) {?>
-				<tr><?php printf('<th><label for="menu-lang-%1$s-%2$s">%3$s</label></th>', esc_attr($location), esc_attr($language->slug), esc_html($language->name));?>
-					<td><?php printf('<select name="menu-lang[%1$s][%2$s]" id="menu-lang-%1$s-%2$s">', esc_attr($location), esc_attr($language->slug));?>
-						<option value="0"></option><?php
-						foreach ($menus as $menu) {
-							printf(
-								"<option value='%d'%s>%s</option>\n",
-								esc_attr($menu->term_id),
-								isset($menu_lang[$location][$language->slug]) && $menu_lang[$location][$language->slug] == $menu->term_id ? ' selected="selected"' : '',
-								esc_html($menu->name)
-							);
-						} ?>
-					</select></td>
-				</tr><?php
-			}?>
-			<tr>
-				<th><?php _e('Language switcher', 'polylang') ?></th>
-				<td><?php
-					foreach ($this->get_switcher_options('menu') as $key => $str)
-						printf('<label><input name="menu-lang[%1$s][%2$s]" type="checkbox" value="1" %3$s /> %4$s</label>',
-							esc_attr($location), esc_attr($key), isset($menu_lang[$location][$key]) && $menu_lang[$location][$key] ? 'checked="checked"' :'', esc_html($str));?>
-				</td>
-			</tr>
-		</table><?php
-	}
-
-	submit_button(); // since WP 3.1 ?>
-
-	</form>
-</div><!-- form-wrap --><?php
-break;
-
 // string translations tab
-case 'strings':
+case 'strings': ?>
 
-	$paged = isset($_GET['paged']) ? '&paged='.$_GET['paged'] : '';?>
-	<form id="string-translation" method="post" action="<?php echo esc_url(admin_url('admin.php?page=mlang&tab=strings'.$paged.'&noheader=true'))?>" class="validate">
-	<?php wp_nonce_field('string-translation', '_wpnonce_string-translation');?>
-	<input type="hidden" name="action" value="string-translation" /><?php
+	<form id="string-translation" method="post" action="admin.php?page=mlang&amp;tab=strings&amp;noheader=true">
+	<input type="hidden" name="pll_action" value="string-translation" /><?php
+	$string_table->search_box(__('Search translations', 'polylang'), 'translations' );
+	wp_nonce_field('string-translation', '_wpnonce_string-translation');
 	$string_table->display();
 	printf('<label><input name="clean" type="checkbox" value="1" /> %s</label>', __('Clean strings translation database', 'polylang'));
 	submit_button(); // since WP 3.1 ?>
@@ -181,19 +157,19 @@ break;
 case 'settings': ?>
 
 <div class="form-wrap">
-	<form id="options-lang" method="post" action="admin.php?page=mlang&tab=settings" class="validate">
+	<form id="options-lang" method="post" action="admin.php?page=mlang&amp;tab=settings&amp;noheader=true" class="validate">
 	<?php wp_nonce_field('options-lang', '_wpnonce_options-lang');?>
-	<input type="hidden" name="action" value="options" />
+	<input type="hidden" name="pll_action" value="options" />
 
 	<table class="form-table">
 
 		<tr>
 			<th><label for='default_lang'><?php _e('Default language', 'polylang');?></label></th>
-			<td><?php echo $this->dropdown_languages(array('name' => 'default_lang', 'selected' => $options['default_lang']));?></td>
+			<td><?php echo $this->dropdown_languages(array('name' => 'default_lang', 'selected' => $this->options['default_lang']));?></td>
 		</tr><?php
 
 		// posts or terms without language set
-		if ($this->get_objects_with_no_lang() && $options['default_lang']) {?>
+		if ($this->get_objects_with_no_lang() && $this->options['default_lang']) {?>
 			<tr>
 				<th></th>
 				<td>
@@ -213,7 +189,7 @@ case 'settings': ?>
 				<label><?php
 					printf(
 						'<input name="browser" type="checkbox" value="1" %s /> %s',
-						$options['browser'] ? 'checked="checked"' :'',
+						$this->options['browser'] ? 'checked="checked"' :'',
 						__('When the front page is visited, set the language according to the browser preference', 'polylang')
 					);?>
 				</label>
@@ -221,20 +197,20 @@ case 'settings': ?>
 		</tr>
 
 		<tr>
-			<th><?php _e('URL modifications', 'polylang') ?></th>
-			<td scope="row">
+			<th scope="row"><?php _e('URL modifications', 'polylang') ?></th>
+			<td>
 				<label><?php
 					printf(
 						'<input name="force_lang" type="radio" value="0" %s /> %s',
-						$options['force_lang'] ? '' :'checked="checked"',
+						$this->options['force_lang'] ? '' :'checked="checked"',
 						__('The language is set from content. Posts, pages, categories and tags urls are not modified.', 'polylang')
 					);?>
 				</label>
 				<label><?php
 					printf(
 						'<input name="force_lang" type="radio" value="1" %s %s/> %s',
-						$wp_rewrite->using_permalinks() ? '' : 'disabled=1',
-						$options['force_lang'] ? 'checked="checked"' :'',
+						$this->using_permalinks ? '' : 'disabled',
+						$this->options['force_lang'] ? 'checked="checked"' :'',
 						__('The language code, for example /en/, is added to all urls when using pretty permalinks.', 'polylang')
 					);?>
 				</label>
@@ -242,8 +218,8 @@ case 'settings': ?>
 				<label><?php
 					printf(
 						'<input name="rewrite" type="radio" value="1" %s %s/> %s %s',
-						$wp_rewrite->using_permalinks() ? '' : 'disabled=1',
-						$options['rewrite'] ? 'checked="checked"' : '',
+						$this->using_permalinks ? '' : 'disabled',
+						$this->options['rewrite'] ? 'checked="checked"' : '',
 						__('Remove /language/ in pretty permalinks. Example:', 'polylang'),
 						'<code>'.esc_html(home_url('en/')).'</code>'
 					);?>
@@ -251,8 +227,8 @@ case 'settings': ?>
 				<label><?php
 					printf(
 						'<input name="rewrite" type="radio" value="0" %s %s/> %s %s',
-						$wp_rewrite->using_permalinks() ? '' : 'disabled=1',
-						$options['rewrite'] ? '' : 'checked="checked"',
+						$this->using_permalinks ? '' : 'disabled',
+						$this->options['rewrite'] ? '' : 'checked="checked"',
 						 __('Keep /language/ in pretty permalinks. Example:', 'polylang'),
 						'<code>'.esc_html(home_url('language/en/')).'</code>'
 					);?>
@@ -261,7 +237,7 @@ case 'settings': ?>
 				<label><?php
 					printf(
 						'<input name="hide_default" type="checkbox" value="1" %s /> %s',
-						$options['hide_default'] ? 'checked="checked"' :'',
+						$this->options['hide_default'] ? 'checked="checked"' :'',
 						__('Hide URL language information for default language', 'polylang')
 					);?>
 				</label>
@@ -269,26 +245,82 @@ case 'settings': ?>
 				<label><?php
 					printf(
 						'<input name="redirect_lang" type="checkbox" value="1" %s %s/> %s',
-						get_option('page_on_front') ? '' : 'disabled=1',
-						$options['redirect_lang'] ? 'checked="checked"' :'',
-						sprintf(__('When using static front page, redirect the language page (example: %s) to the front page in the right language', 'polylang'), '<code>'.esc_html(home_url('en/')).'</code>')
+						get_option('page_on_front') ? '' : 'disabled',
+						$this->options['redirect_lang'] ? 'checked="checked"' :'',
+						sprintf(
+							__('When using static front page, redirect the language page (example: %s) to the front page in the right language', 'polylang'),
+							'<code>'.esc_html(home_url('en/')).'</code>'
+						)
 					);?>
 				</label>
 			</td>
 		</tr>
 
 		<tr>
-			<th><?php _e('Synchronization', 'polylang') ?></th>
-			<td scope="row">
+			<th scope="row"><?php _e('Media', 'polylang') ?></th>
+			<td>
 				<label><?php
 					printf(
-						'<input name="sync" type="checkbox" value="1" %s /> %s',
-						$options['sync'] ? 'checked="checked"' :'',
-						__('Allow to synchronize categories, tags, featured image and other metas between translations of a post or page', 'polylang')
+						'<input name="media_support" type="checkbox" value="1" %s /> %s',
+						$this->options['media_support'] ? 'checked="checked"' :'',
+						__('Activate languages and translations for media', 'polylang')
 					);?>
 				</label>
 			</td>
 		</tr>
+
+		<tr>
+			<th scope="row"><?php _e('Synchronization', 'polylang') ?></th>
+			<td><ul class="pll_inline_block"><?php
+				foreach ($this->list_metas_to_sync() as $key => $str)
+					printf(
+						'<li><label><input name="sync[%s]" type="checkbox" value="1" %s /> %s</label></li>',
+						esc_attr($key),
+						in_array($key, $this->options['sync']) ? 'checked="checked"' :'',
+						esc_html($str)
+					);?>
+			</ul></td>
+		</tr><?php
+
+		if (!empty($post_types)) {?>
+			<tr>
+				<th scope="row"><?php _e('Custom post types', 'polylang') ?></th>
+				<td>
+					<ul class="pll_inline_block"><?php
+						foreach ($post_types as $post_type) {
+							$pt = get_post_type_object($post_type);
+							printf(
+								'<li><label><input name="post_types[%s]" type="checkbox" value="1" %s /> %s</label></li>',
+								esc_attr($post_type),
+								in_array($post_type, $this->options['post_types']) ? 'checked="checked"' :'',
+								esc_html($pt->labels->name)
+							);
+						}?>
+					</ul>
+					<p><?php _e('Activate languages and translations for custom post types.', 'polylang');?></p>
+				</td>
+			</tr><?php
+		}
+
+		if (!empty($taxonomies)) {?>
+			<tr>
+				<th scope="row"><?php _e('Custom taxonomies', 'polylang') ?></th>
+				<td>
+					<ul class="pll_inline_block"><?php
+						foreach ($taxonomies as $taxonomy) {
+							$tax = get_taxonomy($taxonomy);
+							printf(
+								'<li><label><input name="taxonomies[%s]" type="checkbox" value="1" %s /> %s</label></li>',
+								esc_attr($taxonomy),
+								in_array($taxonomy, $this->options['taxonomies']) ? 'checked="checked"' :'',
+								esc_html($tax->labels->name)
+							);
+						}?>
+					</ul>
+					<p><?php _e('Activate languages and translations for custom taxonomies.', 'polylang');?></p>
+				</td>
+			</tr><?php
+		}?>
 
 	</table>
 
