@@ -92,6 +92,11 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 
 == Changelog ==
 
+= 1.1.6 =
+
+* Bug correction: Illegal string offset 'taxonomy' in polylang/include/auto-translate.php
+* Bug correction: user defined strings translations are not loaded on admin side
+
 = 1.1.5 (2013-09-15) =
 
 * Add compatibility with Aqua Resizer (often used in porfolio themes)

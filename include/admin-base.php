@@ -34,6 +34,7 @@ class Polylang_Admin_Base extends Polylang_Base {
 		foreach($languages as $lang) {
 			if ($locale == $lang->description) {
 				$GLOBALS['wp_locale']->text_direction = get_metadata('term', $lang->term_id, '_rtl', true) ? 'rtl' : 'ltr';
+				$GLOBALS['l10n']['pll_string'] = $this->mo_import($lang);
 				break;
 			}
 		}
