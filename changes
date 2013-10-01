@@ -1,0 +1,8 @@
+* major rewrite with new structure
+* change the language and translations model from meta to taxonomy (don't use the termmeta table anymore)
+* move the strings translations from option to post type
+* add support of wordpress importer plugin. Export must have been done with Polylang 1.2+
+* add support for language code in subdomain
+* better management of default category for each language
+* update management of the 'copy' action of the custom fields section in wpml-config.xml
+* start improving the inline doc

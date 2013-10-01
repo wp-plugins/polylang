@@ -1,0 +1,574 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: polylang\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Naglis Jonaitis <njonaitis@gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2: nplural=n>1;\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: _e;__;_x\n"
+"X-Poedit-Basepath: .\n"
+"X-Generator: Poedit 1.5.5\n"
+"X-Poedit-SearchPath-0: ..\n"
+"X-Poedit-SearchPath-1: ../include\n"
+
+#: include/about.php:3
+#, php-format
+msgid ""
+"Polylang is provided with an extensive %sdocumentation%s (in English only). "
+"It includes information on how to set up your multilingual site and use it "
+"on a daily basis, a FAQ, as well as a documentation for programmers to adapt "
+"their plugins and themes."
+msgstr ""
+"Polylang pateikiams su išsamia %sdokumentacija%s (tik anglų kalba). Joje "
+"rasite informaciją kaip sukurti kelių kalbų svetainę bei naudotis ją "
+"kasdien, D.U.K. bei dokumentaciją programuotojams, aprašančią kaip "
+"pritaikyti savo įskiepius bei temas."
+
+#: include/about.php:9
+#, php-format
+msgid ""
+"You will also find useful information in the %ssupport forum%s. However "
+"don't forget to make a search before posting a new topic."
+msgstr ""
+"Naudingos informacijos taip pat galite rasti %spalaikymo forume%s. Tiesa, "
+"nepamirškite paieškoti prieš sukurdami naują temą."
+
+#: include/about.php:16
+#, php-format
+msgid ""
+"Polylang is free of charge and is released under the same license as "
+"WordPress, the %sGPL%s."
+msgstr ""
+"Polylang yra nemokamas ir leidžiamas su ta pačia licencija kaip ir WordPress "
+"- %sGPL%s."
+
+#: include/about.php:22
+#, php-format
+msgid "If you wonder how you can help the project, just %sread this%s."
+msgstr "Jei norite prisidėti prie šio projekto, %sskaitykite čia%s."
+
+#: include/about.php:27
+msgid ""
+"Finally if you like this plugin or if it helps your business, donations to "
+"the author are greatly appreciated."
+msgstr ""
+"Galiausiai, jei Jums patinka šis įskiepis arba jei jis padeda Jūsų verslui, "
+"autorius labai vertintų Jūsų paramą."
+
+#: include/admin-base.php:55 include/admin-base.php:190
+#: include/admin-filters.php:243 include/admin.php:23 include/admin.php:301
+#: include/list-table.php:13 polylang.php:339
+msgid "Languages"
+msgstr "Kalbos"
+
+#: include/admin-base.php:153
+msgid "Displays language names"
+msgstr "Rodyti kalbų pavadinimus"
+
+#: include/admin-base.php:154
+msgid "Displays flags"
+msgstr "Rodyti vėliavėles"
+
+#: include/admin-base.php:155
+msgid "Forces link to front page"
+msgstr "Priverstinai nukreipti į pagrindinį puslapį"
+
+#: include/admin-base.php:156
+msgid "Hides the current language"
+msgstr "Nerodyti dabartinės kalbos"
+
+#: include/admin-base.php:160
+msgid "Displays as dropdown"
+msgstr "Rodyti kaip išskleidžiamą pasirinkimą"
+
+#: include/admin-base.php:191
+msgid "Filters content by language"
+msgstr "Atrenka turinį pagal kalbą"
+
+#: include/admin-base.php:186
+msgid "Show all languages"
+msgstr "Rodyti visas kalbas"
+
+#: include/admin-filters.php:181 include/admin-filters.php:877
+msgid "Add new translation"
+msgstr "Pridėti naują vertimą"
+
+#: include/admin-filters.php:209 include/admin-filters.php:267
+#: include/admin-filters.php:601 include/admin-filters.php:817
+#: include/admin-filters.php:835 include/list-table.php:12
+#: include/media-translations.php:5 include/media-translations.php:43
+#: include/post-translations.php:8 include/term-translations.php:15
+#: polylang.php:340
+msgid "Language"
+msgstr "Kalba"
+
+#: include/admin-filters.php:616 include/admin-filters.php:651
+#: include/list-table.php:127 include/media-translations.php:40
+#: include/term-translations.php:6 include/term-translations.php:11
+msgid "Translations"
+msgstr "Vertimai"
+
+#: include/admin-filters.php:819 include/admin-filters.php:838
+msgid "Sets the language"
+msgstr "Nustatyti kalbą"
+
+#: include/admin-filters.php:1053
+msgid "The widget is displayed for:"
+msgstr "Valdiklį rodyti:"
+
+#: include/admin-filters.php:1057 polylang.php:341
+msgid "All languages"
+msgstr "Visoms kalboms"
+
+#: include/admin-filters.php:1080
+msgid "Admin language"
+msgstr "Administravimo skydelio kalba"
+
+#: include/admin-filters.php:1085
+msgid "Wordpress default"
+msgstr "Wordpress numatytasis"
+
+#: include/admin-filters.php:1114 include/admin.php:306
+msgid "Settings"
+msgstr "Nustatymai"
+
+#: include/admin-filters.php:1120
+msgid "Upgrading language files&#8230;"
+msgstr "Atnaujinami kalbų failai&#8230;"
+
+#: include/admin.php:22
+msgid "About Polylang"
+msgstr "Apie Polylang"
+
+#: include/admin.php:27 include/list-table.php:82
+msgid "Strings translations"
+msgstr "Eilučių vertimas"
+
+#: include/admin.php:305 include/list-table.php:81
+msgid "Strings translation"
+msgstr "Eilučių vertimas"
+
+#: include/admin.php:345
+msgid "Enter a valid WorPress locale"
+msgstr "Įveskite taisyklingą WordPress lokalę"
+
+#: include/admin.php:346
+msgid "The language code must be 2 characters long"
+msgstr "Kalbos kodas privalo būti dviejų simbolių ilgio"
+
+#: include/admin.php:328
+msgid "The language code must be unique"
+msgstr "Kalbos kodas privalo būti unikalus"
+
+#: include/admin.php:329
+msgid "The language must have a name"
+msgstr "Kalba privalo turėti vardą"
+
+#: include/admin.php:330
+msgid ""
+"The language was created, but the WordPress language file was not "
+"downloaded. Please install it manually."
+msgstr ""
+"Kalba buvo pridėta, tačiau jos WordPress kalbos failas nebuvo parsiųstas. "
+"Prašome tai padaryti rankiniu būdu."
+
+#: include/admin.php:449
+msgid "Widget title"
+msgstr "Valdiklio pavadinimas"
+
+# @ polylang
+#: include/base.php:368
+msgid "Taxonomies"
+msgstr "Taksonomijos"
+
+# @ polylang
+#: include/base.php:369
+msgid "Custom fields"
+msgstr "Pasirinktiniai laukai"
+
+# @ polylang
+#: include/base.php:370
+msgid "Comment status"
+msgstr "Komentarų būsena"
+
+# @ polylang
+#: include/base.php:371
+msgid "Ping status"
+msgstr "Ryšio patikrinimo būsena"
+
+# @ polylang
+#: include/base.php:372
+msgid "Sticky posts"
+msgstr "Nuolat pirmame puslapyje rodomi įrašai"
+
+# @ polylang
+#: include/base.php:373
+msgid "Published date"
+msgstr "Paskelbimo data"
+
+# @ polylang
+#: include/base.php:374
+msgid "Post format"
+msgstr "Įrašo formatas"
+
+#: include/base.php:375
+msgid "Page parent"
+msgstr "Tėvinis puslapis"
+
+# @ polylang
+#: include/base.php:376
+msgid "Page template"
+msgstr "Puslapio šablonas"
+
+#: include/base.php:377
+msgid "Page order"
+msgstr "Puslapio tvarka"
+
+# @ polylang
+#: include/base.php:378
+msgid "Featured image"
+msgstr "Spec. paveikslėlis"
+
+#: include/languages-form.php:42
+msgid "Edit language"
+msgstr "Redaguoti kalbą"
+
+#: include/languages-form.php:42 include/languages-form.php:123
+msgid "Add new language"
+msgstr "Pridėti naują kalbą"
+
+#: include/languages-form.php:64
+msgid "Choose a language"
+msgstr "Pasirinkite kalbą"
+
+#: include/languages-form.php:78
+msgid "You can choose a language in the list or directly edit it below."
+msgstr ""
+"Galite pasirinkti kalbą iš sąrašo arba tiesiogiai redaguoti ją apačioje."
+
+#: include/languages-form.php:82 include/list-table.php:34
+msgid "Full name"
+msgstr "Pilnas vardas"
+
+#: include/languages-form.php:84
+msgid "The name is how it is displayed on your site (for example: English)."
+msgstr "Vardas, kuris bus rodomas Jūsų svetainėje (pavyzdžiui: English)."
+
+#: include/languages-form.php:88 include/list-table.php:35
+msgid "Locale"
+msgstr "Lokalė"
+
+#: include/languages-form.php:93
+msgid ""
+"Wordpress Locale for the language (for example: en_US). You will need to "
+"install the .mo file for this language."
+msgstr ""
+"Kalbos WordPress lokalė (pavyzdžiui: lt_LT). Jums reikės įsidiegti šios "
+"kalbos .mo failą."
+
+#: include/languages-form.php:97
+msgid "Language code"
+msgstr "Kalbos kodas"
+
+#: include/languages-form.php:99
+msgid "2-letters ISO 639-1 language code (for example: en)"
+msgstr "Dviejų raidžių ISO 639-1 kalbos kodas (pavyzdžiui: lt)"
+
+#: include/languages-form.php:103
+msgid "Text direction"
+msgstr "Teksto kryptis"
+
+#: include/languages-form.php:107
+msgid "left to right"
+msgstr "iš kairės į dešinę"
+
+#: include/languages-form.php:112
+msgid "right to left"
+msgstr "iš dešinės į kairę"
+
+#: include/languages-form.php:114
+msgid "Choose the text direction for the language"
+msgstr "Pasirinkite kalbos teksto kryptį"
+
+#: include/languages-form.php:118 include/list-table.php:37
+msgid "Order"
+msgstr "Tvarka"
+
+#: include/languages-form.php:120
+msgid "Position of the language in the language switcher"
+msgstr "Kalbos pozicija kalbos perjungiklyje"
+
+#: include/nav-menu.php:28 include/nav-menu.php:51 include/nav-menu.php:54
+#: include/nav-menu.php:82 include/nav-menu.php:106 polylang.php:302
+msgid "Language switcher"
+msgstr "Kalbų perjungimas"
+
+#: include/languages-form.php:148
+msgid "Search translations"
+msgstr "Ieškoti vertimuose"
+
+#: include/languages-form.php:151
+msgid "Clean strings translation database"
+msgstr "Išvalyti eilučių vertimų duomenų bazę"
+
+#: include/languages-form.php:167
+msgid "Default language"
+msgstr "Numatytoji kalba"
+
+#: include/languages-form.php:179
+msgid ""
+"There are posts, pages, categories or tags without language set. Do you want "
+"to set them all to default language ?"
+msgstr ""
+"Yra įrašų, puslapių, kategorijų arba žymų, kuriems nenustatyta kalba. Ar "
+"norite visiems jiems priskirti numatytąją kalbą?"
+
+#: include/languages-form.php:187
+msgid "Detect browser language"
+msgstr "Nustatyti naršyklės kalbą"
+
+#: include/languages-form.php:193
+msgid ""
+"When the front page is visited, set the language according to the browser "
+"preference"
+msgstr ""
+"Kai aplankomas pagrindinis puslapis, nustatyti kalbą pagal naršyklės "
+"pageidavimą"
+
+#: include/languages-form.php:200
+msgid "URL modifications"
+msgstr "URL pakeitimai"
+
+#: include/languages-form.php:206
+msgid ""
+"The language is set from content. Posts, pages, categories and tags urls are "
+"not modified."
+msgstr ""
+"Kalba nustatyta pagal turinį. Įrašų, puslapių, kategorijų ir žymų URL "
+"adresai nepakeisti."
+
+#: include/languages-form.php:214
+msgid ""
+"The language code, for example /en/, is added to all urls when using pretty "
+"permalinks."
+msgstr ""
+"Kalbos kodas, pavyzdžiui /lt/, bus pridėtas prie adresų jei naudojamos "
+"pastoviosios nuorodos."
+
+#: include/languages-form.php:223
+msgid "Remove /language/ in pretty permalinks. Example:"
+msgstr "Pašalinti /language/ iš pastoviųjų nuorodų. Pavyzdys:"
+
+#: include/languages-form.php:232
+msgid "Keep /language/ in pretty permalinks. Example:"
+msgstr "Palikti /language/ pastoviosiose nuorodose. Pavyzdys:"
+
+#: include/languages-form.php:241
+msgid "Hide URL language information for default language"
+msgstr "Numatytajai kalbai nerodyti kalbos informacijos URL"
+
+#: include/languages-form.php:251
+#, php-format
+msgid ""
+"When using static front page, redirect the language page (example: %s) to "
+"the front page in the right language"
+msgstr ""
+"Naudojant statinį pradžios puslapį, nukreipti kalbos puslapį (pavyzdžiui: "
+"%s) į pradžios puslapį atitinkamoje kalboje"
+
+# @ polylang
+#: include/languages-form.php:260
+msgid "Media"
+msgstr "Failai"
+
+# @ polylang
+#: include/languages-form.php:266
+msgid "Activate languages and translations for media"
+msgstr "Įgalinti kalbas ir vertimus failams"
+
+#: include/languages-form.php:273
+msgid "Synchronization"
+msgstr "Sinchronizavimas"
+
+# @ polylang
+#: include/languages-form.php:287
+msgid "Custom post types"
+msgstr "Pasirinktiniai įrašų tipai"
+
+# @ polylang
+#: include/languages-form.php:300
+msgid "Activate languages and translations for custom post types."
+msgstr "Įgalinti kalbas bei vertimus pasirinktiniams įrašų tipams."
+
+# @ polylang
+#: include/languages-form.php:307
+msgid "Custom taxonomies"
+msgstr "Pasirinktinės taksonomijos"
+
+# @ polylang
+#: include/languages-form.php:320
+msgid "Activate languages and translations for custom taxonomies."
+msgstr "Įgalinti kalbas ir vertimus pasirinktinėms taksonomijoms."
+
+#: include/list-table.php:26 include/media-translations.php:22
+#: include/media-translations.php:60 include/post-translations.php:10
+#: include/post-translations.php:33 include/term-translations.php:18
+#: include/term-translations.php:80
+msgid "Edit"
+msgstr "Redaguoti"
+
+#: include/list-table.php:27 include/list-table.php:162
+msgid "Delete"
+msgstr "Ištrinti"
+
+#: include/list-table.php:36
+msgid "Code"
+msgstr "Kodas"
+
+#: include/list-table.php:38
+msgid "Flag"
+msgstr "Vėliava"
+
+#: include/list-table.php:39
+msgid "Posts"
+msgstr "Įrašai"
+
+#: include/list-table.php:125
+msgid "Name"
+msgstr "Vardas"
+
+#: include/list-table.php:126
+msgid "String"
+msgstr "Eilutė"
+
+#: include/media-translations.php:6 include/media-translations.php:44
+#: include/term-translations.php:16
+msgid "Translation"
+msgstr "Vertimas"
+
+#: include/media-translations.php:31 include/media-translations.php:68
+#: include/post-translations.php:38 include/term-translations.php:60
+msgid "Add new"
+msgstr "Pridėti naują"
+
+#: include/post-translations.php:5
+msgid "ID of pages in other languages:"
+msgstr "Puslapių kitose kalbose ID:"
+
+#: include/post-translations.php:5
+msgid "ID of posts in other languages:"
+msgstr "Įrašų kitose kalbose ID:"
+
+#: include/post-translations.php:9
+msgid "Page ID"
+msgstr "Puslapio ID"
+
+#: include/post-translations.php:9
+msgid "Post ID"
+msgstr "Įrašo ID"
+
+#: include/term-translations.php:48
+msgid "No untranslated term"
+msgstr "Nėra išversto atitikmens"
+
+#: include/widget.php:6
+msgid "Language Switcher"
+msgstr "Kalbų perjungimas"
+
+#: include/widget.php:6
+msgid "Displays a language switcher"
+msgstr "Leidžia pasirinkti puslapio kalbą"
+
+#: include/widget.php:69
+msgid "Title:"
+msgstr "Pavadinimas:"
+
+# @ polylang
+#. translators: plugin header field 'Description'
+#: polylang.php:0
+msgid "Adds multilingual capability to WordPress"
+msgstr "Prideda daugiakalbystės funkciją Wordpress sistemai"
+
+#: polylang.php:133
+#, php-format
+msgid "You are using WordPress %s. Polylang requires at least WordPress %s."
+msgstr ""
+"Jūs naudojatės WordPress %s. Polylang reikalauja mažiausiai WordPress %s."
+
+#: polylang.php:174
+msgid "For some reasons, Polylang could not create a table in your database."
+msgstr ""
+"Dėl kažkokių priežasčių Polylang nepavyko sukurti lentelės Jūsų duomenų "
+"bazėje."
+
+# @ polylang
+#: polylang.php:235
+msgid ""
+"Polylang has been deactivated because you upgraded from a too old version."
+msgstr "Polylang buvo išjungtas, nes atsinaujinote iš per daug senos versijos."
+
+# @ polylang
+#: polylang.php:237
+#, php-format
+msgid "Please upgrade first to %s before ugrading to %s."
+msgstr "Prašome atsinaujinti iki %s, prieš atnaujinant iki %s."
+
+# @ polylang
+#: include/list-table.php:124
+msgid "Group"
+msgstr "Grupė"
+
+# @ polylang
+#: include/list-table.php:173
+msgid "View all groups"
+msgstr "Peržiūrėti visas grupes"
+
+#~ msgid "Displays a language switcher at the end of the menu"
+#~ msgstr "Meniu pabaigoje rodyti kalbų perjungimų pasirinkimą"
+
+#~ msgid "Theme locations and languages"
+#~ msgstr "Temų vietos ir kalbos"
+
+#~ msgid ""
+#~ "Please go to the %slanguages page%s to set theme locations and languages"
+#~ msgstr ""
+#~ "Prašome aplankyti %skalbų puslapį%s ir nustayti temos vietas bei kalbas"
+
+#~ msgid "Menus"
+#~ msgstr "Meniu"
+
+#~ msgid "Error: Restore of local flags failed!"
+#~ msgstr "Klaida: Atkurti Jūsų vėliavėlių nepavyko!"
+
+#~ msgid "Please move your local flags from %s to %s"
+#~ msgstr "Prašome perketi savo vėliavėles iš %s į %s"
+
+#~ msgid "%1$s %2$s"
+#~ msgstr "%1$s %2$s"
+
+#~ msgid "View posts for %1$s %2$s"
+#~ msgstr "Rodyti %1$s %2$s įrašus"
+
+#~ msgid "Site Title"
+#~ msgstr "Tinklaraščio pavadinimas"
+
+#~ msgid "Tagline"
+#~ msgstr "Tinklaraščio apibūdinimas"
+
+#~ msgid "Page's language:"
+#~ msgstr "Puslapio kalba:"
+
+#~ msgid "Post's language:"
+#~ msgstr "Įrašo kalba:"
+
+#~ msgid "None"
+#~ msgstr "Nėra"
+
+#~ msgid "Update"
+#~ msgstr "Atnaujinti"

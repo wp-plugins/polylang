@@ -1,0 +1,581 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: polylang\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Jani Alha <tuki@wysiwyg.fi>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2: nplural=n>1;\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: _e;__;_x\n"
+"X-Poedit-Basepath: .\n"
+"X-Generator: Poedit 1.5.5\n"
+"X-Poedit-SearchPath-0: ..\n"
+"X-Poedit-SearchPath-1: ../include\n"
+
+#: include/about.php:3
+#, php-format
+msgid ""
+"Polylang is provided with an extensive %sdocumentation%s (in English only). "
+"It includes information on how to set up your multilingual site and use it "
+"on a daily basis, a FAQ, as well as a documentation for programmers to adapt "
+"their plugins and themes."
+msgstr ""
+"Polylang toimitetaan kattavan %sdokumentaation%s kanssa (vain englanniksi). "
+"Se sisältää tietoa kuinka perustat monikielisen sivuston ja käytät sitä "
+"päivittäisessä käytössä, UKK:t sekä dokumentaation ohjelmoijille lisäosien "
+"ja teemojen sovittamiseksi."
+
+#: include/about.php:9
+#, php-format
+msgid ""
+"You will also find useful information in the %ssupport forum%s. However "
+"don't forget to make a search before posting a new topic."
+msgstr ""
+"Tarpeellista tietoa löydät myös %stukifoorumilta%s. Älä kuitenkaan unohda "
+"tehdä hakua ennen uuden viestin lähettämistä."
+
+#: include/about.php:16
+#, php-format
+msgid ""
+"Polylang is free of charge and is released under the same license as "
+"WordPress, the %sGPL%s."
+msgstr ""
+"Polylang on ilmainen ja se on julkaistu saman lisenssin alla kuin WordPress, "
+"%sGPL%s."
+
+#: include/about.php:22
+#, php-format
+msgid "If you wonder how you can help the project, just %sread this%s."
+msgstr "Mikäli mietit kuinka voit auttaa projektia, %slue tämä%s."
+
+#: include/about.php:27
+msgid ""
+"Finally if you like this plugin or if it helps your business, donations to "
+"the author are greatly appreciated."
+msgstr ""
+"Mikäli pidit tästä lisäosasta tai se auttaa yritystäsi, lahjoituksia "
+"tekijälle arvostetaan suuresti."
+
+#: include/admin-base.php:55 include/admin-base.php:190
+#: include/admin-filters.php:243 include/admin.php:23 include/admin.php:301
+#: include/list-table.php:13 polylang.php:339
+msgid "Languages"
+msgstr "Kielet"
+
+#: include/admin-base.php:153
+msgid "Displays language names"
+msgstr "Näytä kielien nimet"
+
+#: include/admin-base.php:154
+msgid "Displays flags"
+msgstr "Näytä liput"
+
+#: include/admin-base.php:155
+msgid "Forces link to front page"
+msgstr "Pakottaa linkin etusivulle"
+
+#: include/admin-base.php:156
+msgid "Hides the current language"
+msgstr "Piilottaa nykyisen kielen"
+
+#: include/admin-base.php:160
+msgid "Displays as dropdown"
+msgstr "Näytä pudotusvalikkona"
+
+#: include/admin-base.php:191
+msgid "Filters content by language"
+msgstr "Suodata sisältöä kielen mukaan"
+
+#: include/admin-base.php:186
+msgid "Show all languages"
+msgstr "Näytä kaikki kielet"
+
+#: include/admin-filters.php:181 include/admin-filters.php:877
+msgid "Add new translation"
+msgstr "Lisää uusi käännös"
+
+#: include/admin-filters.php:209 include/admin-filters.php:267
+#: include/admin-filters.php:601 include/admin-filters.php:817
+#: include/admin-filters.php:835 include/list-table.php:12
+#: include/media-translations.php:5 include/media-translations.php:43
+#: include/post-translations.php:8 include/term-translations.php:15
+#: polylang.php:340
+msgid "Language"
+msgstr "Kieli"
+
+#: include/admin-filters.php:616 include/admin-filters.php:651
+#: include/list-table.php:127 include/media-translations.php:40
+#: include/term-translations.php:6 include/term-translations.php:11
+msgid "Translations"
+msgstr "Käännökset"
+
+#: include/admin-filters.php:819 include/admin-filters.php:838
+msgid "Sets the language"
+msgstr "Aseta kieli"
+
+#: include/admin-filters.php:1053
+msgid "The widget is displayed for:"
+msgstr "Vimpain näytetään:"
+
+#: include/admin-filters.php:1057 polylang.php:341
+msgid "All languages"
+msgstr "Kaikki kielet"
+
+#: include/admin-filters.php:1080
+msgid "Admin language"
+msgstr "Ylläpidon kieli"
+
+#: include/admin-filters.php:1085
+msgid "Wordpress default"
+msgstr "Wordpress oletus"
+
+#: include/admin-filters.php:1114 include/admin.php:306
+msgid "Settings"
+msgstr "Asetukset"
+
+#: include/admin-filters.php:1120
+msgid "Upgrading language files&#8230;"
+msgstr "Päivitetään kielitiedostoja&#8230;"
+
+#: include/admin.php:22
+msgid "About Polylang"
+msgstr "Tietoja Polylang:sta"
+
+#: include/admin.php:27 include/list-table.php:82
+msgid "Strings translations"
+msgstr "Merkkijonojen käännökset"
+
+#: include/admin.php:305 include/list-table.php:81
+msgid "Strings translation"
+msgstr "Merkkijonojen käännös"
+
+#: include/admin.php:345
+msgid "Enter a valid WorPress locale"
+msgstr "Syötä oikeanmuotoinen WordPress lokaali"
+
+#: include/admin.php:346
+msgid "The language code must be 2 characters long"
+msgstr "Kielikoodin täytyy olla 2 merkkiä pitkä"
+
+#: include/admin.php:328
+msgid "The language code must be unique"
+msgstr "Kielikoodin täytyy olla uniikki"
+
+#: include/admin.php:329
+msgid "The language must have a name"
+msgstr "Kielellä täytyy olla nimi"
+
+#: include/admin.php:330
+msgid ""
+"The language was created, but the WordPress language file was not "
+"downloaded. Please install it manually."
+msgstr ""
+"Kieli luotiin, mutta WordPress-kielitiedostoa ei ladattu. Asenna se käsin."
+
+#: include/admin.php:449
+msgid "Widget title"
+msgstr "Vimpaimen otsikko"
+
+# @ polylang
+#: include/base.php:368
+msgid "Taxonomies"
+msgstr "Luokittelut"
+
+# @ polylang
+#: include/base.php:369
+msgid "Custom fields"
+msgstr "Mukautetut kentät"
+
+# @ polylang
+#: include/base.php:370
+msgid "Comment status"
+msgstr "Kommentin tila"
+
+# @ polylang
+#: include/base.php:371
+msgid "Ping status"
+msgstr "Ping-tila"
+
+# @ polylang
+#: include/base.php:372
+msgid "Sticky posts"
+msgstr "Kiinnitetyt artikkelit"
+
+# @ polylang
+#: include/base.php:373
+msgid "Published date"
+msgstr "Julkaisupäivämäärä"
+
+# @ polylang
+#: include/base.php:374
+msgid "Post format"
+msgstr "Artikkelin muoto"
+
+#: include/base.php:375
+msgid "Page parent"
+msgstr "Sivun yläsivu"
+
+# @ polylang
+#: include/base.php:376
+msgid "Page template"
+msgstr "Sivun sivupohja"
+
+#: include/base.php:377
+msgid "Page order"
+msgstr "Sivun järjestys"
+
+# @ polylang
+#: include/base.php:378
+msgid "Featured image"
+msgstr "Artikkelikuva"
+
+#: include/languages-form.php:42
+msgid "Edit language"
+msgstr "Muokkaa kieltä"
+
+#: include/languages-form.php:42 include/languages-form.php:123
+msgid "Add new language"
+msgstr "Lisää uusi kieli"
+
+#: include/languages-form.php:64
+msgid "Choose a language"
+msgstr "Valitse kieli"
+
+#: include/languages-form.php:78
+msgid "You can choose a language in the list or directly edit it below."
+msgstr "Voit valita kielen listalta tai muokata sitä suoraan alla."
+
+#: include/languages-form.php:82 include/list-table.php:34
+msgid "Full name"
+msgstr "Täydellinen nimi"
+
+#: include/languages-form.php:84
+msgid "The name is how it is displayed on your site (for example: English)."
+msgstr "Nimi kuinka se esiintyy sivustollasi (esimerkiksi: Englanti)."
+
+#: include/languages-form.php:88 include/list-table.php:35
+msgid "Locale"
+msgstr "Lokaali"
+
+#: include/languages-form.php:93
+msgid ""
+"Wordpress Locale for the language (for example: en_US). You will need to "
+"install the .mo file for this language."
+msgstr ""
+"Wordpress lokaali tälle kielelle (esimerkiksi: en_US). Sinun pitää asentaa ."
+"mo-tiedosto tälle kielelle."
+
+#: include/languages-form.php:97
+msgid "Language code"
+msgstr "Kielikoodi"
+
+#: include/languages-form.php:99
+msgid "2-letters ISO 639-1 language code (for example: en)"
+msgstr "2-kirjaiminen ISO 639-1 kielikoodi (esimerkiksi: en)"
+
+#: include/languages-form.php:103
+msgid "Text direction"
+msgstr "Tekstin suunta"
+
+#: include/languages-form.php:107
+msgid "left to right"
+msgstr "vasemmalta oikealle"
+
+#: include/languages-form.php:112
+msgid "right to left"
+msgstr "oikealta vasemmalle"
+
+#: include/languages-form.php:114
+msgid "Choose the text direction for the language"
+msgstr "Valitse kielen tekstin suunta"
+
+#: include/languages-form.php:118 include/list-table.php:37
+msgid "Order"
+msgstr "Järjestys"
+
+#: include/languages-form.php:120
+msgid "Position of the language in the language switcher"
+msgstr "Kielen sijainti kielivalinnassa"
+
+#: include/nav-menu.php:28 include/nav-menu.php:51 include/nav-menu.php:54
+#: include/nav-menu.php:82 include/nav-menu.php:106 polylang.php:302
+msgid "Language switcher"
+msgstr "Kielivalinta"
+
+#: include/languages-form.php:148
+msgid "Search translations"
+msgstr "Haun käännökset"
+
+#: include/languages-form.php:151
+msgid "Clean strings translation database"
+msgstr "Tyhjennä merkkijonot käännöstietokannasta"
+
+#: include/languages-form.php:167
+msgid "Default language"
+msgstr "Oletuskieli"
+
+#: include/languages-form.php:179
+msgid ""
+"There are posts, pages, categories or tags without language set. Do you want "
+"to set them all to default language ?"
+msgstr ""
+"Siellä on artikkeleita, sivuja, kategorioita tai tageja ilman asetettua "
+"kieltä. Haluatko asettaa ne oletuskielelle?"
+
+#: include/languages-form.php:187
+msgid "Detect browser language"
+msgstr "Tunnista selaimen kieli"
+
+#: include/languages-form.php:193
+msgid ""
+"When the front page is visited, set the language according to the browser "
+"preference"
+msgstr "Kun etusivulla vieraillaan, aseta kieli selaimen asetuksen mukaan"
+
+#: include/languages-form.php:200
+msgid "URL modifications"
+msgstr "URL muunnokset"
+
+#: include/languages-form.php:206
+msgid ""
+"The language is set from content. Posts, pages, categories and tags urls are "
+"not modified."
+msgstr ""
+"Kieli asetetaan sisällöstä. Artikkelien, sivujen, kategorioiden ja tagien "
+"url-osoitteita ei muokata."
+
+#: include/languages-form.php:214
+msgid ""
+"The language code, for example /en/, is added to all urls when using pretty "
+"permalinks."
+msgstr ""
+"Kielikoodi, esimerkiksi /en/, lisätään url-osoitteisiin kun käytetään "
+"osoiterakennetta."
+
+#: include/languages-form.php:223
+msgid "Remove /language/ in pretty permalinks. Example:"
+msgstr "Poista /language/ osoiterakenteesta. Esimerkiksi:"
+
+#: include/languages-form.php:232
+msgid "Keep /language/ in pretty permalinks. Example:"
+msgstr "Säilytä /language/ osoiterakenteessa. Esimerkiksi:"
+
+#: include/languages-form.php:241
+msgid "Hide URL language information for default language"
+msgstr "Piilota URL-osoitteen kielitieto oletuskieleltä"
+
+#: include/languages-form.php:251
+#, php-format
+msgid ""
+"When using static front page, redirect the language page (example: %s) to "
+"the front page in the right language"
+msgstr ""
+"Kun käytetään staattista etusivua, uudelleenohjaa kielisivu (esimerkiksi: "
+"%s) oikean kielen etusivulle"
+
+# @ polylang
+#: include/languages-form.php:260
+msgid "Media"
+msgstr "Media"
+
+# @ polylang
+#: include/languages-form.php:266
+msgid "Activate languages and translations for media"
+msgstr "Aktivoi kielet ja käännökset mediassa."
+
+#: include/languages-form.php:273
+msgid "Synchronization"
+msgstr "Synkronointi"
+
+# @ polylang
+#: include/languages-form.php:287
+msgid "Custom post types"
+msgstr "Mukautetut artikkelien mallit"
+
+# @ polylang
+#: include/languages-form.php:300
+msgid "Activate languages and translations for custom post types."
+msgstr "Aktivoi kielet ja käännökset mukautettujen artikkelien malleissa."
+
+# @ polylang
+#: include/languages-form.php:307
+msgid "Custom taxonomies"
+msgstr "Mukautetut luokittelut"
+
+# @ polylang
+#: include/languages-form.php:320
+msgid "Activate languages and translations for custom taxonomies."
+msgstr "Aktivoi kielet ja käännökset mukautettuissa luokitteluissa."
+
+#: include/list-table.php:26 include/media-translations.php:22
+#: include/media-translations.php:60 include/post-translations.php:10
+#: include/post-translations.php:33 include/term-translations.php:18
+#: include/term-translations.php:80
+msgid "Edit"
+msgstr "Muokkaa"
+
+#: include/list-table.php:27 include/list-table.php:162
+msgid "Delete"
+msgstr "Poista"
+
+#: include/list-table.php:36
+msgid "Code"
+msgstr "Koodi"
+
+#: include/list-table.php:38
+msgid "Flag"
+msgstr "Lippu"
+
+#: include/list-table.php:39
+msgid "Posts"
+msgstr "Artikkelit"
+
+#: include/list-table.php:125
+msgid "Name"
+msgstr "Nimi"
+
+#: include/list-table.php:126
+msgid "String"
+msgstr "Merkkijono"
+
+#: include/media-translations.php:6 include/media-translations.php:44
+#: include/term-translations.php:16
+msgid "Translation"
+msgstr "Käännös"
+
+#: include/media-translations.php:31 include/media-translations.php:68
+#: include/post-translations.php:38 include/term-translations.php:60
+msgid "Add new"
+msgstr "Lisää uusi"
+
+#: include/post-translations.php:5
+msgid "ID of pages in other languages:"
+msgstr "Sivun ID toisilla kielillä:"
+
+#: include/post-translations.php:5
+msgid "ID of posts in other languages:"
+msgstr "Artikkelin ID toisilla kielillä:"
+
+#: include/post-translations.php:9
+msgid "Page ID"
+msgstr "Sivun ID"
+
+#: include/post-translations.php:9
+msgid "Post ID"
+msgstr "Artikkelin ID"
+
+#: include/term-translations.php:48
+msgid "No untranslated term"
+msgstr "Ei kääntämättömiä termejä"
+
+#: include/widget.php:6
+msgid "Language Switcher"
+msgstr "Kielivalinta"
+
+#: include/widget.php:6
+msgid "Displays a language switcher"
+msgstr "Näytä kielivalinta"
+
+#: include/widget.php:69
+msgid "Title:"
+msgstr "Otsikko:"
+
+# @ polylang
+#. translators: plugin header field 'Description'
+#: polylang.php:0
+msgid "Adds multilingual capability to WordPress"
+msgstr "Lisää monikielisyyden tuen WordPressiin"
+
+#: polylang.php:133
+#, php-format
+msgid "You are using WordPress %s. Polylang requires at least WordPress %s."
+msgstr ""
+"Käytät WordPress versiota %s. Polylang vaatii vähintään WordPress version %s."
+
+#: polylang.php:174
+msgid "For some reasons, Polylang could not create a table in your database."
+msgstr "Jostain syystä Polylang ei voinut luoda taulukkoa tietokantaasi."
+
+# @ polylang
+#: polylang.php:235
+msgid ""
+"Polylang has been deactivated because you upgraded from a too old version."
+msgstr ""
+"Polylang on poistettu käytöstä, koska päivitit liian vanhasta versiosta."
+
+# @ polylang
+#: polylang.php:237
+#, php-format
+msgid "Please upgrade first to %s before ugrading to %s."
+msgstr "Päivitä ensin versioon %s ennen kuin päivität %s."
+
+# @ polylang
+#: include/list-table.php:124
+msgid "Group"
+msgstr "Ryhmä"
+
+# @ polylang
+#: include/list-table.php:173
+msgid "View all groups"
+msgstr "Näytä kaikki ryhmät"
+
+#~ msgid "Displays a language switcher at the end of the menu"
+#~ msgstr "Näytä kielivalinta valikon lopussa"
+
+#~ msgid "Theme locations and languages"
+#~ msgstr "Teeman sijainnit ja kielet"
+
+#~ msgid ""
+#~ "Please go to the %slanguages page%s to set theme locations and languages"
+#~ msgstr "Siirry %skielisivulle%s asettamaan teemojen sijainnit ja kielet"
+
+#~ msgid "Menus"
+#~ msgstr "Valikot"
+
+#~ msgid "Error: Restore of local flags failed!"
+#~ msgstr "Virhe: Paikallisten lippujen palautus epäonnistui!"
+
+#~ msgid "Please move your local flags from %s to %s"
+#~ msgstr "Siirrä paikalliset lippusi kansiosta %s kansioon %s"
+
+#~ msgid "%1$s %2$s"
+#~ msgstr "%1$s %2$s"
+
+#~ msgid "View posts for %1$s %2$s"
+#~ msgstr "Näytä artikkelit %1$s %2$s"
+
+#~ msgid "Site Title"
+#~ msgstr "Sivuston otsikko"
+
+#~ msgid "Tagline"
+#~ msgstr "Kuvaus"
+
+#~ msgid "&mdash; No Change &mdash;"
+#~ msgstr "&mdash; Ei muutosta &mdash;"
+
+#~ msgid "Page's language:"
+#~ msgstr "Sivun kieli:"
+
+#~ msgid "Post's language:"
+#~ msgstr "Artikkelin kieli:"
+
+#~ msgid "None"
+#~ msgstr "Ei mitään"
+
+#~ msgid "Update"
+#~ msgstr "Päivitä"
+
+#~ msgid ""
+#~ "Allow to synchronize categories, tags, featured image and other metas "
+#~ "between translations of a post or page"
+#~ msgstr ""
+#~ "Salli kategorioiden, tagien, artikkelikuvan ja muiden meta-tietojen "
+#~ "synkronointi artikkelin tai sivun käännösten välillä"
+
+#~ msgid "Search"
+#~ msgstr "Hae"
