@@ -13,6 +13,9 @@ class Polylang_Auto_Translate {
 		global $wpdb, $polylang;
 		$qv = &$query->query_vars;
 
+		if (!(is_array($qv['post_type']) && array_intersect($qv['post_type'], $polylang->post_types) || in_array($qv['post_type'], $polylang->post_types)))
+			return;
+
 		$sign = create_function('$n', 'return $n > 0 ? 1 : ($n < 0 ? -1 : 0);');
 
 		// /!\ always keep untranslated as is

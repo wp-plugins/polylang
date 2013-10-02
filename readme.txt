@@ -96,16 +96,17 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 
 * Bug correction: Illegal string offset 'taxonomy' in polylang/include/auto-translate.php
 * Bug correction: user defined strings translations are not loaded on admin side
+* Bug correction: untranslated post types are auto translated
 
 = 1.1.5 (2013-09-15) =
 
 * Add compatibility with Aqua Resizer (often used in porfolio themes)
 * Add support of 'icl_get_default_language' function from the WPML API
 * Remove the 3 characters limitation for the language code
-* Change default names for zh_CN, zh_HK, zh_TW 
+* Change default names for zh_CN, zh_HK, zh_TW
 * Bug correction: urls are modified in search forms
 
-= 1.1.4 (2013-08-16) = 
+= 1.1.4 (2013-08-16) =
 
 * Add simplified Chinese language contributed by [Changmeng Hu](http://www.wpdaxue.com)
 * Add Indonesian language contributed by [ajoull](http://www.ajoull.com/)
