@@ -94,9 +94,11 @@ If you are using a version older than 0.8, please ugrade to 0.9.8 before ugradin
 
 = 1.1.6 =
 
+* Add the possibility to display the upgrade notice on plugins page
 * Bug correction: Illegal string offset 'taxonomy' in polylang/include/auto-translate.php
 * Bug correction: user defined strings translations are not loaded on admin side
 * Bug correction: untranslated post types are auto translated
+* Bug correction: tags are not added to post when the name exists in several languages and they are not translations of each other
 
 = 1.1.5 (2013-09-15) =
 

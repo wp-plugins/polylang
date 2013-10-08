@@ -15,6 +15,7 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 
 		// adds a 'settings' link in the plugins table
 		add_filter('plugin_action_links_'.basename(POLYLANG_DIR).'/polylang.php', array(&$this, 'plugin_action_links'));
+		add_action('in_plugin_update_message-'.basename(POLYLANG_DIR).'/polylang.php', array(&$this, 'plugin_update_message'), 10, 2);
 
 		// ugrades languages files after a core upgrade (timing is important)
 		// FIXME private action ? is there a better way to do this ?
@@ -533,6 +534,19 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 					foreach ($terms as $term) {
 						if ($term_id = $this->get_term($term->term_id, $_POST['post_lang_choice']))
 							$newterms[] = (int) $term_id; // cast is important otherwise we get 'numeric' tags
+
+						// FIXME quick fix for Polylang 1.1.6
+						// handles tags with same names in several languages (but are not the translation of each other)
+						elseif ($term_id = $wpdb->get_var($wpdb->prepare("
+								SELECT t.term_id FROM $wpdb->terms AS t
+								INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id
+								INNER JOIN $wpdb->termmeta AS tm on t.term_id = tm.term_id
+								WHERE tt.taxonomy = %s AND t.name = %s
+								AND tm.meta_key = %s AND tm.meta_value = %s",
+								$tax, $term->name, '_language', $this->get_language($_POST['post_lang_choice'])->term_id
+							)))
+							$newterms[] = (int) $term_id;
+
 						elseif (!is_wp_error($term_info = wp_insert_term($term->name, $tax))) // create the term in the correct language
 							$newterms[] = (int) $term_info['term_id'];
 					}
@@ -1150,6 +1164,12 @@ class Polylang_Admin_Filters extends Polylang_Admin_Base {
 	function plugin_action_links($links) {
 		array_unshift($links, '<a href="admin.php?page=mlang">' . __('Settings', 'polylang') . '</a>');
 		return $links;
+	}
+
+	// adds the upgrade notice in plugins table
+	function plugin_update_message($plugin_data, $r) {
+		if (isset($r->upgrade_notice))
+			printf('<p style="margin: 3px 0 0 0; border-top: 1px solid #ddd; padding-top: 3px">%s</p>', $r->upgrade_notice);
 	}
 
 	// ugrades languages files after a core upgrade
