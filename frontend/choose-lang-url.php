@@ -12,6 +12,8 @@ class PLL_Choose_Lang_Url extends PLL_Choose_lang {
 	 * constructor
 	 *
 	 * @since 1.2
+	 *
+	 * @param object $links instance of PLL_Frontend_Links
 	 */
 	public function __construct(&$links) {
 		parent::__construct($links);

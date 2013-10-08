@@ -44,7 +44,8 @@ class PLL_Plugins_Compat {
 	 * @since 1.2
 	 */
 	function wordpress_importer_init() {
-		load_plugin_textdomain( 'wordpress-importer', false, basename(dirname( (new ReflectionClass('WP_Import'))->getFileName() )) . '/languages' );
+		$class = new ReflectionClass('WP_Import');
+		load_plugin_textdomain( 'wordpress-importer', false, basename(dirname( $class->getFileName() )) . '/languages' );
 
 		$GLOBALS['wp_import'] = new PLL_WP_Import();
 		register_importer( 'wordpress', 'WordPress', __('Import <strong>posts, pages, comments, custom fields, categories, and tags</strong> from a WordPress export file.', 'wordpress-importer'), array( $GLOBALS['wp_import'], 'dispatch' ) );
@@ -55,6 +56,9 @@ class PLL_Plugins_Compat {
 	 * removes the language filter for the taxonomy sitemaps
 	 *
 	 * @since 1.0.3
+	 *
+	 * @param array $args get_terms arguments
+	 * @return array modified list of arguments
 	 */
 	public function wpseo_remove_terms_filter($args) {
 		if (defined('WPSEO_VERSION') && isset($GLOBALS['wp_query']->query['sitemap']))
@@ -78,6 +82,8 @@ class PLL_Plugins_Compat {
 	 * Currently it is not possible to set the language in ajax url so let's use our cookie
 	 *
 	 * @since 1.1.1
+	 *
+	 * @param object $query WP_Query instance
 	 */
 	public function jetpack_infinite_scroll($query) {
 		if (isset($_GET['infinity'], $_GET['page'])) {

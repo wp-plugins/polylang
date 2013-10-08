@@ -137,14 +137,17 @@ break;
 // string translations tab
 case 'strings': ?>
 
+<div class="form-wrap">
 	<form id="string-translation" method="post" action="admin.php?page=mlang&amp;tab=strings&amp;noheader=true">
-	<input type="hidden" name="pll_action" value="string-translation" /><?php
-	$string_table->search_box(__('Search translations', 'polylang'), 'translations' );
-	wp_nonce_field('string-translation', '_wpnonce_string-translation');
-	$string_table->display();
-	printf('<label><input name="clean" type="checkbox" value="1" /> %s</label>', __('Clean strings translation database', 'polylang'));
-	submit_button(); // since WP 3.1 ?>
-	</form><?php
+		<input type="hidden" name="pll_action" value="string-translation" /><?php
+		$string_table->search_box(__('Search translations', 'polylang'), 'translations' );
+		wp_nonce_field('string-translation', '_wpnonce_string-translation');
+		$string_table->display();
+		printf('<br /><label><input name="clean" type="checkbox" value="1" /> %s</label>', __('Clean strings translation database', 'polylang')); ?>
+		<p><?php _e('Use this to remove unused strings from database, for example after a plugin has been uninstalled.', 'polylang');?></p><?php
+		submit_button(); // since WP 3.1 ?>
+	</form>
+</div><?php
 break;
 
 // settings tab
@@ -159,7 +162,10 @@ case 'settings': ?>
 
 		<tr>
 			<th><label for='default_lang'><?php _e('Default language', 'polylang');?></label></th>
-			<td><?php echo (new PLL_Walker_Dropdown)->walk($listlanguages, array('name' => 'default_lang', 'selected' => $this->options['default_lang']));?></td>
+			<td><?php
+				$dropdown = new PLL_Walker_Dropdown;
+				echo $dropdown ->walk($listlanguages, array('name' => 'default_lang', 'selected' => $this->options['default_lang']));?>
+			</td>
 		</tr><?php
 
 		// posts or terms without language set
@@ -275,15 +281,18 @@ case 'settings': ?>
 
 		<tr>
 			<th scope="row"><?php _e('Synchronization', 'polylang') ?></th>
-			<td><ul class="pll_inline_block"><?php
-				foreach (self::list_metas_to_sync() as $key => $str)
-					printf(
-						'<li><label><input name="sync[%s]" type="checkbox" value="1" %s /> %s</label></li>',
-						esc_attr($key),
-						in_array($key, $this->options['sync']) ? 'checked="checked"' :'',
-						esc_html($str)
-					);?>
-			</ul></td>
+			<td>
+				<ul class="pll_inline_block"><?php
+					foreach (self::list_metas_to_sync() as $key => $str)
+						printf(
+							'<li><label><input name="sync[%s]" type="checkbox" value="1" %s /> %s</label></li>',
+							esc_attr($key),
+							in_array($key, $this->options['sync']) ? 'checked="checked"' :'',
+							esc_html($str)
+						);?>
+				</ul>
+				<p><?php _e('The synchronization options allow to maintain exact same values (or translations in the case of taxonomies and page parent) of meta content between the translations of a post or page.', 'polylang');?></p>
+			</td>
 		</tr><?php
 
 		if (!empty($post_types)) {?>

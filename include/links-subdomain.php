@@ -15,6 +15,8 @@ class PLL_Links_Subdomain {
 	 * constructor
 	 *
 	 * @since 1.2
+	 *
+	 * @param object $model PLL_Model instance
 	 */
 	public function __construct($model) {
 		$this->model = &$model;
@@ -31,6 +33,10 @@ class PLL_Links_Subdomain {
 	 * links_model interface
 	 *
 	 * @since 1.2
+	 *
+	 * @param string $url url to modify
+	 * @param object $lang language
+	 * @return string modified url
 	 */
 	public function add_language_to_link($url, $lang) {
 		if (!empty($lang))
@@ -43,6 +49,9 @@ class PLL_Links_Subdomain {
 	 * links_model interface
 	 *
 	 * @since 1.2
+	 *
+	 * @param string $url url to modify
+	 * @return string modified url
 	 */
 	public function remove_language_from_link($url) {
 		foreach ($this->model->get_languages_list() as $language)
@@ -60,6 +69,9 @@ class PLL_Links_Subdomain {
 	 * links_model interface
 	 *
 	 * @since 1.2
+	 *
+	 * @param string $url url to modify
+	 * @return string modified url
 	 */
 	function remove_paged_from_link($url) {
 		return preg_replace('#\/page\/[0-9]+\/#', '/', $url);
@@ -70,6 +82,8 @@ class PLL_Links_Subdomain {
 	 * links_model interface
 	 *
 	 * @since 1.2
+	 *
+	 * @return string language slug
 	 */
 	public function get_language_from_url() {
 		$pattern = '#('.implode('|', $this->model->get_languages_list(array('fields' => 'slug'))).')\.#';
@@ -80,6 +94,11 @@ class PLL_Links_Subdomain {
 	 * returns the correct language link
 	 *
 	 * @since 1.2
+	 *
+	 * @param string $link term link
+	 * @param object $term term
+	 * @param string $tax taxonomy name
+	 * @return string language home link or unmodified term link
 	 */
 	function term_link($link, $term, $tax) {
 		return 'language' == $tax ? $this->add_language_to_link($this->home, $term) : $link;

@@ -14,6 +14,8 @@ class PLL_Links_Default {
 	 * constructor
 	 *
 	 * @since 1.2
+	 *
+	 * @param object $model PLL_Model instance
 	 */
 	public function __construct(&$model) {
 		$this->model = &$model;
@@ -24,6 +26,10 @@ class PLL_Links_Default {
 	 * links_model interface
 	 *
 	 * @since 1.2
+	 *
+	 * @param string $url url to modify
+	 * @param object $lang language
+	 * @return string modified url
 	 */
 	public function add_language_to_link($url, $lang) {
 		return !empty($lang) && '_get_page_link' != current_filter() ? add_query_arg( 'lang', $lang->slug, $url ) : $url;
@@ -34,6 +40,9 @@ class PLL_Links_Default {
 	 * links_model interface
 	 *
 	 * @since 1.2
+	 *
+	 * @param string $url url to modify
+	 * @return string modified url
 	 */
 	public function remove_language_from_link($url) {
 		return remove_query_arg('lang', $url);
@@ -44,6 +53,9 @@ class PLL_Links_Default {
 	 * links_model interface
 	 *
 	 * @since 1.2
+	 *
+	 * @param string $url url to modify
+	 * @return string modified url
 	 */
 	function remove_paged_from_link($url) {
 		return remove_query_arg('paged', $url);
@@ -54,6 +66,8 @@ class PLL_Links_Default {
 	 * links_model interface
 	 *
 	 * @since 1.2
+	 *
+	 * @return string language slug
 	 */
 	public function get_language_from_url() {
 		$pattern = '#lang=('.implode('|', $this->model->get_languages_list(array('fields' => 'slug'))).')#';

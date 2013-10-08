@@ -11,6 +11,8 @@ class PLL_Choose_Lang_Content extends PLL_Choose_lang {
 	 * constructor
 	 *
 	 * @since 1.2
+	 *
+	 * @param object $links instance of PLL_Frontend_Links
 	 */
 	public function __construct(&$links) {
 		parent::__construct($links);
@@ -28,6 +30,8 @@ class PLL_Choose_Lang_Content extends PLL_Choose_lang {
 	 * overwrites parent::set_language to remove the 'wp' action if the language is set before
 	 *
 	 * @since 1.2
+	 *
+	 * @param object $curlang current language
 	 */
 	protected function set_language($curlang) {
 		parent::set_language($curlang);
@@ -38,6 +42,8 @@ class PLL_Choose_Lang_Content extends PLL_Choose_lang {
 	 * returns the language based on the queried content
 	 *
 	 * @since 1.2
+	 *
+	 * @return object|bool detected language, false if none was found
 	 */
 	protected function get_language_from_content() {
 		// no language set for 404
@@ -68,6 +74,8 @@ class PLL_Choose_Lang_Content extends PLL_Choose_lang {
 	 * add the lang query var when querying archives with no language code
 	 *
 	 * @since 1.2
+	 *
+	 * @param object $query instance of WP_Query
 	 */
 	public function parse_main_query($query) {
 		if ($query !== $GLOBALS['wp_the_query'])
@@ -111,6 +119,9 @@ class PLL_Choose_Lang_Content extends PLL_Choose_lang {
 	 * if no language found by get_language_from_content, return the preferred one
 	 *
 	 * @since 0.9
+	 *
+	 * @param object|bool language found in get_language_from_content
+	 * @return object language
 	 */
 	public function pll_get_current_language($lang) {
 		return !$lang ? $this->get_preferred_language() : $lang;

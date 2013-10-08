@@ -19,12 +19,16 @@
  *
  * @since 0.5
  *
- * @param array $args
+ * @param array $args optional
  * @return null|string|array null if displaying, array if raw is requested, string otherwise
  */
 function pll_the_languages($args = '') {
 	global $polylang;
-	return $polylang instanceof PLL_Frontend ? (new PLL_Switcher)->the_languages($polylang->links, $args) : '';
+	if ($polylang instanceof PLL_Frontend) {
+		$switcher = new PLL_Switcher;
+		return $switcher->the_languages($polylang->links, $args);
+	}
+	return '';
 }
 
 /*
@@ -32,7 +36,7 @@ function pll_the_languages($args = '') {
  *
  * @since 0.8.1
  *
- * @param string $field the language field to return 'name', 'locale', defaults to 'slug'
+ * @param string $field optional the language field to return 'name', 'locale', defaults to 'slug'
  * @return string the requested field for the current language
  */
 function pll_current_language($field = 'slug') {
@@ -45,7 +49,7 @@ function pll_current_language($field = 'slug') {
  *
  * @since 1.0
  *
- * @param string $field the language field to return 'name', 'locale', defaults to 'slug'
+ * @param string $field optional the language field to return 'name', 'locale', defaults to 'slug'
  * @return string the requested field for the default language
  */
 function pll_default_language($field = 'slug') {
@@ -59,7 +63,7 @@ function pll_default_language($field = 'slug') {
  * @since 0.5
  *
  * @param int $post_id post id
- * @param string $slug language code, defaults to current language
+ * @param string $slug optional language code, defaults to current language
  * @return int post id of the translation if exists
  */
 function pll_get_post($post_id, $slug = '') {
@@ -73,10 +77,10 @@ function pll_get_post($post_id, $slug = '') {
  * @since 0.5
  *
  * @param int $term_id term id
- * @param string $slug language code, defaults to current language
+ * @param string $slug optional language code, defaults to current language
  * @return int term id of the translation if exists
  */
-function pll_get_term($term_id, $slug = false) {
+function pll_get_term($term_id, $slug = '') {
 	global $polylang;
 	return isset($polylang) && ($slug = $slug ? $slug : pll_current_language()) ? $polylang->model->get_term($term_id, $slug) : null;
 }
@@ -100,8 +104,8 @@ function pll_home_url() {
  *
  * @param string $name a unique name for the string
  * @param string $string the string to register
- * @param string $context the group in which the string is registered, defaults to 'polylang'
- * @param bool $multiline wether the string table should display a multiline textarea or a single line input
+ * @param string $context optional the group in which the string is registered, defaults to 'polylang'
+ * @param bool $multiline optional wether the string table should display a multiline textarea or a single line input, defaults to single line
  */
 function pll_register_string($name, $string, $context = 'polylang', $multiline = false) {
 	global $polylang;

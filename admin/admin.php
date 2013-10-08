@@ -11,7 +11,7 @@ class PLL_Admin extends PLL_Base {
 
 	/*
 	 * loads the polylang text domain
-	 * setups filters and action needed on all admin pages
+	 * setups filters and action needed on all admin pages and on plugins page
 	 * loads the settings pages or the filters base on the request
 	 * manages the admin language filter and the "admin preferred language"
 	 *
@@ -33,7 +33,8 @@ class PLL_Admin extends PLL_Base {
 		add_action('admin_enqueue_scripts', array(&$this, 'admin_enqueue_scripts'));
 
 		// adds a 'settings' link in the plugins table
-		add_filter('plugin_action_links_'.basename(POLYLANG_DIR).'/polylang.php', array(&$this, 'plugin_action_links'));
+		add_filter('plugin_action_links_' . POLYLANG_BASENAME, array(&$this, 'plugin_action_links'));
+		add_action('in_plugin_update_message-' . POLYLANG_BASENAME, array(&$this, 'plugin_update_message'), 10, 2);
 
 		if (!$this->model->get_languages_list())
 			return;
@@ -105,6 +106,19 @@ class PLL_Admin extends PLL_Base {
 	public function plugin_action_links($links) {
 		array_unshift($links, '<a href="admin.php?page=mlang">' . __('Settings', 'polylang') . '</a>');
 		return $links;
+	}
+
+	/*
+	 * adds the upgrade notice in plugins table
+	 *
+	 * @since 1.1.6
+	 *
+	 * @param array $plugin_data not used
+	 * @param object $r plugin update data
+	 */
+	function plugin_update_message($plugin_data, $r) {
+		if (isset($r->upgrade_notice))
+			printf('<p style="margin: 3px 0 0 0; border-top: 1px solid #ddd; padding-top: 3px">%s</p>', $r->upgrade_notice);
 	}
 
 	/*

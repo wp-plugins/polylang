@@ -24,6 +24,9 @@ class PLL_Frontend_Auto_Translate {
 		global $wpdb;
 		$qv = &$query->query_vars;
 
+		if (!empty($qv['post_type']) && !$this->model->is_translated_post_type($qv['post_type']))
+			return;
+
 		$sign = create_function('$n', 'return $n > 0 ? 1 : ($n < 0 ? -1 : 0);');
 
 		// /!\ always keep untranslated as is
@@ -158,7 +161,7 @@ class PLL_Frontend_Auto_Translate {
 	 * @since 1.1.1
 	 */
 	public function get_terms_args($args, $taxonomies) {
-		if (!empty($args['include']) && isset($this->model->taxonomies) && is_array($this->model->taxonomies) && array_intersect($taxonomies, $this->model->taxonomies)) {
+		if (!empty($args['include']) && $this->model->is_translated_taxonomy($taxonomies)) {
 			foreach(wp_parse_id_list($args['include']) as $id)
 				$arr[] = ($tr = pll_get_term($id)) ? $tr : $id;
 

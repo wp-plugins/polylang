@@ -16,6 +16,8 @@ class PLL_Links_Directory {
 	 * constructor
 	 *
 	 * @since 1.2
+	 *
+	 * @param object $model PLL_Model instance
 	 */
 	public function __construct($model) {
 		$this->model = &$model;
@@ -33,6 +35,10 @@ class PLL_Links_Directory {
 	 * links_model interface
 	 *
 	 * @since 1.2
+	 *
+	 * @param string $url url to modify
+	 * @param object $lang language
+	 * @return string modified url
 	 */
 	public function add_language_to_link($url, $lang) {
 		if (!empty($lang)) {
@@ -50,6 +56,9 @@ class PLL_Links_Directory {
 	 * links_model interface
 	 *
 	 * @since 1.2
+	 *
+	 * @param string $url url to modify
+	 * @return string modified url
 	 */
 	function remove_language_from_link($url) {
 		foreach ($this->model->get_languages_list() as $language)
@@ -69,6 +78,9 @@ class PLL_Links_Directory {
 	 * links_model interface
 	 *
 	 * @since 1.2
+	 *
+	 * @param string $url url to modify
+	 * @return string modified url
 	 */
 	function remove_paged_from_link($url) {
 		return preg_replace('#\/page\/[0-9]+\/#', '/', $url);
@@ -79,6 +91,8 @@ class PLL_Links_Directory {
 	 * links_model interface
 	 *
 	 * @since 1.2
+	 *
+	 * @return string language slug
 	 */
 	public function get_language_from_url() {
 		$root = $this->options['rewrite'] ? '' : 'language/';
@@ -103,6 +117,9 @@ class PLL_Links_Directory {
 	 * prepares rewrite rules filters
 	 *
 	 * @since 0.8.1
+	 *
+	 * @param array $pre not used
+	 * @return unmodified $pre
 	 */
 	public function prepare_rewrite_rules($pre) {
 		//clean filters which could have been set in a previous call (may occur when changing Polylang settings)
@@ -130,6 +147,9 @@ class PLL_Links_Directory {
 	 * thanks to brbrbr http://wordpress.org/support/topic/plugin-polylang-rewrite-rules-not-correct
 	 *
 	 * @since 0.8.1
+	 *
+	 * @param array $rules rewrite rules
+	 * @return array modified rewrite rules
 	 */
 	public function rewrite_rules($rules) {
 		$filter = str_replace('_rewrite_rules', '', current_filter());

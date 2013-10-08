@@ -93,6 +93,8 @@ class PLL_WP_Import extends WP_Import {
 	 * remaps terms languages
 	 *
 	 * @since 1.2
+	 *
+	 * @param array $terms array of terms in 'term_translations' taxonomy
 	 */
 	function remap_terms_relations(&$terms){
 		global $polylang, $wpdb;
@@ -118,6 +120,9 @@ class PLL_WP_Import extends WP_Import {
 	 * remaps translations for both posts and terms
 	 *
 	 * @since 1.2
+	 *
+	 * @param array $terms array of terms in 'post_translations' or 'term_translations' taxonomies
+	 * @param array $processed_objects array of posts or terms processed by WordPress Importer
 	 */
 	function remap_translations(&$terms, &$processed_objects) {
 		global $wpdb;

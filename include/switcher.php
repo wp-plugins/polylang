@@ -96,8 +96,8 @@ class PLL_Switcher {
 		if ($args['raw'])
 			return $elements;
 
-		$out = $args['dropdown'] ? (new PLL_Walker_Dropdown)->walk($elements, $args) : (new PLL_Walker_List)->walk($elements, $args);
-		$out = apply_filters('pll_the_languages', $out, $args);
+		$walker = $args['dropdown'] ? new PLL_Walker_Dropdown() : new PLL_Walker_List();
+		$out = apply_filters('pll_the_languages', $walker->walk($elements, $args), $args);
 
 		if ($args['echo'])
 			echo $out;

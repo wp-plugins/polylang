@@ -13,6 +13,8 @@ abstract class PLL_Choose_Lang {
 	 * constructor
 	 *
 	 * @since 1.2
+	 *
+	 * @param object $links instance of PLL_Frontend_Links
 	 */
 	public function __construct(&$links) {
 		$this->links = &$links;
@@ -37,6 +39,8 @@ abstract class PLL_Choose_Lang {
 	 * fires the action 'pll_language_defined'
 	 *
 	 * @since 1.2
+	 *
+	 * @param object $curlang current language
 	 */
 	protected function set_language($curlang) {
 		// don't set the language a second time
@@ -58,6 +62,8 @@ abstract class PLL_Choose_Lang {
 	 * returns the language according to browser preference or the default language
 	 *
 	 * @since 0.1
+	 *
+	 * @return object browser preferred language or default language
 	 */
 	public function get_preferred_language() {
 		// check first if the user was already browsing this site
@@ -165,6 +171,8 @@ abstract class PLL_Choose_Lang {
 	 * set the language when posting a comment
 	 *
 	 * @since 0.8.4
+	 *
+	 * @param int $post_id the post beeing commented
 	 */
 	public function pre_comment_on_post($post_id) {
 		$this->set_language($this->model->get_post_language($post_id));
@@ -175,6 +183,8 @@ abstract class PLL_Choose_Lang {
 	 * to enable one home page (and one page for posts) per language
 	 *
 	 * @since 1.2
+	 *
+	 * @param object $query instance of WP_Query
 	 */
 	public function parse_main_query($query) {
 		if (empty($GLOBALS['wp_the_query']) || $query !== $GLOBALS['wp_the_query'])

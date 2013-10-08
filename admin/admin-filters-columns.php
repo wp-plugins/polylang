@@ -130,6 +130,7 @@ class PLL_Admin_Filters_Columns {
 			if (current_filter() == 'bulk_edit_custom_box')
 				array_unshift($elements, (object) array('slug' => -1, 'name' => __('&mdash; No Change &mdash;')));
 
+			$dropdown = new PLL_Walker_Dropdown();
 			printf(
 				'<fieldset class="inline-edit-col-left">
 					<div class="inline-edit-col">
@@ -142,7 +143,7 @@ class PLL_Admin_Filters_Columns {
 				</fieldset>',
 				$name,
 				__('Language', 'polylang'),
-				(new PLL_Walker_Dropdown)->walk($elements, array('name' => $name))
+				$dropdown->walk($elements, array('name' => $name))
 			);
 		}
 		return $column;

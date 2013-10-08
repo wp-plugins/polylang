@@ -49,10 +49,11 @@ class PLL_Admin_Filters extends PLL_Filters_Base {
 	 * @since 0.3
 	 */
 	public function in_widget_form($widget) {
+		$dropdown = new PLL_Walker_Dropdown();
 		printf('<p><label for="%1$s">%2$s%3$s</label></p>',
 			esc_attr( $widget->id.'_lang_choice'),
 			__('The widget is displayed for:', 'polylang'),
-			(new PLL_Walker_Dropdown)->walk(
+			$dropdown->walk(
 				array_merge(
 					array((object) array('slug' => 0, 'name' => __('All languages', 'polylang'))),
 					$this->model->get_languages_list()
@@ -95,13 +96,14 @@ class PLL_Admin_Filters extends PLL_Filters_Base {
 	 * @since 0.4
 	 */
 	public function personal_options($profileuser) {
+		$dropdown = new PLL_Walker_Dropdown();
 		printf('
 			<tr>
 				<th><label for="user_lang">%s</label></th>
 				<td>%s</td>
 			</tr>',
 			__('Admin language', 'polylang'),
-			(new PLL_Walker_Dropdown)->walk(
+			$dropdown->walk(
 				array_merge(
 					array((object) array('locale' => 0, 'name' => __('Wordpress default', 'polylang'))),
 					$this->model->get_languages_list()

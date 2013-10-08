@@ -6,3 +6,11 @@
 * better management of default category for each language
 * update management of the 'copy' action of the custom fields section in wpml-config.xml
 * start improving the inline doc
+
+1.2dev42
+* suppress the 'Posts' custom post type in Polylang settings
+* Add some descriptions in Polylang settings and strings translations
+* Add the possibility to display the upgrade notice on plugins page (included in 1.1.6)
+* Bug correction (included in 1.1.6): untranslated post types are auto translated
+* improve inline doc
+* correct syntax errors for PHP < 5.4

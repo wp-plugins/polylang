@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://polylang.wordpress.com/
-Version: 1.2dev40
+Version: 1.2dev42
 Author: Frédéric Demarle
 Description: Adds multilingual capability to WordPress
 Text Domain: polylang
@@ -29,31 +29,39 @@ Domain Path: /languages
  *
  */
 
-define('POLYLANG_VERSION', '1.2dev40');
+define('POLYLANG_VERSION', '1.2dev42');
 define('PLL_MIN_WP_VERSION', '3.1');
 
+define('POLYLANG_BASENAME', plugin_basename(__FILE__)); // plugin name as known by WP
+
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
-define('PLL_INC', POLYLANG_DIR.'/include');
-define('PLL_FRONT_INC',  POLYLANG_DIR.'/frontend');
-define('PLL_ADMIN_INC',  POLYLANG_DIR.'/admin');
+define('PLL_INC', POLYLANG_DIR . '/include');
+define('PLL_FRONT_INC',  POLYLANG_DIR . '/frontend');
+define('PLL_ADMIN_INC',  POLYLANG_DIR . '/admin');
 
+// default directory to store user data such as custom flags
 if (!defined('PLL_LOCAL_DIR'))
-	define('PLL_LOCAL_DIR', WP_CONTENT_DIR.'/polylang'); // default directory to store user data such as custom flags
+	define('PLL_LOCAL_DIR', WP_CONTENT_DIR . '/polylang');
 
-if (file_exists(PLL_LOCAL_DIR.'/pll-config.php'))
-	include_once(PLL_LOCAL_DIR.'/pll-config.php'); // includes local config file if exists
+// includes local config file if exists
+if (file_exists(PLL_LOCAL_DIR . '/pll-config.php'))
+	include_once(PLL_LOCAL_DIR . '/pll-config.php');
 
-define('POLYLANG_URL', plugins_url('/'.basename(POLYLANG_DIR))); // our url. Don't use WP_PLUGIN_URL http://wordpress.org/support/topic/ssl-doesnt-work-properly
+// our url. Don't use WP_PLUGIN_URL http://wordpress.org/support/topic/ssl-doesnt-work-properly
+define('POLYLANG_URL', plugins_url('/' . basename(POLYLANG_DIR)));
 
+// default url to access user data such as custom flags
 if (!defined('PLL_LOCAL_URL'))
-	define('PLL_LOCAL_URL', content_url('/polylang')); // default url to access user data such as custom flags
+	define('PLL_LOCAL_URL', content_url('/polylang'));
 
+// cookie name. no cookie will be used if set to false
 if (!defined('PLL_COOKIE'))
-	define('PLL_COOKIE', 'pll_language'); // cookie name. no cookie will be used if set to false
+	define('PLL_COOKIE', 'pll_language');
 
 // backward compatibility WP < 3.6
+// the search form js is no more needed in WP 3.6+ except if the search form is hardcoded elsewhere than in searchform.php
 if (!defined('PLL_SEARCH_FORM_JS') && !version_compare($GLOBALS['wp_version'], '3.6', '<'))
-	define('PLL_SEARCH_FORM_JS', false); // the search form js is no more needed in WP 3.6+ except if the search form is hardcoded elsewhere than in searchform.php
+	define('PLL_SEARCH_FORM_JS', false);
 
 // avoid loading polylang admin for frontend ajax requests if 'pll_load_front' is set (thanks to g100g)
 if (!defined('PLL_AJAX_ON_FRONT'))
@@ -106,6 +114,8 @@ class Polylang {
 	 * activation or deactivation for all blogs
 	 *
 	 * @since 1.2
+	 *
+	 * @param string $what either 'activate' or 'deactivate'
 	 */
 	protected function do_for_all_blogs($what) {
 		// network
@@ -150,8 +160,10 @@ class Polylang {
 	protected function _activate() {
 		if ($options = get_option('polylang')) {
 			// plugin upgrade
-			if (version_compare($options['version'], POLYLANG_VERSION, '<'))
-				(new PLL_Upgrade($options))->upgrade_at_activation();
+			if (version_compare($options['version'], POLYLANG_VERSION, '<')) {
+				$upgrade = new PLL_Upgrade($options);
+				$upgrade->upgrade_at_activation();
+			}
 		}
 		// defines default values for options in case this is the first installation
 		else {
@@ -196,6 +208,8 @@ class Polylang {
 	 * blog creation on multisite (to set default options)
 	 *
 	 * @since 0.9.4
+	 *
+	 * @param int $blog_id
 	 */
 	public function wpmu_new_blog($blog_id) {
 		switch_to_blog($blog_id);
@@ -207,6 +221,8 @@ class Polylang {
 	 * autoload classes
 	 *
 	 * @since 1.2
+	 *
+	 * @param string $class
 	 */
 	public function autoload($class) {
 		$class = str_replace('_', '-', strtolower(substr($class, 4)));
@@ -228,7 +244,8 @@ class Polylang {
 
 		// plugin upgrade
 		if ($options && version_compare($options['version'], POLYLANG_VERSION, '<')) {
-			if (!(new PLL_Upgrade($options))->upgrade()) // if the version is too old
+			$upgrade = new PLL_Upgrade($options);
+			if (!$upgrade->upgrade()) // if the version is too old
 				return;
 		}
 
@@ -250,6 +267,9 @@ class Polylang {
 	 * setup the links model based on options
 	 *
 	 * @since 1.2
+	 *
+	 * @param object $model instance of PLL_Model
+	 * @return object implementing "links_model interface"
 	 */
 	protected function get_links_model(&$model) {
 		if (get_option('permalink_structure'))

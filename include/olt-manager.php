@@ -12,7 +12,7 @@
 class PLL_OLT_Manager {
 	protected $default_locale;
 	protected $list_textdomains = array(); // all text domains
-	protected $labels = array(); // post types and taxonomies labels to translate
+	public $labels = array(); // post types and taxonomies labels to translate
 
 	/*
 	 * constructor: setups relevant filters
@@ -70,6 +70,9 @@ class PLL_OLT_Manager {
 			$GLOBALS['wp_locale'] = new WP_Locale();
 		}
 
+		// allow plugins to translate text the same way we do for post types and taxonomies labels
+		do_action_ref_array('pll_translate_labels', array(&$this->labels));
+
 		// free memory
 		unset($this->default_locale, $this->list_textdomains, $this->labels);
 	}
@@ -78,6 +81,11 @@ class PLL_OLT_Manager {
 	 * saves all text domains in a table for later usage
 	 *
 	 * @since 0.1
+	 *
+	 * @param bool $bool not used
+	 * @param string $domain text domain name
+	 * @param string $mofile translation file name
+	 * @return bool always true
 	 */
 	public function mofile($bool, $domain, $mofile) {
 		$this->list_textdomains[] = array ('mo' => $mofile, 'domain' => $domain);
@@ -88,6 +96,11 @@ class PLL_OLT_Manager {
 	 * saves post types and taxonomies labels for a later usage
 	 *
 	 * @since 0.9
+	 *
+	 * @param string $translation not used
+	 * @param string $text string to translate
+	 * @param string $domain text domain
+	 * @return string unmodified $translation
 	 */
 	public function gettext($translation, $text, $domain) {
 		$this->labels[$text] =  array('domain' => $domain);
@@ -98,6 +111,12 @@ class PLL_OLT_Manager {
 	 * saves post types and taxonomies labels for a later usage
 	 *
 	 * @since 0.9
+	 *
+	 * @param string $translation not used
+	 * @param string $text string to translate
+	 * @param string $context some comment to describe the context of string to translate
+	 * @param string $domain text domain
+	 * @return string unmodified $translation
 	 */
 	public function gettext_with_context($translation, $text, $context, $domain) {
 		$this->labels[$text] =  array('domain' => $domain, 'context' => $context);
@@ -108,9 +127,11 @@ class PLL_OLT_Manager {
 	 * translates post types and taxonomies labels once the language is known
 	 *
 	 * @since 0.9
+	 *
+	 * @param object $type either a post type or a taxonomy
 	 */
 	public function translate_labels($type) {
-		foreach($type->labels as $key=>$label)
+		foreach($type->labels as $key => $label)
 			if (is_string($label) && isset($this->labels[$label]))
 				$type->labels->$key = isset($this->labels[$label]['context']) ?
 					_x($label, $this->labels[$label]['context'], $this->labels[$label]['domain']) :
@@ -121,11 +142,14 @@ class PLL_OLT_Manager {
 	 * allows Polylang to be the first plugin loaded ;-)
 	 *
 	 * @since 1.2
+	 *
+	 * @param array $plugins list of active plugins
+	 * @return array list of active plugins
 	 */
 	public function make_polylang_first($plugins) {
-		if ($key = array_search($plugin = basename(POLYLANG_DIR) . '/polylang.php', $plugins)) {
+		if ($key = array_search(POLYLANG_BASENAME, $plugins)) {
 			unset($plugins[$key]);
-			array_unshift($plugins, $plugin);
+			array_unshift($plugins, POLYLANG_BASENAME);
 		}
 		return $plugins;
 	}

@@ -46,10 +46,11 @@ class PLL_Admin_Filters_Media {
 		$post_id = $post->ID;
 		$lang = $this->model->get_post_language($post_id);
 
+		$dropdown = new PLL_Walker_Dropdown();
 		$fields['language'] = array(
 			'label' => __('Language', 'polylang'),
 			'input' => 'html',
-			'html'  => (new PLL_Walker_Dropdown)->walk($this->model->get_languages_list(), array(
+			'html'  => $dropdown->walk($this->model->get_languages_list(), array(
 				'name'     => sprintf('attachments[%d][language]', $post_id),
 				'class'    => 'media_lang_choice',
 				'selected' => $lang ? $lang->slug : ''

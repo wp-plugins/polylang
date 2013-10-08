@@ -60,6 +60,8 @@ class PLL_Admin_Filters_Term {
 		$taxonomy = $_GET['taxonomy'];
 		$lang = isset($_GET['new_lang']) ? $this->model->get_language($_GET['new_lang']) : $this->pref_lang;
 
+		$dropdown = new PLL_Walker_Dropdown();
+
 		printf('
 			<div class="form-field">
 				<label for="term_lang_choice">%s</label>
@@ -67,7 +69,7 @@ class PLL_Admin_Filters_Term {
 				<p>%s</p>
 			</div>',
 			__('Language', 'polylang'),
-			(new PLL_Walker_Dropdown)->walk($this->model->get_languages_list(), array('name' => 'term_lang_choice', 'value' => 'term_id', 'selected' => $lang ? $lang->term_id : '')),
+			$dropdown->walk($this->model->get_languages_list(), array('name' => 'term_lang_choice', 'value' => 'term_id', 'selected' => $lang ? $lang->term_id : '')),
 			__('Sets the language', 'polylang')
 		);
 
@@ -88,6 +90,8 @@ class PLL_Admin_Filters_Term {
 		$lang = $this->model->get_term_language($term_id);
 		$taxonomy = $tag->taxonomy;
 
+		$dropdown = new PLL_Walker_Dropdown();
+
 		printf('
 			<tr class="form-field">
 				<th scope="row">
@@ -99,7 +103,7 @@ class PLL_Admin_Filters_Term {
 				</td>
 			</tr>',
 			__('Language', 'polylang'),
-			(new PLL_Walker_Dropdown)->walk($this->model->get_languages_list(), array('name' => 'term_lang_choice', 'value' => 'term_id', 'selected' => $lang ? $lang->term_id : '')),
+			$dropdown->walk($this->model->get_languages_list(), array('name' => 'term_lang_choice', 'value' => 'term_id', 'selected' => $lang ? $lang->term_id : '')),
 			__('Sets the language', 'polylang')
 		);
 

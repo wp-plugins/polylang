@@ -21,7 +21,7 @@
  * flag_url            => url of the flag
  * flag                => html img of the flag
  *
- * @ since 1.2
+ * @since 1.2
  */
 class PLL_Language {
 
@@ -29,6 +29,9 @@ class PLL_Language {
 	 * constructor: builds a language object given its two corresponding terms in language and term_language taxonomies
 	 *
 	 * @since 1.2
+	 *
+	 * @param object $language 'language' term
+	 * @param object $term_language corresponding 'term_language' term
 	 */
 	public function __construct($language, $term_language) {
 		foreach ($language as $prop => $value)
@@ -53,6 +56,8 @@ class PLL_Language {
 	 * returns the url of the language flag
 	 *
 	 * @since 1.2
+	 *
+	 * @return string flag url
 	 */
 	protected function get_flag_url() {
 		if (file_exists(POLYLANG_DIR.($file = '/flags/'.$this->locale.'.png')))
@@ -70,6 +75,8 @@ class PLL_Language {
 	 * returns an html img of the language flag
 	 *
 	 * @since 1.2
+	 *
+	 * @return string flag img html markup
 	 */
 	protected function get_flag() {
 		return apply_filters('pll_get_flag', empty($this->flag_url) ? '' :

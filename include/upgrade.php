@@ -34,6 +34,8 @@ class PLL_Upgrade {
 	 * upgrades if possible otherwise returns false to stop Polylang loading
 	 *
 	 * @since 1.2
+	 *
+	 * @return bool true if upgrade is possible, false otherwise
 	 */
 	public function upgrade() {
 		if (!$this->can_upgrade()) {
@@ -49,6 +51,8 @@ class PLL_Upgrade {
 	 * upgrades if OK
 	 *
 	 * @since 1.2
+	 *
+	 * @return bool true if upgrade is possible, false otherwise
 	 */
 	public function can_upgrade() {
 		// don't manage upgrade from version < 0.8
@@ -83,7 +87,7 @@ class PLL_Upgrade {
 	 * @since 1.2
 	 */
 	protected function _upgrade() {
-		foreach (array('0.9', '1.0', '1.1', '1.2') as $version)
+		foreach (array('0.9', '1.0', '1.1', '1.2dev40') as $version)
 			if (version_compare($this->options['version'], $version, '<'))
 				call_user_func(array(&$this, 'upgrade_' . str_replace('.', '_', $version)));
 

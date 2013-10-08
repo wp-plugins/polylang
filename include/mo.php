@@ -13,13 +13,15 @@ class PLL_MO extends MO {
 	 * @since 1.2
 	 */
 	public function __construct() {
-		register_post_type('polylang_mo', array('rewrite' => false, 'query_var' => false));
+		register_post_type('polylang_mo', array('rewrite' => false, 'query_var' => false, '_pll' => true));
 	}
 
 	/*
 	 * writes a PLL_MO object into a custom post
 	 *
 	 * @since 1.2
+	 *
+	 * @param object $lang the language in which we want to export strings
 	 */
 	public function export_to_db($lang) {
 		$this->add_entry($this->make_entry('', '')); // empty string translation, just in case
@@ -33,7 +35,7 @@ class PLL_MO extends MO {
 		$lang_id = is_object($lang) ? $lang->term_id : $lang;
 		$post = get_page_by_title('polylang_mo_' . $lang_id, ARRAY_A, 'polylang_mo'); // wp_insert_post wants an array
 		$post['post_title'] = 'polylang_mo_' . $lang_id;;
-		$post['post_content'] = serialize($strings);
+		$post['post_content'] = serialize($strings); // json_encode would take less space but is slower to decode
 		$post['post_status'] = 'publish';
 		$post['post_type'] = 'polylang_mo';
 		wp_insert_post($post);
@@ -43,6 +45,8 @@ class PLL_MO extends MO {
 	 * reads a PLL_MO object from a custom post
 	 *
 	 * @since 1.2
+	 *
+	 * @param object $lang the language in which we want to get strings
 	 */
 	public function import_from_db($lang) {
 		$lang_id = is_object($lang) ? $lang->term_id : $lang;

@@ -11,6 +11,8 @@ class PLL_Admin_Model extends PLL_Model {
 	 * constructor
 	 *
 	 * @since 1.2
+	 *
+	 * @param array $options Polylang options
 	 */
 	public function __construct(&$options) {
 		parent::__construct($options);
@@ -28,6 +30,9 @@ class PLL_Admin_Model extends PLL_Model {
 	 * term_group -> language order when displayed
 	 *
 	 * @since 1.2
+	 *
+	 * @param array $args
+	 * @return int error code
 	 */
 	public function add_language($args) {
 		if ($error = $this->validate_lang($args))
@@ -80,6 +85,8 @@ class PLL_Admin_Model extends PLL_Model {
 	 * delete a language
 	 *
 	 * @since 1.2
+	 *
+	 * @param int $lang_id language term_id
 	 */
 	public function delete_language($lang_id) {
 		$lang = $this->get_language((int) $lang_id);
@@ -136,6 +143,9 @@ class PLL_Admin_Model extends PLL_Model {
 	 * term_group -> language order when displayed
 	 *
 	 * @since 1.2
+	 *
+	 * @param array $args
+	 * @return int error code
 	 */
 	public function update_language($args) {
 		$lang = $this->get_language((int) $args['lang_id']);
@@ -180,6 +190,11 @@ class PLL_Admin_Model extends PLL_Model {
 	 * validates data entered when creating or updating a language
 	 *
 	 * @since 0.4
+	 *
+	 * @param array $args
+	 * @param object $lang optional the language currently updated, the language is created if not set
+	 * @return int error code
+	 * @see PLL_Admin_Model::add_language
 	 */
 	protected function validate_lang($args, $lang = null) {
 		// validate locale
@@ -205,6 +220,10 @@ class PLL_Admin_Model extends PLL_Model {
 	 * used to set the language of posts or terms in mass
 	 *
 	 * @since 1.2
+	 *
+	 * @param string $type either 'post' or 'term'
+	 * @param array $ids array of post ids or term ids
+	 * @param object|string $lang object or slug
 	 */
 	public function set_language_in_mass($type, $ids, $lang) {
 		global $wpdb;
@@ -225,6 +244,8 @@ class PLL_Admin_Model extends PLL_Model {
 	 * returns unstranslated posts and terms ids (used in settings)
 	 *
 	 * @since 0.9
+	 *
+	 * @return array array made of an array of post ids and an array of term ids
 	 */
 	public function get_objects_with_no_lang() {
 		$posts = get_posts(array(
@@ -252,8 +273,11 @@ class PLL_Admin_Model extends PLL_Model {
 	 * used to delete translations or update the translations when a language slug has been modified in settings
 	 *
 	 * @since 0.5
+	 *
+	 * @param string $old_slug the old language slug
+	 * @param string $new_slug optional, the new language slug, if not set it means the correspondant has been deleted
 	 */
-	public function update_translations($old_slug, $new_slug = false) {
+	public function update_translations($old_slug, $new_slug = '') {
 		global $wpdb;
 
 		$terms = get_terms(array('post_translations', 'term_translations'));

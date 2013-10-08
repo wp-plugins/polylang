@@ -13,6 +13,8 @@ class PLL_Settings {
 	 * constructor
 	 *
 	 * @since 1.2
+	 *
+	 * @param object $model instance of PLL_Model
 	 */
 	public function __construct(&$model) {
 		$this->model = &$model;
@@ -110,7 +112,7 @@ class PLL_Settings {
 				break;
 
 			case 'settings':
-				$post_types = array_unique(apply_filters('pll_get_post_types', get_post_types(array('_builtin' => false)), true));
+				$post_types = array_unique(apply_filters('pll_get_post_types', array_diff(get_post_types(array('_builtin' => false)), get_post_types(array('_pll' => true))), true));
 				$taxonomies = array_unique(apply_filters('pll_get_taxonomies', array_diff(get_taxonomies(array('_builtin' => false)), get_taxonomies(array('_pll' => true))), true));
 				break;
 
@@ -246,6 +248,11 @@ class PLL_Settings {
 	 * register strings for translation making sure it is not duplicate or empty
 	 *
 	 * @since 0.6
+	 *
+	 * @param string $name a unique name for the string
+	 * @param string $string the string to register
+	 * @param string $context optional the group in which the string is registered, defaults to 'polylang'
+	 * @param bool $multiline optional wether the string table should display a multiline textarea or a single line input, defaults to single line
 	 */
 	public function register_string($name, $string, $context = 'polylang', $multiline = false) {
 		// backward compatibility with Polylang older than 1.1
@@ -263,6 +270,8 @@ class PLL_Settings {
 	 * get registered strings
 	 *
 	 * @since 0.6.1
+	 *
+	 * @return array list of all registered strings
 	 */
 	protected function &get_strings() {
 		// WP strings
@@ -301,6 +310,8 @@ class PLL_Settings {
 	 * list the post metas to synchronize
 	 *
 	 * @since 1.0
+	 *
+	 * @return array
 	 */
 	static public function list_metas_to_sync() {
 		return array(

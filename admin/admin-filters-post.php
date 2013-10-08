@@ -92,13 +92,15 @@ class PLL_Admin_Filters_Post {
 			(isset($_GET['new_lang']) ? $this->model->get_language($_GET['new_lang']) :
 			$this->pref_lang);
 
+		$dropdown = new PLL_Walker_Dropdown();
+
 		// NOTE: the class "tags-input" allows to include the field in the autosave $_POST (see autosave.js)
 		printf('
 			<p><em>%s</em></p>
 			<p>%s<br /></p>
 			<div id="post-translations" class="translations">',
 			__('Language', 'polylang'),
-			(new PLL_Walker_Dropdown)->walk($this->model->get_languages_list(), array(
+			$dropdown->walk($this->model->get_languages_list(), array(
 				'name'     => $post_type == 'attachment' ? sprintf('attachments[%d][language]', $post_ID) : 'post_lang_choice',
 				'class'    => $post_type == 'attachment' ? 'media_lang_choice' : 'tags-input',
 				'selected' => $lang ? $lang->slug : ''
