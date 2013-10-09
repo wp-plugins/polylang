@@ -14,6 +14,8 @@ abstract class PLL_Filters_Base {
 	 * constructor
 	 *
 	 * @since 1.2
+	 *
+	 * @param object $links_model
 	 */
 	public function __construct(&$links_model) {
 		$this->links_model = &$links_model;
@@ -35,6 +37,10 @@ abstract class PLL_Filters_Base {
 	 * modifies post & page links
 	 *
 	 * @since 0.7
+	 *
+	 * @param string $link post link
+	 * @param object|int $post post object or post ID
+	 * @return string modified post link
 	 */
 	public function post_link($link, $post) {
 		static $links = array();
@@ -56,6 +62,11 @@ abstract class PLL_Filters_Base {
 	 * modifies term link
 	 *
 	 * @since 0.7
+	 *
+	 * @param string $link term link
+	 * @param object $post term object
+	 * @param string $tax taxonomy name
+	 * @return string modified term link
 	 */
 	public function term_link($link, $term, $tax) {
 		static $links = array();
@@ -72,6 +83,9 @@ abstract class PLL_Filters_Base {
 	 * works for all translated hierarchical post types
 	 *
 	 * @since 0.6
+	 *
+	 * @param object $lang language object
+	 * @return array list of page ids to exclude
 	 */
 	public function exclude_pages($lang) {
 		$args = array(
@@ -97,3 +111,4 @@ abstract class PLL_Filters_Base {
 		return get_posts($args);
 	}
 }
+

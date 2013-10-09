@@ -8,9 +8,14 @@
 class PLL_Switcher {
 
 	/*
-	 * returns options available for the language switcher (menu or widget)
+	 * returns options available for the language switcher - menu or widget
+	 * either strings to display the options or default values
 	 *
 	 * @since 0.7
+	 *
+	 * @param string $type optional either 'menu' or 'widget', defaults to 'widget'
+	 * @param string $key optional either 'string' or 'default', defaults to 'string'
+	 * @return array list of switcher options srings or default values
 	 */
 	static public function get_switcher_options($type = 'widget', $key ='string') {
 		$options = array(
@@ -27,9 +32,16 @@ class PLL_Switcher {
 	}
 
 	/*
-	 * returns the language elements for use in a walker
+	 * get the language elements for use in a walker
+	 *
+	 * list of parameters accepted in $args:
+	 * @see PLL_Switcher::the_languages
 	 *
 	 * @since 1.2
+	 *
+	 * @param object $links instance of PLL_Frontend_Links
+	 * @param array $args
+	 * @return array
 	 */
 	protected function get_elements($links, $args) {
 		extract($args);
@@ -73,7 +85,25 @@ class PLL_Switcher {
 	 * displays a language switcher
 	 * or returns the raw elements to build a custom language switcher
 	 *
+	 * list of parameters accepted in $args:
+	 *
+	 * dropdown               => the list is displayed as dropdown if set to 1, defaults to 0
+	 * echo                   => echoes the list if set to 1, defaults to 1
+	 * hide_if_empty          => hides languages with no posts (or pages) if set to 1, defaults to 1
+	 * show_flags             => displays flags if set to 1, defaults to 0
+	 * show_names             => show language names if set to 1, defaults to 1
+	 * display_names_as       => wether to display the language name or its slug, valid options are 'slug' and 'name', defaults to name
+	 * force_home             => will always link to home in translated language if set to 1, defaults to 0
+	 * hide_if_no_translation => hide the link if there is no translation if set to 1, defaults to 0
+	 * hide_current           => hide the current language if set to 1, defaults to 0
+	 * post_id                => returns links to translations of post defined by post_id if set, defaults not set
+	 * raw                    => return a raw array instead of html markup if set to 1, defaults to 0
+	 *
 	 * @since 0.1
+	 *
+	 * @param object $links instance of PLL_Frontend_Links
+	 * @param array $args
+	 * @return string|array either the html markup of the switcher or the raw elements to build a custom language switcher
 	 */
 	public function the_languages($links, $args = '') {
 		$defaults = array(
@@ -143,6 +173,10 @@ class PLL_Walker_List extends Walker {
 	 * overrides Walker:walk to set depth argument
 	 *
 	 * @since 1.2
+	 *
+	 * @param array $elements elements to display
+	 * @param array $args
+	 * @return string
 	 */
 	function walk($elements, $args = array()) {
 		return parent::walk($elements, -1, $args);

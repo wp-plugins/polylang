@@ -322,4 +322,31 @@ class PLL_Admin_Model extends PLL_Model {
 				SET description = ( CASE term_id " . implode(' ', $ut['case']) . " END )
 				WHERE term_id IN ( " . implode(',', $ut['in']) . " )");
 	}
+
+	/*
+	 * it is possible to have several terms with the same name in the same taxonomy (one per language)
+	 * but the native get_term_by will return only one term
+	 * so here the function adds the language parameter
+	 *
+	 * @since 1.2
+	 *
+	 * @param string $field currently the only possibility is 'name'
+	 * @param string $value the term name
+	 * @param string $taxonomy taxonomy name
+	 * @param string|object $language the language slug or object
+	 * @return null|int the term_id of the found term
+	 */
+	public function get_term_by($field, $value, $taxonomy, $language) {
+		global $wpdb;
+
+		if ('name' != $field)
+			return NULL;
+
+		return $wpdb->get_var("SELECT t*, tt* FROM $wpdb->terms AS t"
+			. " INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id"
+			. $this->join_clause('term')
+			. $wpdb->prepare(" WHERE tt.taxonomy = %s AND t.name = %s", $taxonomy, $value)
+			. $this->where_clause($this->get_language($language), 'term')
+		);
+	}
 }

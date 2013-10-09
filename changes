@@ -14,3 +14,8 @@
 * Bug correction (included in 1.1.6): untranslated post types are auto translated
 * improve inline doc
 * correct syntax errors for PHP < 5.4
+
+1.2dev43
+* Bug correction (included in 1.1.6): tags are not added to post when the name exists in several languages and they are not translations of each other
+* improve inline doc
+

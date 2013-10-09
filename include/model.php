@@ -401,7 +401,7 @@ class PLL_Model {
 	 */
 	public function join_clause($type) {
 		global $wpdb;
-		return " INNER JOIN $wpdb->term_relationships AS pll_tr ON pll_tr.object_id = " . ("term" == $type ? "t.term_id" : "ID");
+		return " INNER JOIN $wpdb->term_relationships AS pll_tr ON pll_tr.object_id = " . ('term' == $type ? "t.term_id" : "ID");
 	}
 
 	/*

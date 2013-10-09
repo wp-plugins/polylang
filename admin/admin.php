@@ -16,6 +16,8 @@ class PLL_Admin extends PLL_Base {
 	 * manages the admin language filter and the "admin preferred language"
 	 *
 	 * @since 1.2
+	 *
+	 * @param object $links_model
 	 */
 	public function __construct(&$links_model) {
 		parent::__construct($links_model);
@@ -102,6 +104,9 @@ class PLL_Admin extends PLL_Base {
 	 * adds a 'settings' link in the plugins table
 	 *
 	 * @since 0.1
+	 *
+	 * @param array $links list of links associated to the plugin
+	 * @return array modified list of links
 	 */
 	public function plugin_action_links($links) {
 		array_unshift($links, '<a href="admin.php?page=mlang">' . __('Settings', 'polylang') . '</a>');
@@ -122,9 +127,12 @@ class PLL_Admin extends PLL_Base {
 	}
 
 	/*
-	 * returns the locale based on user preference
+	 * get the locale based on user preference
 	 *
 	 * @since 0.4
+	 *
+	 * @param string $locale
+	 * @return string modified locale
 	 */
 	public function get_locale($locale) {
 		return ($loc = get_user_meta(get_current_user_id(), 'user_lang', 'true')) ? $loc : $locale;
@@ -151,6 +159,8 @@ class PLL_Admin extends PLL_Base {
 	 * adds the languages list in admin bar for the admin languages filter
 	 *
 	 * @since 0.9
+	 *
+	 * @param object $wp_admin_bar
 	 */
 	public function admin_bar_menu($wp_admin_bar) {
 		$url = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
@@ -187,8 +197,13 @@ class PLL_Admin extends PLL_Base {
 	/*
 	 * downloads mofiles from http://svn.automattic.com/wordpress-i18n/
 	 * FIXME is it the best class for this?
+	 * FIXME use language packs API coming with WP 3.7 instead
 	 *
 	 * @since 0.6
+	 *
+	 * @param string $locale locale to download
+	 * @param bool $upgrade optional true if this is an upgrade, false if this is the first download, defaults to false
+	 * @return bool true on success, false otherwise
 	 */
 	static public function download_mo($locale, $upgrade = false) {
 		global $wp_version;

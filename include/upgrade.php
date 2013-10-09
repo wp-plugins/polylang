@@ -87,7 +87,7 @@ class PLL_Upgrade {
 	 * @since 1.2
 	 */
 	protected function _upgrade() {
-		foreach (array('0.9', '1.0', '1.1', '1.2dev40') as $version)
+		foreach (array('0.9', '1.0', '1.1', '1.2') as $version)
 			if (version_compare($this->options['version'], $version, '<'))
 				call_user_func(array(&$this, 'upgrade_' . str_replace('.', '_', $version)));
 
