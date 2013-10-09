@@ -235,6 +235,7 @@ class PLL_Admin_Filters_Post {
 					foreach ($terms as $term) {
 						if ($newterm = $this->model->get_term_by('name', $term->name, $tax, $_POST['post_lang_choice']))
 							$newterms[] = (int) $newterm->term_id; // cast is important otherwise we get 'numeric' tags
+
 						elseif (!is_wp_error($term_info = wp_insert_term($term->name, $tax))) // create the term in the correct language
 							$newterms[] = (int) $term_info['term_id'];
 					}
