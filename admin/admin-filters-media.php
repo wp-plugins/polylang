@@ -12,6 +12,9 @@ class PLL_Admin_Filters_Media {
 	 * constructor: setups filters and actions
 	 *
 	 * @since 1.2
+	 *
+	 * @param object $model instance of PLL_Model
+	 * @param object $pref_lang language chosen in admin filter or default language
 	 */
 	public function __construct(&$model, $pref_lang) {
 		$this->model = &$model;
@@ -147,6 +150,8 @@ class PLL_Admin_Filters_Media {
 	 * sets the language of a new attachment
 	 *
 	 * @since 0.9.8
+	 *
+	 * @param int $post_id
 	 */
 	public function add_attachment($post_id) {
 		if (!empty($_GET['new_lang'])) // created as a translation from an existing attachment

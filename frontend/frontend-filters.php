@@ -12,6 +12,9 @@ class PLL_Frontend_Filters extends PLL_Filters_Base {
 	 * constructor: setups filters and actions
 	 *
 	 * @since 1.2
+	 *
+	 * @param object $links_model
+	 * @param object $curlang
 	 */
 	public function __construct(&$links_model, &$curlang) {
 		parent::__construct($links_model);
@@ -68,6 +71,9 @@ class PLL_Frontend_Filters extends PLL_Filters_Base {
 	 * returns the locale based on current language
 	 *
 	 * @since 0.1
+	 *
+	 * @param string $locale
+	 * @return string
 	 */
 	public function get_locale($locale) {
 		return $this->curlang->locale;
@@ -101,6 +107,9 @@ class PLL_Frontend_Filters extends PLL_Filters_Base {
 	 * filters sticky posts by current language
 	 *
 	 * @since 0.8
+	 *
+	 * @param array $posts list of sticky posts ids
+	 * @return array modified list of sticky posts ids
 	 */
 	public function option_sticky_posts($posts) {
 		if ($this->curlang && !empty($posts)) {
@@ -118,6 +127,8 @@ class PLL_Frontend_Filters extends PLL_Filters_Base {
 	 * Note: pll_is_translated_post_type is correctly defined only once the action 'wp_loaded' has been fired
 	 *
 	 * @since 0.1
+	 *
+	 * @param object $query WP_Query object
 	 */
 	public function pre_get_posts($query) {
 		$qv = $query->query_vars;
@@ -134,6 +145,11 @@ class PLL_Frontend_Filters extends PLL_Filters_Base {
 	 * filters categories and post tags by language when needed
 	 *
 	 * @since 0.2
+	 *
+	 * @param array $clauses
+	 * @param array $taxonomies
+	 * @param array $args
+	 * @return array modified sql clauses
 	 */
 	public function terms_clauses($clauses, $taxonomies, $args) {
 		// does nothing except on taxonomies which are filterable
@@ -149,6 +165,9 @@ class PLL_Frontend_Filters extends PLL_Filters_Base {
 	 * useful for the pages widget
 	 *
 	 * @since 0.4
+	 *
+	 * @param array $pages list of page ids to exclude from wp_list_pages
+	 * @return array modified list of page ids
 	 */
 	public function wp_list_pages_excludes($pages) {
 		return array_merge($pages, $this->exclude_pages($this->curlang));
@@ -158,6 +177,10 @@ class PLL_Frontend_Filters extends PLL_Filters_Base {
 	 * filters the comments according to the current language mainly for the recent comments widget
 	 *
 	 * @since 0.2
+	 *
+	 * @param array $clauses
+	 * @param object $query
+	 * @return array modified $clauses
 	 */
 	public function comments_clauses($clauses, $query) {
 		return $this->model->comments_clauses($clauses, isset($query->query_vars['lang']) ? $query->query_vars['lang'] : $this->curlang);
@@ -167,6 +190,9 @@ class PLL_Frontend_Filters extends PLL_Filters_Base {
 	 * modifies the sql request for wp_get_archives an get_adjacent_post to filter by the current language
 	 *
 	 * @since 0.1
+	 *
+	 * @param string $sql join clause
+	 * @return string modified join clause
 	 */
 	public function posts_join($sql) {
 		return $sql . $this->model->join_clause('post');
@@ -176,6 +202,9 @@ class PLL_Frontend_Filters extends PLL_Filters_Base {
 	 * modifies the sql request for wp_get_archives and get_adjacent_post to filter by the current language
 	 *
 	 * @since 0.1
+	 *
+	 * @param string $sql where clause
+	 * @return string modified where clause
 	 */
 	public function posts_where($sql) {
 		preg_match("#post_type = '([^']+)'#", $sql, $matches);	// find the queried post type

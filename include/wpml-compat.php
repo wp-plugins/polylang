@@ -367,7 +367,7 @@ class PLL_WPML_Config {
 	 *
 	 * @since 1.0
 	 *
-	 * @param string wpml-confi.xml file content
+	 * @param string wpml-config.xml file content
 	 * @param string $context identifies where the file was found
 	 */
 	protected function xml_parse($xml, $context) {

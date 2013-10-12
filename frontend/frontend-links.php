@@ -13,6 +13,8 @@ class PLL_Frontend_Links {
 	 * constructor
 	 *
 	 * @since 1.2
+	 *
+	 * @param object $links_model
 	 */
 	public function __construct(&$links_model) {
 		$this->links_model = &$links_model;
@@ -32,6 +34,9 @@ class PLL_Frontend_Links {
 	 * adds filters once the language is defined
 	 *
 	 * @since 1.2
+	 *
+	 * @param string $slug current language slug
+	 * @param object $curlang current language object
 	 */
 	public function pll_language_defined($slug, $curlang) {
 		$this->curlang = $curlang;
@@ -61,6 +66,9 @@ class PLL_Frontend_Links {
 	 * modifies the author and date links to add the language parameter (as well as feed link)
 	 *
 	 * @since 0.4
+	 *
+	 * @param string $link
+	 * @return string modified link
 	 */
 	public function archive_link($link) {
 		return $this->links_model->add_language_to_link($link, $this->curlang);
@@ -70,6 +78,11 @@ class PLL_Frontend_Links {
 	 * modifies post format links
 	 *
 	 * @since 0.7
+	 *
+	 * @param string $link
+	 * @param object $term term object
+	 * @param string $tax taxonomy name
+	 * @return string modified link
 	 */
 	public function term_link($link, $term, $tax) {
 		if (isset($this->links[$link]))
@@ -83,6 +96,10 @@ class PLL_Frontend_Links {
 	 * modifies the page link in case the front page is not in the default language
 	 *
 	 * @since 0.7.2
+	 *
+	 * @param string $link
+	 * @param int $id
+	 * @return string modified link
 	 */
 	public function page_link($link, $id) {
 		static $posts = array(); // cache the results
@@ -121,6 +138,10 @@ class PLL_Frontend_Links {
 	 * manages canonical redirection of the homepage when using page on front
 	 *
 	 * @since 0.1
+	 *
+	 * @param string $redirect_url
+	 * @param string $requested_url
+	 * @return bool|string modified url, false if redirection is canceled
 	 */
 	public function redirect_canonical($redirect_url, $requested_url) {
 		global $wp_query;
@@ -133,6 +154,10 @@ class PLL_Frontend_Links {
 	 * filters the home url to get the right language
 	 *
 	 * @since 0.4
+	 *
+	 * @param string $url
+	 * @param string $path
+	 * @return string
 	 */
 	public function home_url($url, $path) {
 		if (!(did_action('template_redirect') || did_action('login_init')) || rtrim($url,'/') != $this->home)
@@ -171,6 +196,9 @@ class PLL_Frontend_Links {
 	 * returns the url of the translation (if exists) of the current page
 	 *
 	 * @since 0.1
+	 *
+	 * @param object $language
+	 * @return string
 	 */
 	public function get_translation_url($language) {
 		static $translation_url = array(); // used to cache results
@@ -222,6 +250,9 @@ class PLL_Frontend_Links {
 	 * returns the home url in the right language
 	 *
 	 * @since 0.1
+	 *
+	 * @param object $language optional defaults to current language
+	 * @param bool $is_search optional wether we need the home url for a search form, defaults to false
 	 */
 	public function get_home_url($language = '', $is_search = false) {
 		static $home_urls = array(); // used for cache

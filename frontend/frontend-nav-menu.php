@@ -27,6 +27,9 @@ class PLL_Frontend_Nav_Menu {
 	 * take care to menu_order as it is used later in wp_nav_menu
 	 *
 	 * @since 1.1.1
+	 *
+	 * @param array $items menu items
+	 * @return array modified items
 	 */
 	public function wp_get_nav_menu_items($items) {
 		$new_items = array();
@@ -62,6 +65,9 @@ class PLL_Frontend_Nav_Menu {
 	 * returns the ancestors of a menu item
 	 *
 	 * @since 1.1.1
+	 *
+	 * @param object $item
+	 * @return array ancestors ids
 	 */
 	public function get_ancestors($item) {
 		$ids = array();
@@ -75,6 +81,9 @@ class PLL_Frontend_Nav_Menu {
 	 * removes current-menu and current-menu-ancestor classes to lang switcher when not on the home page
 	 *
 	 * @since 1.1.1
+	 *
+	 * @param array $items
+	 * @return array modified menu items
 	 */
 	public function wp_nav_menu_objects($items) {
 		$r_ids = $k_ids = array();
@@ -103,6 +112,9 @@ class PLL_Frontend_Nav_Menu {
 	 * available since WP3.6
 	 *
 	 * @since 1.1
+	 *
+	 * @param array $atts
+	 * @return array modified $atts
 	 */
 	public function nav_menu_link_attributes($atts, $item, $args) {
 		if (isset($item->lang))
@@ -115,6 +127,9 @@ class PLL_Frontend_Nav_Menu {
 	 * avoid infinite loop and http://core.trac.wordpress.org/ticket/9968
 	 *
 	 * @since 1.1
+	 *
+	 * @param object $term nav menu
+	 * @return object
 	 */
 	public function get_nav_menu($term) {
 		static $once = false;

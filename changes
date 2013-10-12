@@ -19,3 +19,14 @@
 * Bug correction (included in 1.1.6): tags are not added to post when the name exists in several languages and they are not translations of each other
 * improve inline doc
 
+1.2dev44
+* Request confirmation for deleting a language
+* Modify admin language filter for valid html
+* update .pot file
+* Improve inline doc
+
+1.2dev45
+* fix: notice when a language has been deleted
+* fix: API, WPML compat and plugins compat not loaded
+* fix: custom flags not loaded
+

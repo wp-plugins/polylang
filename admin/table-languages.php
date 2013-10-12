@@ -40,11 +40,18 @@ class PLL_Table_Languages extends WP_List_Table {
 	 * @since 0.1
 	 */
 	function column_name($item) {
-		$edit_link = esc_url(admin_url('admin.php?page=mlang&amp;pll_action=edit&amp;lang=' . $item->term_id));
-		$delete_link = wp_nonce_url('?page=mlang&amp;pll_action=delete&amp;noheader=true&amp;lang=' . $item->term_id, 'delete-lang');
 		return $item->name . $this->row_actions(array(
-			'edit'   => sprintf('<a href="%s">%s</a>', $edit_link,  __('Edit','polylang')),
-			'delete' => sprintf('<a href="%s">%s</a>', $delete_link,  __('Delete','polylang'))
+			'edit'   => sprintf(
+				'<a href="%s">%s</a>',
+				esc_url(admin_url('admin.php?page=mlang&amp;pll_action=edit&amp;lang=' . $item->term_id)),
+				__('Edit','polylang')
+			),
+			'delete' => sprintf(
+				'<a href="%s" onclick = "return confirm(\'%s\');">%s</a>',
+				wp_nonce_url('?page=mlang&amp;pll_action=delete&amp;noheader=true&amp;lang=' . $item->term_id, 'delete-lang'),
+				__('You are about to permanently delete this language. Are you sure?', 'polylang'),
+				__('Delete','polylang')
+			)
 		));
 	}
 

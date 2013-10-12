@@ -22,14 +22,14 @@ class PLL_Admin extends PLL_Base {
 	public function __construct(&$links_model) {
 		parent::__construct($links_model);
 
-		 // plugin i18n, only needed for backend
+		// plugin i18n, only needed for backend
 		load_plugin_textdomain('polylang', false, basename(POLYLANG_DIR).'/languages');
-
-		// adds the link to the languages panel in the wordpress admin menu
-		add_action('admin_menu', array(&$this, 'add_menus'));
 
 		if (PLL_SETTINGS)
 			$this->settings_page = new PLL_Settings($this->model);
+
+		// adds the link to the languages panel in the wordpress admin menu
+		add_action('admin_menu', array(&$this, 'add_menus'));
 
 		// setup js scripts and css styles
 		add_action('admin_enqueue_scripts', array(&$this, 'admin_enqueue_scripts'));
@@ -96,8 +96,7 @@ class PLL_Admin extends PLL_Base {
 			if (in_array($screen->base, $v[0]) && ($v[2] || $this->model->get_languages_list()))
 				wp_enqueue_script('pll_'.$script, POLYLANG_URL .'/js/'.$script.$suffix.'.js', $v[1], POLYLANG_VERSION);
 
-		if (in_array($screen->base, array('settings_page_mlang', 'post', 'edit-tags', 'edit', 'upload', 'media')))
-			wp_enqueue_style('polylang_admin', POLYLANG_URL .'/css/admin'.$suffix.'.css', array(), POLYLANG_VERSION);
+		wp_enqueue_style('polylang_admin', POLYLANG_URL .'/css/admin'.$suffix.'.css', array(), POLYLANG_VERSION);
 	}
 
 	/*
@@ -178,18 +177,12 @@ class PLL_Admin extends PLL_Base {
 		));
 
 		foreach (array_merge($all_item, $this->model->get_languages_list()) as $lang) {
-			$href = esc_url(add_query_arg('lang', $lang->slug, $url));
 			$wp_admin_bar->add_menu(array(
 				'parent' => 'languages',
 				'id'     => $lang->slug,
-				'title'  => sprintf(
-					'<input name="language" type="radio" onclick="location.href=%s" value="%s" %s /> %s', // FIXME this works but produces invalid html
-					"'" . $href . "'", // onclick is needed for Chrome browser, thanks to RavanH for the bug report and fix
-					esc_attr($lang->slug),
-					$selected == $lang->slug ? 'checked="checked"' : '',
-					esc_html($lang->name)
-				),
-				'href'   => $href,
+				'title'  => esc_html($lang->name),
+				'href'   => esc_url(add_query_arg('lang', $lang->slug, $url)),
+				'meta'   => $selected == $lang->slug ? array('class' => 'pll-ab-selected') : array()
 			));
 		}
 	}

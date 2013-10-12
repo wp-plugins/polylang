@@ -102,6 +102,13 @@ class PLL_Admin_Model extends PLL_Model {
 			}
 		}
 
+		// delete menus locations
+		$locations = get_theme_mod('nav_menu_locations');
+		foreach ($locations as $loc => $menu)
+			if (false !== strpos($loc, '#' . $lang->slug))
+				unset($locations[$loc]);
+		set_theme_mod('nav_menu_locations', $locations);
+
 		// delete users options
 		foreach (get_users(array('fields' => 'ID')) as $user_id) {
 			delete_user_meta($user_id, 'user_lang', $lang->locale);
@@ -168,6 +175,14 @@ class PLL_Admin_Model extends PLL_Model {
 						$this->options['widgets'][$key] = $slug;
 				}
 			}
+
+			// update menus locations
+			$locations = get_theme_mod('nav_menu_locations');
+			foreach ($locations as $loc => $menu) {
+				$loc = str_replace('#' . $old_slug, '#' . $slug, $loc);
+				$new_locations[$loc] = $menu;
+			}
+			set_theme_mod('nav_menu_locations', $new_locations);
 
 			// update the default language option if necessary
 			if ($this->options['default_lang'] == $old_slug)

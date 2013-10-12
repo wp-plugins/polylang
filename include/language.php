@@ -47,19 +47,14 @@ class PLL_Language {
 		$this->is_rtl = $description['rtl'];
 
 		$this->description = &$this->locale; // backward compatibility with Polylang < 1.2
-
-		$this->flag_url = $this->get_flag_url();
-		$this->flag = $this->get_flag();
 	}
 
 	/*
-	 * returns the url of the language flag
+	 * sets flag_url and flag properties
 	 *
 	 * @since 1.2
-	 *
-	 * @return string flag url
 	 */
-	protected function get_flag_url() {
+	public function set_flag() {
 		if (file_exists(POLYLANG_DIR.($file = '/flags/'.$this->locale.'.png')))
 			$url = POLYLANG_URL.$file;
 
@@ -68,18 +63,9 @@ class PLL_Language {
 		if (!PLL_ADMIN && ( file_exists(PLL_LOCAL_DIR.($file = '/'.$this->locale.'.png')) || file_exists(PLL_LOCAL_DIR.($file = '/'.$this->locale.'.jpg')) ))
 			$url = PLL_LOCAL_URL.$file;
 
-		return empty($url) ? '' : $url;
-	}
+		$this->flag_url = empty($url) ? '' : $url;
 
-	/*
-	 * returns an html img of the language flag
-	 *
-	 * @since 1.2
-	 *
-	 * @return string flag img html markup
-	 */
-	protected function get_flag() {
-		return apply_filters('pll_get_flag', empty($this->flag_url) ? '' :
+		$this->flag = apply_filters('pll_get_flag', empty($this->flag_url) ? '' :
 			sprintf(
 				'<img src="%s" title="%s" alt="%s" />',
 				esc_url($this->flag_url),

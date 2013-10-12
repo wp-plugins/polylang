@@ -13,6 +13,8 @@ class PLL_Admin_Filters_Columns {
 	 * constructor: setups filters and actions
 	 *
 	 * @since 1.2
+	 *
+	 * @param object $model instance of PLL_Model
 	 */
 	public function __construct(&$model) {
 		$this->model = &$model;

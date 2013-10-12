@@ -8,6 +8,14 @@
 class PLL_Frontend_Auto_Translate {
 	public $model;
 
+
+	/*
+	 * constructor
+	 *
+	 * @since 1.1
+	 *
+	 * @param object $model PLL_Model instance
+	 */
 	public function __construct(&$model) {
 		$this->model = &$model;
 
@@ -19,6 +27,8 @@ class PLL_Frontend_Auto_Translate {
 	 * filters posts query to automatically translate included ids
 	 *
 	 * @since 1.1
+	 *
+	 * @param object $query WP_Query object
 	 */
 	public function pre_get_posts($query) {
 		global $wpdb;
@@ -159,6 +169,10 @@ class PLL_Frontend_Auto_Translate {
 	 * filters terms query to automatically translate included ids
 	 *
 	 * @since 1.1.1
+	 *
+	 * @param array $args
+	 * @param array $taxonomies
+	 * @return array modified $args
 	 */
 	public function get_terms_args($args, $taxonomies) {
 		if (!empty($args['include']) && $this->model->is_translated_taxonomy($taxonomies)) {

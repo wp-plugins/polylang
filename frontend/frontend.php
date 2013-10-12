@@ -15,6 +15,8 @@ class PLL_Frontend extends PLL_Base{
 	 * setups the language chooser based on options
 	 *
 	 * @since 1.2
+	 *
+	 * @param object $links_model
 	 */
 	public function __construct(&$links_model) {
 		parent::__construct($links_model);
@@ -36,6 +38,9 @@ class PLL_Frontend extends PLL_Base{
 	 * setups filters and nav menus once the language has been defined
 	 *
 	 * @since 1.2
+	 *
+	 * @param string $slug current language slug
+	 * @param object $curlang current language object
 	 */
 	public function pll_language_defined($slug, $curlang) {
 		$this->curlang = $curlang;

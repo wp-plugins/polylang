@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://polylang.wordpress.com/
-Version: 1.2dev43
+Version: 1.2dev45
 Author: Frédéric Demarle
 Description: Adds multilingual capability to WordPress
 Text Domain: polylang
@@ -29,7 +29,7 @@ Domain Path: /languages
  *
  */
 
-define('POLYLANG_VERSION', '1.2dev43');
+define('POLYLANG_VERSION', '1.2dev45');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_BASENAME', plugin_basename(__FILE__)); // plugin name as known by WP
@@ -238,8 +238,6 @@ class Polylang {
 	 * @since 1.2
 	 */
 	public function init() {
-		global $polylang;
-
 		$options = get_option('polylang');
 
 		// plugin upgrade
@@ -253,14 +251,25 @@ class Polylang {
 		$links_model = $this->get_links_model($model);
 
 		if (PLL_ADMIN)
-			$polylang = new PLL_Admin($links_model);
+			$GLOBALS['polylang'] = new PLL_Admin($links_model);
 
 		// do nothing on frontend if no language is defined
 		elseif ($model->get_languages_list())
-			$polylang = new PLL_Frontend($links_model);
+			$GLOBALS['polylang'] = new PLL_Frontend($links_model);
 
 		else
 			do_action('pll_language_defined'); // to load overriden textdomains
+
+				// loads the API
+		require_once(PLL_INC.'/api.php');
+
+		// WPML API + wpml-config.xml
+		if (!defined('PLL_WPML_COMPAT') || PLL_WPML_COMPAT)
+			require_once (PLL_INC.'/wpml-compat.php');
+
+		// extra code for compatibility with some plugins
+		if (!defined('PLL_PLUGINS_COMPAT') || PLL_PLUGINS_COMPAT)
+			new PLL_Plugins_Compat();
 	}
 
 	/*

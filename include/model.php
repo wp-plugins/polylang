@@ -114,7 +114,8 @@ class PLL_Model {
 
 	/*
 	 * returns the list of available languages
-	 * caches the list in a transient
+	 * caches the list in a db transient (except flags)
+	 * caches the list (with flags) in a static variable
 	 *
 	 * list of parameters accepted in $args:
 	 *
@@ -127,18 +128,26 @@ class PLL_Model {
 	 * @return array|string|int list of PLL_Language objects or PLL_Language object properties
 	 */
 	public function get_languages_list($args = array()) {
-		if (false === ($languages = get_transient('pll_languages_list'))) {
-			$languages = get_terms('language', array('hide_empty' => false, 'orderby'=> 'term_group'));
-			$languages = empty($languages) || is_wp_error($languages) ? array() : $languages;
+		static $languages = array();
 
-			$term_languages = get_terms('term_language', array('hide_empty' => false));
-			$term_languages = empty($term_languages) || is_wp_error($term_languages) ?
-				array() : array_combine(wp_list_pluck($term_languages, 'name'), $term_languages);
+		if (empty($languages)) {
+			if (false === ($languages = get_transient('pll_languages_list'))) {
+				$languages = get_terms('language', array('hide_empty' => false, 'orderby'=> 'term_group'));
+				$languages = empty($languages) || is_wp_error($languages) ? array() : $languages;
 
-			if (!empty($languages) && !empty($term_languages))
-				array_walk($languages, create_function('&$v, $k, $term_languages', '$v = new PLL_Language($v, $term_languages[$v->name]);'), $term_languages);
+				$term_languages = get_terms('term_language', array('hide_empty' => false));
+				$term_languages = empty($term_languages) || is_wp_error($term_languages) ?
+					array() : array_combine(wp_list_pluck($term_languages, 'name'), $term_languages);
 
-			set_transient('pll_languages_list', $languages);
+				if (!empty($languages) && !empty($term_languages))
+					array_walk($languages, create_function('&$v, $k, $term_languages', '$v = new PLL_Language($v, $term_languages[$v->name]);'), $term_languages);
+
+				set_transient('pll_languages_list', $languages);
+			}
+
+			// add flags (not in db cache as they may be different on frontend and admin)
+			foreach ($languages as $lang)
+				$lang->set_flag();
 		}
 
 		$args = wp_parse_args($args, array('hide_empty' => false));

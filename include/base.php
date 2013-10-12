@@ -24,17 +24,6 @@ abstract class PLL_Base {
 
 		// user defined strings translations
 		add_action('pll_language_defined', array(&$this, 'load_strings_translations'));
-
-		// loads the API
-		require_once(PLL_INC.'/api.php');
-
-		// WPML API + wpml-config.xml
-		if (!defined('PLL_WPML_COMPAT') || PLL_WPML_COMPAT)
-			require_once (PLL_INC.'/wpml-compat.php');
-
-		// extra code for compatibility with some plugins
-		if (!defined('PLL_PLUGINS_COMPAT') || PLL_PLUGINS_COMPAT)
-			new PLL_Plugins_Compat();
 	}
 
 	/*

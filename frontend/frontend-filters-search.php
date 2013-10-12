@@ -12,6 +12,8 @@ class PLL_Frontend_Filters_Search {
 	 * constructor
 	 *
 	 * @since 1.2
+	 *
+	 * @param object $links instance of PLL_Frontend_Links
 	 */
 	public function __construct(&$links) {
 		$this->links = &$links;
@@ -35,6 +37,9 @@ class PLL_Frontend_Filters_Search {
 	 * does not work if searchform.php (prior to WP 3.6) is used or if the search form is hardcoded in another template file
 	 *
 	 * @since 0.1
+	 *
+	 * @param string $form search form
+	 * @return string modified search form
 	 */
 	public function get_search_form($form) {
 		if ($form) {
@@ -66,6 +71,8 @@ class PLL_Frontend_Filters_Search {
 	 * rewrites the admin bar search form to pass our get_search form filter. See #21342
 	 *
 	 * @since 0.9
+	 *
+	 * @param object $wp_admin_bar
 	 */
 	public function admin_bar_search_menu($wp_admin_bar) {
 		$form = sprintf('
