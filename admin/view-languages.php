@@ -224,6 +224,26 @@ case 'settings': ?>
 						'<code>'.str_replace('://','://en.', str_replace('www.', '', home_url('my-post/'))).'</code>'
 					);?>
 				</label>
+				<label><?php
+					printf(
+						'<input name="force_lang" type="radio" value="3" %s %s/> %s',
+						$using_permalinks ? '' : 'disabled=1',
+						$this->options['force_lang'] == 3 ? 'checked="checked"' : '',
+						__('Use one domain per language', 'polylang')
+					);?>
+				</label>
+				<table class="pll-domains-table"><?php
+					foreach ($listlanguages as  $lg) {
+						printf(
+							'<tr><td><label for="pll-domain[%1$s]">%2$s</label></td>' .
+							'<td><input name="domains[%1$s]" id="pll-domain[%1$s]" type="text" value="%3$s" size="40" aria-required="true" %4$s /></td></tr>',
+							$lg->slug,
+							$lg->name,
+							$lg->slug == $this->options['default_lang'] ? get_option('home') : (isset($this->options['domains'][$lg->slug]) ? $this->options['domains'][$lg->slug] : ''),
+							!$using_permalinks || $lg->slug == $this->options['default_lang'] ? 'disabled=1' : ''
+						);
+					}?>
+				</table>
 				<br />
 				<label><?php
 					printf(

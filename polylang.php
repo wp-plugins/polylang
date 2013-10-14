@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://polylang.wordpress.com/
-Version: 1.2dev45
+Version: 1.2dev46
 Author: Frédéric Demarle
 Description: Adds multilingual capability to WordPress
 Text Domain: polylang
@@ -29,7 +29,7 @@ Domain Path: /languages
  *
  */
 
-define('POLYLANG_VERSION', '1.2dev45');
+define('POLYLANG_VERSION', '1.2dev46');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_BASENAME', plugin_basename(__FILE__)); // plugin name as known by WP
@@ -176,6 +176,7 @@ class Polylang {
 			$options['sync'] = array_keys(PLL_Settings::list_metas_to_sync()); // synchronisation is enabled by default
 			$options['post_types'] = array_values(get_post_types(array('_builtin' => false, 'show_ui => true')));
 			$options['taxonomies'] = array_values(get_taxonomies(array('_builtin' => false, 'show_ui => true')));
+			$options['domains'] = array();
 			$options['version'] = POLYLANG_VERSION;
 
 			update_option('polylang', $options);
@@ -281,13 +282,14 @@ class Polylang {
 	 * @return object implementing "links_model interface"
 	 */
 	protected function get_links_model(&$model) {
-		if (get_option('permalink_structure'))
-			return (2 == $model->options['force_lang']) ?
-				new PLL_Links_Subdomain($model) :
-				new PLL_Links_Directory($model);
-
-		else
-			return new PLL_Links_Default($model);
+		if (get_option('permalink_structure')) {
+			switch ($model->options['force_lang']) {
+				case 1: return new PLL_Links_Directory($model);
+				case 2: return new PLL_Links_Subdomain($model);
+				case 3: return new PLL_Links_Domain($model);
+			}
+		}
+		return new PLL_Links_Default($model);
 	}
 }
 

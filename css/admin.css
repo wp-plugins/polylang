@@ -3,7 +3,7 @@
 	width : 10%;
 }
 
-.form-field input.tog {
+.form-field input[type="radio"] {
 	width: auto;
 	margin-right: 2px;
 }
@@ -53,6 +53,9 @@
 	width: 250px;
 }
 
+.form-table .pll-domains-table td {
+	padding: 2px 2px 2px 18px;
+}
 /* language columns in edit.php and edit-tags.php */
 th[class*='column-language_'] {
 	width: 2em;

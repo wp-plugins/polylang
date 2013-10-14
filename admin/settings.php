@@ -209,9 +209,9 @@ class PLL_Settings {
 			case 'options':
 				check_admin_referer( 'options-lang', '_wpnonce_options-lang' );
 
-				foreach(array('default_lang', 'force_lang', 'rewrite') as $key)
+				foreach(array('default_lang', 'force_lang', 'rewrite', 'domains') as $key)
 					if (isset($_POST[$key]))
-						$this->options[$key] = $_POST[$key];
+						$this->options[$key] = stripslashes_deep(is_array($_POST[$key]) ? $_POST[$key] : trim($_POST[$key]));
 
 				foreach (array('browser', 'hide_default', 'redirect_lang', 'media_support') as $key)
 					$this->options[$key] = isset($_POST[$key]) ? 1 : 0;

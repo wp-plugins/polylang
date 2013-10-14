@@ -30,3 +30,8 @@
 * fix: API, WPML compat and plugins compat not loaded
 * fix: custom flags not loaded
 
+1.2dev46
+* Add support for one domain per language
+* fix: notices if upgrade from version < 1.0
+* fix: css bug in chrome
+

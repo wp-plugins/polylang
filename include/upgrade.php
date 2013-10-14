@@ -129,6 +129,7 @@ class PLL_Upgrade {
 		// set default values for post types and taxonomies to translate
 		$this->options['post_types'] = array_values(get_post_types(array('_builtin' => false, 'show_ui => true')));
 		$this->options['taxonomies'] = array_values(get_taxonomies(array('_builtin' => false, 'show_ui => true')));
+		update_option('polylang', $this->options);
 
 		flush_rewrite_rules(); // rewrite rules have been modified in 1.0
 	}
@@ -194,6 +195,8 @@ class PLL_Upgrade {
 	 * @since 1.2
 	 */
 	protected function upgrade_1_2() {
+		$this->options['domains'] = array(); // option added in 1.2
+
 		// need to register the taxonomies
 		foreach (array('language', 'term_language', 'post_translations', 'term_translations') as $taxonomy)
 			register_taxonomy($taxonomy, null , array('label' => false, 'public' => false, 'query_var' => false, 'rewrite' => false));

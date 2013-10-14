@@ -184,6 +184,12 @@ class PLL_Admin_Model extends PLL_Model {
 			}
 			set_theme_mod('nav_menu_locations', $new_locations);
 
+			// update domains
+			if (!empty($this->options['domains'][$old_slug])) {
+				$this->options['domains'][$slug] = $this->options['domains'][$old_slug];
+				unset($this->options['domains'][$slug]);
+			}
+
 			// update the default language option if necessary
 			if ($this->options['default_lang'] == $old_slug)
 				$this->options['default_lang'] = $slug;
