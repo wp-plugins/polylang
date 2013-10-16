@@ -147,6 +147,8 @@ class PLL_Walker_List extends Walker {
 	 * outputs one element
 	 *
 	 * @since 1.2
+	 *
+	 * @see Walker::start_el
 	 */
 	 function start_el( &$output, $element, $depth = 0, $args = array(), $current_object_id = 0 ) {
 		$output .= sprintf(
@@ -162,6 +164,8 @@ class PLL_Walker_List extends Walker {
 	 * overrides Walker::display_element as it expects an object with a parent property
 	 *
 	 * @since 1.2
+	 *
+	 * @see Walker::display_element
 	 */
 	function display_element( $element, &$children_elements, $max_depth, $depth = 0, $args, &$output ) {
 		$element = (object) $element; // make sure we have an object

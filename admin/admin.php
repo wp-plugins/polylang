@@ -25,9 +25,6 @@ class PLL_Admin extends PLL_Base {
 		// plugin i18n, only needed for backend
 		load_plugin_textdomain('polylang', false, basename(POLYLANG_DIR).'/languages');
 
-		if (PLL_SETTINGS)
-			$this->settings_page = new PLL_Settings($this->model);
-
 		// adds the link to the languages panel in the wordpress admin menu
 		add_action('admin_menu', array(&$this, 'add_menus'));
 
@@ -37,6 +34,21 @@ class PLL_Admin extends PLL_Base {
 		// adds a 'settings' link in the plugins table
 		add_filter('plugin_action_links_' . POLYLANG_BASENAME, array(&$this, 'plugin_action_links'));
 		add_action('in_plugin_update_message-' . POLYLANG_BASENAME, array(&$this, 'plugin_update_message'), 10, 2);
+	}
+
+	/*
+	 * loads the polylang text domain
+	 * setups filters and action needed on all admin pages and on plugins page
+	 * loads the settings pages or the filters base on the request
+	 * manages the admin language filter and the "admin preferred language"
+	 *
+	 * @since 1.2
+	 *
+	 * @param object $links_model
+	 */
+	public function init() {
+		if (PLL_SETTINGS)
+			$this->settings_page = new PLL_Settings($this->model);
 
 		if (!$this->model->get_languages_list())
 			return;

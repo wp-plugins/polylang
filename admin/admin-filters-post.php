@@ -12,6 +12,9 @@ class PLL_Admin_Filters_Post {
 	 * constructor: setups filters and actions
 	 *
 	 * @since 1.2
+	 *
+	 * @param object $model instance of PLL_Model
+	 * @param object $pref_lang language chosen in admin filter or default language
 	 */
 	public function __construct(&$model, $pref_lang) {
 		$this->model = &$model;
@@ -36,6 +39,8 @@ class PLL_Admin_Filters_Post {
 	 * filters posts, pages and media by language
 	 *
 	 * @since 0.1
+	 *
+	 * @param object $query a WP_Query object
 	 */
 	public function parse_query($query) {
 		$qvars = &$query->query_vars;
@@ -63,6 +68,8 @@ class PLL_Admin_Filters_Post {
 	 * adds the Language box in the 'Edit Post' and 'Edit Page' panels (as well as in custom post types panels)
 	 *
 	 * @since 0.1
+	 *
+	 * @param string $post_type
 	 */
 	public function add_meta_boxes($post_type) {
 		if (in_array($post_type, $this->model->post_types))
@@ -187,6 +194,9 @@ class PLL_Admin_Filters_Post {
 	 * checks the terms saved are in the right language
 	 *
 	 * @since 0.1
+	 *
+	 * @param int $post_id
+	 * @param object $post
 	 */
 	public function save_post($post_id, $post) {
 		// does nothing except on post types which are filterable
@@ -261,6 +271,8 @@ class PLL_Admin_Filters_Post {
 	 * http://wordpress.org/support/topic/plugin-polylang-quick-edit-still-breaks-translation-linking-of-pages-in-072
 	 *
 	 * @since 0.1
+	 *
+	 * @param int $post_id
 	 */
 	public function delete_post($post_id) {
 		if (!wp_is_post_revision($post_id))

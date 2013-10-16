@@ -52,14 +52,14 @@ class PLL_Frontend_Filters extends PLL_Filters_Base {
 				add_filter($filter.$clause, array(&$this, 'posts'.$clause));
 
 		// filters the widgets according to the current language
-		add_filter('widget_display_callback', array(&$this, 'widget_display_callback'), 10, 3);
+		add_filter('widget_display_callback', array(&$this, 'widget_display_callback'), 10, 2);
 
 		// strings translation (must be applied before WordPress applies its default formatting filters)
 		foreach (array('widget_title', 'option_blogname', 'option_blogdescription', 'option_date_format', 'option_time_format') as $filter)
 			add_filter($filter, 'pll__', 1);
 
 		// translates biography
-		add_filter('get_user_metadata', array(&$this,'get_user_metadata'), 10, 4);
+		add_filter('get_user_metadata', array(&$this,'get_user_metadata'), 10, 3);
 
 		// set posts and terms language when created from frontend (ex with P2 theme)
 		add_action('save_post', array(&$this, 'save_post'), 200, 2);
@@ -84,6 +84,9 @@ class PLL_Frontend_Filters extends PLL_Filters_Base {
 	 * backward compatibility WP < 3.4
 	 *
 	 * @since 0.8
+	 *
+	 * @param string $value
+	 * @return string
 	 */
 	public function option_rss_language($value) {
 		return get_bloginfo_rss('language');
@@ -91,12 +94,14 @@ class PLL_Frontend_Filters extends PLL_Filters_Base {
 
 	/*
 	 * translates page for posts and page on front
-	 * backward compatibility WP < 3.4
 	 *
 	 * @since 0.8
+	 *
+	 * @param int $v page for posts or page on front page id
+	 * @return int
 	 */
-	// FIXME comes too late when language is set from content
 	public function translate_page($v) {
+		// FIXME comes too late when language is set from content
 		static $posts = array(); // the fonction may be often called so let's store the result
 
 		// returns the current page if there is no translation to avoid ugly notices
@@ -146,9 +151,9 @@ class PLL_Frontend_Filters extends PLL_Filters_Base {
 	 *
 	 * @since 0.2
 	 *
-	 * @param array $clauses
+	 * @param array $clauses sql clauses
 	 * @param array $taxonomies
-	 * @param array $args
+	 * @param array $args get_terms arguments
 	 * @return array modified sql clauses
 	 */
 	public function terms_clauses($clauses, $taxonomies, $args) {
@@ -216,8 +221,12 @@ class PLL_Frontend_Filters extends PLL_Filters_Base {
 	 * don't display if a language filter is set and this is not the current one
 	 *
 	 * @since 0.3
+	 *
+	 * @param array $instance widget settings
+	 * @param object $widget WP_Widget object
+	 * @return bool|array false if we hide the widget, unmodified $instance otherwise
 	 */
-	public function widget_display_callback($instance, $widget, $args) {
+	public function widget_display_callback($instance, $widget) {
 		return !empty($this->options['widgets'][$widget->id]) && $this->options['widgets'][$widget->id] != $this->curlang->slug ? false : $instance;
 	}
 
@@ -225,8 +234,13 @@ class PLL_Frontend_Filters extends PLL_Filters_Base {
 	 * translates biography
 	 *
 	 * @since 0.9
+	 *
+	 * @param null $null
+	 * @param int $id user id
+	 * @param string $meta_key
+	 * @return null|string
 	 */
-	public function get_user_metadata($null, $id, $meta_key, $single) {
+	public function get_user_metadata($null, $id, $meta_key) {
 		return $meta_key == 'description' ? get_user_meta($id, 'description_'.$this->curlang->slug, true) : $null;
 	}
 
@@ -235,6 +249,9 @@ class PLL_Frontend_Filters extends PLL_Filters_Base {
 	 * does nothing except on post types which are filterable
 	 *
 	 * @since 1.1
+	 *
+	 * @param int $post_id
+	 * @param object $post
 	 */
 	public function save_post($post_id, $post) {
 		if (in_array($post->post_type, $this->model->post_types)) {
@@ -257,6 +274,10 @@ class PLL_Frontend_Filters extends PLL_Filters_Base {
 	 * does nothing except on taxonomies which are filterable
 	 *
 	 * @since 1.1
+	 *
+	 * @param int $term_id
+	 * @param int $tt_id term taxonomy id
+	 * @param string $taxonomy
 	 */
 	public function save_term($term_id, $tt_id, $taxonomy) {
 		if (in_array($taxonomy, $this->model->taxonomies)) {

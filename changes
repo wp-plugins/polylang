@@ -35,3 +35,9 @@
 * fix: notices if upgrade from version < 1.0
 * fix: css bug in chrome
 
+1.2dev47
+* Add support for ICL_LANGUAGE_CODE and ICL_LANGUAGE_NAME on admin side
+* fix: strings translation not deleted in db when deleting a language
+* fix: strings translations not saved if one has slashes
+* Improve inline doc
+

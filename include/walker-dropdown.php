@@ -12,6 +12,8 @@ class PLL_Walker_Dropdown extends Walker {
 	 * outputs one element
 	 *
 	 * @since 1.2
+	 *
+	 * @see Walker::start_el
 	 */
 	function start_el( &$output, $element, $depth = 0, $args = array(), $current_object_id = 0 ) {
 		$value = isset($args['value']) && $args['value'] ? $args['value'] : 'slug';
@@ -27,6 +29,8 @@ class PLL_Walker_Dropdown extends Walker {
 	 * overrides Walker::display_element as expects an object with a parent property
 	 *
 	 * @since 1.2
+	 *
+	 * @see Walker::display_element
 	 */
 	function display_element( $element, &$children_elements, $max_depth, $depth = 0, $args, &$output ) {
 		$element = (object) $element; // make sure we have an object
@@ -38,12 +42,16 @@ class PLL_Walker_Dropdown extends Walker {
 	 * starts teh output of the dropdown list
 	 *
 	 * @since 1.2
+	 *
+	 * @param array $elements elements to display
+	 * @param array $args
+	 * @return string
 	 */
 	function walk($elements, $args = array()) {
 		return sprintf(
 			'<select name="%1$s" id="%1$s"%2$s>' . "\n" . '%3$s' . "\n" . '</select>'."\n",
 			empty($args['name']) ? 'lang_choice' : esc_attr($args['name']),
-			empty($args['class']) ? '' : ' class="'.esc_attr($args['class']).'"',
+			empty($args['class']) ? '' : ' class="' . esc_attr($args['class']) . '"',
 			parent::walk($elements, -1, $args)
 		);
 	}

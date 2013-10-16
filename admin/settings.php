@@ -209,9 +209,14 @@ class PLL_Settings {
 			case 'options':
 				check_admin_referer( 'options-lang', '_wpnonce_options-lang' );
 
-				foreach(array('default_lang', 'force_lang', 'rewrite', 'domains') as $key)
-					if (isset($_POST[$key]))
-						$this->options[$key] = stripslashes_deep(is_array($_POST[$key]) ? $_POST[$key] : trim($_POST[$key]));
+				$this->options['default_lang'] = sanitize_title($_POST['default_lang']); // we have slug as value
+
+				foreach(array('force_lang', 'rewrite') as $key)
+					$this->options[$key] = (int) $_POST[$key];
+
+				// FIXME : TODO error message if not a valid url
+				foreach ($_POST['domains'] as $key => $domain)
+					$this->options['domains'][$key] = esc_url_raw(trim($domain));
 
 				foreach (array('browser', 'hide_default', 'redirect_lang', 'media_support') as $key)
 					$this->options[$key] = isset($_POST[$key]) ? 1 : 0;

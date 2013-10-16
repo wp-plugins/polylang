@@ -11,8 +11,6 @@ class PLL_Frontend extends PLL_Base{
 
 	/*
 	 * constructor
-	 * setups url modifications based on the links mode
-	 * setups the language chooser based on options
 	 *
 	 * @since 1.2
 	 *
@@ -23,15 +21,25 @@ class PLL_Frontend extends PLL_Base{
 
 		add_action('pll_language_defined', array(&$this, 'pll_language_defined'), 1, 2);
 
-		$this->links = new PLL_Frontend_Links($links_model);
+		// not before 'check_language_code_in_url'
+		if (!defined('PLL_AUTO_TRANSLATE') || PLL_AUTO_TRANSLATE)
+			add_action('wp', array(&$this, 'auto_translate'), 20);
+	}
+
+	/*
+	 * setups url modifications based on the links mode
+	 * setups the language chooser based on options
+	 *
+	 * @since 1.2
+	 *
+	 * @param object $links_model
+	 */
+	public function init() {
+		$this->links = new PLL_Frontend_Links($this->links_model);
 
 		$this->choose_lang = $this->options['force_lang'] && get_option('permalink_structure') ?
 			new PLL_Choose_Lang_Url($this->links) :
 			new PLL_Choose_Lang_Content($this->links);
-
-		// not before 'check_language_code_in_url'
-		if (!defined('PLL_AUTO_TRANSLATE') || PLL_AUTO_TRANSLATE)
-			add_action('wp', array(&$this, 'auto_translate'), 20);
 	}
 
 	/*

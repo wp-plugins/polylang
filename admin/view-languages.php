@@ -164,7 +164,7 @@ case 'settings': ?>
 			<th><label for='default_lang'><?php _e('Default language', 'polylang');?></label></th>
 			<td><?php
 				$dropdown = new PLL_Walker_Dropdown;
-				echo $dropdown ->walk($listlanguages, array('name' => 'default_lang', 'selected' => $this->options['default_lang']));?>
+				echo $dropdown->walk($listlanguages, array('name' => 'default_lang', 'selected' => $this->options['default_lang']));?>
 			</td>
 		</tr><?php
 
@@ -237,9 +237,9 @@ case 'settings': ?>
 						printf(
 							'<tr><td><label for="pll-domain[%1$s]">%2$s</label></td>' .
 							'<td><input name="domains[%1$s]" id="pll-domain[%1$s]" type="text" value="%3$s" size="40" aria-required="true" %4$s /></td></tr>',
-							$lg->slug,
-							$lg->name,
-							$lg->slug == $this->options['default_lang'] ? get_option('home') : (isset($this->options['domains'][$lg->slug]) ? $this->options['domains'][$lg->slug] : ''),
+							esc_attr($lg->slug),
+							esc_attr($lg->name),
+							esc_url($lg->slug == $this->options['default_lang'] ? get_option('home') : (isset($this->options['domains'][$lg->slug]) ? $this->options['domains'][$lg->slug] : '')),
 							!$using_permalinks || $lg->slug == $this->options['default_lang'] ? 'disabled=1' : ''
 						);
 					}?>

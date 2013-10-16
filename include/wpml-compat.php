@@ -9,11 +9,13 @@
  * @since 0.9.5
  */
 function pll_define_wpml_constants() {
+	$code = is_admin() ? get_user_meta(get_current_user_id(), 'pll_filter_content', true) : pll_current_language();
+
 	if(!defined('ICL_LANGUAGE_CODE'))
-		define('ICL_LANGUAGE_CODE', pll_current_language());
+		define('ICL_LANGUAGE_CODE', is_admin() && empty($code) ? 'all' : $code);
 
 	if(!defined('ICL_LANGUAGE_NAME'))
-		define('ICL_LANGUAGE_NAME', pll_current_language('name'));
+		define('ICL_LANGUAGE_NAME', empty($code) ? '' : $GLOBALS['polylang']->model->get_language($code)->name);
 }
 
 add_action('pll_language_defined', 'pll_define_wpml_constants');

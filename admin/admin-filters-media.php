@@ -41,6 +41,10 @@ class PLL_Admin_Filters_Media {
 	 * adds the language field and translations tables in the 'Edit Media' panel
 	 *
 	 * @since 0.9
+	 *
+	 * @param array $fields list of form fields
+	 * @param object $post
+	 * @return array modified list of form fields
 	 */
 	public function attachment_fields_to_edit($fields, $post) {
 		if ($GLOBALS['pagenow'] == 'post.php')
@@ -170,6 +174,10 @@ class PLL_Admin_Filters_Media {
 	 * saves language and translations
 	 *
 	 * @since 0.9
+	 *
+	 * @param array $post
+	 * @param array $attachment
+	 * @return array unmodified $post
 	 */
 	public function save_media($post, $attachment) {
 		$this->model->set_post_language($post['ID'], $attachment['language']); // the language is no more automatically saved by WP since WP 3.5
@@ -191,6 +199,9 @@ class PLL_Admin_Filters_Media {
 	 * thanks to Bruno "Aesqe" Babic and its plugin file gallery in which I took all the ideas for this function
 	 *
 	 * @since 0.9
+	 *
+	 * @param string $file
+	 * @return string unmodified $file
 	 */
 	public function wp_delete_file($file) {
 		global $wpdb;

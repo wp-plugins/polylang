@@ -20,6 +20,9 @@ class PLL_Widget_Languages extends WP_Widget {
 	 * displays the widget
 	 *
 	 * @since 0.1
+	 *
+	 * @param array $args Display arguments including before_title, after_title, before_widget, and after_widget.
+	 * @param array $instance The settings for the particular instance of the widget
 	 */
 	function widget($args, $instance) {
 		global $polylang;
@@ -66,6 +69,10 @@ class PLL_Widget_Languages extends WP_Widget {
 	 * updates the widget options
 	 *
 	 * @since 0.4
+	 *
+	 * @param array $new_instance New settings for this instance as input by the user via form()
+	 * @param array $old_instance Old settings for this instance
+	 * @return array Settings to save or bool false to cancel saving
 	 */
 	function update( $new_instance, $old_instance ) {
 		$instance['title'] = strip_tags($new_instance['title']);
@@ -79,6 +86,8 @@ class PLL_Widget_Languages extends WP_Widget {
 	 * displays the widget form
 	 *
 	 * @since 0.4
+	 *
+	 * @param array $instance Current settings
 	 */
 	function form($instance) {
 		// default values

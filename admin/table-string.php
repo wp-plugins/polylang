@@ -17,6 +17,9 @@ class PLL_Table_String extends WP_List_Table {
 	 * constructor
 	 *
 	 * @since 0.6
+	 *
+	 * @param array $groups
+	 * @param string $group_selected
 	 */
 	function __construct($groups = array(), $group_selected) {
 		parent::__construct(array(
@@ -32,6 +35,10 @@ class PLL_Table_String extends WP_List_Table {
 	 * displays the item information in a column (default case)
 	 *
 	 * @since 0.6
+	 *
+	 * @param array $item
+	 * @param string $column_name
+	 * @return string
 	 */
 	function column_default($item, $column_name) {
 		return $item[$column_name];
@@ -41,6 +48,9 @@ class PLL_Table_String extends WP_List_Table {
 	 * displays the checkbox in first column
 	 *
 	 * @since 1.1
+	 *
+	 * @param array $item
+	 * @return string
 	 */
 	function column_cb($item){
 		return sprintf(
@@ -54,6 +64,9 @@ class PLL_Table_String extends WP_List_Table {
 	 * displays the string to translate
 	 *
 	 * @since 1.0
+	 *
+	 * @param array $item
+	 * @return string
 	 */
 	function column_string($item) {
 		return format_to_edit($item['string']); // don't interpret special chars for the string column
@@ -63,6 +76,9 @@ class PLL_Table_String extends WP_List_Table {
 	 * displays the translations to edit
 	 *
 	 * @since 0.6
+	 *
+	 * @param array $item
+	 * @return string
 	 */
 	function column_translations($item) {
 		$out = '';
@@ -83,6 +99,8 @@ class PLL_Table_String extends WP_List_Table {
 	 * gets the list of columns
 	 *
 	 * @since 0.6
+	 *
+	 * @return array the list of column titles
 	 */
 	function get_columns() {
 		return array(
@@ -98,6 +116,8 @@ class PLL_Table_String extends WP_List_Table {
 	 * gets the list of sortable columns
 	 *
 	 * @since 0.6
+	 *
+	 * @return array
 	 */
 	function get_sortable_columns() {
 		return array(
@@ -111,6 +131,8 @@ class PLL_Table_String extends WP_List_Table {
 	 * prepares the list of items ofr displaying
 	 *
 	 * @since 0.6
+	 *
+	 * @param array $data
 	 */
 	function prepare_items($data = array()) {
 		$per_page = $this->get_items_per_page('pll_strings_per_page');
@@ -135,9 +157,11 @@ class PLL_Table_String extends WP_List_Table {
 	}
 
 	/*
-	 * displays the possible bulk actions
+	 * get the list of possible bulk actions
 	 *
 	 * @since 1.1
+	 *
+	 * @return array
 	 */
 	function get_bulk_actions() {
 		return array('delete' => __('Delete','polylang'));
@@ -147,31 +171,32 @@ class PLL_Table_String extends WP_List_Table {
 	 * displays the dropdown list to filter strings per group
 	 *
 	 * @since 1.1
+	 *
+	 * @param string $which only 'top' is supported
 	 */
 	function extra_tablenav($which) {
+		if ('top' != $which)
+			return;
+
 		echo '<div class="alignleft actions">';
+		echo '<select name="group">' . "\n";
+		printf(
+			'<option value="-1"%s>%s</option>' . "\n",
+			$this->group_selected == -1 ? ' selected="selected"' : '',
+			__('View all groups', 'polylang')
+		);
 
-		if ('top' == $which) {
-			echo '<select name="group">'."\n";
+		foreach ($this->groups as $group) {
 			printf(
-				'<option value="-1"%s>%s</option>'."\n",
-				$this->group_selected == -1 ? ' selected="selected"' : '',
-				__('View all groups', 'polylang')
+				'<option value="%s"%s>%s</option>' . "\n",
+				esc_attr($group),
+				$this->group_selected == $group ? ' selected="selected"' : '',
+				esc_html($group)
 			);
-
-			foreach ($this->groups as $group) {
-				printf(
-					'<option value="%s"%s>%s</option>'."\n",
-					esc_attr($group),
-					$this->group_selected == $group ? ' selected="selected"' : '',
-					esc_html($group)
-				);
-			}
-			echo '</select>'."\n";
-
-			submit_button( __( 'Filter' ), 'button', false, false, array( 'id' => 'post-query-submit' ) );
 		}
+		echo '</select>'."\n";
 
+		submit_button( __( 'Filter' ), 'button', false, false, array( 'id' => 'post-query-submit' ) );
 		echo '</div>';
 	}
 }

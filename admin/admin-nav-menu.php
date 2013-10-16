@@ -11,6 +11,8 @@ class PLL_Admin_Nav_Menu {
 	 * constructor: setups filters and actions
 	 *
 	 * @since 1.2
+	 *
+	 * @param object $model instance of PLL_Model
 	 */
 	public function __construct(&$model) {
 		$this->model = $model;
@@ -35,7 +37,7 @@ class PLL_Admin_Nav_Menu {
 		global $_wp_registered_nav_menus;
 
 		add_action('admin_enqueue_scripts', array(&$this, 'admin_enqueue_scripts'));
-		add_action('wp_update_nav_menu_item', array(&$this, 'wp_update_nav_menu_item'), 10, 3);
+		add_action('wp_update_nav_menu_item', array(&$this, 'wp_update_nav_menu_item'), 10, 2);
 		add_filter('wp_get_nav_menu_items', array(&$this, 'translate_switcher_title'));
 
 		// translation of menus based on chosen locations
@@ -132,8 +134,11 @@ class PLL_Admin_Nav_Menu {
 	 * save our menu item options
 	 *
 	 * @since 1.1
+	 *
+	 * @param int $menu_id not used
+	 * @param int $menu_item_db_id
 	 */
-	public function wp_update_nav_menu_item( $menu_id = 0, $menu_item_db_id = 0, $menu_item_data = array() ) {
+	public function wp_update_nav_menu_item( $menu_id = 0, $menu_item_db_id = 0 ) {
 		if (empty($_POST['menu-item-url'][$menu_item_db_id]) || $_POST['menu-item-url'][$menu_item_db_id] != '#pll_switcher')
 			return;
 
@@ -155,10 +160,13 @@ class PLL_Admin_Nav_Menu {
 	 * translates the language switcher menu items title in case the user switches the admin language
 	 *
 	 * @since 1.1.1
+	 *
+	 * @param array $items
+	 * @return array modified $items
 	 */
 	public function translate_switcher_title($items) {
 		foreach ($items as $item)
-			if ($item->url == '#pll_switcher')
+			if ('#pll_switcher' == $item->url)
 				$item->post_title = __('Language switcher', 'polylang');
 		return $items;
 	}
@@ -167,6 +175,9 @@ class PLL_Admin_Nav_Menu {
 	 * assign menu languages and translations based on locations
 	 *
 	 * @since 1.1
+	 *
+	 * @param array $mods theme mods
+	 * @return unmodified $mods
 	 */
 	public function update_nav_menu_locations($mods) {
 		if (isset($mods['nav_menu_locations'])) {
@@ -197,6 +208,10 @@ class PLL_Admin_Nav_Menu {
 	 * filters _wp_auto_add_pages_to_menu by language
 	 *
 	 * @since 0.9.4
+	 *
+	 * @param string $new_status Transition to this post status.
+	 * @param string $old_status Previous post status.
+	 * @param object $post Post data.
 	 */
 	public function auto_add_pages_to_menu( $new_status, $old_status, $post ) {
 		if ('publish' != $new_status || 'publish' == $old_status || 'page' != $post->post_type || ! empty($post->post_parent) || !($lang = $this->model->get_post_language($post->ID)))
@@ -224,6 +239,10 @@ class PLL_Admin_Nav_Menu {
 	 * and http://wordpress.org/support/topic/all-connection-between-elements-lost
 	 *
 	 * @since 1.1.3
+	 *
+	 * @param string $name term name
+	 * @param string $taxonomy
+	 * @return string modified (nav menu) term name if necessary
 	 */
 	function pre_insert_term($name, $taxonomy) {
 		return ('nav_menu' == $taxonomy && in_array($name, $this->model->get_languages_list(array('fields' => 'name')))) ? $name .= '-menu' : $name;

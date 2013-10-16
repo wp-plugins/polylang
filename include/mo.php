@@ -34,8 +34,10 @@ class PLL_MO extends MO {
 
 		$lang_id = is_object($lang) ? $lang->term_id : $lang;
 		$post = get_page_by_title('polylang_mo_' . $lang_id, ARRAY_A, 'polylang_mo'); // wp_insert_post wants an array
-		$post['post_title'] = 'polylang_mo_' . $lang_id;;
-		$post['post_content'] = serialize($strings); // json_encode would take less space but is slower to decode
+		$post['post_title'] = 'polylang_mo_' . $lang_id;
+		// json_encode would take less space but is slower to decode
+		// wp_insert_post expects slashed data
+		$post['post_content'] = addslashes(serialize($strings));
 		$post['post_status'] = 'publish';
 		$post['post_type'] = 'polylang_mo';
 		wp_insert_post($post);

@@ -43,6 +43,10 @@ class PLL_Admin_Filters_Columns {
 	 * adds languages and translations columns in posts, pages, media, categories and tags tables
 	 *
 	 * @since 0.8.2
+	 *
+	 * @param array $columns list of table columns
+	 * @param string $before the column before which we want to add our languages
+	 * @return array modified list of columns
 	 */
 	protected function add_column($columns, $before) {
 		if ($n = array_search($before, array_keys($columns))) {
@@ -62,6 +66,8 @@ class PLL_Admin_Filters_Columns {
 	 * returns the first language column in the posts, pages and media library tables
 	 *
 	 * @since 0.9
+	 *
+	 * @return string first language column name
 	 */
 	protected function get_first_language_column() {
 		foreach ($this->model->get_languages_list() as $language)
@@ -75,6 +81,9 @@ class PLL_Admin_Filters_Columns {
 	 * adds the language and translations columns (before the comments column) in the posts, pages and media library tables
 	 *
 	 * @since 0.1
+	 *
+	 * @param array $columns list of posts table columns
+	 * @return array modified list of columns
 	 */
 	function add_post_column($columns) {
 		return $this->add_column($columns, 'comments');
@@ -86,6 +95,9 @@ class PLL_Admin_Filters_Columns {
 	 * FIXME if inline edit breaks translations, the rows corresponding to these translations are not updated
 	 *
 	 * @since 0.1
+	 *
+	 * @param string $column column name
+	 * @param int $post_id
 	 */
 	public function post_column($column, $post_id) {
 		$inline = defined('DOING_AJAX') && $_REQUEST['action'] == 'inline-save' ? 1 : 0;
@@ -123,6 +135,10 @@ class PLL_Admin_Filters_Columns {
 	 * quick edit & bulk edit
 	 *
 	 * @since 0.9
+	 *
+	 * @param string $column column name
+	 * @param string $type either 'edit-tags' for terms list table or post type for posts list table
+	 * @return string unmodified $column
 	 */
 	public function quick_edit_custom_box($column, $type) {
 		if ($column == $this->get_first_language_column()) {
@@ -155,6 +171,9 @@ class PLL_Admin_Filters_Columns {
 	 * adds the language column (before the posts column) in the 'Categories' or 'Post Tags' table
 	 *
 	 * @since 0.1
+	 *
+	 * @param array $columns list of terms table columns
+	 * @return array modified list of columns
 	 */
 	public function add_term_column($columns) {
 		return $this->add_column($columns, 'posts');
@@ -165,6 +184,10 @@ class PLL_Admin_Filters_Columns {
 	 * FIXME if inline edit breaks translations, the rows corresponding to these translations are not updated
 	 *
 	 * @since 0.1
+	 *
+	 * @param string $empty not used
+	 * @param string $column column name
+	 * @param int term_id
 	 */
 	public function term_column($empty, $column, $term_id) {
 		$inline = defined('DOING_AJAX') && $_REQUEST['action'] == 'inline-save-tax' ? 1 : 0;

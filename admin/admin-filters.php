@@ -12,6 +12,9 @@ class PLL_Admin_Filters extends PLL_Filters_Base {
 	 * constructor: setups filters and actions
 	 *
 	 * @since 1.2
+	 *
+	 * @param object $links_model
+	 * @param object $pref_lang language chosen in admin filter or default language
 	 */
 	public function __construct(&$links_model, $pref_lang) {
 		parent::__construct($links_model);
@@ -47,6 +50,8 @@ class PLL_Admin_Filters extends PLL_Filters_Base {
 	 * modifies the widgets forms to add our language dropdwown list
 	 *
 	 * @since 0.3
+	 *
+	 * @param object $widget
 	 */
 	public function in_widget_form($widget) {
 		$dropdown = new PLL_Walker_Dropdown();
@@ -69,9 +74,15 @@ class PLL_Admin_Filters extends PLL_Filters_Base {
 
 	/*
 	 * called when widget options are saved
-	 * saves the language associated ti the widget
+	 * saves the language associated to the widget
 	 *
 	 * @since 0.3
+	 *
+	 * @param array $instance not used
+	 * @param array $new_instance not used
+	 * @param array $old_instance not used
+	 * @param object $widget WP_Widget object
+	 * @return array unmodified $instance
 	 */
 	public function widget_update_callback($instance, $new_instance, $old_instance, $widget) {
 		$this->options['widgets'][$widget->id] = $_POST[$widget->id.'_lang_choice'];
@@ -83,6 +94,8 @@ class PLL_Admin_Filters extends PLL_Filters_Base {
 	 * updates language user preference set in user profile
 	 *
 	 * @since 0.4
+	 *
+	 * @param int $user_id
 	 */
 	public function personal_options_update($user_id) {
 		update_user_meta($user_id, 'user_lang', $_POST['user_lang']); // admin language
@@ -94,6 +107,8 @@ class PLL_Admin_Filters extends PLL_Filters_Base {
 	 * form for language user preference in user profile
 	 *
 	 * @since 0.4
+	 *
+	 * @param object $profileuser
 	 */
 	public function personal_options($profileuser) {
 		$dropdown = new PLL_Walker_Dropdown();
@@ -129,6 +144,8 @@ class PLL_Admin_Filters extends PLL_Filters_Base {
 	 * ugrades languages files after a core upgrade
 	 *
 	 * @since 0.6
+	 *
+	 * @param string $version WP version
 	 */
 	public function upgrade_languages($version) {
 		apply_filters('update_feedback', __('Upgrading language files&#8230;', 'polylang'));
@@ -142,6 +159,10 @@ class PLL_Admin_Filters extends PLL_Filters_Base {
 	 * FIXME not in admin_post_filters because of exclude_pages
 	 *
 	 * @since 0.6
+	 *
+	 * @param array $dropdown_args arguments passed to wp_dropdown_pages
+	 * @param object $post
+	 * @return array modified arguments
 	 */
 	public function page_attributes_dropdown_pages_args($dropdown_args, $post) {
 		$lang = isset($_POST['lang']) ? $this->model->get_language($_POST['lang']) : $this->model->get_post_language($post->ID); // ajax or not ?
@@ -157,6 +178,10 @@ class PLL_Admin_Filters extends PLL_Filters_Base {
 	 * filters comments by language
 	 *
 	 * @since 0.9
+	 *
+	 * @param array $clauses sql clauses
+	 * @param object $query WP_Comment_Query object
+	 * @return array modified clauses
 	 */
 	public function comments_clauses($clauses, $query) {
 		if (!empty($query->query_vars['lang']))

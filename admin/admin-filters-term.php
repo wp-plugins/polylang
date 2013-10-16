@@ -12,7 +12,8 @@ class PLL_Admin_Filters_Term {
 	/*
 	 * constructor: setups filters and actions
 	 *
-	 * @since 1.2
+	 * @param object $model instance of PLL_Model
+	 * @param object $pref_lang language chosen in admin filter or default language
 	 */
 	public function __construct(&$model, $pref_lang) {
 		$this->model = &$model;
@@ -117,6 +118,9 @@ class PLL_Admin_Filters_Term {
 	 * translates term parent if exists when using "Add new" (translation)
 	 *
 	 * @since 0.7
+	 *
+	 * @param string html markup for dropdown list of categories
+	 * @return string modified html
 	 */
 	public function wp_dropdown_cats($output) {
 		if (isset($_GET['taxonomy'], $_GET['from_tag'], $_GET['new_lang']) && $id = get_term($_GET['from_tag'], $_GET['taxonomy'])->parent) {
@@ -131,6 +135,10 @@ class PLL_Admin_Filters_Term {
 	 * saves language and translations
 	 *
 	 * @since 0.1
+	 *
+	 * @param int $term_id
+	 * @param int $tt_id term taxononomy id
+	 * @param string $taxonomy
 	 */
 	public function save_term($term_id, $tt_id, $taxonomy) {
 		// does nothing except on taxonomies which are filterable
@@ -176,6 +184,9 @@ class PLL_Admin_Filters_Term {
 	 * stores the term name for use in pre_term_slug
 	 *
 	 * @since 0.9.5
+	 *
+	 * @param string $name term name
+	 * @return string unmodified term name
 	 */
 	public function pre_term_name($name) {
 		return $this->pre_term_name = $name;
@@ -185,6 +196,10 @@ class PLL_Admin_Filters_Term {
 	 * creates the term slug in case the term already exists in another language
 	 *
 	 * @since 0.9.5
+	 *
+	 * @param string $slug
+	 * @param string $taxonomy
+	 * @return string
 	 */
 	public function pre_term_slug($slug, $taxonomy) {
 		$name = sanitize_title($this->pre_term_name);
@@ -203,6 +218,8 @@ class PLL_Admin_Filters_Term {
 	 * deletes language and translations
 	 *
 	 * @since 0.1
+	 *
+	 * @param int $term_id
 	 */
 	public function delete_term($term_id) {
 		$this->model->delete_translation('term', $term_id);
@@ -213,6 +230,11 @@ class PLL_Admin_Filters_Term {
 	 * returns all terms in the $taxonomy in the $term_language which have no translation in the $translation_language
 	 *
 	 * @since 0.1
+	 *
+	 * @param string $taxonomy
+	 * @param object $term_language the language of the term we want to translate
+	 * @param object $translation_language the language in which we are looking untranslated terms
+	 * @return array
 	 */
 	protected function get_terms_not_translated($taxonomy, $term_language, $translation_language) {
 		$new_terms = array();
@@ -279,6 +301,11 @@ class PLL_Admin_Filters_Term {
 	 * filters categories and post tags by language when needed on admin side
 	 *
 	 * @since 0.5
+	 *
+	 * @param array $clauses list of sql clauses
+	 * @param array $taxonomies list of taxonomies
+	 * @param array $args get_terms arguments
+	 * @return array modified sql clauses
 	 */
 	public function terms_clauses($clauses, $taxonomies, $args) {
 		// does nothing except on taxonomies which are filterable
@@ -406,6 +433,9 @@ class PLL_Admin_Filters_Term {
 	 * hack to avoid displaying delete link for the default category in all languages
 	 *
 	 * @since 1.2
+	 *
+	 * @param int $value
+	 * @return int
 	 */
 	function option_default_category($value) {
 		$traces = debug_backtrace();

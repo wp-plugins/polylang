@@ -19,6 +19,9 @@ class PLL_Widget_Calendar extends WP_Widget_Calendar {
 	 * modified version of the parent function to call our own get_calendar function
 	 *
 	 * @since 0.5
+	 *
+	 * @param array $args Display arguments including before_title, after_title, before_widget, and after_widget.
+	 * @param array $instance The settings for the particular instance of the widget
 	 */
 	function widget( $args, $instance ) {
 		extract($args);
@@ -36,7 +39,11 @@ class PLL_Widget_Calendar extends WP_Widget_Calendar {
 	 * modified version of WP get_calendar function to filter the query
 	 *
 	 * @since 0.5
-	 */
+	 *
+	 * @param bool $initial Optional, default is true. Use initial calendar names.
+	 * @param bool $echo Optional, default is true. Set to false for return.
+	 * @return string|null String when retrieving, null when displaying.
+ 	 */
 	static function get_calendar($initial = true, $echo = true) {
 		global $wpdb, $m, $monthnum, $year, $wp_locale, $posts, $polylang; #modified#
 

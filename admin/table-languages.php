@@ -28,6 +28,10 @@ class PLL_Table_Languages extends WP_List_Table {
 	 * displays the item information in a column (default case)
 	 *
 	 * @since 0.1
+	 *
+	 * @param object $item
+	 * @param string $column_name
+	 * @return string
 	 */
 	function column_default($item, $column_name) {
 		return $item->$column_name;
@@ -38,6 +42,9 @@ class PLL_Table_Languages extends WP_List_Table {
 	 * displays the edit and delete links
 	 *
 	 * @since 0.1
+	 *
+	 * @param object $item
+	 * @return string
 	 */
 	function column_name($item) {
 		return $item->name . $this->row_actions(array(
@@ -59,6 +66,8 @@ class PLL_Table_Languages extends WP_List_Table {
 	 * gets the list of columns
 	 *
 	 * @since 0.1
+	 *
+	 * @return array the list of column titles
 	 */
 	function get_columns() {
 		return array(
@@ -75,6 +84,8 @@ class PLL_Table_Languages extends WP_List_Table {
 	 * gets the list of sortable columns
 	 *
 	 * @since 0.1
+	 *
+	 * @return array
 	 */
 	function get_sortable_columns() {
 		return array(
@@ -90,6 +101,8 @@ class PLL_Table_Languages extends WP_List_Table {
 	 * prepares the list of items for displaying
 	 *
 	 * @since 0.1
+	 *
+	 * @param array $data
 	 */
 	function prepare_items($data = array()) {
 		$per_page = $this->get_items_per_page('pll_lang_per_page');
