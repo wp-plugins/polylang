@@ -558,7 +558,7 @@ class PLL_Model {
 	 * @return array array of taxonomy names for which Polylang manages languages and translations
 	 */
 	protected function get_taxonomies() {
-		$taxonomies = array('category' => 'category', 'post_tag' => 'post_tag', 'nav_menu' => 'nav_menu');
+		$taxonomies = array('category' => 'category', 'post_tag' => 'post_tag'/*, 'nav_menu' => 'nav_menu'*/);
 		return apply_filters('pll_get_taxonomies', array_merge($taxonomies, $this->options['taxonomies']), false);
 	}
 

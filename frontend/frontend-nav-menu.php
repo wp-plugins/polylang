@@ -18,8 +18,11 @@ class PLL_Frontend_Nav_Menu {
 		add_filter('wp_nav_menu_objects', array(&$this, 'wp_nav_menu_objects'));
 		add_filter('nav_menu_link_attributes', array(&$this, 'nav_menu_link_attributes'), 10, 3);
 
-		// filters menus locations by language
-		add_filter('get_nav_menu', array($this, 'get_nav_menu'), 1);
+		// filters menus by language
+		if (isset($_POST['wp_customize'], $_POST['customized']))
+			add_action('pll_language_defined', array(&$this, 'customizer_locations')); // theme customizer
+		else
+			add_filter('theme_mod_nav_menu_locations', array($this, 'nav_menu_locations'), 20);
 	}
 
 	/*
@@ -132,6 +135,7 @@ class PLL_Frontend_Nav_Menu {
 	 * @return object
 	 */
 	public function get_nav_menu($term) {
+		global $wp_customize;
 		static $once = false;
 		if (!$once && $tr = pll_get_term($term->term_id)) {
 			$once = true; // breaks the loop
@@ -140,5 +144,46 @@ class PLL_Frontend_Nav_Menu {
 		}
 
 		return $term;
+	}
+
+	/*
+	 * fills the theme nav menus locations with the right menu in the right language
+	 *
+	 * @since 1.2
+	 *
+	 * @param array list of nav menus locations
+	 * @return array modified list of nav menus locations
+	 */
+	public function nav_menu_locations($menus) {
+		$curlang = pll_current_language();
+
+		foreach ($menus as $loc => $menu) {
+			if (($pos = strpos($loc, '___')) && substr($loc, $pos+3) == $curlang)
+				$arr[substr($loc, 0, $pos)] = $menu;
+		}
+
+		return empty($arr) ? $menus : array_merge($menus, $arr);
+	}
+
+	/*
+	 * hack $_POST to allow the customizer to find the right menu in the right language
+	 *
+	 * @since 1.2
+	 */
+	public function customizer_locations() {
+		$customized = json_decode($_POST['customized']);
+		$curlang = pll_current_language();
+
+		foreach ($customized as $key => $c) {
+			if (false !== strpos($key, 'nav_menu_locations[')) {
+				$loc = substr(trim($key, ']'), 19);
+				if (($pos = strpos($loc, '___')) && substr($loc, $pos+3) == $curlang) {
+					$loc = 'nav_menu_locations[' . substr($loc, 0, $pos) . ']';
+					$customized->$loc = $c;
+				}
+			}
+		}
+
+		$_POST['customized'] = json_encode($customized);
 	}
 }

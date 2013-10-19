@@ -146,7 +146,7 @@ abstract class PLL_Choose_Lang {
 	 */
 	public function home_requested() {
 		// we are already on the right page
-		if ($this->options['default_lang'] == $this->curlang->slug && $this->options['hide_default']) {
+		if (3 == $this->options['force_lang'] || ($this->options['default_lang'] == $this->curlang->slug && $this->options['hide_default'])) {
 			if ($this->page_on_front && $page_id = $this->model->get_post($this->page_on_front, $this->curlang))
 				set_query_var('page_id', $page_id);
 			else

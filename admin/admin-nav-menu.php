@@ -20,8 +20,8 @@ class PLL_Admin_Nav_Menu {
 		// integration in the WP menu interface
 		add_action('admin_init', array(&$this, 'admin_init')); // after Polylang upgrade
 
-		// remove the customize menu section as it is unusable with Polylang
-		add_action('customize_register', array(&$this, 'customize_register'), 20); // since WP 3.4
+		// integration with WP customizer
+		add_action('customize_register', array(&$this, 'create_nav_menu_locations'), 5);
 
 		// protection against #24802
 		add_filter('pre_insert_term', array(&$this, 'pre_insert_term'), 10, 2);
@@ -34,14 +34,9 @@ class PLL_Admin_Nav_Menu {
 	 * @since 1.1
 	 */
 	public function admin_init(){
-		global $_wp_registered_nav_menus;
-
 		add_action('admin_enqueue_scripts', array(&$this, 'admin_enqueue_scripts'));
 		add_action('wp_update_nav_menu_item', array(&$this, 'wp_update_nav_menu_item'), 10, 2);
 		add_filter('wp_get_nav_menu_items', array(&$this, 'translate_switcher_title'));
-
-		// translation of menus based on chosen locations
-		add_filter('pre_update_option_theme_mods_' . get_option( 'stylesheet' ), array($this, 'update_nav_menu_locations'));
 
 		// filter _wp_auto_add_pages_to_menu by language
 		add_action('transition_post_status', array(&$this, 'auto_add_pages_to_menu'), 5, 3); // before _wp_auto_add_pages_to_menu
@@ -50,11 +45,21 @@ class PLL_Admin_Nav_Menu {
 		// FIXME not displayed if Polylang is activated before the first time the user goes to nav menus http://core.trac.wordpress.org/ticket/16828
 		add_meta_box('pll_lang_switch_box', __('Language switcher', 'polylang'), array( &$this, 'lang_switch' ), 'nav-menus', 'side', 'high');
 
-		// create new nav menu locations except for all non-default language
+		$this->create_nav_menu_locations();
+	}
+
+	/*
+	 * create new nav menu locations (one per location and per language) except for all non-default language
+	 *
+	 * @since 1.2
+	 */
+	public function create_nav_menu_locations() {
+		global $_wp_registered_nav_menus;
+
 		if (isset($_wp_registered_nav_menus)) {
 			foreach ($_wp_registered_nav_menus as $loc => $name)
 				foreach ($this->model->get_languages_list() as $lang)
-					$arr[$loc . (pll_default_language() == $lang->slug ? '' : '#' . $lang->slug)] = $name . ' ' . $lang->name;
+					$arr[$loc . (pll_default_language() == $lang->slug ? '' : '___' . $lang->slug)] = $name . ' ' . $lang->name;
 
 			$_wp_registered_nav_menus = $arr;
 		}
@@ -172,39 +177,6 @@ class PLL_Admin_Nav_Menu {
 	}
 
 	/*
-	 * assign menu languages and translations based on locations
-	 *
-	 * @since 1.1
-	 *
-	 * @param array $mods theme mods
-	 * @return unmodified $mods
-	 */
-	public function update_nav_menu_locations($mods) {
-		if (isset($mods['nav_menu_locations'])) {
-			$default = pll_default_language();
-			$arr = array();
-
-			// extract language and menu from locations
-			foreach ($mods['nav_menu_locations'] as $loc => $menu) {
-				if (!strpos($loc, '#'))
-					$arr[$loc][$default] = $menu;
-				elseif ($pos = strpos($loc, '#')) {
-					$arr[substr($loc, 0, $pos)][substr($loc, $pos+1)] = $menu;
-				}
-			}
-
-			// assign menus language and translations
-			foreach ($arr as $loc => $translations) {
-				foreach ($translations as $lang=>$menu) {
-					$this->model->set_term_language($menu, $lang);
-					$this->model->save_translations('term', $menu, $translations);
-				}
-			}
-		}
-		return $mods;
-	}
-
-	/*
 	 * filters _wp_auto_add_pages_to_menu by language
 	 *
 	 * @since 0.9.4
@@ -222,15 +194,6 @@ class PLL_Admin_Nav_Menu {
 		$menus = implode(',', $menus);
 
 		add_filter('option_nav_menu_options', create_function('$a', "\$a['auto_add'] = array_intersect(\$a['auto_add'], array($menus)); return \$a;"));
-	}
-
-	/*
-	 * FIXME removes the customize menu section as it is currently unusable with Polylang
-	 *
-	 * @since 0.8.1
-	 */
-	public function customize_register() {
-		$GLOBALS['wp_customize']->remove_section('nav'); // since WP 3.4
 	}
 
 	/*

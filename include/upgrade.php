@@ -197,11 +197,16 @@ class PLL_Upgrade {
 	protected function upgrade_1_2() {
 		$this->options['domains'] = array(); // option added in 1.2
 
+		// update language separator in nav menus locations
+		foreach (get_theme_mod('nav_menu_locations') as $loc => $menu)
+			$menus[str_replace('#', '___', $loc)] = $menu;
+		set_theme_mod('nav_menu_locations', $menus);
+
 		// need to register the taxonomies
 		foreach (array('language', 'term_language', 'post_translations', 'term_translations') as $taxonomy)
 			register_taxonomy($taxonomy, null , array('label' => false, 'public' => false, 'query_var' => false, 'rewrite' => false));
 
-		// abort if the upgrade has already been done previously
+		// abort if the db upgrade has already been done previously
 		if (get_terms('term_language', array('hide_empty' => 0)))
 			return;
 

@@ -229,7 +229,7 @@ case 'settings': ?>
 						'<input name="force_lang" type="radio" value="3" %s %s/> %s',
 						$using_permalinks ? '' : 'disabled=1',
 						$this->options['force_lang'] == 3 ? 'checked="checked"' : '',
-						__('Use one domain per language', 'polylang')
+						__('The language is set from different domains:', 'polylang')
 					);?>
 				</label>
 				<table class="pll-domains-table"><?php

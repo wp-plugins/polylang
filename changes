@@ -41,3 +41,11 @@
 * fix: strings translations not saved if one has slashes
 * Improve inline doc
 
+1.2dev48
+* fix: bad redirection if multiple domains and not hiding language code for default language
+* fix: bad archive url for multiple domains
+* update .pot file
+
+1.2dev49
+* Add support for theme navigation customizer
+* fix: bad links when setting language from content when using permalinks

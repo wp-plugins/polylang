@@ -54,13 +54,8 @@ class PLL_Links_Domain {
 	 * @return string modified url
 	 */
 	public function remove_language_from_link($url) {
-		foreach ($this->model->get_languages_list() as $language)
-			if (!$this->options['hide_default'] || $this->options['default_lang'] != $language->slug)
-				$domains[] = $this->options['domains'][$language->slug];
-
-		if (!empty($domains))
-			$url = preg_replace('#^('.implode('|', $domains).')#', $this->home , $url);
-
+		if (!empty($this->options['domains']))
+			$url = preg_replace('#^('.implode('|', $this->options['domains']).')#', $this->home , $url);
 		return $url;
 	}
 
