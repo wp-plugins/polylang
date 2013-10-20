@@ -178,7 +178,7 @@ msgstr ""
 
 #: admin/settings.php:74
 #@ polylang
-msgid "Enter a valid WorPress locale"
+msgid "Enter a valid WordPress locale"
 msgstr ""
 
 #: admin/settings.php:76

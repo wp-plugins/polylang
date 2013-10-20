@@ -24,6 +24,7 @@ class PLL_Plugins_Compat {
 		add_action('init', create_function('',"\$GLOBALS['wp_taxonomies']['language']->yarpp_support = 1;"), 20);
 
 		// WordPress SEO by Yoast
+		add_action('pll_language_defined', array(&$this, 'wpseo_translate_options'));
 		add_filter('get_terms_args', array(&$this, 'wpseo_remove_terms_filter'));
 		add_filter('pll_home_url_white_list', create_function('$arr', "return array_merge(\$arr, array(array('file' => 'wordpress-seo')));"));
 
@@ -49,6 +50,22 @@ class PLL_Plugins_Compat {
 
 		$GLOBALS['wp_import'] = new PLL_WP_Import();
 		register_importer( 'wordpress', 'WordPress', __('Import <strong>posts, pages, comments, custom fields, categories, and tags</strong> from a WordPress export file.', 'wordpress-importer'), array( $GLOBALS['wp_import'], 'dispatch' ) );
+	}
+
+	/*
+	 * WordPress SEO by Yoast
+	 * reloads options once the language has been defined to enable translations
+	 * useful only when the language is set from content
+	 *
+	 * @since 1.2
+	 *
+	 */
+	public function wpseo_translate_options() {
+		if (!PLL_ADMIN && did_action('wp_loaded')) {
+			global $wpseo_front;
+			foreach ( get_wpseo_options_arr() as $opt )
+				$wpseo_front->options = array_merge( $wpseo_front->options, (array) get_option( $opt ) );
+		}
 	}
 
 	/*

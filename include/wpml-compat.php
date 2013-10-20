@@ -658,5 +658,3 @@ class PLL_WPML_Config {
 		return $values;
 	}
 } // class PLL_WPML_Config
-
-new PLL_WPML_Config;

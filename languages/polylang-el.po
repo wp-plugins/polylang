@@ -4,9 +4,9 @@ msgstr ""
 "Project-Id-Version: polylang\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2013-10-17 11:47+0100\n"
+"PO-Revision-Date: 2013-10-20 14:56+0300\n"
 "Last-Translator: Theodotos Andreou <theo@ubuntucy.org>\n"
-"Language-Team: Ubuntucy - www.ubuntucy.org\n"
+"Language-Team: Cyprus Ubuntu Loco Team\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,19 +24,29 @@ msgstr ""
 #: admin/view-about.php:3
 #, php-format
 msgid "Polylang is provided with an extensive %sdocumentation%s (in English only). It includes information on how to set up your multilingual site and use it on a daily basis, a FAQ, as well as a documentation for programmers to adapt their plugins and themes."
-msgstr "Το Polylang παρέχει εκτενή %sτεκμηρίωση%s (μόνο στα Αγγλικά). Περιέχει πληροφορίες πως να ρυθμίσετε τον πολυγλωσσικό σας ιστοτόπο και να τον χρησιμοποιήσετε σε καθημερινή βάση, λίστα συχνών ερωτήσεων (FAQ), καθώς και τεκμηρίωση για προγραμματιστές για προσαρμογή των προσθέτων και θεμάτων τους."
+msgstr ""
+"Το Polylang παρέχει εκτενή %sτεκμηρίωση%s (μόνο στα Αγγλικά). Περιέχει "
+"πληροφορίες πως να ρυθμίσετε τον πολυγλωσσικό σας ιστοτόπο και να τον "
+"χρησιμοποιήσετε σε καθημερινή βάση, λίστα συχνών ερωτήσεων (FAQ), καθώς και "
+"τεκμηρίωση για προγραμματιστές για προσαρμογή των προσθέτων και θεμάτων "
+"τους."
 
 # @ polylang
 #: admin/view-about.php:9
 #, php-format
 msgid "You will also find useful information in the %ssupport forum%s. However don't forget to make a search before posting a new topic."
-msgstr "Θα βρείτε επίσης χρήσιμες πληροφορίες στο %sφόρουμ%s υποστήριξης. Μην παραλείψετε να ψάξετε πρώτα αν έχει απαντηθεί το ερώτημα σας πριν ανοίξετε καινούργιο θέμα."
+msgstr ""
+"Θα βρείτε επίσης χρήσιμες πληροφορίες στο %sφόρουμ%s υποστήριξης. Μην "
+"παραλείψετε να ψάξετε πρώτα αν έχει απαντηθεί το ερώτημα σας πριν ανοίξετε "
+"καινούργιο θέμα."
 
 # @ polylang
 #: admin/view-about.php:16
 #, php-format
 msgid "Polylang is free of charge and is released under the same license as WordPress, the %sGPL%s."
-msgstr "Το Polylang είναι δωρεάν και διανέμεται κάτω από την ίδια άδεια χρήσης όπως και το Wordpress, την %sΓενική Άδεια Χρήσης - GPL%s."
+msgstr ""
+"Το Polylang είναι δωρεάν και διανέμεται κάτω από την ίδια άδεια χρήσης όπως "
+"και το Wordpress, την %sΓενική Άδεια Χρήσης - GPL%s."
 
 # @ polylang
 #: admin/view-about.php:22
@@ -47,7 +57,9 @@ msgstr "Αν θέλετε να βοηθήσετε, απλά, %sδιαβάστε 
 # @ polylang
 #: admin/view-about.php:27
 msgid "Finally if you like this plugin or if it helps your business, donations to the author are greatly appreciated."
-msgstr "Τέλος αν σας αρέσει αυτό το πρόσθετο ή αν σας βοηθά στην επιχείρηση σας, οι δωρεές στο δημιουργό θα εκτιμηθούν ιδιαίτερα. "
+msgstr ""
+"Τέλος αν σας αρέσει αυτό το πρόσθετο ή αν σας βοηθά στην επιχείρηση σας, οι "
+"δωρεές στο δημιουργό θα εκτιμηθούν ιδιαίτερα. "
 
 # @ polylang
 #: admin/admin-filters-post.php:76
@@ -179,7 +191,7 @@ msgstr "Μετάφραση συμβολοσειρών"
 
 # @ polylang
 #: admin/settings.php:74
-msgid "Enter a valid WorPress locale"
+msgid "Enter a valid WordPress locale"
 msgstr "Εισάγετε μια έγκυρη τοπικοποίηση Wordpress"
 
 # @ polylang
@@ -195,7 +207,9 @@ msgstr "Η γλώσσα πρέπει να έχει όνομα"
 # @ polylang
 #: admin/settings.php:78
 msgid "The language was created, but the WordPress language file was not downloaded. Please install it manually."
-msgstr "Η γλώσσα δημιουργήθηκε αλλά το αρχείο γλώσσας του Wordpress δεν έχει κατέβει. Παρακαλώ εγκαταστήστε το εσείς."
+msgstr ""
+"Η γλώσσα δημιουργήθηκε αλλά το αρχείο γλώσσας του Wordpress δεν έχει "
+"κατέβει. Παρακαλώ εγκαταστήστε το εσείς."
 
 # @ polylang
 #: admin/settings.php:305
@@ -276,7 +290,9 @@ msgstr "Επιλογή γλώσσας"
 # @ polylang
 #: admin/view-languages.php:72
 msgid "You can choose a language in the list or directly edit it below."
-msgstr "Μπορείτε να επιλέξετε μια γλώσσα από την λίστα ή να την επεξεργαστείτε πιο κάτω."
+msgstr ""
+"Μπορείτε να επιλέξετε μια γλώσσα από την λίστα ή να την επεξεργαστείτε πιο "
+"κάτω."
 
 # @ polylang
 #: admin/table-languages.php:74
@@ -298,7 +314,9 @@ msgstr "Τοπικοποίηση"
 # @ polylang
 #: admin/view-languages.php:87
 msgid "Wordpress Locale for the language (for example: en_US). You will need to install the .mo file for this language."
-msgstr "Τοπικοποίηση Wordpress για την γλώσσα (πχ: en_US). Θα χρειαστεί να εγκαταστήσετε το αρχείο .mo για αυτή την γλώσσα."
+msgstr ""
+"Τοπικοποίηση Wordpress για την γλώσσα (πχ: en_US). Θα χρειαστεί να "
+"εγκαταστήσετε το αρχείο .mo για αυτή την γλώσσα."
 
 # @ polylang
 #: admin/view-languages.php:91
@@ -369,7 +387,9 @@ msgstr "Προκαθορισμένη γλώσσα"
 # @ polylang
 #: admin/view-languages.php:179
 msgid "There are posts, pages, categories or tags without language set. Do you want to set them all to default language ?"
-msgstr "Υπάρχουν άρθρα, σελίδες, κατηγορίες ή ετικέτες χωρίς καθορισμό γλώσσας. Θέλετε να οριστούν όλα στην προκαθορισμένη γλώσσα;"
+msgstr ""
+"Υπάρχουν άρθρα, σελίδες, κατηγορίες ή ετικέτες χωρίς καθορισμό γλώσσας. "
+"Θέλετε να οριστούν όλα στην προκαθορισμένη γλώσσα;"
 
 # @ polylang
 #: admin/view-languages.php:187
@@ -379,7 +399,9 @@ msgstr "Αναγνώριση γλώσσας φυλλομετρητή"
 # @ polylang
 #: admin/view-languages.php:193
 msgid "When the front page is visited, set the language according to the browser preference"
-msgstr "Όταν καλείται η αρχική σελίδα, να καθορίζεται η γλώσσα βάση των προτιμήσεων του φυλλομετρητή"
+msgstr ""
+"Όταν καλείται η αρχική σελίδα, να καθορίζεται η γλώσσα βάση των προτιμήσεων "
+"του φυλλομετρητή"
 
 # @ polylang
 #: admin/view-languages.php:200
@@ -389,7 +411,9 @@ msgstr "Τροποποιήσεις URL"
 # @ polylang
 #: admin/view-languages.php:206
 msgid "The language is set from content. Posts, pages, categories and tags urls are not modified."
-msgstr "Η γλώσσα ορίσθηκε βάση του περιεχομένου. Οι διευθύνσεις URL των άρθρων, σελίδων και ετικετών δεν έχουν τροποποιηθεί."
+msgstr ""
+"Η γλώσσα ορίσθηκε βάση του περιεχομένου. Οι διευθύνσεις URL των άρθρων, "
+"σελίδων και ετικετών δεν έχουν τροποποιηθεί."
 
 # @ polylang
 #: admin/view-languages.php:253
@@ -410,7 +434,9 @@ msgstr "Απόκρυψη των πληροφοριών γλώσσας από URL
 #: admin/view-languages.php:281
 #, php-format
 msgid "When using static front page, redirect the language page (example: %s) to the front page in the right language"
-msgstr "Όταν υπάρχει στατική αρχική σελίδα, να γίνεται ανακατεύθυνση της σελίδας γλώσσας (παράδειγμα: %s) της αρχικής σελίδας στην σωστή γλώσσα"
+msgstr ""
+"Όταν υπάρχει στατική αρχική σελίδα, να γίνεται ανακατεύθυνση της σελίδας "
+"γλώσσας (παράδειγμα: %s) της αρχικής σελίδας στην σωστή γλώσσα"
 
 # @ polylang
 #: admin/view-languages.php:290
@@ -553,12 +579,15 @@ msgstr "Προσθέτει πολυγλωσσική δυνατότητα στο 
 #: polylang.php:157
 #, php-format
 msgid "You are using WordPress %s. Polylang requires at least WordPress %s."
-msgstr "Χρησιμοποιείτε WordPress %s. Το Polylang χρειάζεται τουλάχιστον WordPress %s."
+msgstr ""
+"Χρησιμοποιείτε WordPress %s. Το Polylang χρειάζεται τουλάχιστον WordPress %"
+"s."
 
 # @ polylang
 #: include/upgrade.php:75
 msgid "Polylang has been deactivated because you upgraded from a too old version."
-msgstr "Το Polylang έχει απενεργοποιηθεί γιατί αναβαθμίσατε από πολύ παλιά έκδοση."
+msgstr ""
+"Το Polylang έχει απενεργοποιηθεί γιατί αναβαθμίσατε από πολύ παλιά έκδοση."
 
 # @ polylang
 #: include/upgrade.php:77
@@ -569,7 +598,7 @@ msgstr "Παρακαλώ αναβαθμίστε πρώτα σε %s πριν αν
 # @ polylang
 #: admin/table-string.php:108
 msgid "Group"
-msgstr ""
+msgstr "Ομάδα"
 
 # @ polylang
 #: admin/table-string.php:186
@@ -580,36 +609,46 @@ msgstr "Προβολή όλων των ομάδων"
 #: admin/table-languages.php:59
 msgid "You are about to permanently delete this language. Are you sure?"
 msgstr ""
+"Πρόκειται να διαγράψετε οριστικά αυτή τη γλώσσα. Είστε σίγουροι για αυτό;"
 
 # @ polylang
 #: admin/view-languages.php:147
 msgid "Use this to remove unused strings from database, for example after a plugin has been uninstalled."
 msgstr ""
+"Χρησιμοποιείστε αυτό για να αφαιρέσετε αχρησιμοποίητες συμβολοσειρές από την "
+"βάση δεδομένων, για παράδειγμα μετά την αφαίρεση κάποιου πρόσθετου."
 
 # @ polylang
 #: admin/view-languages.php:214
 msgid "The language is set from the directory name in pretty permalinks. Example:"
 msgstr ""
+"Η γλώσσα ορίζεται από το όνομα καταλόγου σε μορφή ελκυστικών μόνιμων "
+"συνδέσμων. Παράδειγμα:"
 
 # @ polylang
 #: admin/view-languages.php:223
 msgid "The language is set from the subdomain name in pretty permalinks. Example:"
 msgstr ""
+"Η γλώσσα ορίζεται από το όνομα υποτομέα σε μορφή ελκυστικών μόνιμων "
+"συνδέσμων. Παράδειγμα:"
 
 # @ polylang
 #: admin/view-languages.php:314
 msgid "The synchronization options allow to maintain exact same values (or translations in the case of taxonomies and page parent) of meta content between the translations of a post or page."
 msgstr ""
+"Η επιλογές συγχρονισμού επιτρέπουν την διατήρηση των ίδιων ακριβώς τιμών (ή "
+"μεταφράσεων στην περίπτωση ταξονομιών και μητρικών σελίδων) μετα- "
+"περιεχομένου μεταξύ των μεταφράσεων ενός άρθρου ή μιας σελίδας. "
 
 # @ polylang
 #: admin/settings.php:75
 msgid "The language code contains invalid characters"
-msgstr ""
+msgstr "Το όνομα του κώδικα γλώσσας περιέχει μη έγκυρους χαρακτήρες."
 
 # @ polylang
 #: admin/view-languages.php:232
 msgid "The language is set from different domains:"
-msgstr ""
+msgstr "Η γλώσσα ορίζετε από διαφορετικούς τομείς:"
 
 #~ msgid ""
 #~ "The language code, for example /en/, is added to all urls when using "

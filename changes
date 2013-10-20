@@ -49,3 +49,8 @@
 1.2dev49
 * Add support for theme navigation customizer
 * fix: bad links when setting language from content when using permalinks
+
+1.2dev50
+* add support of WPSEO custom strings translations when the language is set from content
+* fix: wpml-config.xml does not work
+* fix typo in one string

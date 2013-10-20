@@ -71,7 +71,7 @@ class PLL_Settings {
 				$list_table->prepare_items($listlanguages);
 
 				// error messages for data validation
-				$errors[1] = __('Enter a valid WorPress locale', 'polylang');
+				$errors[1] = __('Enter a valid WordPress locale', 'polylang');
 				$errors[2] = __('The language code contains invalid characters', 'polylang');
 				$errors[3] = __('The language code must be unique', 'polylang');
 				$errors[4] = __('The language must have a name', 'polylang');

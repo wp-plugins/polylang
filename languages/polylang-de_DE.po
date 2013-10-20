@@ -4,7 +4,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Christian Ries <christian_ries@internet.lu>\n"
+"Last-Translator: F. Demarle\n"
 "Language-Team: \n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -12,11 +12,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
-"_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2\n"
 "X-Poedit-Basepath: .\n"
 "X-Textdomain-Support: yes\n"
-"X-Generator: Poedit 1.5.5\n"
+"X-Generator: Poedit 1.5.7\n"
 "X-Poedit-SearchPath-0: ..\n"
 
 # @ polylang
@@ -178,7 +177,7 @@ msgstr "Übersetzung von Sätzen"
 
 # @ polylang
 #: admin/settings.php:74
-msgid "Enter a valid WorPress locale"
+msgid "Enter a valid WordPress locale"
 msgstr "Bitte geben Sie eine gültige Sprachdatei an"
 
 # @ polylang
@@ -577,37 +576,37 @@ msgstr "Alle Gruppen anzeigen"
 # @ polylang
 #: admin/table-languages.php:59
 msgid "You are about to permanently delete this language. Are you sure?"
-msgstr ""
+msgstr "Sie sind dabei, diese Sprache definitiv zu löschen. Sind Sie sicher?"
 
 # @ polylang
 #: admin/view-languages.php:147
 msgid "Use this to remove unused strings from database, for example after a plugin has been uninstalled."
-msgstr ""
+msgstr "Verwenden Sie diese Option, um nicht verwendete Zeichenfolgen aus der Datenbank zu entfernen, beispielsweise nachdem ein Plugin deinstalliert wurde."
 
 # @ polylang
 #: admin/view-languages.php:214
 msgid "The language is set from the directory name in pretty permalinks. Example:"
-msgstr ""
+msgstr "Die Sprache wird aus dem Verzeichnisnamen in schöne Permalinks gesetzt. Beispiel:"
 
 # @ polylang
 #: admin/view-languages.php:223
 msgid "The language is set from the subdomain name in pretty permalinks. Example:"
-msgstr ""
+msgstr "Die Sprache wird aus der Subdomain in schöne Permalinks gesetzt. Beispiel:"
 
 # @ polylang
 #: admin/view-languages.php:314
 msgid "The synchronization options allow to maintain exact same values (or translations in the case of taxonomies and page parent) of meta content between the translations of a post or page."
-msgstr ""
+msgstr "Die Synchronisierungs-Optionen ermöglichen es, exakt gleiche Werte (oder Übersetzungen im Falle von Taxonomien und Elternseiten) der Metainhalte beizubehalten zwischen den Übersetzungen eines Artikels oder einer Seite."
 
 # @ polylang
 #: admin/settings.php:75
 msgid "The language code contains invalid characters"
-msgstr ""
+msgstr "Die Sprachenkodierung enthält ungültige Zeichen"
 
 # @ polylang
 #: admin/view-languages.php:232
 msgid "The language is set from different domains:"
-msgstr ""
+msgstr "Die Sprache ist von verschiedenen Domains aus gesetzt:"
 
 #~ msgid ""
 #~ "The language code, for example /en/, is added to all urls when using "

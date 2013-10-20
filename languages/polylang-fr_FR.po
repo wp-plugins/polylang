@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Polylang v1.2dev47\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2013-10-17 11:31+0100\n"
+"PO-Revision-Date: 2013-10-20 18:52+0100\n"
 "Last-Translator: F. Demarle\n"
 "Language-Team: \n"
 "Language: \n"
@@ -176,7 +176,7 @@ msgstr "Traduction de phrases"
 
 # @ polylang
 #: admin/settings.php:74
-msgid "Enter a valid WorPress locale"
+msgid "Enter a valid WordPress locale"
 msgstr "Entrez un code local WordPress valide"
 
 # @ polylang

@@ -23,7 +23,7 @@ abstract class PLL_Base {
 		add_action('widgets_init', array(&$this, 'widgets_init'));
 
 		// user defined strings translations
-		add_action('pll_language_defined', array(&$this, 'load_strings_translations'));
+		add_action('pll_language_defined', array(&$this, 'load_strings_translations'), 5);
 	}
 
 	/*
