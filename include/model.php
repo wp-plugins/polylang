@@ -426,11 +426,13 @@ class PLL_Model {
 		global $wpdb;
 		$tt_id = 'term' == $type ? 'tl_term_taxonomy_id' : 'term_taxonomy_id';
 
-		// the query is coming from Polylang and the $lang is an object
+		// $lang is an object
+		// generally the case if the query is coming from Polylang
 		if (is_object($lang))
 			return $wpdb->prepare(" AND pll_tr.term_taxonomy_id = %d", $lang->$tt_id);
 
-		// the query is coming from outside with 'lang' parameter and $lang is a comma separated list of slugs (or an array of slugs)
+		// $lang is a comma separated list of slugs (or an array of slugs)
+		// generally the case is the query is coming from outside with 'lang' parameter
 		$slugs = is_array($lang) ? $lang : explode(',', $lang);
 		foreach ($slugs as $slug)
 			$languages[] = (int) $this->get_language($slug)->$tt_id;
@@ -621,5 +623,59 @@ class PLL_Model {
 			. $wpdb->prepare(" WHERE tt.taxonomy = %s AND t.name = %s", $taxonomy, $value)
 			. $this->where_clause($this->get_language($language), 'term')
 		);
+	}
+
+	/*
+	 * gets the number of posts per language in a date or post type archive
+	 *
+	 * @since 1.2
+	 *
+	 * @param object lang
+	 * @param array $args WP_Query arguments (accepted: post_type, m, year, monthnum, day)
+	 * @return int
+	 */
+	public function count_posts($lang, $args = array()) {
+		global $wpdb;
+
+		$q = wp_parse_args($args, array('post_type' => 'post'));
+
+		$cache_key = md5(serialize($q));
+		$counts = wp_cache_get($cache_key, 'pll_counts');
+
+		if (false === $counts) {
+			$where = " WHERE post_status = 'publish'";
+			$where .= $wpdb->prepare(" AND {$wpdb->posts}.post_type = %s", $q['post_type']);
+
+			if (!empty($q['m'])) {
+				$q['m'] = '' . preg_replace('|[^0-9]|', '', $q['m']);
+				$where .= " AND YEAR($wpdb->posts.post_date)=" . substr($q['m'], 0, 4);
+				if ( strlen($q['m']) > 5 )
+					$where .= " AND MONTH($wpdb->posts.post_date)=" . substr($q['m'], 4, 2);
+				if ( strlen($q['m']) > 7 )
+					$where .= " AND DAYOFMONTH($wpdb->posts.post_date)=" . substr($q['m'], 6, 2);
+			}
+
+			if (!empty($q['year']))
+				$where .= " AND YEAR($wpdb->posts.post_date)='" . (int) $q['year'] . "'";
+
+			if (!empty($q['monthnum']))
+				$where .= " AND MONTH($wpdb->posts.post_date)='" . (int) $q['monthnum'] . "'";
+
+			if (!empty($q['day']))
+				$where .= " AND DAYOFMONTH($wpdb->posts.post_date)='" . (int) $q['day'] . "'";
+
+			$select = "SELECT pll_tr.term_taxonomy_id, COUNT(*) AS num_posts FROM {$wpdb->posts}";
+			$join = $this->join_clause('post');
+			$where .= $this->where_clause($this->get_languages_list(), 'post');
+			$groupby = " GROUP BY pll_tr.term_taxonomy_id";
+
+			$res = $wpdb->get_results($select . $join . $where . $groupby, ARRAY_A);
+			foreach ((array) $res as $row)
+				$counts[$row['term_taxonomy_id']] = $row['num_posts'];
+
+			wp_cache_set($cache_key, $counts, 'pll_counts');
+		}
+
+		return isset($counts[$lang->term_taxonomy_id]) ? $counts[$lang->term_taxonomy_id] : 0;
 	}
 }

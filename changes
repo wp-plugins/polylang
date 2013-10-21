@@ -54,3 +54,8 @@
 * add support of WPSEO custom strings translations when the language is set from content
 * fix: wpml-config.xml does not work
 * fix typo in one string
+
+1.2dev51
+* now check if date and post type archives are translated before displaying the language switcher
+* fix broken site if WPSEO not active
+

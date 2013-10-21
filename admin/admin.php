@@ -55,7 +55,10 @@ class PLL_Admin extends PLL_Base {
 
 		// filter admin language for users
 		add_filter('locale', array(&$this, 'get_locale'));
-		do_action('pll_language_defined');
+
+		// inform that the admin language has been set
+		$curlang = $this->model->get_language(get_locale());
+		do_action('pll_language_defined', $curlang->slug, $curlang);
 
 		// adds the languages in admin bar
 		// FIXME: OK for WP 3.2 and newer (the admin bar is not displayed on admin side for WP 3.1)

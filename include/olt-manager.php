@@ -30,6 +30,7 @@ class PLL_OLT_Manager {
 
 		// loads text domains
 		add_action('pll_language_defined', array(&$this, 'load_textdomains'), 2); // after PLL_Frontend::pll_language_defined
+		add_action('pll_no_language_defined', array(&$this, 'load_textdomains'));
 
 		// allows Polylang to be the first plugin loaded ;-)
 		add_filter('pre_update_option_active_plugins', array(&$this, 'make_polylang_first'));

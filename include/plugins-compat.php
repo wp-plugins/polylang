@@ -61,7 +61,7 @@ class PLL_Plugins_Compat {
 	 *
 	 */
 	public function wpseo_translate_options() {
-		if (!PLL_ADMIN && did_action('wp_loaded')) {
+		if (defined('WPSEO_VERSION') && !PLL_ADMIN && did_action('wp_loaded')) {
 			global $wpseo_front;
 			foreach ( get_wpseo_options_arr() as $opt )
 				$wpseo_front->options = array_merge( $wpseo_front->options, (array) get_option( $opt ) );

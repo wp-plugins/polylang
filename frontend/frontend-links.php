@@ -232,18 +232,36 @@ class PLL_Frontend_Links {
 				$url = get_term_link(get_term($link_id, $term->taxonomy), $term->taxonomy);
 		}
 
-		// don't test if there are existing translations before creating the url as it would be very expensive in sql queries
-		elseif (is_archive() || is_search()) {
-			$url = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-			$url = $this->links_model->remove_language_from_link($url);
-			$url = $this->links_model->add_language_to_link($url, $language);
-			$url = $this->links_model->remove_paged_from_link($url);
+		elseif (is_search())
+			$url = $this->get_archive_url($language);
+
+		elseif (is_archive()) {
+			$keys = array('post_type', 'm', 'year', 'monthnum', 'day');
+			// check if there are existing translations before creating the url
+			if ($this->model->count_posts($language, array_intersect_key($qv, array_flip($keys))))
+				$url = $this->get_archive_url($language);
 		}
 
 		elseif (is_home() || is_tax('language') )
 			$url = $this->get_home_url($language);
 
 		return $translation_url[$language->slug] = apply_filters('pll_translation_url', (isset($url) && !is_wp_error($url) ? $url : null), $language->slug);
+	}
+
+	/*
+	 * get the translation of the current archive url
+	 * used also for search
+	 *
+	 * @since 1.2
+	 *
+	 * @param object $language
+	 * @return string
+	 */
+	public function get_archive_url($language) {
+		$url = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+		$url = $this->links_model->remove_language_from_link($url);
+		$url = $this->links_model->add_language_to_link($url, $language);
+		return $this->links_model->remove_paged_from_link($url);
 	}
 
 	/*
