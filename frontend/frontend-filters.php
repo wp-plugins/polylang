@@ -130,21 +130,47 @@ class PLL_Frontend_Filters extends PLL_Filters_Base {
 	/*
 	 * filters posts according to the language
 	 * Note: pll_is_translated_post_type is correctly defined only once the action 'wp_loaded' has been fired
+	 * modifies some query vars to "hide" that the language is a taxonomy
 	 *
 	 * @since 0.1
 	 *
 	 * @param object $query WP_Query object
 	 */
 	public function pre_get_posts($query) {
-		$qv = $query->query_vars;
+		$qv = &$query->query_vars;
 
 		// allow filtering recent posts and secondary queries by the current language
 		// take care not to break queries for non visible post types such as nav_menu_items
 		// do not filter if lang is set to an empty value
 		if (!isset($qv['lang']) && (empty($qv['post_type']) || pll_is_translated_post_type($qv['post_type'])))
 			$query->set('lang', $this->curlang->slug);
-	}
 
+
+		// modifies query vars when the language is queried
+		if (!empty($qv['lang'])) {
+			// remove pages query when the language is set unless we do a search
+			if (empty($qv['post_type']) && !$query->is_search)
+				$query->set('post_type', 'post');
+
+			// unset the is_archive flag for language pages to prevent loading the archive template
+			// keep archive flag for comment feed otherwise the language filter does not work
+			if (!$query->is_comment_feed && !$query->is_post_type_archive && !$query->is_date && !$query->is_author && !$query->is_category && !$query->is_tag && !$query->is_tax('post_format'))
+				$query->is_archive = false;
+
+			// unset the is_tax flag for authors pages and post types archives
+			// FIXME Should I do this for other cases?
+			if ($query->is_author || $query->is_post_type_archive || $query->is_date || $query->is_search) {
+				$query->is_tax = false;
+				unset($query->queried_object);
+			}
+
+			// to avoid conflict beetwen taxonomies
+			if (isset($query->tax_query->queries))
+				foreach ($query->tax_query->queries as $tax)
+					if (pll_is_translated_taxonomy($tax['taxonomy']))
+						unset($query->query_vars['lang']);
+		}
+	}
 
 	/*
 	 * filters categories and post tags by language when needed

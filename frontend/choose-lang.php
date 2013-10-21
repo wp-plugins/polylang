@@ -238,30 +238,5 @@ abstract class PLL_Choose_Lang {
 			$this->set_language($this->get_preferred_language());
 			$query->set('lang', $this->curlang->slug);
 		}
-
-		// modifies query vars when the language is queried
-		if (!empty($qv['lang'])) {
-			// remove pages query when the language is set unless we do a search
-			if (empty($qv['post_type']) && !$query->is_search)
-				$query->set('post_type', 'post');
-
-			// unset the is_archive flag for language pages to prevent loading the archive template
-			// keep archive flag for comment feed otherwise the language filter does not work
-			if (!$query->is_comment_feed && !$query->is_post_type_archive && !$query->is_date && !$query->is_author && !$query->is_category && !$query->is_tag && !$query->is_tax('post_format'))
-				$query->is_archive = false;
-
-			// unset the is_tax flag for authors pages and post types archives
-			// FIXME Should I do this for other cases?
-			if ($query->is_author || $query->is_post_type_archive || $query->is_date || $query->is_search) {
-				$query->is_tax = false;
-				unset($query->queried_object);
-			}
-
-			// to avoid conflict beetwen taxonomies
-			if (isset($query->tax_query->queries))
-				foreach ($query->tax_query->queries as $tax)
-					if (pll_is_translated_taxonomy($tax['taxonomy']))
-						unset($query->query_vars['lang']);
-		}
 	}
 }

@@ -59,3 +59,6 @@
 * now check if date and post type archives are translated before displaying the language switcher
 * fix broken site if WPSEO not active
 
+1.2dev52
+* fix: language name (instead of term name) displayed on terms archive pages
+

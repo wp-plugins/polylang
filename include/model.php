@@ -640,7 +640,7 @@ class PLL_Model {
 		$q = wp_parse_args($args, array('post_type' => 'post'));
 
 		$cache_key = md5(serialize($q));
-		$counts = wp_cache_get($cache_key, 'pll_counts');
+		$counts = wp_cache_get($cache_key, 'pll_count_posts');
 
 		if (false === $counts) {
 			$where = " WHERE post_status = 'publish'";
@@ -673,9 +673,9 @@ class PLL_Model {
 			foreach ((array) $res as $row)
 				$counts[$row['term_taxonomy_id']] = $row['num_posts'];
 
-			wp_cache_set($cache_key, $counts, 'pll_counts');
+			wp_cache_set($cache_key, $counts, 'pll_count_posts');
 		}
 
-		return isset($counts[$lang->term_taxonomy_id]) ? $counts[$lang->term_taxonomy_id] : 0;
+		return empty($counts[$lang->term_taxonomy_id]) ? 0 : $counts[$lang->term_taxonomy_id];
 	}
 }
