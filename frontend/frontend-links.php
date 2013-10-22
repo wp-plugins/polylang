@@ -128,8 +128,9 @@ class PLL_Frontend_Links {
 	 */
 	public function wp_head() {
 		// outputs references to translated pages (if exists) in the html head section
+		// google recommends to include self link https://support.google.com/webmasters/answer/189077?hl=en
 		foreach ($this->model->get_languages_list() as $language) {
-			if ($language->slug != $this->curlang->slug && $url = $this->get_translation_url($language))
+			if ($url = $this->get_translation_url($language))
 				printf('<link hreflang="%s" href="%s" rel="alternate" />'."\n", esc_attr($language->slug), esc_url($url));
 		}
 	}

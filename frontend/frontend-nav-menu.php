@@ -46,6 +46,7 @@ class PLL_Frontend_Nav_Menu {
 				foreach (pll_the_languages(array_merge(array('raw' => 1), $options)) as $language) {
 					extract($language);
 					$lang_item = clone $item;
+					$lang_item->ID = $lang_item->ID . '-' . $slug; // a unique ID
 					$lang_item->title = $show_flags && $show_names ? $flag.'&nbsp;'.$name : ($show_flags ? $flag : $name);
 					$lang_item->url = $url;
 					$lang_item->lang = $slug; // save this for use in nav_menu_link_attributes
@@ -151,15 +152,17 @@ class PLL_Frontend_Nav_Menu {
 	 *
 	 * @since 1.2
 	 *
-	 * @param array list of nav menus locations
-	 * @return array modified list of nav menus locations
+	 * @param array|bool list of nav menus locations, false if menu locations have not been filled yet
+	 * @return array|bool modified list of nav menus locations
 	 */
 	public function nav_menu_locations($menus) {
 		$curlang = pll_current_language();
 
-		foreach ($menus as $loc => $menu) {
-			if (($pos = strpos($loc, '___')) && substr($loc, $pos+3) == $curlang)
-				$arr[substr($loc, 0, $pos)] = $menu;
+		if (is_array($menus)) {
+			foreach ($menus as $loc => $menu) {
+				if (($pos = strpos($loc, '___')) && substr($loc, $pos+3) == $curlang)
+					$arr[substr($loc, 0, $pos)] = $menu;
+			}
 		}
 
 		return empty($arr) ? $menus : array_merge($menus, $arr);

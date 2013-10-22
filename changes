@@ -62,3 +62,7 @@
 1.2dev52
 * fix: language name (instead of term name) displayed on terms archive pages
 
+1.2dev53
+* Include rel="alternate" hreflang="x" selflink per google recommendation
+* Bug correction: same id is used for all language items in menu
+* fix: PHP warning if menu locations have not been filled yet

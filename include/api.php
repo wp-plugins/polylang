@@ -24,7 +24,7 @@
  */
 function pll_the_languages($args = '') {
 	global $polylang;
-	if ($polylang instanceof PLL_Frontend) {
+	if ($polylang instanceof PLL_Frontend && !empty($polylang->links)) {
 		$switcher = new PLL_Switcher;
 		return $switcher->the_languages($polylang->links, $args);
 	}
@@ -94,7 +94,7 @@ function pll_get_term($term_id, $slug = '') {
  */
 function pll_home_url() {
 	global $polylang;
-	return $polylang instanceof PLL_Frontend ? $polylang->get_home_url() : home_url('/');
+	return $polylang instanceof PLL_Frontend &&  !empty($polylang->links) ? $polylang->links->get_home_url() : home_url('/');
 }
 
 /*

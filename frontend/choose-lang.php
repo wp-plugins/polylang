@@ -158,7 +158,7 @@ abstract class PLL_Choose_Lang {
 		// don't redirect if $_POST is not empty as it could break other plugins
 		// don't forget the query string which may be added by plugins
 		elseif (is_string($redirect = $this->links->get_home_url($this->curlang)) && empty($_POST)) {
-			$redirect = empty($_SERVER['QUERY_STRING']) ? $redirect : $redirect . ($this->using_permalinks ? '?' : '&') . $_SERVER['QUERY_STRING'];
+			$redirect = empty($_SERVER['QUERY_STRING']) ? $redirect : $redirect . (get_option('permalink_structure') ? '?' : '&') . $_SERVER['QUERY_STRING'];
 			if ($redirect = apply_filters('pll_redirect_home', $redirect)) {
 				wp_redirect($redirect);
 				exit;

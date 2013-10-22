@@ -89,7 +89,7 @@ abstract class PLL_Filters_Base {
 	 */
 	public function exclude_pages($lang) {
 		$args = array(
-			'lang' => 0, // so this query is not filtered by our pre_get_post filter in core.php
+			'lang' => 0, // so this query is not filtered by our pre_get_post filter in PLL_Frontend_Filters
 			'numberposts' => -1,
 			'nopaging'    => true,
 			'post_type'   => array_intersect(get_post_types(array('hierarchical' => 1)), $this->model->post_types),
