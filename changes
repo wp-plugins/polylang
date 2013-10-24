@@ -66,3 +66,14 @@
 * Include rel="alternate" hreflang="x" selflink per google recommendation
 * Bug correction: same id is used for all language items in menu
 * fix: PHP warning if menu locations have not been filled yet
+
+1.2dev54
+* Synchronization is now disabled by default (due to too much conflicts / questions on the forum)
+* add the option 'no_default_cat' optional argument to PLL_Admin_Model::add_language
+* remove static var $languages in PLL_Model::get_languages_list
+* make sure the default category is assigned the new default language if the default language is deleted
+* fix: Fatal error: Call to undefined method stdClass::set_flag()
+* fix: Polylang notice in icl_get_languages
+* fix: current language is not selected in dropdown language switcher
+* fix: notices in nav_menus upgrade
+* fix: 404 error on pages introduced in 1.2dev52

@@ -137,7 +137,7 @@ class PLL_Frontend_Filters extends PLL_Filters_Base {
 	 * @param object $query WP_Query object
 	 */
 	public function pre_get_posts($query) {
-		$qv = &$query->query_vars;
+		$qv = $query->query_vars;
 
 		// allow filtering recent posts and secondary queries by the current language
 		// take care not to break queries for non visible post types such as nav_menu_items
@@ -163,13 +163,13 @@ class PLL_Frontend_Filters extends PLL_Filters_Base {
 				$query->is_tax = false;
 				unset($query->queried_object);
 			}
-
-			// to avoid conflict beetwen taxonomies
-			if (isset($query->tax_query->queries))
-				foreach ($query->tax_query->queries as $tax)
-					if (pll_is_translated_taxonomy($tax['taxonomy']))
-						unset($query->query_vars['lang']);
 		}
+
+		// to avoid conflict beetwen taxonomies
+		if (isset($query->tax_query->queries))
+			foreach ($query->tax_query->queries as $tax)
+				if (pll_is_translated_taxonomy($tax['taxonomy']))
+					unset($query->query_vars['lang']);
 	}
 
 	/*

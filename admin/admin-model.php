@@ -23,11 +23,14 @@ class PLL_Admin_Model extends PLL_Model {
 	 * creates a default category for this language
 	 *
 	 * list of arguments that $args must contain:
-	 * name       -> language name (used only for display)
-	 * slug       -> language code (ideally 2-letters ISO 639-1 language code
-	 * locale     -> WordPress locale. If something wrong is used for the locale, the .mo files will not be loaded...
-	 * rtl        -> 1 if rtl language, 0 otherwise
-	 * term_group -> language order when displayed
+	 * name           -> language name (used only for display)
+	 * slug           -> language code (ideally 2-letters ISO 639-1 language code
+	 * locale         -> WordPress locale. If something wrong is used for the locale, the .mo files will not be loaded...
+	 * rtl            -> 1 if rtl language, 0 otherwise
+	 * term_group     -> language order when displayed
+	 *
+	 * optional arguments that $args can contain:
+	 * no_default_cat -> if set, no default category will be created for this language
 	 *
 	 * @since 1.2
 	 *
@@ -47,7 +50,7 @@ class PLL_Admin_Model extends PLL_Model {
 		// don't want shared terms so use a different slug
 		wp_insert_term($args['name'], 'term_language', array('slug' => 'pll_' . $args['slug']));
 
-		$this->clean_languages_cache(); // udpate the languages list now
+		$this->clean_languages_cache(); // udpate the languages list now !
 
 		if (!isset($this->options['default_lang'])) {
 			// if this is the first language created, set it as default language
@@ -57,28 +60,45 @@ class PLL_Admin_Model extends PLL_Model {
 			// and assign default language to default category
 			$this->set_term_language((int) get_option('default_category'), (int) $r['term_id']);
 		}
-		else {
-			// create a new category
-			$cat_name = __('Uncategorized');
-			$cat_slug = sanitize_title($cat_name . '-' .  $args['slug']);
-			$cat = wp_insert_term($cat_name, 'category', array('slug' => $cat_slug));
-
-			// check that the category was not previously created (in case the language was deleted and recreated)
-			$cat = isset($cat->error_data['term_exists']) ? $cat->error_data['term_exists'] : $cat['term_id'];
-
-			// set language
-			$this->set_term_language((int) $cat, (int) $r['term_id']);
-
-			// this is a translation of the default category
-			$default = (int) get_option('default_category');
-			$translations = $this->get_translations('term', $default);
-			if (empty($translations))
-				$translations[$this->get_term_language($default)->slug] = $default;
-			$this->save_translations('term', (int) $cat, $translations);
-		}
+		elseif (empty($args['no_default_cat']))
+			$this->create_default_category($args['slug']);
 
 		flush_rewrite_rules(); // refresh rewrite rules
 		return $error;
+	}
+
+	/*
+	 * create a default category for a language
+	 *
+	 * @since 1.2
+	 *
+	 * @param object|string|int $lang language
+	 */
+	public function create_default_category($lang) {
+		$lang = $this->get_language($lang);
+
+		// create a new category
+		$cat_name = __('Uncategorized');
+		$cat_slug = sanitize_title($cat_name . '-' . $lang->slug);
+		$cat = wp_insert_term($cat_name, 'category', array('slug' => $cat_slug));
+
+		// check that the category was not previously created (in case the language was deleted and recreated)
+		$cat = isset($cat->error_data['term_exists']) ? $cat->error_data['term_exists'] : $cat['term_id'];
+
+		// set language
+		$this->set_term_language((int) $cat, $lang);
+
+		// this is a translation of the default category
+		$default = (int) get_option('default_category');
+		$translations = $this->get_translations('term', $default);
+		if (empty($translations)) {
+			if ($lg = $this->get_term_language($default))
+				$translations[$lg->slug] = $default;
+			else
+				$translations = array();
+		}
+
+		$this->save_translations('term', (int) $cat, $translations);
 	}
 
 	/*
@@ -90,6 +110,7 @@ class PLL_Admin_Model extends PLL_Model {
 	 */
 	public function delete_language($lang_id) {
 		$lang = $this->get_language((int) $lang_id);
+		$default_cats = $this->get_translations('term', get_option('default_category'));
 
 		// delete the translations
 		$this->update_translations($lang->slug);
@@ -133,8 +154,13 @@ class PLL_Admin_Model extends PLL_Model {
 
 		// oops ! we deleted the default language...
 		if ($this->options['default_lang'] == $lang->slug)	{
-			if ($slugs = $this->get_languages_list(array('fields' => 'slug')))
-				$this->options['default_lang'] = reset($slugs); // arbitrary choice...
+			if ($slugs = $this->get_languages_list(array('fields' => 'slug'))) {
+				$this->options['default_lang'] = $slug = reset($slugs); // arbitrary choice...
+
+				// the default category should be in the default language
+				if (isset($default_cats[$slug]))
+					update_option('default_category', $default_cats[$slug]);
+			}
 			else
 				unset($this->options['default_lang']);
 		}

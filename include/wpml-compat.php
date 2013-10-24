@@ -87,7 +87,7 @@ if (!function_exists('icl_get_languages')) {
 				'language_code'    => $lang->slug,
 				'country_flag_url' => $lang->flag_url,
 				'url'              => $url ? $url :
-					(empty($link_empty_to) ? $polylang->get_home_url($lang) :
+					(empty($link_empty_to) ? $polylang->links->get_home_url($lang) :
 					str_replace('{$lang}', $lang->slug, $link_empty_to))
 			);
 		}

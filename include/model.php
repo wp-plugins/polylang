@@ -8,6 +8,7 @@
 class PLL_Model {
 	public $options;
 	public $post_types = array(), $taxonomies = array(); // post types & taxonomies to filter by language
+	private $languages; // used to cache the list of languages
 
 	/*
 	 * constructor: registers custom taxonomies and setups filters and actions
@@ -115,7 +116,7 @@ class PLL_Model {
 	/*
 	 * returns the list of available languages
 	 * caches the list in a db transient (except flags)
-	 * caches the list (with flags) in a static variable
+	 * caches the list (with flags) in the private property $languages
 	 *
 	 * list of parameters accepted in $args:
 	 *
@@ -128,9 +129,7 @@ class PLL_Model {
 	 * @return array|string|int list of PLL_Language objects or PLL_Language object properties
 	 */
 	public function get_languages_list($args = array()) {
-		static $languages = array();
-
-		if (empty($languages)) {
+		if (empty($this->languages)) {
 			if (false === ($languages = get_transient('pll_languages_list'))) {
 				$languages = get_terms('language', array('hide_empty' => false, 'orderby'=> 'term_group'));
 				$languages = empty($languages) || is_wp_error($languages) ? array() : $languages;
@@ -139,24 +138,28 @@ class PLL_Model {
 				$term_languages = empty($term_languages) || is_wp_error($term_languages) ?
 					array() : array_combine(wp_list_pluck($term_languages, 'name'), $term_languages);
 
-				if (!empty($languages) && !empty($term_languages))
+				if (!empty($languages) && !empty($term_languages)) {
 					array_walk($languages, create_function('&$v, $k, $term_languages', '$v = new PLL_Language($v, $term_languages[$v->name]);'), $term_languages);
-
-				set_transient('pll_languages_list', $languages);
+					set_transient('pll_languages_list', $languages);
+				}
+				else
+					$languages = array(); // in case something went wrong
 			}
 
 			// add flags (not in db cache as they may be different on frontend and admin)
 			foreach ($languages as $lang)
 				$lang->set_flag();
+
+			$this->languages = $languages;
 		}
 
 		$args = wp_parse_args($args, array('hide_empty' => false));
 		extract($args);
 
 		// remove empty languages if requested
-		$languages = array_filter($languages, create_function('$v', sprintf('return $v->count || !%d;', $hide_empty)));
+		$languages = array_filter($this->languages, create_function('$v', sprintf('return $v->count || !%d;', $hide_empty)));
 
-		return empty($fields) ? $languages : wp_list_pluck ($languages, $fields);
+		return empty($fields) ? $languages : wp_list_pluck($languages, $fields);
 	}
 
 	/*
@@ -170,8 +173,10 @@ class PLL_Model {
 	 * @param string $taxonomy taxonomy name
 	 */
 	public function clean_languages_cache($term = 0, $taxonomy = null) {
-		if (empty($taxonomy->name) || 'language' == $taxonomy->name)
+		if (empty($taxonomy->name) || 'language' == $taxonomy->name) {
 			delete_transient('pll_languages_list');
+			$this->languages = array();
+		}
 	}
 
 	/*
@@ -179,7 +184,7 @@ class PLL_Model {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int|string term_id, tl_term_id, slug or locale of teh queried language
+	 * @param int|string term_id, tl_term_id, slug or locale of the queried language
 	 * @return object PLL_Language object
 	 */
 	public function get_language($value) {

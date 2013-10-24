@@ -198,9 +198,13 @@ class PLL_Upgrade {
 		$this->options['domains'] = array(); // option added in 1.2
 
 		// update language separator in nav menus locations
-		foreach (get_theme_mod('nav_menu_locations') as $loc => $menu)
-			$menus[str_replace('#', '___', $loc)] = $menu;
-		set_theme_mod('nav_menu_locations', $menus);
+		$menus = get_theme_mod('nav_menu_locations');
+		if (is_array($menus)) {
+			foreach ($menus as $loc => $menu)
+				$menus[str_replace('#', '___', $loc)] = $menu;
+
+			set_theme_mod('nav_menu_locations', $menus);
+		}
 
 		// need to register the taxonomies
 		foreach (array('language', 'term_language', 'post_translations', 'term_translations') as $taxonomy)

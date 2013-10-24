@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://polylang.wordpress.com/
-Version: 1.2dev53
+Version: 1.2dev54
 Author: Frédéric Demarle
 Description: Adds multilingual capability to WordPress
 Text Domain: polylang
@@ -29,7 +29,7 @@ Domain Path: /languages
  *
  */
 
-define('POLYLANG_VERSION', '1.2dev53');
+define('POLYLANG_VERSION', '1.2dev54');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_BASENAME', plugin_basename(__FILE__)); // plugin name as known by WP
@@ -63,16 +63,6 @@ if (!defined('PLL_COOKIE'))
 if (!defined('PLL_SEARCH_FORM_JS') && !version_compare($GLOBALS['wp_version'], '3.6', '<'))
 	define('PLL_SEARCH_FORM_JS', false);
 
-// avoid loading polylang admin for frontend ajax requests if 'pll_load_front' is set (thanks to g100g)
-if (!defined('PLL_AJAX_ON_FRONT'))
-	define('PLL_AJAX_ON_FRONT', isset($_REQUEST['pll_load_front']));
-
-if (!defined('PLL_ADMIN'))
-	define('PLL_ADMIN', defined('DOING_CRON') || (is_admin() && !PLL_AJAX_ON_FRONT));
-
-if (!defined('PLL_SETTINGS'))
-	define('PLL_SETTINGS', is_admin() && isset($_GET['page']) && $_GET['page'] == 'mlang');
-
 /*
  * controls the plugin, as well as activation, and deactivation
  *
@@ -93,6 +83,16 @@ class Polylang {
 		// stopping here if we are going to deactivate the plugin (avoids breaking rewrite rules)
 		if (isset($_GET['action'], $_GET['plugin']) && 'deactivate' == $_GET['action'] && plugin_basename(__FILE__) == $_GET['plugin'])
 			return;
+
+		// avoid loading polylang admin for frontend ajax requests if 'pll_load_front' is set (thanks to g100g)
+		if (!defined('PLL_AJAX_ON_FRONT'))
+			define('PLL_AJAX_ON_FRONT', isset($_REQUEST['pll_load_front']));
+
+		if (!defined('PLL_ADMIN'))
+			define('PLL_ADMIN', defined('DOING_CRON') || (is_admin() && !PLL_AJAX_ON_FRONT));
+
+		if (!defined('PLL_SETTINGS'))
+			define('PLL_SETTINGS', is_admin() && isset($_GET['page']) && $_GET['page'] == 'mlang');
 
 		// blog creation on multisite
 		add_action('wpmu_new_blog', array(&$this, 'wpmu_new_blog'));
@@ -184,7 +184,7 @@ class Polylang {
 			$options['force_lang'] = 0; // do not add URL language information when useless
 			$options['redirect_lang'] = 0; // do not redirect the language page to the homepage
 			$options['media_support'] = 1; // support languages and translation for media by default
-			$options['sync'] = array_keys(PLL_Settings::list_metas_to_sync()); // synchronisation is enabled by default
+			$options['sync'] = array(); // synchronisation is disabled by default
 			$options['post_types'] = array_values(get_post_types(array('_builtin' => false, 'show_ui => true')));
 			$options['taxonomies'] = array_values(get_taxonomies(array('_builtin' => false, 'show_ui => true')));
 			$options['domains'] = array();
