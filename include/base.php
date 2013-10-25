@@ -68,14 +68,14 @@ abstract class PLL_Base {
 				if (WP_DEBUG) {
 					$debug = debug_backtrace();
 					trigger_error(sprintf(
-						'%1$s was called incorrectly: use $polylang->%2$s->%1$s() instead of $polylang->%1$s() in %3$s on line %4$s' . "\nError handler",
-						$func, $prop, $debug[0]['file'], $debug[0]['line']
+						'%1$s was called incorrectly in %3$s on line %4$s: the call to $polylang->%1$s() has been deprecated in Polylang 1.2, use $polylang->%2$s->%1$s() instead.' . "\nError handler",
+						$func, $prop, $debug[1]['file'], $debug[1]['line']
 					));
 				}
 				return call_user_func_array(array($obj, $func), $args);
 			}
 
 		$debug = debug_backtrace();
-		trigger_error(sprintf('$polylang->%1$s() does not exist in %2$s on line %3$s' . "\nError handler", $func, $debug[0]['file'], $debug[0]['line']), E_USER_ERROR);
+		trigger_error(sprintf('Call to undefined function $polylang->%1$s() in %2$s on line %3$s' . "\nError handler", $func, $debug[0]['file'], $debug[0]['line']), E_USER_ERROR);
 	}
 }

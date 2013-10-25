@@ -32,6 +32,7 @@ class PLL_Frontend_Links {
 
 	/*
 	 * adds filters once the language is defined
+	 * low priority on links filters to come after any other modification
 	 *
 	 * @since 1.2
 	 *
@@ -43,13 +44,13 @@ class PLL_Frontend_Links {
 
 		// rewrites author and date links to filter them by language
 		foreach (array('feed_link', 'author_link', 'post_type_archive_link', 'year_link', 'month_link', 'day_link') as $filter)
-			add_filter($filter, array(&$this, 'archive_link'));
+			add_filter($filter, array(&$this, 'archive_link'), 20);
 
 		// modifies post format links
-		add_filter('term_link', array(&$this, 'term_link'), 10, 3);
+		add_filter('term_link', array(&$this, 'term_link'), 20, 3);
 
 		// modifies the page link in case the front page is not in the default language
-		add_filter('page_link', array(&$this, 'page_link'), 10, 2);
+		add_filter('page_link', array(&$this, 'page_link'), 20, 2);
 
 		// meta in the html head section
 		add_action('wp_head', array(&$this, 'wp_head'));

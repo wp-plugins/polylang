@@ -25,11 +25,12 @@ abstract class PLL_Filters_Base {
 		// just in case someone would like to display the language description ;-)
 		add_filter('language_description', create_function('$v', "return '';"));
 
+		// low priority on links filters to come after any other modifications
 		if ($this->options['force_lang']) {
 			foreach (array('post_link', '_get_page_link', 'post_type_link') as $filter)
-				add_filter($filter, array(&$this, 'post_link'), 10, 2);
+				add_filter($filter, array(&$this, 'post_link'), 20, 2);
 
-			add_filter('term_link', array(&$this, 'term_link'), 10, 3);
+			add_filter('term_link', array(&$this, 'term_link'), 20, 3);
 		}
 	}
 

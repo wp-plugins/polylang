@@ -77,3 +77,11 @@
 * fix: current language is not selected in dropdown language switcher
 * fix: notices in nav_menus upgrade
 * fix: 404 error on pages introduced in 1.2dev52
+
+1.2dev55
+* move pre_get_posts filters to parse_query filters
+* Bug correction: wpml-config.xml file not loaded for sitewide active plugins on network installations
+* fix: ICL_LANGUAGE_CODE and ICL_LANGUAGE_NAME not correctly set on admin side at language switch
+* fix: backward compatibility debug message does not display file and line on old versions of PHP (PHP < ???)
+* fix: various PHP notices and warnings
+* fix: decreased priority of links filters to 20 -> compatibility with wp-ecommerce page links (was OK in 1.1.x)

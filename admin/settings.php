@@ -212,11 +212,12 @@ class PLL_Settings {
 				$this->options['default_lang'] = sanitize_title($_POST['default_lang']); // we have slug as value
 
 				foreach(array('force_lang', 'rewrite') as $key)
-					$this->options[$key] = (int) $_POST[$key];
+					$this->options[$key] = isset($_POST[$key]) ? (int) $_POST[$key] : 0;
 
 				// FIXME : TODO error message if not a valid url
-				foreach ($_POST['domains'] as $key => $domain)
-					$this->options['domains'][$key] = esc_url_raw(trim($domain));
+				if (isset($_POST['domains']) && is_array($_POST['domains']))
+					foreach ($_POST['domains'] as $key => $domain)
+						$this->options['domains'][$key] = esc_url_raw(trim($domain));
 
 				foreach (array('browser', 'hide_default', 'redirect_lang', 'media_support') as $key)
 					$this->options[$key] = isset($_POST[$key]) ? 1 : 0;

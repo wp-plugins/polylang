@@ -53,6 +53,14 @@ class PLL_Admin extends PLL_Base {
 		if (!$this->model->get_languages_list())
 			return;
 
+		// admin language filter
+		if (!defined('DOING_AJAX') && !empty($_GET['lang']) && !is_numeric($_GET['lang']))
+			update_user_meta(get_current_user_id(), 'pll_filter_content', ($lang = $this->model->get_language($_GET['lang'])) ? $lang->slug : '');
+
+		// set preferred language for use in filters
+		$this->pref_lang = $this->model->get_language(($lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true)) ? $lg : $this->options['default_lang']);
+		$this->pref_lang = apply_filters('pll_admin_preferred_language', $this->pref_lang);
+
 		// filter admin language for users
 		add_filter('locale', array(&$this, 'get_locale'));
 
@@ -63,14 +71,6 @@ class PLL_Admin extends PLL_Base {
 		// adds the languages in admin bar
 		// FIXME: OK for WP 3.2 and newer (the admin bar is not displayed on admin side for WP 3.1)
 		add_action('admin_bar_menu', array(&$this, 'admin_bar_menu'), 100); // 100 determines the position
-
-		// admin language filter
-		if (!defined('DOING_AJAX') && !empty($_GET['lang']) && !is_numeric($_GET['lang']))
-			update_user_meta(get_current_user_id(), 'pll_filter_content', ($lang = $this->model->get_language($_GET['lang'])) ? $lang->slug : '');
-
-		// set preferred language for use in filters
-		$this->pref_lang = $this->model->get_language(($lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true)) ? $lg : $this->options['default_lang']);
-		$this->pref_lang = apply_filters('pll_admin_preferred_language', $this->pref_lang);
 
 		// setup filters for admin pages
 		if (!PLL_SETTINGS)

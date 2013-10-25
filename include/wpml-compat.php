@@ -469,7 +469,11 @@ class PLL_WPML_Config {
  			$this->xml_parse(file_get_contents($file), get_template());
 
 		// plugins
-		foreach (get_option('active_plugins') as $plugin) {
+		// don't forget sitewide active plugins thanks to Reactorshop http://wordpress.org/support/topic/polylang-and-yoast-seo-plugin/page/2?replies=38#post-4801829
+		$plugins = ($sitewide_plugins = get_site_option('active_sitewide_plugins')) && is_array($sitewide_plugins) ? array_keys($sitewide_plugins) : array();
+		$plugins = array_merge($plugins, get_option('active_plugins'));
+
+		foreach ($plugins as $plugin) {
 			if (file_exists($file = dirname(POLYLANG_DIR).'/'.dirname($plugin).'/wpml-config.xml'))
 				$this->xml_parse(file_get_contents($file), dirname($plugin));
 		}
