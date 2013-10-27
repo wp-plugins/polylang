@@ -158,6 +158,7 @@ class PLL_Admin extends PLL_Base {
 	 * @since 1.2
 	 */
 	public function add_filters() {
+		$this->links = new PLL_Links($this->links_model);
 		$this->filters = new PLL_Admin_Filters($this->links_model, $this->pref_lang);
 		$this->filters_columns = new PLL_Admin_Filters_Columns($this->model);
 		$this->filters_post = new PLL_Admin_Filters_Post($this->model, $this->pref_lang);

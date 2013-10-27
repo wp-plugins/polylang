@@ -5,8 +5,7 @@
  *
  * @since 1.2
  */
-class PLL_Frontend_Links {
-	public $links_model, $model, $options;
+class PLL_Frontend_Links extends PLL_Links {
 	public $curlang, $home, $using_permalinks, $page_on_front, $page_for_posts;
 
 	/*
@@ -17,9 +16,7 @@ class PLL_Frontend_Links {
 	 * @param object $links_model
 	 */
 	public function __construct(&$links_model) {
-		$this->links_model = &$links_model;
-		$this->model = &$links_model->model;
-		$this->options = &$this->model->options;
+		parent::__construct($links_model);
 
 		$this->using_permalinks = (bool) get_option('permalink_structure'); // are we using permalinks?
 

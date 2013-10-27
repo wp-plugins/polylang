@@ -224,7 +224,7 @@ jQuery(document).ready(function($) {
 						$('#' + tax + '-lang').val($('#post_lang_choice').attr('value')); // hidden field
 						break;
 					case 'pages': // parent dropdown list for pages
-						$('#parent_id').replaceWith(this.data);
+						$('#pageparentdiv > .inside').html(this.data);
 						break;
 					default:
 						break;

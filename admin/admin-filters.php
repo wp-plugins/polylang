@@ -5,7 +5,8 @@
  *
  * @since 1.2
  */
-class PLL_Admin_Filters extends PLL_Filters_Base {
+class PLL_Admin_Filters {
+	public $links_model, $model, $options;
 	public $pref_lang;
 
 	/*
@@ -17,7 +18,9 @@ class PLL_Admin_Filters extends PLL_Filters_Base {
 	 * @param object $pref_lang language chosen in admin filter or default language
 	 */
 	public function __construct(&$links_model, $pref_lang) {
-		parent::__construct($links_model);
+		$this->links_model = &$links_model;
+		$this->model = &$links_model->model;
+		$this->options = &$this->model->options;
 
 		$this->pref_lang = $pref_lang;
 
@@ -36,9 +39,6 @@ class PLL_Admin_Filters extends PLL_Filters_Base {
 		// ugrades languages files after a core upgrade (timing is important)
 		// FIXME private action ? is there a better way to do this ?
 		add_action( '_core_updated_successfully', array(&$this, 'upgrade_languages'), 1); // since WP 3.3
-
-		// filters the pages by language in the parent dropdown list in the page attributes metabox
-		add_filter('page_attributes_dropdown_pages_args', array(&$this, 'page_attributes_dropdown_pages_args'), 10, 2);
 
 		// filters comments by language
 		add_filter('comments_clauses', array(&$this, 'comments_clauses'), 10, 2);
@@ -152,26 +152,6 @@ class PLL_Admin_Filters extends PLL_Filters_Base {
 		foreach ($this->model->get_languages_list() as $language)
 			if ($language->locale != $_POST['locale']) // do not (re)update the language files of a localized WordPress
 				PLL_Admin::download_mo($language->locale, $version);
-	}
-
-	/*
-	 * filters the pages by language in the parent dropdown list in the page attributes metabox
-	 * FIXME not in admin_post_filters because of exclude_pages
-	 *
-	 * @since 0.6
-	 *
-	 * @param array $dropdown_args arguments passed to wp_dropdown_pages
-	 * @param object $post
-	 * @return array modified arguments
-	 */
-	public function page_attributes_dropdown_pages_args($dropdown_args, $post) {
-		$lang = isset($_POST['lang']) ? $this->model->get_language($_POST['lang']) : $this->model->get_post_language($post->ID); // ajax or not ?
-		if (!$lang)
-			$lang = $this->pref_lang;
-
-		$pages = implode(',', $this->exclude_pages($lang));
-		$dropdown_args['exclude'] = isset($dropdown_args['exclude']) ? $dropdown_args['exclude'] . ',' . $pages : $pages;
-		return $dropdown_args;
 	}
 
 	/*

@@ -17,7 +17,7 @@ class PLL_Admin_Sync {
 		$this->options = &$model->options;
 
 		add_filter('wp_insert_post_parent', array(&$this, 'wp_insert_post_parent'));
-		add_action('dbx_post_advanced', array(&$this, 'dbx_post_advanced'));
+		add_action('add_meta_boxes', array(&$this, 'add_meta_boxes'), 10, 2);
 
 		add_action('pll_save_post', array(&$this, 'pll_save_post'), 10, 3);
 
@@ -36,14 +36,15 @@ class PLL_Admin_Sync {
 
 	/*
 	 * copy post metas, menu order, comment and ping status when using "Add new" (translation)
-	 * the hook was probably not intended for that but did not find a better one
+	 * formerly used dbx_post_advanced deprecated in WP 3.7
 	 *
-	 * @since 0.6
+	 * @since 1.2
+	 *
+	 * @param string $post_type unused
+	 * @param object $post current post object
 	 */
-	function dbx_post_advanced() {
+	function add_meta_boxes($post_type, $post) {
 		if (isset($_GET['from_post'], $_GET['new_lang'])) {
-			global $post;
-
 			$this->copy_post_metas($_GET['from_post'], $post->ID, $_GET['new_lang']);
 
 			$from_post = get_post($_GET['from_post']);

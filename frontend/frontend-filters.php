@@ -5,7 +5,8 @@
  *
  * @since 1.2
  */
-class PLL_Frontend_Filters extends PLL_Filters_Base {
+class PLL_Frontend_Filters {
+	public $links_model, $model, $options;
 	public $curlang;
 
 	/*
@@ -17,7 +18,9 @@ class PLL_Frontend_Filters extends PLL_Filters_Base {
 	 * @param object $curlang
 	 */
 	public function __construct(&$links_model, &$curlang) {
-		parent::__construct($links_model);
+		$this->links_model = &$links_model;
+		$this->model = &$links_model->model;
+		$this->options = &$this->model->options;
 
 		$this->curlang = &$curlang;
 
@@ -141,7 +144,7 @@ class PLL_Frontend_Filters extends PLL_Filters_Base {
 		// allow filtering recent posts and secondary queries by the current language
 		// take care not to break queries for non visible post types such as nav_menu_items
 		// do not filter if lang is set to an empty value
-		if (!isset($qv['lang']) && (empty($qv['post_type']) || $this->model->is_translated_post_type($qv['post_type'])))
+		if ($query->is_home && !isset($qv['lang']) && (empty($qv['post_type']) || $this->model->is_translated_post_type($qv['post_type'])))
 			$query->set('lang', $this->curlang->slug);
 	}
 
@@ -174,7 +177,7 @@ class PLL_Frontend_Filters extends PLL_Filters_Base {
 	 * @return array modified list of page ids
 	 */
 	public function wp_list_pages_excludes($pages) {
-		return array_merge($pages, $this->exclude_pages($this->curlang));
+		return array_merge($pages, pll_exclude_pages($this->curlang));
 	}
 
 	/*

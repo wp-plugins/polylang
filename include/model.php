@@ -39,6 +39,9 @@ class PLL_Model {
 		// setups post types and taxonomies to translate
 		add_action('registered_post_type', array(&$this, 'registered_post_type'));
 		add_action('registered_taxonomy', array(&$this, 'registered_taxonomy'));
+
+		// just in case someone would like to display the language description ;-)
+		add_filter('language_description', create_function('$v', "return '';"));
 	}
 
 	/*

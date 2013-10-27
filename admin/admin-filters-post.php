@@ -33,6 +33,9 @@ class PLL_Admin_Filters_Post {
 		// adds actions and filters related to languages when creating, saving or deleting posts and pages
 		add_action('save_post', array(&$this, 'save_post'), 21, 2); // priority 21 to come after advanced custom fields (20) and before the event calendar which breaks everything after 25
 		add_action('before_delete_post', array(&$this, 'delete_post'));
+
+		// filters the pages by language in the parent dropdown list in the page attributes metabox
+		add_filter('page_attributes_dropdown_pages_args', array(&$this, 'page_attributes_dropdown_pages_args'), 10, 2);
 	}
 
 	/*
@@ -169,20 +172,12 @@ class PLL_Admin_Filters_Post {
 		}
 
 		// parent dropdown list (only for hierarchical post types)
-		// $dropdown_args copied from page_attributes_meta_box
 		if (in_array($post_type, get_post_types(array('hierarchical' => true)))) {
-			$post = get_post($post_ID);
-			$dropdown_args = array(
-				'post_type'        => $post->post_type,
-				'exclude_tree'     => $post->ID,
-				'selected'         => $post->post_parent,
-				'name'             => 'parent_id',
-				'show_option_none' => __('(no parent)'),
-				'sort_column'      => 'menu_order, post_title',
-				'echo'             => 0,
-			);
-			$dropdown_args = apply_filters('page_attributes_dropdown_pages_args', $dropdown_args, $post);
-			$x->Add(array('what' => 'pages', 'data' => wp_dropdown_pages($dropdown_args)));
+			require_once( ABSPATH . 'wp-admin/includes/meta-boxes.php' );
+			ob_start();
+			page_attributes_meta_box(get_post($post_ID));
+			$x->Add(array('what' => 'pages', 'data' => ob_get_contents()));
+			ob_end_clean();
 		}
 
 		$x->send();
@@ -277,5 +272,24 @@ class PLL_Admin_Filters_Post {
 	public function delete_post($post_id) {
 		if (!wp_is_post_revision($post_id))
 			$this->model->delete_translation('post', $post_id);
+	}
+
+	/*
+	 * filters the pages by language in the parent dropdown list in the page attributes metabox
+	 *
+	 * @since 0.6
+	 *
+	 * @param array $dropdown_args arguments passed to wp_dropdown_pages
+	 * @param object $post
+	 * @return array modified arguments
+	 */
+	public function page_attributes_dropdown_pages_args($dropdown_args, $post) {
+		$lang = isset($_POST['lang']) ? $this->model->get_language($_POST['lang']) : $this->model->get_post_language($post->ID); // ajax or not ?
+		if (!$lang)
+			$lang = $this->pref_lang;
+
+		$pages = implode(',', pll_exclude_pages($lang));
+		$dropdown_args['exclude'] = isset($dropdown_args['exclude']) ? $dropdown_args['exclude'] . ',' . $pages : $pages;
+		return $dropdown_args;
 	}
 }

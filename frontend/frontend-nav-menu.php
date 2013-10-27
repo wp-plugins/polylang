@@ -127,27 +127,6 @@ class PLL_Frontend_Nav_Menu {
 	}
 
 	/*
-	 * get the menu in the correct language
-	 * avoid infinite loop and http://core.trac.wordpress.org/ticket/9968
-	 *
-	 * @since 1.1
-	 *
-	 * @param object $term nav menu
-	 * @return object
-	 */
-	public function get_nav_menu($term) {
-		global $wp_customize;
-		static $once = false;
-		if (!$once && $tr = pll_get_term($term->term_id)) {
-			$once = true; // breaks the loop
-			$term = get_term($tr, 'nav_menu');
-			$once = false; // for the next call
-		}
-
-		return $term;
-	}
-
-	/*
 	 * fills the theme nav menus locations with the right menu in the right language
 	 *
 	 * @since 1.2

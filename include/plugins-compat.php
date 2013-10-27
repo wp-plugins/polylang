@@ -29,7 +29,7 @@ class PLL_Plugins_Compat {
 		add_filter('pll_home_url_white_list', create_function('$arr', "return array_merge(\$arr, array(array('file' => 'wordpress-seo')));"));
 
 		// Custom field template
-		add_action('dbx_post_advanced', array(&$this, 'cft_copy'));
+		add_action('add_meta_boxes', array(&$this, 'cft_copy'), 10, 2);
 
 		// Jetpack infinite scroll
 		add_filter('pre_get_posts', array(&$this, 'jetpack_infinite_scroll'));
@@ -87,9 +87,12 @@ class PLL_Plugins_Compat {
 	 * Custom field template does check $_REQUEST['post'] to populate the custom fields values
 	 *
 	 * @since 1.0.2
+	 *
+	 * @param string $post_type unused
+	 * @param object $post current post object
 	 */
-	public function cft_copy() {
-		global $post, $custom_field_template;
+	public function cft_copy($post_type, $post) {
+		global $custom_field_template;
 		if (isset($custom_field_template, $_REQUEST['from_post'], $_REQUEST['new_lang']) && !empty($post))
 			$_REQUEST['post'] = $post->ID;
 	}
