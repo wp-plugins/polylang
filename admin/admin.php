@@ -66,6 +66,7 @@ class PLL_Admin extends PLL_Base {
 
 		// inform that the admin language has been set
 		$curlang = $this->model->get_language(get_locale());
+		$GLOBALS['text_direction'] = $curlang->is_rtl ? 'rtl' : 'ltr'; // force text direction according to language setting
 		do_action('pll_language_defined', $curlang->slug, $curlang);
 
 		// adds the languages in admin bar

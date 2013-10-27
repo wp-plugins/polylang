@@ -87,7 +87,9 @@
 * fix: decreased priority of links filters to 20 -> compatibility with wp-ecommerce page links (was OK in 1.1.x)
 
 1.2dev56
+* Add Arabic translation
 * PLL_Filters_Base class removed, PLL_Links created
 * Bug correction: page parent dropdown list (in page attributes metabox) not correctly displayed when switching from a language with empty list
 * replace usage of action dbx_post_advanced (deprecated since WP 3.7) by add_meta_boxes
 * fix: 404 error on pages again!
+* fix: text direction on admin side according to language setting
