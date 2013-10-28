@@ -135,16 +135,12 @@ class PLL_Frontend_Nav_Menu {
 	 * @return array|bool modified list of nav menus locations
 	 */
 	public function nav_menu_locations($menus) {
-		$curlang = pll_current_language();
+		if (is_array($menus))
+			foreach ($menus as $loc => $menu)
+				if ($id = pll_get_term($menu))
+					$menus[$loc] = $id;
 
-		if (is_array($menus)) {
-			foreach ($menus as $loc => $menu) {
-				if (($pos = strpos($loc, '___')) && substr($loc, $pos+3) == $curlang)
-					$arr[substr($loc, 0, $pos)] = $menu;
-			}
-		}
-
-		return empty($arr) ? $menus : array_merge($menus, $arr);
+		return $menus;
 	}
 
 	/*

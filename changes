@@ -93,3 +93,8 @@
 * replace usage of action dbx_post_advanced (deprecated since WP 3.7) by add_meta_boxes
 * fix: 404 error on pages again!
 * fix: text direction on admin side according to language setting
+
+1.2dev57
+* reworked again parse_query filters
+* fix: PHP Notice: Undefined index in /wp-admin/nav-menus.php when Polylang is de-activated
+* fix: update post count in languages after import

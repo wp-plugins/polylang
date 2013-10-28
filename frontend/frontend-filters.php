@@ -37,9 +37,6 @@ class PLL_Frontend_Filters {
 		// filter sticky posts by current language
 		add_filter('option_sticky_posts', array(&$this, 'option_sticky_posts'));
 
-		// filters posts by language
-		add_filter('parse_query', array(&$this, 'parse_query'), 4); // filters posts according to the language
-
 		// filters categories and post tags by language
 		add_filter('terms_clauses', array(&$this, 'terms_clauses'), 10, 3);
 
@@ -128,24 +125,6 @@ class PLL_Frontend_Filters {
 			}
 		}
 		return $posts;
-	}
-
-	/*
-	 * filters posts according to the language
-	 * Note: is_translated_post_type is correctly defined only once the action 'wp_loaded' has been fired
-	 *
-	 * @since 1.2
-	 *
-	 * @param object $query WP_Query object
-	 */
-	public function parse_query($query) {
-		$qv = $query->query_vars;
-
-		// allow filtering recent posts and secondary queries by the current language
-		// take care not to break queries for non visible post types such as nav_menu_items
-		// do not filter if lang is set to an empty value
-		if ($query->is_home && !isset($qv['lang']) && (empty($qv['post_type']) || $this->model->is_translated_post_type($qv['post_type'])))
-			$query->set('lang', $this->curlang->slug);
 	}
 
 	/*

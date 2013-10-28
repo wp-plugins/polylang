@@ -22,6 +22,7 @@ class PLL_Model {
 
 		// register our taxonomies as soon as possible
 		// this is early registration, not ready for rewrite rules as wp_rewrite will be setup later
+		// FIXME should I supply an 'update_count_callback' for taxonomies other than 'language' (currently not needed by PLL)?
 		foreach (array('language', 'term_language', 'post_translations', 'term_translations') as $tax)
 			register_taxonomy($tax,
 				false !== strpos($tax, 'term_') ? 'term' : null ,
@@ -568,7 +569,7 @@ class PLL_Model {
 	 * @return array array of taxonomy names for which Polylang manages languages and translations
 	 */
 	protected function get_taxonomies() {
-		$taxonomies = array('category' => 'category', 'post_tag' => 'post_tag'/*, 'nav_menu' => 'nav_menu'*/);
+		$taxonomies = array('category' => 'category', 'post_tag' => 'post_tag', 'nav_menu' => 'nav_menu');
 		return apply_filters('pll_get_taxonomies', array_merge($taxonomies, $this->options['taxonomies']), false);
 	}
 

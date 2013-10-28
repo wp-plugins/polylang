@@ -74,6 +74,12 @@ class PLL_Frontend extends PLL_Base{
 	public function parse_query($query) {
 		$qv = $query->query_vars;
 
+		// allow filtering recent posts and secondary queries by the current language
+		// take care not to break queries for non visible post types such as nav_menu_items
+		// do not filter if lang is set to an empty value
+		if (/*$query->is_home &&*/ !isset($qv['lang']) && (empty($qv['post_type']) || $this->model->is_translated_post_type($qv['post_type'])))
+			$query->set('lang', $this->curlang->slug);
+
 		// modifies query vars when the language is queried
 		if (!empty($qv['lang'])) {
 			// remove pages query when the language is set unless we do a search

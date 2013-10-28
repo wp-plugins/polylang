@@ -197,11 +197,12 @@ class PLL_Upgrade {
 	protected function upgrade_1_2() {
 		$this->options['domains'] = array(); // option added in 1.2
 
-		// update language separator in nav menus locations
+		// it was a bad idea to pollute WP option with our custom nav menu locations
 		$menus = get_theme_mod('nav_menu_locations');
 		if (is_array($menus)) {
 			foreach ($menus as $loc => $menu)
-				$menus[str_replace('#', '___', $loc)] = $menu;
+				if (strpos($loc, '#'))
+					unset($menus[$loc]);
 
 			set_theme_mod('nav_menu_locations', $menus);
 		}

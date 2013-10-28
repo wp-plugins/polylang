@@ -61,6 +61,9 @@ class PLL_WP_Import extends WP_Import {
 
 		parent::process_posts();
 
+		global $polylang;
+		$polylang->model->clean_languages_cache(); // to update the posts count in (cached) languages list
+
 		$this->remap_translations($this->post_translations, $this->processed_posts);
 		unset($this->post_translations);
 

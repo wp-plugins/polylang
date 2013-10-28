@@ -38,6 +38,10 @@ class PLL_Admin_Nav_Menu {
 		add_action('wp_update_nav_menu_item', array(&$this, 'wp_update_nav_menu_item'), 10, 2);
 		add_filter('wp_get_nav_menu_items', array(&$this, 'translate_switcher_title'));
 
+		// translation of menus based on chosen locations
+		add_filter('pre_update_option_theme_mods_' . get_option( 'stylesheet' ), array($this, 'update_nav_menu_locations'));
+		add_filter('theme_mod_nav_menu_locations', array($this, 'nav_menu_locations'), 20);
+
 		// filter _wp_auto_add_pages_to_menu by language
 		add_action('transition_post_status', array(&$this, 'auto_add_pages_to_menu'), 5, 3); // before _wp_auto_add_pages_to_menu
 
@@ -49,7 +53,7 @@ class PLL_Admin_Nav_Menu {
 	}
 
 	/*
-	 * create new nav menu locations (one per location and per language) except for all non-default language
+	 * create temporary nav menu locations (one per location and per language) for all non-default language
 	 *
 	 * @since 1.2
 	 */
@@ -174,6 +178,60 @@ class PLL_Admin_Nav_Menu {
 			if ('#pll_switcher' == $item->url)
 				$item->post_title = __('Language switcher', 'polylang');
 		return $items;
+	}
+
+	/*
+	 * assign menu languages and translations based on (temporary) locations
+	 *
+	 * @since 1.1
+	 *
+	 * @param array $mods theme mods
+	 * @return unmodified $mods
+	 */
+	public function update_nav_menu_locations($mods) {
+		if (isset($mods['nav_menu_locations'])) {
+			$default = pll_default_language();
+			$arr = array();
+
+			// extract language and menu from locations
+			foreach ($mods['nav_menu_locations'] as $loc => $menu) {
+				if ($pos = strpos($loc, '___')) {
+					$arr[substr($loc, 0, $pos)][substr($loc, $pos+3)] = $menu;
+					unset($mods['nav_menu_locations'][$loc]); // remove temporary locations before database update
+				}
+				else
+					$arr[$loc][$default] = $menu;
+			}
+
+			// assign menus language and translations
+			foreach ($arr as $loc => $translations) {
+				foreach ($translations as $lang=>$menu) {
+					$this->model->set_term_language($menu, $lang);
+					$this->model->save_translations('term', $menu, $translations);
+				}
+			}
+		}
+		return $mods;
+	}
+
+	/*
+	 * fills temporary menu locations based on menus translations
+	 *
+	 * @since 1.2
+	 *
+	 * @param bool|array $menus
+	 * @return bool|array modified list of menu locations
+	 */
+	public function nav_menu_locations($menus) {
+		if (is_array($menus)) {
+			foreach ($menus as $loc => $menu) {
+				foreach ($this->model->get_languages_list() as $lang) {
+					if (pll_default_language() != $lang->slug && $id = $this->model->get_term($menu, $lang))
+						$menus[$loc . '___' . $lang->slug] = $id;
+				}
+			}
+		}
+		return $menus;
 	}
 
 	/*

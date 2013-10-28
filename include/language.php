@@ -16,6 +16,7 @@
  * count               => number of posts and pages in that language
  * tl_term_id          => id of the term in 'term_language' taxonomy
  * tl_term_taxonomy_id => term taxonomy id in 'term_language' taxonomy
+ * tl_count            => number of terms in that language (not used by Polylang)
  * locale              => language locale. Ex: en_US
  * is_rtl              => 1 if the language is rtl
  * flag_url            => url of the flag
@@ -41,6 +42,7 @@ class PLL_Language {
 		// http://make.wordpress.org/core/2013/07/28/potential-roadmap-for-taxonomy-meta-and-post-relationships/
 		$this->tl_term_id = (int) $term_language->term_id;
 		$this->tl_term_taxonomy_id = (int) $term_language->term_taxonomy_id;
+		$this->tl_count = (int) $term_language->count;
 
 		$description = maybe_unserialize($language->description);
 		$this->locale = $description['locale'];
@@ -72,5 +74,15 @@ class PLL_Language {
 				esc_attr(apply_filters('pll_flag_title', $this->name, $this->slug, $this->locale)),
 				esc_attr($this->name)
 			));
+	}
+
+	/*
+	 * updates post and term count
+	 *
+	 * @since 1.2
+	 */
+	public function update_count() {
+		wp_update_term_count($this->term_taxonomy_id, 'language'); // posts count
+		wp_update_term_count($this->tl_term_taxonomy_id, 'term_language'); // terms count
 	}
 }

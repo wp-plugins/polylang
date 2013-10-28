@@ -288,7 +288,8 @@ class PLL_Admin_Model extends PLL_Model {
 
 		if (!empty($values)) {
 			$wpdb->query("INSERT INTO $wpdb->term_relationships (object_id, term_taxonomy_id) VALUES " . implode(',', $values));
-			wp_update_term_count($tt_id, 'term' == $type ? 'term_language' : 'language'); // updating term count is mandatory (thanks to AndyDeGroo)
+			$lang->update_count(); // updating term count is mandatory (thanks to AndyDeGroo)
+			$this->clean_languages_cache(); // to update the posts count in (cached) languages list
 		}
 	}
 
