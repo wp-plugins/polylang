@@ -237,10 +237,6 @@ class PLL_Model {
 				// link all translations to the new term
 				foreach($translations as $p)
 					wp_set_object_terms($p, $group, $type . '_translations');
-
-				// clean database of unused terms if needed
-				foreach ($terms as $term)
-					wp_delete_term($term->term_id, $type . '_translations');
 			}
 		}
 	}
@@ -672,6 +668,15 @@ class PLL_Model {
 
 			if (!empty($q['day']))
 				$where .= " AND DAYOFMONTH($wpdb->posts.post_date)='" . (int) $q['day'] . "'";
+
+			if (!empty($q['author_name'])) {
+				$author = get_user_by('slug',  sanitize_title_for_query($q['author_name']));
+				if ($author)
+					$q['author'] = $author->ID;
+			}
+
+			if (!empty($q['author']))
+				$where .= $wpdb->prepare(" AND {$wpdb->posts}.post_author = %d", $q['author']);
 
 			$select = "SELECT pll_tr.term_taxonomy_id, COUNT(*) AS num_posts FROM {$wpdb->posts}";
 			$join = $this->join_clause('post');

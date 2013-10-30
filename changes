@@ -98,3 +98,9 @@
 * reworked again parse_query filters
 * fix: PHP Notice: Undefined index in /wp-admin/nav-menus.php when Polylang is de-activated
 * fix: update post count in languages after import
+
+1.2dev58
+* Add author archive translation check in language switcher
+* no php time limit for upgrade to 1.2
+* fix: rel="alternate" hreflang="x" selflink added only if there are translations
+* fix: third translation breaks links

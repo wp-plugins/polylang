@@ -120,16 +120,21 @@ class PLL_Frontend_Links extends PLL_Links {
 	}
 
 	/*
-	 * adds links to translations in the html head section
+	 * outputs references to translated pages (if exists) in the html head section
 	 *
 	 * @since 0.1
 	 */
 	public function wp_head() {
-		// outputs references to translated pages (if exists) in the html head section
 		// google recommends to include self link https://support.google.com/webmasters/answer/189077?hl=en
 		foreach ($this->model->get_languages_list() as $language) {
 			if ($url = $this->get_translation_url($language))
-				printf('<link hreflang="%s" href="%s" rel="alternate" />'."\n", esc_attr($language->slug), esc_url($url));
+				$urls[$language->slug] = $url;
+		}
+
+		// ouptputs the section only if there are translations ($urls always contains self link)
+		if (!empty($urls) && count($urls) > 1) {
+			foreach ($urls as $lang => $url)
+				printf('<link rel="alternate" href="%s" hreflang="%s" />'."\n", esc_url($url), esc_attr($lang));
 		}
 	}
 
@@ -235,7 +240,7 @@ class PLL_Frontend_Links extends PLL_Links {
 			$url = $this->get_archive_url($language);
 
 		elseif (is_archive()) {
-			$keys = array('post_type', 'm', 'year', 'monthnum', 'day');
+			$keys = array('post_type', 'm', 'year', 'monthnum', 'day', 'author', 'author_name');
 			// check if there are existing translations before creating the url
 			if ($this->model->count_posts($language, array_intersect_key($qv, array_flip($keys))))
 				$url = $this->get_archive_url($language);

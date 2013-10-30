@@ -215,6 +215,8 @@ class PLL_Upgrade {
 		if (get_terms('term_language', array('hide_empty' => 0)))
 			return;
 
+		set_time_limit(0); // in case we upgrade a huge site
+
 		// upgrade old model based on metas to new model based on taxonomies
 		global $wpdb;
 		$wpdb->termmeta = $wpdb->prefix . 'termmeta'; // registers the termmeta table in wpdb
