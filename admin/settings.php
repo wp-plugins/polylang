@@ -279,7 +279,7 @@ class PLL_Settings {
 	 *
 	 * @return array list of all registered strings
 	 */
-	protected function &get_strings() {
+	public function &get_strings() {
 		// WP strings
 		$this->register_string(__('Site Title'), get_option('blogname'), 'WordPress');
 		$this->register_string(__('Tagline'), get_option('blogdescription'), 'WordPress');

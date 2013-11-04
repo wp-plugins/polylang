@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://polylang.wordpress.com/
-Version: 1.2dev58
+Version: 1.2dev59
 Author: Frédéric Demarle
 Description: Adds multilingual capability to WordPress
 Text Domain: polylang
@@ -10,7 +10,7 @@ Domain Path: /languages
 */
 
 /*
- * Copyright 2011-2013 F. Demarle
+ * Copyright 2011-2013 Frédéric Demarle
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ Domain Path: /languages
  *
  */
 
-define('POLYLANG_VERSION', '1.2dev58');
+define('POLYLANG_VERSION', '1.2dev59');
 define('PLL_MIN_WP_VERSION', '3.1');
 
 define('POLYLANG_BASENAME', plugin_basename(__FILE__)); // plugin name as known by WP
@@ -131,7 +131,9 @@ class Polylang {
 	protected function do_for_all_blogs($what) {
 		// network
 		if (is_multisite() && isset($_GET['networkwide']) && ($_GET['networkwide'] == 1)) {
-			foreach ($GLOBALS['wpdb']->get_col("SELECT blog_id FROM $wpdb->blogs") as $blog_id) {
+			global $wpdb;
+
+			foreach ($wpdb->get_col("SELECT blog_id FROM $wpdb->blogs") as $blog_id) {
 				switch_to_blog($blog_id);
 				$what == 'activate' ? $this->_activate() : $this->_deactivate();
 			}

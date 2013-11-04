@@ -21,7 +21,7 @@ class PLL_Table_String extends WP_List_Table {
 	 * @param array $groups
 	 * @param string $group_selected
 	 */
-	function __construct($groups = array(), $group_selected) {
+	function __construct($groups = array(), $group_selected = -1) {
 		parent::__construct(array(
 			'plural'   => 'Strings translations', // do not translate (used for css class)
 			'ajax'	 => false

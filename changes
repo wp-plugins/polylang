@@ -104,3 +104,6 @@
 * no php time limit for upgrade to 1.2
 * fix: rel="alternate" hreflang="x" selflink added only if there are translations
 * fix: third translation breaks links
+
+1.2dev59
+* fix: warnings at network activation
