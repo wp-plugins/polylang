@@ -181,25 +181,33 @@ class PLL_Admin extends PLL_Base {
 	public function admin_bar_menu($wp_admin_bar) {
 		$url = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
+		$all_item = (object) array(
+			'slug' => 'all',
+			'name' => __('Show all languages', 'polylang'),
+			'flag' => sprintf('<img src="%s" style="margin-bottom: -3px"/>', POLYLANG_URL .'/flags/all.png')
+		);
+
 		// $_GET['lang'] is numeric when editing a language, not when selecting a new language in the filter
 		$selected = !empty($_GET['lang']) && !is_numeric($_GET['lang']) && ($lang = $this->model->get_language($_GET['lang'])) ? $lang->slug :
 			(($lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true)) ? $lg : 'all');
 
-		$all_item = array((object) array('slug' => 'all', 'name' => __('Show all languages', 'polylang')));
+		$selected = ('all' == $selected) ? $all_item : $this->model->get_language($selected);
 
 		$wp_admin_bar->add_menu(array(
 			'id'     => 'languages',
-			'title'  => __('Languages', 'polylang'),
+			'title'  =>  empty($selected->flag) ? esc_html($selected->name) : $selected->flag .'&nbsp;'. esc_html($selected->name),
 			'meta'  => array('title' => __('Filters content by language', 'polylang')),
 		));
 
-		foreach (array_merge($all_item, $this->model->get_languages_list()) as $lang) {
+		foreach (array_merge(array($all_item), $this->model->get_languages_list()) as $lang) {
+			if ($selected == $lang->slug)
+				continue;
+
 			$wp_admin_bar->add_menu(array(
 				'parent' => 'languages',
 				'id'     => $lang->slug,
-				'title'  => esc_html($lang->name),
+				'title'  => empty($lang->flag) ? esc_html($lang->name) : $lang->flag .'&nbsp;'. esc_html($lang->name),
 				'href'   => esc_url(add_query_arg('lang', $lang->slug, $url)),
-				'meta'   => $selected == $lang->slug ? array('class' => 'pll-ab-selected') : array()
 			));
 		}
 	}

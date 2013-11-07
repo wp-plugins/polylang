@@ -189,6 +189,8 @@ class PLL_Settings {
 					}
 				}
 
+				do_action('pll_save_strings_translations');
+
 				// unregisters strings registered through WPML API
 				if ($string_table->current_action() == 'delete' && !empty($_REQUEST['strings']) && function_exists('icl_unregister_string')) {
 					check_admin_referer( 'string-translation', '_wpnonce_string-translation' );

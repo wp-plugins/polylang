@@ -107,3 +107,9 @@
 
 1.2dev59
 * fix: warnings at network activation
+
+1.2dev60
+* Improve the visibility of the admin language filter
+* fix: php notice when querying a custom post type
+* fix: incorrect term links when adding the language code to all urls
+* fix: uninstall does not remove term relationships in DB

@@ -99,7 +99,7 @@ class PLL_Uninstall {
 		// delete all what is related to languages and translations
 		foreach (get_terms($pll_taxonomies, array('hide_empty'=>false)) as $term) {
 			$term_ids[] = (int) $term->term_id;
-			$tt_ids[] = (int) $term->taxonomy_id;
+			$tt_ids[] = (int) $term->term_taxonomy_id;
 		}
 
 		$term_ids = array_unique($term_ids);

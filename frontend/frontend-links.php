@@ -43,9 +43,6 @@ class PLL_Frontend_Links extends PLL_Links {
 		foreach (array('feed_link', 'author_link', 'post_type_archive_link', 'year_link', 'month_link', 'day_link') as $filter)
 			add_filter($filter, array(&$this, 'archive_link'), 20);
 
-		// modifies post format links
-		add_filter('term_link', array(&$this, 'term_link'), 20, 3);
-
 		// modifies the page link in case the front page is not in the default language
 		add_filter('page_link', array(&$this, 'page_link'), 20, 2);
 
@@ -87,7 +84,7 @@ class PLL_Frontend_Links extends PLL_Links {
 			return $this->links[$link];
 
 		return $this->links[$link] = $tax == 'post_format' ?
-			$this->links_model->add_language_to_link($link, $this->get_term_language($term->term_id)) : $link;
+			$this->links_model->add_language_to_link($link, $this->get_term_language($term->term_id)) : parent::term_link($link, $term, $tax);
 	}
 
 	/*

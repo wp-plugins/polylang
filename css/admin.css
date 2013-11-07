@@ -124,12 +124,3 @@ tr#term-translations select[id*='tr_lang_'] {
 .media-translations {
 	width: 460px;
 }
-
-/* admin bar */
-#wp-admin-bar-languages ul li {
-	padding-left: 10px;
-}
-
-#wp-admin-bar-languages ul li.pll-ab-selected {
-	background: url("icons.png") -48px 0px no-repeat;
-}

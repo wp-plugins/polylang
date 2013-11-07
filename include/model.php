@@ -189,7 +189,7 @@ class PLL_Model {
 	 * @since 0.1
 	 *
 	 * @param int|string term_id, tl_term_id, slug or locale of the queried language
-	 * @return object PLL_Language object
+	 * @return object|bool PLL_Language object, false if no language found
 	 */
 	public function get_language($value) {
 		static $language;
