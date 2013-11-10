@@ -11,13 +11,13 @@
 	</tr></thead>
 
 	<tbody>
-	<?php foreach ($this->get_languages_list() as $language) {
+	<?php foreach ($this->model->get_languages_list() as $language) {
 		if ($language->term_id != $lang->term_id) {
-			$value = $this->get_translation('post', $post_ID, $language);
+			$value = $this->model->get_translation('post', $post_ID, $language);
 			if (!$value || $value == $post_ID) // $value == $post_ID happens if the post has been (auto)saved before changing the language
 				$value = '';
 			if (isset($_GET['from_post']))
-				$value = $this->get_post($_GET['from_post'], $language); ?>			
+				$value = $this->model->get_post($_GET['from_post'], $language); ?>
 			<tr>
 			<td><?php echo esc_html($language->name);?></td><?php
 			printf(
@@ -25,7 +25,7 @@
 				esc_attr($language->slug),
 				esc_attr($value)
 			);
-			if ($lang) {				
+			if ($lang) {
 				$link = $value ?
 					sprintf(
 						'<a href="%1$s">%2$s</a>',
