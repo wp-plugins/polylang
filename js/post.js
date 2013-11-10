@@ -136,6 +136,7 @@ pll_tagBox = {
 			// add the language in the $_GET variable
 			var lang = $('#post_lang_choice').attr('value');
 			var tax = $(this).closest('div.tagsdiv').attr('id');
+			// change action name for backward compatibility WP < 3.7
 			$(this).suggest( ajaxurl + '?action=polylang-ajax-tag-search&lang=' + lang + '&tax=' + tax, { delay: 500, minchars: 2, multiple: true, multipleSep: "," } );
 		});
 	},
@@ -223,7 +224,7 @@ jQuery(document).ready(function($) {
 						$('#' + tax + '-lang').val($('#post_lang_choice').attr('value')); // hidden field
 						break;
 					case 'pages': // parent dropdown list for pages
-						$('#parent_id').replaceWith(this.data);
+						$('#pageparentdiv > .inside').html(this.data);
 						break;
 					default:
 						break;
@@ -278,7 +279,7 @@ jQuery(document).ready(function($) {
 			$.each(res.responses, function() {
 				switch (this.what) {
 					case 'translations': // translations fields
-						$('.translations').html(this.data); // WP < 3.5
+						$('.translations').html(this.data); // backward compatibility WP < 3.5
 						$('.compat-field-translations').html(this.data); // WP 3.5+
 						break;
 					default:

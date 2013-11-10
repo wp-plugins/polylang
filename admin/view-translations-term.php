@@ -18,15 +18,15 @@ else {
 			echo '<th class="tr-edit-column">'.__('Edit', 'polylang').'</th>';?>
 	</tr></thead>
 	<tbody>
-		<?php foreach ($this->get_languages_list() as $language) {
+		<?php foreach ($this->model->get_languages_list() as $language) {
 			if ($language->term_id == $lang->term_id)
 				continue;
 
 			// look for any existing translation in this language
 			$translation = 0;
-			if (isset($term_id) && $translation_id = $this->get_translation('term', $term_id, $language))
+			if (isset($term_id) && $translation_id = $this->model->get_translation('term', $term_id, $language))
 				$translation = get_term($translation_id, $taxonomy);
-			if (isset($_GET['from_tag']) && $translation_id = $this->get_term($_GET['from_tag'], $language))
+			if (isset($_GET['from_tag']) && $translation_id = $this->model->get_term($_GET['from_tag'], $language))
 				$translation = get_term($translation_id, $taxonomy);?>
 
 			<tr><td class="tr-language-column"><?php echo esc_html($language->name);?></td><?php
