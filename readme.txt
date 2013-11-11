@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, international, localization
 Requires at least: 3.1
 Tested up to: 3.7.1
-Stable tag: 1.1.6
+Stable tag: 1.2.1
 License: GPLv2 or later
 
 Polylang adds multilingual content management support to WordPress.
@@ -63,10 +63,16 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 == Upgrade Notice ==
 
-= 1.2 =
-More than ever, make a database backup before upgrading! If you are using a version older than 0.8, please ugrade to 0.9.8 before ugrading to 1.2
+= 1.2.1 =
+Polylang 1.2 introduces major internal changes. More than ever, make a database backup before upgrading! If you are using a version older than 0.8, please ugrade to 0.9.8 before ugrading to 1.2
 
 == Changelog ==
+
+= 1.2.1 (2013-11-11) =
+
+* Update badly encoded Latvian translation
+* Suppress one query in PLL_WPML_Config when not in multisite
+* Bug correction: strings translations are not correctly upgraded
 
 = 1.2 (2013-11-10) =
 

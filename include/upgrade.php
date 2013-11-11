@@ -87,7 +87,7 @@ class PLL_Upgrade {
 	 * @since 1.2
 	 */
 	protected function _upgrade() {
-		foreach (array('0.9', '1.0', '1.1', '1.2') as $version)
+		foreach (array('0.9', '1.0', '1.1', '1.2', '1.2.1') as $version)
 			if (version_compare($this->options['version'], $version, '<'))
 				call_user_func(array(&$this, 'upgrade_' . str_replace('.', '_', $version)));
 
@@ -252,6 +252,9 @@ class PLL_Upgrade {
 			// get all translated objects
 			$objects = $wpdb->get_col("SELECT DISTINCT meta_value FROM {$wpdb->$table} WHERE meta_key = '_translations'");
 
+			if (empty($objects))
+				continue;
+
 			foreach ($objects as $obj) {
 				$term = uniqid('pll_'); // the term name
 				$terms[] = $wpdb->prepare('("%1$s", "%1$s")', $term);
@@ -295,15 +298,32 @@ class PLL_Upgrade {
 			// insert term_relationships
 			if (!empty($trs))
 				$wpdb->query("INSERT INTO $wpdb->term_relationships (object_id, term_taxonomy_id) VALUES " . implode(',', $trs));
+		}
+	}
 
-			// strings translations
-			foreach($languages as $lang) {
-				if ($strings = get_option('polylang_mo'.$lang->term_id)) {
-					$mo = new PLL_MO();
-					foreach ($strings as $msg)
-						$mo->add_entry($mo->make_entry($msg[0], $msg[1]));
-					$mo->export_to_db($lang);
-				}
+	/*
+	 * upgrades if the previous version is < 1.2.1
+	 *
+	 * @since 1.2.1
+	 */
+	protected function upgrade_1_2_1() {
+		add_action('wp_loaded', array(&$this, 'wp_loaded_upgrade_1_2_1')); // once wp-rewrite is available
+	}
+
+	/*
+	 * upgrades if the previous version is < 1.2.1
+	 * actions that need to be taken after $wp_rewrite is available
+	 *
+	 * @since 1.2.1
+	 */
+	public function wp_loaded_upgrade_1_2_1() {
+		// strings translations
+		foreach(get_terms('language', array('hide_empty' => 0)) as $lang) {
+			if ($strings = get_option('polylang_mo'.$lang->term_id)) {
+				$mo = new PLL_MO();
+				foreach ($strings as $msg)
+					$mo->add_entry($mo->make_entry($msg[0], $msg[1]));
+				$mo->export_to_db($lang);
 			}
 		}
 	}
