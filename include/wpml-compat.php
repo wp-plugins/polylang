@@ -5,19 +5,27 @@
 
 /*
  * defines two WPML constants once the language has been defined
+ *
+ * @since 0.9.5
  */
 function pll_define_wpml_constants() {
+	$code = is_admin() ? get_user_meta(get_current_user_id(), 'pll_filter_content', true) : pll_current_language();
+
 	if(!defined('ICL_LANGUAGE_CODE'))
-		define('ICL_LANGUAGE_CODE', pll_current_language());
+		define('ICL_LANGUAGE_CODE', is_admin() && empty($code) ? 'all' : $code);
 
 	if(!defined('ICL_LANGUAGE_NAME'))
-		define('ICL_LANGUAGE_NAME', pll_current_language('name'));
+		define('ICL_LANGUAGE_NAME', empty($code) ? '' : $GLOBALS['polylang']->model->get_language($code)->name);
 }
 
 add_action('pll_language_defined', 'pll_define_wpml_constants');
 
 /*
  * link to the home page in the active language
+ *
+ * @since 0.9.4
+ *
+ * @return string
  */
 if (!function_exists('icl_get_home_url')) {
 	function icl_get_home_url() {
@@ -28,11 +36,34 @@ if (!function_exists('icl_get_home_url')) {
 /*
  * used for building custom language selectors
  * available only on frontend
+ *
+ * list of paramaters accepted in $args
+ *
+ * skip_missing  => wether to skip missing translation or not, 0 or 1, defaults to 0
+ * orderby       => 'id', 'cod', 'name', defaults to 'id'
+ * order         => 'ASC' or 'DESC', defaults to 'ASC'
+ * link_empty_to => link to use when the translation is missing {$lang} is replaced by the language code
+ *
+ * list of parameters returned per language:
+ *
+ * id               => the language id
+ * active           => wether this is the active language or no, 0 or 1
+ * native_name      => the language name
+ * missing          => wether the translation is missing or not, 0 or 1
+ * translated_name  => empty, does not exist in Polylang
+ * language_code    => the language code (slug)
+ * country_flag_url => the url of the flag
+ * url              => the url of the translation
+ *
+ * @since 1.0
+ *
+ * @param string|array $args optional
+ * @return array array of arrays per language
  */
 if (!function_exists('icl_get_languages')) {
 	function icl_get_languages($args = '') {
 		global $polylang;
-		if (!(class_exists('Polylang_Core') && $polylang instanceof Polylang_Core))
+		if (empty($polylang) || empty($polylang->curlang))
 			return array();
 
 		$args = extract(wp_parse_args($args));
@@ -41,22 +72,22 @@ if (!function_exists('icl_get_languages')) {
 
 		$arr = array();
 
-		foreach ($polylang->get_languages_list(array('hide_empty' => true, 'orderby' => $orderby, 'order' => $order)) as $lang) {
+		foreach ($polylang->model->get_languages_list(array('hide_empty' => true, 'orderby' => $orderby, 'order' => $order)) as $lang) {
 			$url = $polylang->get_translation_url($lang);
 
 			if (empty($url) && !empty($skip_missing))
 				continue;
 
 			$arr[] = array(
-				'id' => $lang->term_id,
-				'active' => isset($polylang->curlang->slug) && $polylang->curlang->slug == $lang->slug ? 1 : 0,
-				'native_name' => $lang->name,
-				'missing' => empty($url) ? 1 : 0,
-				'translated_name' => '', // does not exist in Polylang
-				'language_code' => $lang->slug,
-				'country_flag_url' => $polylang->get_flag($lang, true),
-				'url' => $url ? $url :
-					(empty($link_empty_to) ? $polylang->get_home_url($lang) :
+				'id'               => $lang->term_id,
+				'active'           => isset($polylang->curlang->slug) && $polylang->curlang->slug == $lang->slug ? 1 : 0,
+				'native_name'      => $lang->name,
+				'missing'          => empty($url) ? 1 : 0,
+				'translated_name'  => '', // does not exist in Polylang
+				'language_code'    => $lang->slug,
+				'country_flag_url' => $lang->flag_url,
+				'url'              => $url ? $url :
+					(empty($link_empty_to) ? $polylang->links->get_home_url($lang) :
 					str_replace('{$lang}', $lang->slug, $link_empty_to))
 			);
 		}
@@ -65,7 +96,16 @@ if (!function_exists('icl_get_languages')) {
 }
 
 /*
- *  used for creating language dependent links in themes
+ * used for creating language dependent links in themes
+ *
+ * @since 1.0
+ *
+ * @param int $id object id
+ * @param string $type optional, post type or taxonomy name of the object, defaults to 'post'
+ * @param string $text optional the link text. If not specified will produce the name of the element in the current language
+ * @param array $args optional an array of arguments to add to the link, defaults to empty
+ * @param string $anchor optional the anchor to add to teh link, defaults to empty
+ * @return string a language dependent link
  */
 if (!function_exists('icl_link_to_element')) {
 	function icl_link_to_element($id, $type = 'post', $text = '', $args = array(), $anchor = '') {
@@ -74,7 +114,7 @@ if (!function_exists('icl_link_to_element')) {
 		if ($type == 'tag')
 			$type = 'post_tag';
 
-		if (isset($polylang) && ($lang = pll_current_language()) && $tr_id = $polylang->get_translation($type, $id, $lang))
+		if (isset($polylang) && ($lang = pll_current_language()) && $tr_id = $polylang->model->get_translation($type, $id, $lang))
 			$id = $tr_id;
 
 		if (post_type_exists($type)) {
@@ -103,36 +143,61 @@ if (!function_exists('icl_link_to_element')) {
 
 /*
  * used for calculating the IDs of objects (usually categories) in the current language
+ *
+ * @since 0.9.5
+ *
+ * @param int $id object id
+ * @param string $type, post type or taxonomy name of the object, defaults to 'post'
+ * @param bool $return_original_if_missing true if Polylang should return the original id if the translation is missiing
+ * @param string $lang optional language code, defaults to current language
+ * @return int|null the object id of the translation, null if the translation is missing and $return_original_if_missing set to false
  */
 if (!function_exists('icl_object_id')) {
 	function icl_object_id($id, $type, $return_original_if_missing, $lang = false) {
 		global $polylang;
-		return isset($polylang) && ($lang = $lang ? $lang : pll_current_language()) && ($tr_id = $polylang->get_translation($type, $id, $lang)) ? $tr_id :
+		return isset($polylang) && ($lang = $lang ? $lang : pll_current_language()) && ($tr_id = $polylang->model->get_translation($type, $id, $lang)) ? $tr_id :
 			($return_original_if_missing ? $id : null);
 	}
 }
 
 /*
  * registers a string for translation in the "strings translation" panel
+ *
+ * @since 0.9.3
+ *
+ * @param string $context the group in which the string is registered, defaults to 'polylang'
+ * @param string $name a unique name for the string
+ * @param string $string the string to register
  */
 if (!function_exists('icl_register_string')) {
 	function icl_register_string($context, $name, $string) {
-		$GLOBALS['polylang_wpml_compat']->register_string($context, $name, $string);
+		$GLOBALS['pll_wpml_compat']->register_string($context, $name, $string);
 	}
 }
 
 /*
  * removes a string from the "strings translation" panel
+ *
+ * @since 1.0.2
+ *
+ * @param string $context the group in which the string is registered, defaults to 'polylang'
+ * @param string $name a unique name for the string
  */
 if (!function_exists('icl_unregister_string')) {
 	function icl_unregister_string($context, $name) {
-		$GLOBALS['polylang_wpml_compat']->unregister_string($context, $name);
+		$GLOBALS['pll_wpml_compat']->unregister_string($context, $name);
 	}
 }
 
 /*
  * gets the translated value of a string (previously registered with icl_register_string or pll_register_string)
- * the parameters $context and $name are not used by Polylang
+ *
+ * @since 0.9.3
+ *
+ * @param string $context not used by Polylang
+ * @param string $name not used by Polylang
+ * @param string $string the string to translated
+ * @return string the translated string in the current language
  */
 if (!function_exists('icl_t')) {
 	function icl_t($context, $name, $string) {
@@ -143,12 +208,19 @@ if (!function_exists('icl_t')) {
 /*
  * undocumented function used by NextGen Gallery
  * seems to be used to both register and translate a string
- * the parameters $context and $bool are not used by Polylang
  * FIXME: tested only with NextGen gallery
+ *
+ * @since 1.0.2
+ *
+ * @param string $context the group in which the string is registered, defaults to 'polylang'
+ * @param string $name a unique name for the string
+ * @param string $string the string to register
+ * @param bool $bool not used by Polylang
+ * @return string the translated string in the current language
  */
 if (!function_exists('icl_translate')) {
 	function icl_translate($context, $name, $string, $bool) {
-		$GLOBALS['polylang_wpml_compat']->register_string($context, $name, $string);
+		$GLOBALS['pll_wpml_compat']->register_string($context, $name, $string);
 		return pll__($string);
 	}
 }
@@ -158,6 +230,10 @@ if (!function_exists('icl_translate')) {
  * FIXME: tested only with Types
  * probably incomplete as Types locks the custom fields for a new post, but not when edited
  * this is probably linked to the fact that WPML has always an original post in the default language and not Polylang :)
+ *
+ * @since 1.1.2
+ *
+ * @return array
  */
 if (!function_exists('wpml_get_copied_fields_for_post_edit')) {
 	function wpml_get_copied_fields_for_post_edit() {
@@ -178,6 +254,10 @@ if (!function_exists('wpml_get_copied_fields_for_post_edit')) {
 
 /*
  * undocumented function used by Warp 6 by Yootheme
+ *
+ * @since 1.0.5
+ *
+ * @return string default language code
  */
 if (!function_exists('icl_get_default_language')) {
 	function icl_get_default_language() {
@@ -187,18 +267,33 @@ if (!function_exists('icl_get_default_language')) {
 
 /*
  * registers strings in a persistant way as done by WPML
+ *
+ * @since 1.0.2
  */
-class Polylang_WPML_Compat {
-	private $strings; // used for cache
+class PLL_WPML_Compat {
+	protected $strings; // used for cache
 
-	function __construct() {
+	/*
+	 * constructor
+	 *
+	 * @since 1.0.2
+	 */
+	public function __construct() {
 		add_action('pll_get_strings', array(&$this, 'get_strings'));
 	}
 
-	// unlike pll_register_string, icl_register_string stores the string in database
-	// so we need to do the same as some plugins or themes may expect this
-	// we use a serialized option to do this
-	function register_string($context, $name, $string) {
+	/*
+	 * unlike pll_register_string, icl_register_string stores the string in database
+	 * so we need to do the same as some plugins or themes may expect this
+	 * we use a serialized option to do this
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param string $context the group in which the string is registered, defaults to 'polylang'
+	 * @param string $name a unique name for the string
+	 * @param string $string the string to register
+ 	 */
+	public function register_string($context, $name, $string) {
 		if (empty($this->strings))
 			$this->strings = get_option('polylang_wpml_strings', array());
 
@@ -210,8 +305,15 @@ class Polylang_WPML_Compat {
 		}
 	}
 
-	// removes a string from the registered strings list
-	function unregister_string($context, $name) {
+	/*
+	 * removes a string from the registered strings list
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param string $context the group in which the string is registered, defaults to 'polylang'
+	 * @param string $name a unique name for the string
+	 */
+	public function unregister_string($context, $name) {
 		if (empty($this->strings))
 			$this->strings = get_option('polylang_wpml_strings', array());
 
@@ -223,17 +325,23 @@ class Polylang_WPML_Compat {
 		}
 	}
 
-	// adds strings registered by icl_register_string to those registered by pll_register_string
-	function get_strings($strings) {
+	/*
+	 * adds strings registered by icl_register_string to those registered by pll_register_string
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param array $strings existing registered strings
+	 * @return array registered strings with added strings through WPML API
+	 */
+	public function get_strings($strings) {
 		if (empty($this->strings))
 			$this->strings = get_option('polylang_wpml_strings');
 
 		return empty($this->strings) ? $strings : array_merge($strings, $this->strings);
 	}
-}
+} // class PLL_WPML_Compat
 
-global $polylang_wpml_compat;
-$polylang_wpml_compat = new Polylang_WPML_Compat();
+$GLOBALS['pll_wpml_compat'] = new PLL_WPML_Compat;
 
 /*
  * reads and interprets the file wpml-config.xml
@@ -241,18 +349,30 @@ $polylang_wpml_compat = new Polylang_WPML_Compat();
  * the language switcher configuration is not interpreted
  * the xml parser has been adapted from http://php.net/manual/en/function.xml-parse-into-struct.php#84261
  * many thanks to wickedfather at hotmail dot com
+ *
+ * @since 1.0
  */
-class Polylang_WPML_Config {
-	private $values;
-	private $index;
-	private $wpml_config;
-	private $strings;
+class PLL_WPML_Config {
+	protected $values, $index, $wpml_config, $strings;
 
-	function __construct() {
-		add_action('plugins_loaded', array(&$this, 'init'), 1);
+	/*
+	 * constructor
+	 *
+	 * @since 1.0
+	 */
+	public function __construct() {
+		$this->init();
 	}
 
-	function xml_parse($xml, $context) {
+	/*
+	 * parses the wpml-config.xml file
+	 *
+	 * @since 1.0
+	 *
+	 * @param string wpml-config.xml file content
+	 * @param string $context identifies where the file was found
+	 */
+	protected function xml_parse($xml, $context) {
 		$parser = xml_parser_create();
 		xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
 		xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
@@ -283,7 +403,14 @@ class Polylang_WPML_Config {
 		}
 	}
 
-	function xml_parse_recursive() {
+	/*
+	 * recursively parses the wpml-config.xml file
+	 *
+	 * @since 1.0
+	 *
+	 * @return array
+	 */
+	protected function xml_parse_recursive() {
 		$found = array();
 		$tagCount = array();
 
@@ -325,7 +452,12 @@ class Polylang_WPML_Config {
 		return $found;
 	}
 
-	function init() {
+	/*
+	 * finds the wpml-config.xml files to parse and setup filters
+	 *
+	 * @since 1.0
+	 */
+	public function init() {
 		$this->wpml_config = array();
 
 		// child theme
@@ -337,7 +469,11 @@ class Polylang_WPML_Config {
  			$this->xml_parse(file_get_contents($file), get_template());
 
 		// plugins
-		foreach (get_option('active_plugins') as $plugin) {
+		// don't forget sitewide active plugins thanks to Reactorshop http://wordpress.org/support/topic/polylang-and-yoast-seo-plugin/page/2?replies=38#post-4801829
+		$plugins = (is_multisite() && $sitewide_plugins = get_site_option('active_sitewide_plugins')) && is_array($sitewide_plugins) ? array_keys($sitewide_plugins) : array();
+		$plugins = array_merge($plugins, get_option('active_plugins'));
+
+		foreach ($plugins as $plugin) {
 			if (file_exists($file = dirname(POLYLANG_DIR).'/'.dirname($plugin).'/wpml-config.xml'))
 				$this->xml_parse(file_get_contents($file), dirname($plugin));
 		}
@@ -363,9 +499,9 @@ class Polylang_WPML_Config {
 			foreach ($arr as $keys)
 				$this->strings[$context] = $this->admin_texts_recursive($keys);
 
-		foreach ($this->strings as $context=>$options) {
-			foreach ($options as $option_name=>$value) {
-				if ($GLOBALS['polylang']->is_admin) { // backend
+		foreach ($this->strings as $context => $options) {
+			foreach ($options as $option_name => $value) {
+				if (PLL_ADMIN) { // backend
 					$option = get_option($option_name);
 					if (is_string($option) && $value == 1)
 						pll_register_string($option_name, $option, $context);
@@ -378,8 +514,15 @@ class Polylang_WPML_Config {
 		}
 	}
 
-	// arranges strings in a cleaner way
-	function admin_texts_recursive($keys) {
+	/*
+	 * arranges strings in a cleaner way
+	 *
+	 * @since 1.0
+	 *
+	 * @param array $keys
+	 * @return array
+	 */
+	protected function admin_texts_recursive($keys) {
 		if (!isset($keys[0])) {
 			$elem = $keys;
 			unset($keys);
@@ -391,9 +534,17 @@ class Polylang_WPML_Config {
 		return $strings;
 	}
 
-	// recursively registers strings for a serialized option
-	function register_string_recursive($context, $strings, $options) {
-		foreach ($options as $name=>$value) {
+	/*
+	 * recursively registers strings for a serialized option
+	 *
+	 * @since 1.0
+	 *
+	 * @param string $context the group in which the strings will be registered
+	 * @param array $strings
+	 * @param array $options
+	 */
+	protected function register_string_recursive($context, $strings, $options) {
+		foreach ($options as $name => $value) {
 			if (isset($strings[$name])) {
 				if (is_string($value) && $strings[$name] == 1)
 					pll_register_string($name, $value, $context);
@@ -403,20 +554,41 @@ class Polylang_WPML_Config {
 		}
 	}
 
-	function copy_post_metas($metas, $sync) {
+	/*
+	 * adds custom fields to the list of metas to copy when creating a new translation
+	 *
+	 * @since 1.0
+	 *
+	 * @param array $metas the list of custom fields to copy or synchronize
+	 * @param bool $sync true for sync, false for copy
+	 * @return array the list of custom fields to copy or synchronize
+	 */
+	public function copy_post_metas($metas, $sync) {
 		foreach ($this->wpml_config['custom-fields'] as $context) {
 			foreach ($context['custom-field'] as $cf) {
-				if (!$sync && in_array($cf['attributes']['action'], array('copy', 'translate')))
+				// copy => copy and synchronize
+				// translate => copy but don't synchronize
+				// ignore => don't copy
+				// see http://wordpress.org/support/topic/custom-field-values-override-other-translation-values?replies=8#post-4655563
+				if ('copy' == $cf['attributes']['action'] || (!$sync && 'translate' == $cf['attributes']['action']))
 					$metas[] = $cf['value'];
-				elseif ($sync && $cf['attributes']['action'] != 'copy')
-					$metas = array_diff($metas,  array($cf['value'])); // do not synchronize
+				else
+					$metas = array_diff($metas,  array($cf['value']));
 			}
 		}
 		return $metas;
 	}
 
-	// language and translation management for custom post types
-	function translate_types($types, $hide) {
+	/*
+	 * language and translation management for custom post types
+	 *
+	 * @since 1.0
+	 *
+	 * @param array $types list of post type names for which Polylang manages language and translations
+	 * @param bool $hide true when displaying the list in Polylang settings
+	 * @return array list of post type names for which Polylang manages language and translations
+	 */
+	public function translate_types($types, $hide) {
 		foreach ($this->wpml_config['custom-types'] as $context) {
 			foreach ($context['custom-type'] as $pt) {
 				if ($pt['attributes']['translate'] == 1 && !$hide)
@@ -428,8 +600,16 @@ class Polylang_WPML_Config {
 		return $types;
 	}
 
-	// language and translation management for custom taxonomies
-	function translate_taxonomies($taxonomies, $hide) {
+	/*
+	 * language and translation management for custom taxonomies
+	 *
+	 * @since 1.0
+	 *
+	 * @param array $taxonomies list of taxonomy names for which Polylang manages language and translations
+	 * @param bool $hide true when displaying the list in Polylang settings
+	 * @return array list of taxonomy names for which Polylang manages language and translations
+	 */
+	public function translate_taxonomies($taxonomies, $hide) {
 		foreach ($this->wpml_config['taxonomies'] as $context) {
 			foreach ($context['taxonomy'] as $tax) {
 				if ($tax['attributes']['translate'] == 1 && !$hide)
@@ -442,11 +622,18 @@ class Polylang_WPML_Config {
 		return $taxonomies;
 	}
 
-	// translates the strings for an option
-	function translate_strings($value) {
+	/*
+	 * translates the strings for an option
+	 *
+	 * @since 1.0
+	 *
+	 * @param array|string either a string to translate or a list of strings to translate
+	 * @return array|string translated string(s)
+	 */
+	public function translate_strings($value) {
 		if (is_array($value)) {
 			$option = substr(current_filter(), 7);
-			foreach ($this->strings as $context=>$options) {
+			foreach ($this->strings as $context => $options) {
 				if (array_key_exists($option, $options))
 					return $this->translate_strings_recursive($options[$option], $value); // for a serialized option
 			}
@@ -454,9 +641,17 @@ class Polylang_WPML_Config {
 		return pll__($value);
 	}
 
-	// recursively translates strings for a serialized option
-	function translate_strings_recursive($strings, $values) {
-		foreach ($values as $name=>$value) {
+	/*
+	 * recursively translates strings for a serialized option
+	 *
+	 * @since 1.0
+	 *
+	 * @param array $strings
+	 * @param array|string $values either a string to translate or a list of strings to translate
+	 * @return array|string translated string(s)
+	 */
+	protected function translate_strings_recursive($strings, $values) {
+		foreach ($values as $name => $value) {
 			if (isset($strings[$name])) {
 				if (is_string($value) && $strings[$name] == 1)
 					$values[$name] = pll__($value);
@@ -466,7 +661,4 @@ class Polylang_WPML_Config {
 		}
 		return $values;
 	}
-
-}
-
-new Polylang_WPML_Config();
+} // class PLL_WPML_Config
