@@ -308,6 +308,9 @@ class PLL_Upgrade {
 	 */
 	protected function upgrade_1_2_1() {
 		add_action('wp_loaded', array(&$this, 'wp_loaded_upgrade_1_2_1')); // once wp-rewrite is available
+
+		if (did_action('wp_loaded'))
+			$this->wp_loaded_upgrade_1_2_1();
 	}
 
 	/*
