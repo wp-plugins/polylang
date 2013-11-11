@@ -197,16 +197,6 @@ class PLL_Upgrade {
 	protected function upgrade_1_2() {
 		$this->options['domains'] = array(); // option added in 1.2
 
-		// it was a bad idea to pollute WP option with our custom nav menu locations
-		$menus = get_theme_mod('nav_menu_locations');
-		if (is_array($menus)) {
-			foreach ($menus as $loc => $menu)
-				if (strpos($loc, '#'))
-					unset($menus[$loc]);
-
-			set_theme_mod('nav_menu_locations', $menus);
-		}
-
 		// need to register the taxonomies
 		foreach (array('language', 'term_language', 'post_translations', 'term_translations') as $taxonomy)
 			register_taxonomy($taxonomy, null , array('label' => false, 'public' => false, 'query_var' => false, 'rewrite' => false));
@@ -298,6 +288,35 @@ class PLL_Upgrade {
 			// insert term_relationships
 			if (!empty($trs))
 				$wpdb->query("INSERT INTO $wpdb->term_relationships (object_id, term_taxonomy_id) VALUES " . implode(',', $trs));
+		}
+
+		// it was a bad idea to pollute WP option with our custom nav menu locations
+		$menus = get_theme_mod('nav_menu_locations');
+		if (is_array($menus)) {
+			$default = $this->options['default_lang'];
+			$arr = array();
+
+			foreach ($menus as $loc => $menu) {
+				if ($pos = strpos($loc, '#')) {
+					$arr[substr($loc, 0, $pos)][substr($loc, $pos+1)] = $menu;
+					unset($menus[$loc]);
+				}
+				else
+					$arr[$loc][$default] = $menu;
+			}
+
+			$model = new PLL_Admin_Model($this->options);
+			$model->clean_languages_cache();
+
+			// assign menus language and translations
+			foreach ($arr as $loc => $translations) {
+				foreach ($translations as $lang=>$menu) {
+					$model->set_term_language($menu, $lang);
+					$model->save_translations('term', $menu, $translations);
+				}
+			}
+
+			set_theme_mod('nav_menu_locations', $menus);
 		}
 	}
 
