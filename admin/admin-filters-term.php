@@ -354,7 +354,7 @@ class PLL_Admin_Filters_Term {
 
 		// the language filter selection has just changed
 		// test $screen->base to avoid interference between the language filter and the post language selection and the category parent dropdown list
-		elseif (!empty($_GET['lang']) && !in_array($screen->base, array('post', 'edit-tags'))) {
+		elseif (!empty($_GET['lang']) && !(isset($screen) && in_array($screen->base, array('post', 'edit-tags')))) {
 			if ($_GET['lang'] != 'all')
 				$lang = $this->model->get_language($_GET['lang']);
 			elseif ($screen->base == 'edit-tags' && isset($args['class']))
@@ -363,7 +363,7 @@ class PLL_Admin_Filters_Term {
 
 		// again the language filter
 		elseif (($lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true)) &&
-			$screen->base != 'post' && !($screen->base == 'edit-tags' && isset($args['class']))) // don't apply to post edit and the category parent dropdown list
+			(isset($screen) && $screen->base != 'post' && !($screen->base == 'edit-tags' && isset($args['class'])))) // don't apply to post edit and the category parent dropdown list
 		 	$lang = $this->model->get_language($lg);
 
 		elseif (isset($_GET['post']))
