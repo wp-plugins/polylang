@@ -51,7 +51,7 @@ class PLL_Switcher {
 			$slug = $language->slug;
 			$classes = array('lang-item', 'lang-item-' . esc_attr($id), 'lang-item-' . esc_attr($slug));
 
-			if (pll_current_language() == $slug) {
+			if ($current_lang = pll_current_language() == $slug) {
 				if ($hide_current)
 					continue; // hide current language
 				else
@@ -61,7 +61,7 @@ class PLL_Switcher {
 			$url = $post_id !== null && ($tr_id = $links->model->get_post($post_id, $language)) ? get_permalink($tr_id) :
 				($post_id === null && !$force_home ? $links->get_translation_url($language) : null);
 
-			if (empty($url))
+			if ($no_translation = empty($url))
 				$classes[] = 'no-translation';
 
 			$url = apply_filters('pll_the_language_link', $url, $slug, $language->locale);

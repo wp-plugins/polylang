@@ -116,10 +116,10 @@ class PLL_Upgrade {
 		// split the synchronization options in 1.0
 		$this->options['sync'] = empty($this->options['sync']) ? array() : array_keys(PLL_Settings::list_metas_to_sync());
 
-		add_action('admin_init', array(&$this, 'admin_init_upgrade_1_0')); // once post types and taxonomies are set
+		add_action('wp_loaded', array(&$this, 'wp_loaded_upgrade_1_0')); // once post types and taxonomies are set
 
-		if (did_action('admin_init'))
-			$this->admin_init_upgrade_1_0();
+		if (did_action('wp_loaded'))
+			$this->wp_loaded_upgrade_1_0();
 	}
 
 	/*
@@ -128,7 +128,7 @@ class PLL_Upgrade {
 	 *
 	 * @since 1.2
 	 */
-	public function admin_init_upgrade_1_0() {
+	public function wp_loaded_upgrade_1_0() {
 		// set default values for post types and taxonomies to translate
 		$this->options['post_types'] = array_values(get_post_types(array('_builtin' => false, 'show_ui => true')));
 		$this->options['taxonomies'] = array_values(get_taxonomies(array('_builtin' => false, 'show_ui => true')));
@@ -329,10 +329,12 @@ class PLL_Upgrade {
 	 * @since 1.2.1
 	 */
 	protected function upgrade_1_2_1() {
-		add_action('admin_init', array(&$this, 'admin_init_upgrade_1_2_1')); // once wp-rewrite is available
+		$action = is_admin() ? 'admin_init' : 'wp_loaded'; // admin_init for wp-ecommerce
 
-		if (did_action('admin_init'))
-			$this->admin_init_upgrade_1_2_1();
+		add_action($action, array(&$this, 'wp_loaded_upgrade_1_2_1')); // once wp-rewrite is available
+
+		if (did_action($action))
+			$this->wp_loaded_upgrade_1_2_1();
 	}
 
 	/*
@@ -341,7 +343,7 @@ class PLL_Upgrade {
 	 *
 	 * @since 1.2.1
 	 */
-	public function admin_init_upgrade_1_2_1() {
+	public function wp_loaded_upgrade_1_2_1() {
 		// strings translations
 		foreach(get_terms('language', array('hide_empty' => 0)) as $lang) {
 			if ($strings = get_option('polylang_mo'.$lang->term_id)) {

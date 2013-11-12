@@ -73,6 +73,7 @@ Polylang 1.2 introduces major internal changes. More than ever, make a database 
 * Updated Polish translation thanks to [Bartosz](http://www.dfactory.eu/)
 * delay strings translations upgrade from 'wp_loaded' to 'admin_init' to avoid fatal error when wp-ecommerce is active
 * Bug correction: fatal error when doing ajax on frontend
+* Bug correction: ['current_lang'] and ['no-translation'] indexes disappeared from pll_the_languages raw output
 
 = 1.2.1 (2013-11-11) =
 
