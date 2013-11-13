@@ -29,9 +29,6 @@ class PLL_Plugins_Compat {
 		// Custom field template
 		add_action('add_meta_boxes', array(&$this, 'cft_copy'), 10, 2);
 
-		// Jetpack infinite scroll
-		add_filter('pre_get_posts', array(&$this, 'jetpack_infinite_scroll'));
-
 		// Aqua Resizer
 		add_filter('pll_home_url_black_list', create_function('$arr', "return array_merge(\$arr, array(array('function' => 'aq_resize')));"));
 	}
@@ -106,21 +103,5 @@ class PLL_Plugins_Compat {
 		global $custom_field_template;
 		if (isset($custom_field_template, $_REQUEST['from_post'], $_REQUEST['new_lang']) && !empty($post))
 			$_REQUEST['post'] = $post->ID;
-	}
-
-	/*
-	 * Jetpack infinite scroll
-	 * Currently it is not possible to set the language in ajax url so let's use our cookie
-	 *
-	 * @since 1.1.1
-	 *
-	 * @param object $query WP_Query instance
-	 */
-	public function jetpack_infinite_scroll($query) {
-		if (isset($_GET['infinity'], $_GET['page'])) {
-			$query->set('lang', $GLOBALS['polylang']->choose_lang->get_preferred_language()->slug);
-			if (empty($qv['post_type']) && !$query->is_search)
-				$query->set('post_type', 'post');
-		}
 	}
 }

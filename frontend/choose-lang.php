@@ -51,8 +51,11 @@ abstract class PLL_Choose_Lang {
 
 		// set a cookie to remember the language. check headers have not been sent to avoid ugly error
 		// possibility to set PLL_COOKIE to false will disable cookie although it will break some functionalities
-		if (!headers_sent() && PLL_COOKIE !== false && (!isset($_COOKIE[PLL_COOKIE]) || $_COOKIE[PLL_COOKIE] != $curlang->slug))
-			setcookie(PLL_COOKIE, $curlang->slug, time() + 31536000 /* 1 year */, COOKIEPATH, $this->domain);
+		if (!headers_sent() && PLL_COOKIE !== false && (!isset($_COOKIE[PLL_COOKIE]) || $_COOKIE[PLL_COOKIE] != $curlang->slug)) {
+			// FIXME revert to COOKIE_DOMAIN instead of $this->domain
+			// TODO chek it does work with subdomain
+			setcookie(PLL_COOKIE, $curlang->slug, time() + 31536000 /* 1 year */, COOKIEPATH, COOKIE_DOMAIN);
+		}
 
 		$GLOBALS['text_direction'] = $curlang->is_rtl ? 'rtl' : 'ltr';
 		do_action('pll_language_defined', $curlang->slug, $curlang);
