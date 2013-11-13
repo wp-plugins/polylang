@@ -152,16 +152,18 @@ class PLL_Frontend_Nav_Menu {
 		$customized = json_decode($_POST['customized']);
 		$curlang = pll_current_language();
 
-		foreach ($customized as $key => $c) {
-			if (false !== strpos($key, 'nav_menu_locations[')) {
-				$loc = substr(trim($key, ']'), 19);
-				if (($pos = strpos($loc, '___')) && substr($loc, $pos+3) == $curlang) {
-					$loc = 'nav_menu_locations[' . substr($loc, 0, $pos) . ']';
-					$customized->$loc = $c;
+		if (is_array($customized)) {
+			foreach ($customized as $key => $c) {
+				if (false !== strpos($key, 'nav_menu_locations[')) {
+					$loc = substr(trim($key, ']'), 19);
+					if (($pos = strpos($loc, '___')) && substr($loc, $pos+3) == $curlang) {
+						$loc = 'nav_menu_locations[' . substr($loc, 0, $pos) . ']';
+						$customized->$loc = $c;
+					}
 				}
 			}
-		}
 
-		$_POST['customized'] = json_encode($customized);
+			$_POST['customized'] = json_encode($customized);
+		}
 	}
 }
