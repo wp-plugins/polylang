@@ -76,8 +76,9 @@ Polylang 1.2 introduces major internal changes. More than ever, make a database 
 * Bug correction: fatal error when doing ajax on frontend
 * Bug correction: ICL_LANGUAGE_CODE incorrectly defined when doing ajax on frontend
 * Bug correction: ['current_lang'] and ['no-translation'] indexes disappeared from pll_the_languages raw output
-* Bug correction: Invalid argument supplied for foreach() in /polylang/include/mo.php on line 57
+* Bug correction: invalid argument supplied for foreach() in /polylang/include/mo.php on line 57
 * Bug correction: cookie may not correctly set
+* Bug correction: languages columns may not be displayed in custom post types and custom taxonomies tables
 
 = 1.2.1 (2013-11-11) =
 
@@ -107,7 +108,7 @@ This version does include important changes in database. More than ever, make a 
 * Synchronization is now disabled by default (due to too much conflicts / questions on the forum)
 * Include rel="alternate" hreflang="x" selflink per google recommendation
 * Improve inline documentation
-* Bug correction: Wrong datatype for second argument in polylang/include/auto-translate.php (introduced in 1.1.6)
+* Bug correction: wrong datatype for second argument in polylang/include/auto-translate.php (introduced in 1.1.6)
 * Bug correction: same id is used for all language items in menu
 * Bug correction: wpml-config.xml file not loaded for sitewide active plugins on network installations
 * Bug correction: page parent dropdown list (in page attributes metabox) not correctly displayed when switching from a language with empty list
