@@ -1,15 +1,32 @@
 <?php
 
-// the language switcher widget
-class Polylang_Widget extends WP_Widget {
+/*
+ * the language switcher widget
+ *
+ * @since 0.1
+ */
+class PLL_Widget_Languages extends WP_Widget {
+
+	/*
+	 * constructor
+	 *
+	 * @since 0.1
+	 */
 	function __construct() {
 		parent::__construct('polylang', __('Language Switcher', 'polylang'), array( 'description' => __( 'Displays a language switcher', 'polylang')));
 	}
 
-	// displays the widget
+	/*
+	 * displays the widget
+	 *
+	 * @since 0.1
+	 *
+	 * @param array $args Display arguments including before_title, after_title, before_widget, and after_widget.
+	 * @param array $instance The settings for the particular instance of the widget
+	 */
 	function widget($args, $instance) {
 		global $polylang;
-		if (!(isset($polylang) && $polylang->get_languages_list() && $list = $polylang->the_languages(array_merge($instance, array('echo' => 0)))))
+		if (!(isset($polylang) && $polylang->model->get_languages_list() && $list = pll_the_languages(array_merge($instance, array('echo' => 0)))))
 			return;
 
 		extract($args);
@@ -23,8 +40,8 @@ class Polylang_Widget extends WP_Widget {
 
 		// javascript to switch the language when using a dropdown list
 		if ($dropdown) {
-			foreach ($polylang->get_languages_list() as $language) {
-				$url = $force_home || ($url = $polylang->get_translation_url($language)) == null ? $polylang->get_home_url($language) : $url;
+			foreach ($polylang->model->get_languages_list() as $language) {
+				$url = $force_home || ($url = $polylang->links->get_translation_url($language)) == null ? $polylang->links->get_home_url($language) : $url;
 				$urls[] = '"'.esc_js($language->slug).'":"'.esc_url($url).'"';
 			}
 
@@ -48,19 +65,33 @@ class Polylang_Widget extends WP_Widget {
 		}
 	}
 
-	// updates the widget options
+	/*
+	 * updates the widget options
+	 *
+	 * @since 0.4
+	 *
+	 * @param array $new_instance New settings for this instance as input by the user via form()
+	 * @param array $old_instance Old settings for this instance
+	 * @return array Settings to save or bool false to cancel saving
+	 */
 	function update( $new_instance, $old_instance ) {
 		$instance['title'] = strip_tags($new_instance['title']);
-		foreach (array_keys($GLOBALS['polylang']->get_switcher_options('widget')) as $key)
+		foreach (array_keys(PLL_Switcher::get_switcher_options('widget')) as $key)
 			$instance[$key] = !empty($new_instance[$key]) ? 1 : 0;
 
 		return $instance;
 	}
 
-	// displays the widget form
+	/*
+	 * displays the widget form
+	 *
+	 * @since 0.4
+	 *
+	 * @param array $instance Current settings
+	 */
 	function form($instance) {
 		// default values
-		$instance = wp_parse_args( (array)$instance, array_merge(array('title' => ''), $GLOBALS['polylang']->get_switcher_options('widget', 'default')) );
+		$instance = wp_parse_args( (array)$instance, array_merge(array('title' => ''), PLL_Switcher::get_switcher_options('widget', 'default')) );
 
 		// title
 		$title = sprintf(
@@ -72,7 +103,7 @@ class Polylang_Widget extends WP_Widget {
 		);
 
 		$fields = '';
-		foreach ($GLOBALS['polylang']->get_switcher_options('widget') as $key => $str)
+		foreach (PLL_Switcher::get_switcher_options('widget') as $key => $str)
 			$fields .= sprintf(
 				'<input type="checkbox" class="checkbox" id="%1$s" name="%2$s" %3$s /> <label for="%1$s">%4$s</label><br />',
 				$this->get_field_id($key),

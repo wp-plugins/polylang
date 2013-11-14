@@ -1,9 +1,11 @@
 <?php
-// for each language:
-// [0] => ISO 639-1 language code
-// [1] => WordPress locale
-// [2] => name
-// [3] => not set for ltr scripts, 'rtl' otherwise
+/*
+ * for each language:
+ * [0] => ISO 639-1 language code
+ * [1] => WordPress locale
+ * [2] => name
+ * [3] => not set for ltr scripts, 'rtl' otherwise
+ */
 $languages = array(
 	array('af', 'af', 'Afrikaans'),
 	array('ar', 'ar', 'العربية', 'rtl'),

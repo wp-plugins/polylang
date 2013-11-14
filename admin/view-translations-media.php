@@ -1,4 +1,6 @@
 <?php
+
+// backward compatibility WP < 3.5
 if (version_compare($GLOBALS['wp_version'], '3.5', '<')) {?>
 <table class="widefat media-translations">
 	<thead><tr><?php
@@ -7,13 +9,13 @@ if (version_compare($GLOBALS['wp_version'], '3.5', '<')) {?>
 	</tr></thead>
 
 	<tbody><?php
-		foreach ($this->get_languages_list() as $language) {
+		foreach ($this->model->get_languages_list() as $language) {
 			if ($language->term_id == $lang->term_id)
 				continue;?>
 
 			<tr><td class="tr-language-column"><?php echo esc_html($language->name);?></td><?php
 			// the translation exists
-			if (($translation_id = $this->get_translation('post', $post_id, $language)) && $translation_id != $post_id) {
+			if (($translation_id = $this->model->get_translation('post', $post_id, $language)) && $translation_id != $post_id) {
 				printf(
 					'<td class="tr-edit-column"><input type="hidden" name="media_tr_lang[%s]" value="%d" /><a href="%s">%s</a></td>',
  					esc_attr($language->slug),
@@ -45,13 +47,13 @@ else { // WP 3.5+ ?>
 	</tr></thead>
 
 	<tbody><?php
-		foreach ($this->get_languages_list() as $language) {
+		foreach ($this->model->get_languages_list() as $language) {
 			if ($language->term_id == $lang->term_id)
 				continue;?>
 
 			<tr><td><?php echo esc_html($language->name);?></td><?php
 			// the translation exists
-			if (($translation_id = $this->get_translation('post', $post_id, $language)) && $translation_id != $post_id) {
+			if (($translation_id = $this->model->get_translation('post', $post_id, $language)) && $translation_id != $post_id) {
 				printf(
 					'<td><input type="hidden" name="media_tr_lang[%s]" value="%d" /><a href="%s">%s</a></td>',
  					esc_attr($language->slug),
