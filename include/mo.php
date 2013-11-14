@@ -55,9 +55,10 @@ class PLL_MO extends MO {
 		$post = get_page_by_title('polylang_mo_' . $lang_id, OBJECT, 'polylang_mo');
 		if (!empty($post)) {
 			$strings = unserialize($post->post_content);
-			if (is_array($strings))
+			if (is_array($strings)) {
 				foreach ($strings as $msg)
 					$this->add_entry($this->make_entry($msg[0], $msg[1]));
+			}
 		}
-  	}
+	}
 }
