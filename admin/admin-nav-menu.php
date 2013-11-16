@@ -205,9 +205,10 @@ class PLL_Admin_Nav_Menu {
 
 			// assign menus language and translations
 			foreach ($arr as $loc => $translations) {
-				foreach ($translations as $lang=>$menu) {
+				foreach ($translations as $lang => $menu) {
 					$this->model->set_term_language($menu, $lang);
-					$this->model->save_translations('term', $menu, $translations);
+					if (count($translations) > 1) // test to avoid loosing translations at theme deactivation
+						$this->model->save_translations('term', $menu, $translations);
 				}
 			}
 		}

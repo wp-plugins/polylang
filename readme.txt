@@ -68,6 +68,11 @@ Polylang 1.2 introduces major internal changes. More than ever, make a database 
 
 == Changelog ==
 
+= 1.2.3 =
+
+* Bug correction: menus locations of non default language are lost at theme deactivation
+* Bug correction: bbpress admin is broken
+
 = 1.2.2 (2013-11-14) =
 
 * Updated Polish translation thanks to [Bartosz](http://www.dfactory.eu/)
@@ -77,7 +82,7 @@ Polylang 1.2 introduces major internal changes. More than ever, make a database 
 * Bug correction: ICL_LANGUAGE_CODE incorrectly defined when doing ajax on frontend
 * Bug correction: ['current_lang'] and ['no-translation'] indexes disappeared from pll_the_languages raw output
 * Bug correction: invalid argument supplied for foreach() in /polylang/include/mo.php on line 57
-* Bug correction: cookie may not correctly set
+* Bug correction: cookie may not be correctly set
 * Bug correction: languages columns may not be displayed in custom post types and custom taxonomies tables
 
 = 1.2.1 (2013-11-11) =

@@ -5,6 +5,8 @@
 
 /*
  * defines two WPML constants once the language has been defined
+ * the compatibility with WPML is not perfect on admin side as the constants are defined
+ * in 'setup_theme' by Polylang (based on user info) and 'plugins_loaded' by WPML (based on cookie)
  *
  * @since 0.9.5
  */
