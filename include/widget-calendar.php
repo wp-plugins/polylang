@@ -1,38 +1,57 @@
 <?php
-// obliged to rewrite the whole WordPress function as there is no filter on sql queries and only a filter on final output
-// a request for making a filter on sql queries exists: http://core.trac.wordpress.org/ticket/15202
-// method used in 0.4.x: use of the get_calendar filter and overwrite the output of get_calendar function -> not very efficient (add 4 to 5 sql queries)
-// since 0.5: remove the WP widget and replace it by our own -> our language filter will not work if get_calendar is called directly by a theme
 
 if(!class_exists('WP_Widget_Calendar')){
 	require_once( ABSPATH . '/wp-includes/default-widgets.php' );
 }
 
-class Polylang_Widget_Calendar extends WP_Widget_Calendar {
+/*
+ * obliged to rewrite the whole functionnality as there is no filter on sql queries and only a filter on final output
+ * a request for making a filter on sql queries exists: http://core.trac.wordpress.org/ticket/15202
+ * method used in 0.4.x: use of the get_calendar filter and overwrite the output of get_calendar function -> not very efficient (add 4 to 5 sql queries)
+ * method used since 0.5: remove the WP widget and replace it by our own -> our language filter will not work if get_calendar is called directly by a theme
+ *
+ * @since 0.5
+ */
+class PLL_Widget_Calendar extends WP_Widget_Calendar {
 
+	/*
+	 * displays the widget
+	 * modified version of the parent function to call our own get_calendar function
+	 *
+	 * @since 0.5
+	 *
+	 * @param array $args Display arguments including before_title, after_title, before_widget, and after_widget.
+	 * @param array $instance The settings for the particular instance of the widget
+	 */
 	function widget( $args, $instance ) {
-		global $polylang; #added#
-
 		extract($args);
 		$title = apply_filters('widget_title', empty($instance['title']) ? '&nbsp;' : $instance['title'], $instance, $this->id_base);
 		echo $before_widget;
 		if ( $title )
 			echo $before_title . $title . $after_title;
 		echo '<div id="calendar_wrap">';
-		isset($polylang) && $polylang->get_languages_list() && $polylang->get_current_language() ? $this->get_calendar() : get_calendar(); #modified#
+		empty($GLOBALS['polylang']->curlang) ? get_calendar() : self::get_calendar(); #modified#
 		echo '</div>';
 		echo $after_widget;
 	}
 
-	// modified version of WP get_calendar function to filter the query
-	function get_calendar($initial = true, $echo = true) {
-		global $wpdb, $m, $monthnum, $year, $wp_locale, $posts;
-		global $polylang; #added#
+	/*
+	 * modified version of WP get_calendar function to filter the query
+	 *
+	 * @since 0.5
+	 *
+	 * @param bool $initial Optional, default is true. Use initial calendar names.
+	 * @param bool $echo Optional, default is true. Set to false for return.
+	 * @return string|null String when retrieving, null when displaying.
+ 	 */
+	static function get_calendar($initial = true, $echo = true) {
+		global $wpdb, $m, $monthnum, $year, $wp_locale, $posts, $polylang; #modified#
 
-		$lang = $polylang->get_current_language()->term_taxonomy_id; #added#
+		$join_clause = $polylang->model->join_clause('post'); #added#
+		$where_clause = $polylang->model->where_clause($polylang->curlang, 'post'); #added#
 
 		$cache = array();
-		$key = md5( $lang . $m . $monthnum . $year ); #modified#
+		$key = md5( $polylang->curlang->slug . $m . $monthnum . $year ); #modified#
 		if ( $cache = wp_cache_get( 'get_calendar', 'calendar' ) ) {
 			if ( is_array($cache) && isset( $cache[ $key ] ) ) {
 				if ( $echo ) {
@@ -88,17 +107,15 @@ class Polylang_Widget_Calendar extends WP_Widget_Calendar {
 
 		// Get the next and previous month and year with at least one post
 		$previous = $wpdb->get_row("SELECT MONTH(post_date) AS month, YEAR(post_date) AS year
-			FROM $wpdb->posts
-			INNER JOIN $wpdb->term_relationships AS tr ON tr.object_id = ID
+			FROM $wpdb->posts $join_clause
 			WHERE post_date < '$thisyear-$thismonth-01'
-			AND post_type = 'post' AND post_status = 'publish' AND tr.term_taxonomy_id = $lang
+			AND post_type = 'post' AND post_status = 'publish' $where_clause
 				ORDER BY post_date DESC
 				LIMIT 1"); #modified#
 		$next = $wpdb->get_row("SELECT MONTH(post_date) AS month, YEAR(post_date) AS year
-			FROM $wpdb->posts
-			INNER JOIN $wpdb->term_relationships AS tr ON tr.object_id = ID
+			FROM $wpdb->posts $join_clause
 			WHERE post_date > '$thisyear-$thismonth-{$last_day} 23:59:59'
-			AND post_type = 'post' AND post_status = 'publish' AND tr.term_taxonomy_id = $lang
+			AND post_type = 'post' AND post_status = 'publish' $where_clause
 				ORDER BY post_date ASC
 				LIMIT 1"); #modified#
 
@@ -151,10 +168,9 @@ class Polylang_Widget_Calendar extends WP_Widget_Calendar {
 
 		// Get days with posts
 		$dayswithposts = $wpdb->get_results("SELECT DISTINCT DAYOFMONTH(post_date)
-			FROM $wpdb->posts
-			INNER JOIN $wpdb->term_relationships AS tr ON tr.object_id = ID
+			FROM $wpdb->posts $join_clause
 			WHERE post_date >= '{$thisyear}-{$thismonth}-01 00:00:00'
-			AND post_type = 'post' AND post_status = 'publish' AND tr.term_taxonomy_id = $lang
+			AND post_type = 'post' AND post_status = 'publish' $where_clause
 			AND post_date <= '{$thisyear}-{$thismonth}-{$last_day} 23:59:59'", ARRAY_N); #modified#
 		if ( $dayswithposts ) {
 			foreach ( (array) $dayswithposts as $daywith ) {
@@ -171,11 +187,10 @@ class Polylang_Widget_Calendar extends WP_Widget_Calendar {
 
 		$ak_titles_for_day = array();
 		$ak_post_titles = $wpdb->get_results("SELECT ID, post_title, DAYOFMONTH(post_date) as dom "
-			."FROM $wpdb->posts "
-			."INNER JOIN $wpdb->term_relationships AS tr ON tr.object_id = ID "
+			."FROM $wpdb->posts $join_clause "
 			."WHERE post_date >= '{$thisyear}-{$thismonth}-01 00:00:00' "
 			."AND post_date <= '{$thisyear}-{$thismonth}-{$last_day} 23:59:59' "
-			."AND post_type = 'post' AND post_status = 'publish' AND tr.term_taxonomy_id = $lang"
+			."AND post_type = 'post' AND post_status = 'publish' $where_clause"
 		); #modified#
 		if ( $ak_post_titles ) {
 			foreach ( (array) $ak_post_titles as $ak_post_title ) {

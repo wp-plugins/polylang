@@ -4,9 +4,9 @@ jQuery(document).ready(function($) {
 	$('#lang_list').change(function() {
 		value = $(this).attr('value').split('-');
 		selected = $("select option:selected").text().split(' - ');
-		$('input[name="slug"]').val(value[0]);
-		$('input[name="description"]').val(value[1]);
+		$('#lang_slug').val(value[0]);
+		$('#lang_locale').val(value[1]);
 		$('input[name="rtl"]').val([value[2]]);
-		$('input[name="name"]').val(selected[0]);
+		$('#lang_name').val(selected[0]);
 	});
 });
