@@ -517,7 +517,10 @@ class PLL_Model {
 		if (!empty($this->options['media_support']))
 			$post_types['attachement'] = 'attachment';
 
-		return apply_filters('pll_get_post_types', array_merge($post_types,  $this->options['post_types']) , false);
+		if (is_array($this->options['post_types']))
+			$post_types = array_merge($post_types,  $this->options['post_types']);
+
+		return apply_filters('pll_get_post_types', $post_types , false);
 	}
 
 	/*
@@ -565,8 +568,12 @@ class PLL_Model {
 	 * @return array array of taxonomy names for which Polylang manages languages and translations
 	 */
 	protected function get_taxonomies() {
-		$taxonomies = array('category' => 'category', 'post_tag' => 'post_tag', 'nav_menu' => 'nav_menu');
-		return apply_filters('pll_get_taxonomies', array_merge($taxonomies, $this->options['taxonomies']), false);
+		$taxonomies = array('category' => 'category', 'post_tag' => 'post_tag');
+
+		if (is_array($this->options['taxonomies']))
+			$taxonomies = array_merge($taxonomies, $this->options['taxonomies']);
+
+		return apply_filters('pll_get_taxonomies', $taxonomies, false);
 	}
 
 	/*

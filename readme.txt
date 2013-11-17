@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, international, localization
 Requires at least: 3.1
 Tested up to: 3.7.1
-Stable tag: 1.2.2
+Stable tag: 1.2.3
 License: GPLv2 or later
 
 Polylang adds multilingual content management support to WordPress.
@@ -63,20 +63,22 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 == Upgrade Notice ==
 
-= 1.2.2 =
-Polylang 1.2 introduces major internal changes. More than ever, make a database backup before upgrading! If you are using a version older than 0.8, please ugrade to 0.9.8 before ugrading to 1.2
+= 1.2.3 =
+Polylang 1.2 introduced major internal changes. More than ever, make a database backup before upgrading from 1.1.6 or older! If you are using a version older than 0.8, please ugrade to 0.9.8 before ugrading to 1.2.3
 
 == Changelog ==
 
-= 1.2.3 =
+= 1.2.3 (2013-11-17) =
 
+* Avoid fatal error when ugrading with Nextgen Gallery active
 * Bug correction: menus locations of non default language are lost at theme deactivation
+* Bug correction: impossible to set menus locations of non default language in some specific cases
 * Bug correction: bbpress admin is broken
 
 = 1.2.2 (2013-11-14) =
 
 * Updated Polish translation thanks to [Bartosz](http://www.dfactory.eu/)
-* delay strings translations upgrade from 'wp_loaded' to 'admin_init' to avoid fatal error when wp-ecommerce is active
+* Delay strings translations upgrade from 'wp_loaded' to 'admin_init' to avoid fatal error when wp-ecommerce is active
 * Remove Jetpack infinite scroll compatibility code as it seems useless with new Polylang 1.2 code structure
 * Bug correction: fatal error when doing ajax on frontend
 * Bug correction: ICL_LANGUAGE_CODE incorrectly defined when doing ajax on frontend

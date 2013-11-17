@@ -53,21 +53,10 @@ class PLL_Admin extends PLL_Base {
 		if (!$this->model->get_languages_list())
 			return;
 
-		// admin language filter
-		if (!defined('DOING_AJAX') && !empty($_GET['lang']) && !is_numeric($_GET['lang']))
-			update_user_meta(get_current_user_id(), 'pll_filter_content', ($lang = $this->model->get_language($_GET['lang'])) ? $lang->slug : '');
-
-		// set preferred language for use in filters
-		$this->pref_lang = $this->model->get_language(($lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true)) ? $lg : $this->options['default_lang']);
-		$this->pref_lang = apply_filters('pll_admin_preferred_language', $this->pref_lang);
-
 		// filter admin language for users
+		// we must not call user info before WordPress defines user roles in wp-settings.php
+		add_filter('setup_theme', array(&$this, 'init_user'));
 		add_filter('locale', array(&$this, 'get_locale'));
-
-		// inform that the admin language has been set
-		$curlang = $this->model->get_language(get_locale());
-		$GLOBALS['text_direction'] = $curlang->is_rtl ? 'rtl' : 'ltr'; // force text direction according to language setting
-		do_action('pll_language_defined', $curlang->slug, $curlang);
 
 		// adds the languages in admin bar
 		// FIXME: OK for WP 3.2 and newer (the admin bar is not displayed on admin side for WP 3.1)
@@ -139,6 +128,26 @@ class PLL_Admin extends PLL_Base {
 	function plugin_update_message($plugin_data, $r) {
 		if (isset($r->upgrade_notice))
 			printf('<p style="margin: 3px 0 0 0; border-top: 1px solid #ddd; padding-top: 3px">%s</p>', $r->upgrade_notice);
+	}
+
+	/*
+	 * defines the backend language and the admin language filter based on user preferences
+	 *
+	 * @since 1.2.3
+	 */
+	public function init_user() {
+		// admin language filter
+		if (!defined('DOING_AJAX') && !empty($_GET['lang']) && !is_numeric($_GET['lang']))
+			update_user_meta(get_current_user_id(), 'pll_filter_content', ($lang = $this->model->get_language($_GET['lang'])) ? $lang->slug : '');
+
+		// set preferred language for use in filters
+		$this->pref_lang = $this->model->get_language(($lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true)) ? $lg : $this->options['default_lang']);
+		$this->pref_lang = apply_filters('pll_admin_preferred_language', $this->pref_lang);
+
+		// inform that the admin language has been set
+		$curlang = $this->model->get_language(get_locale());
+		$GLOBALS['text_direction'] = $curlang->is_rtl ? 'rtl' : 'ltr'; // force text direction according to language setting
+		do_action('pll_language_defined', $curlang->slug, $curlang);
 	}
 
 	/*

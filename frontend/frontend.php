@@ -61,7 +61,7 @@ class PLL_Frontend extends PLL_Base{
 		$this->filters_search = new PLL_Frontend_Filters_Search($this->links);
 
 		// nav menu
-		$this->nav_menu = new PLL_Frontend_Nav_Menu();
+		$this->nav_menu = new PLL_Frontend_Nav_Menu($this->options, $curlang);
 	}
 
 	/*

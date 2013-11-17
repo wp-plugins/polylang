@@ -15,7 +15,9 @@ class PLL_Admin_Nav_Menu {
 	 * @param object $model instance of PLL_Model
 	 */
 	public function __construct(&$model) {
-		$this->model = $model;
+		$this->model = &$model;
+		$this->options = &$model->options;
+		$this->theme = get_option( 'stylesheet' );
 
 		// integration in the WP menu interface
 		add_action('admin_init', array(&$this, 'admin_init')); // after Polylang upgrade
@@ -39,7 +41,7 @@ class PLL_Admin_Nav_Menu {
 		add_filter('wp_get_nav_menu_items', array(&$this, 'translate_switcher_title'));
 
 		// translation of menus based on chosen locations
-		add_filter('pre_update_option_theme_mods_' . get_option( 'stylesheet' ), array($this, 'update_nav_menu_locations'));
+		add_filter('pre_update_option_theme_mods_' . $this->theme, array($this, 'update_nav_menu_locations'));
 		add_filter('theme_mod_nav_menu_locations', array($this, 'nav_menu_locations'), 20);
 
 		// filter _wp_auto_add_pages_to_menu by language
@@ -196,21 +198,14 @@ class PLL_Admin_Nav_Menu {
 			// extract language and menu from locations
 			foreach ($mods['nav_menu_locations'] as $loc => $menu) {
 				if ($pos = strpos($loc, '___')) {
-					$arr[substr($loc, 0, $pos)][substr($loc, $pos+3)] = $menu;
+					$this->options['nav_menus'][$this->theme][substr($loc, 0, $pos)][substr($loc, $pos+3)] = $menu;
 					unset($mods['nav_menu_locations'][$loc]); // remove temporary locations before database update
 				}
 				else
-					$arr[$loc][$default] = $menu;
+					$this->options['nav_menus'][$this->theme][$loc][$default] = $menu;
 			}
 
-			// assign menus language and translations
-			foreach ($arr as $loc => $translations) {
-				foreach ($translations as $lang => $menu) {
-					$this->model->set_term_language($menu, $lang);
-					if (count($translations) > 1) // test to avoid loosing translations at theme deactivation
-						$this->model->save_translations('term', $menu, $translations);
-				}
-			}
+			update_option('polylang', $this->options);
 		}
 		return $mods;
 	}
@@ -227,11 +222,12 @@ class PLL_Admin_Nav_Menu {
 		if (is_array($menus)) {
 			foreach ($menus as $loc => $menu) {
 				foreach ($this->model->get_languages_list() as $lang) {
-					if (pll_default_language() != $lang->slug && $id = $this->model->get_term($menu, $lang))
-						$menus[$loc . '___' . $lang->slug] = $id;
+					if (pll_default_language() != $lang->slug && !empty($this->options['nav_menus'][$this->theme][$loc][$lang->slug]))
+						$menus[$loc . '___' . $lang->slug] = $this->options['nav_menus'][$this->theme][$loc][$lang->slug];
 				}
 			}
 		}
+
 		return $menus;
 	}
 

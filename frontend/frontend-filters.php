@@ -119,8 +119,9 @@ class PLL_Frontend_Filters {
 	public function option_sticky_posts($posts) {
 		if ($this->curlang && !empty($posts)) {
 			update_object_term_cache($posts, 'post'); // to avoid queries in foreach
-			foreach ($posts as $key=>$post_id) {
-				if ($this->model->get_post_language($post_id)->term_id != $this->curlang->term_id)
+			foreach ($posts as $key => $post_id) {
+				$lang = $this->model->get_post_language($post_id);
+				if (empty($lang) || $lang->term_id != $this->curlang->term_id)
 					unset($posts[$key]);
 			}
 		}

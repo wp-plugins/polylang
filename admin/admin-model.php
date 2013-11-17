@@ -124,11 +124,13 @@ class PLL_Admin_Model extends PLL_Model {
 		}
 
 		// delete menus locations
-		$locations = get_theme_mod('nav_menu_locations');
-		foreach ($locations as $loc => $menu)
-			if (false !== strpos($loc, '#' . $lang->slug))
-				unset($locations[$loc]);
-		set_theme_mod('nav_menu_locations', $locations);
+		if (!empty($this->options['nav_menus'])) {
+			foreach ($this->options['nav_menus'] as $theme => $locations) {
+				foreach ($locations as $location => $languages) {
+					unset($this->options['nav_menus'][$theme][$location][$lang->slug]);
+				}
+			}
+		}
 
 		// delete users options
 		foreach (get_users(array('fields' => 'ID')) as $user_id) {
@@ -194,7 +196,7 @@ class PLL_Admin_Model extends PLL_Model {
 		$slug = $args['slug'];
 		$old_slug = $lang->slug;
 
-		// FIXME should do this in an action 'edit_term' to prevent translations to break when sharing a term with nav_menu
+		// FIXME should do this in an action 'edit_term' to prevent translations to break when sharing a term with nav_menu?
 		if ($old_slug != $slug) {
 			// update the language slug in translations
 			$this->update_translations($old_slug, $slug);
@@ -208,12 +210,17 @@ class PLL_Admin_Model extends PLL_Model {
 			}
 
 			// update menus locations
-			$locations = get_theme_mod('nav_menu_locations');
-			foreach ($locations as $loc => $menu) {
-				$loc = str_replace('#' . $old_slug, '#' . $slug, $loc);
-				$new_locations[$loc] = $menu;
+			if (!empty($this->options['nav_menus'])) {
+				foreach ($this->options['nav_menus'] as $theme => $locations) {
+					foreach ($locations as $location => $languages) {
+						if (!empty($this->options['nav_menus'][$theme][$location][$old_slug])) {
+							$this->options['nav_menus'][$theme][$location][$slug] = $this->options['nav_menus'][$theme][$location][$old_slug];
+							unset($this->options['nav_menus'][$theme][$location][$old_slug]);
+						}
+
+					}
+				}
 			}
-			set_theme_mod('nav_menu_locations', $new_locations);
 
 			// update domains
 			if (!empty($this->options['domains'][$old_slug])) {

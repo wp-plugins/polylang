@@ -12,7 +12,10 @@ class PLL_Frontend_Nav_Menu {
 	 *
 	 * @since 1.2
 	 */
-	public function __construct() {
+	public function __construct($options, $curlang) {
+		$this->options = &$options;
+		$this->curlang = &$curlang;
+
 		// split the language switcher menu item in several language menu items
 		add_filter('wp_get_nav_menu_items', array(&$this, 'wp_get_nav_menu_items'));
 		add_filter('wp_nav_menu_objects', array(&$this, 'wp_nav_menu_objects'));
@@ -136,9 +139,12 @@ class PLL_Frontend_Nav_Menu {
 	 */
 	public function nav_menu_locations($menus) {
 		if (is_array($menus))
-			foreach ($menus as $loc => $menu)
-				if ($id = pll_get_term($menu))
-					$menus[$loc] = $id;
+			$theme = get_option('stylesheet');
+
+			foreach ($menus as $loc => $menu) {
+				if (!empty($this->options['nav_menus'][$theme][$loc][$this->curlang->slug]))
+					$menus[$loc] = $this->options['nav_menus'][$theme][$loc][$this->curlang->slug];
+			}
 
 		return $menus;
 	}
@@ -150,19 +156,17 @@ class PLL_Frontend_Nav_Menu {
 	 */
 	public function customizer_locations() {
 		$customized = json_decode($_POST['customized']);
-		$curlang = pll_current_language();
 
-		if (is_array($customized)) {
+		if (is_object($customized)) {
 			foreach ($customized as $key => $c) {
 				if (false !== strpos($key, 'nav_menu_locations[')) {
 					$loc = substr(trim($key, ']'), 19);
-					if (($pos = strpos($loc, '___')) && substr($loc, $pos+3) == $curlang) {
+					if (($pos = strpos($loc, '___')) && substr($loc, $pos+3) == $this->curlang->slug) {
 						$loc = 'nav_menu_locations[' . substr($loc, 0, $pos) . ']';
 						$customized->$loc = $c;
 					}
 				}
 			}
-
 			$_POST['customized'] = json_encode($customized);
 		}
 	}

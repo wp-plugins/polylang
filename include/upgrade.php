@@ -49,6 +49,7 @@ class PLL_Upgrade {
 	/*
 	 * check if we the previous version is not too old
 	 * upgrades if OK
+	 * /!\ never start any upgrade before admin_init as it is likely to conflict with some other plugins
 	 *
 	 * @since 1.2
 	 *
@@ -59,7 +60,7 @@ class PLL_Upgrade {
 		if (version_compare($this->options['version'], '0.8', '<'))
 			return false;
 
-		$this->_upgrade();
+		add_action('admin_init', array(&$this, '_upgrade'));
 		return true;
 	}
 
@@ -86,8 +87,8 @@ class PLL_Upgrade {
 	 *
 	 * @since 1.2
 	 */
-	protected function _upgrade() {
-		foreach (array('0.9', '1.0', '1.1', '1.2', '1.2.1') as $version)
+	public function _upgrade() {
+		foreach (array('0.9', '1.0', '1.1', '1.2', '1.2.1', '1.2.3') as $version)
 			if (version_compare($this->options['version'], $version, '<'))
 				call_user_func(array(&$this, 'upgrade_' . str_replace('.', '_', $version)));
 
@@ -116,19 +117,6 @@ class PLL_Upgrade {
 		// split the synchronization options in 1.0
 		$this->options['sync'] = empty($this->options['sync']) ? array() : array_keys(PLL_Settings::list_metas_to_sync());
 
-		add_action('wp_loaded', array(&$this, 'wp_loaded_upgrade_1_0')); // once post types and taxonomies are set
-
-		if (did_action('wp_loaded'))
-			$this->wp_loaded_upgrade_1_0();
-	}
-
-	/*
-	 * upgrades if the previous version is < 1.0
-	 * actions that need to be taken after all post types and taxonomies are known
-	 *
-	 * @since 1.2
-	 */
-	public function wp_loaded_upgrade_1_0() {
 		// set default values for post types and taxonomies to translate
 		$this->options['post_types'] = array_values(get_post_types(array('_builtin' => false, 'show_ui => true')));
 		$this->options['taxonomies'] = array_values(get_taxonomies(array('_builtin' => false, 'show_ui => true')));
@@ -155,40 +143,6 @@ class PLL_Upgrade {
 		if ($widgets = get_option('polylang_widgets')) {
 			$this->options['widgets'] = $widgets;
 			delete_option('polylang_widgets');
-		}
-
-		// update nav menus
-		if ($menu_lang = get_option('polylang_nav_menus')) {
-
-			foreach ($menu_lang as $location => $arr) {
-				if (!in_array($location, array_keys(get_registered_nav_menus())))
-					continue;
-
-				$switch_options = array_slice($arr, -5, 5);
-				$translations = array_diff_key($arr, $switch_options);
-				$has_switcher = array_shift($switch_options);
-
-				$languages = get_terms('language', array('hide_empty' => 0)); // don't use get_languages_list which can't work with the old model
-				foreach ($languages as $lang) {
-					$menu_locations[$location.(pll_default_language() == $lang->slug ? '' : '#' . $lang->slug)] = empty($translations[$lang->slug]) ? 0 : $translations[$lang->slug];
-
-					// create the menu items
-					if (!empty($has_switcher)) {
-						$menu_item_db_id = wp_update_nav_menu_item($translations[$lang->slug], 0, array(
-							'menu-item-title' => __('Language switcher', 'polylang'),
-							'menu-item-url' => '#pll_switcher',
-							'menu-item-status' => 'publish'
-						));
-
-						update_post_meta($menu_item_db_id, '_pll_menu_item', $switch_options);
-					}
-				}
-			}
-
-			if (!empty($menu_locations))
-				set_theme_mod('nav_menu_locations', $menu_locations);
-
-			delete_option('polylang_nav_menus');
 		}
 	}
 
@@ -293,34 +247,8 @@ class PLL_Upgrade {
 				$wpdb->query("INSERT INTO $wpdb->term_relationships (object_id, term_taxonomy_id) VALUES " . implode(',', $trs));
 		}
 
-		// it was a bad idea to pollute WP option with our custom nav menu locations
-		$menus = get_theme_mod('nav_menu_locations');
-		if (is_array($menus)) {
-			$default = $this->options['default_lang'];
-			$arr = array();
-
-			foreach ($menus as $loc => $menu) {
-				if ($pos = strpos($loc, '#')) {
-					$arr[substr($loc, 0, $pos)][substr($loc, $pos+1)] = $menu;
-					unset($menus[$loc]);
-				}
-				else
-					$arr[$loc][$default] = $menu;
-			}
-
-			$model = new PLL_Admin_Model($this->options);
-			$model->clean_languages_cache();
-
-			// assign menus language and translations
-			foreach ($arr as $loc => $translations) {
-				foreach ($translations as $lang=>$menu) {
-					$model->set_term_language($menu, $lang);
-					$model->save_translations('term', $menu, $translations);
-				}
-			}
-
-			set_theme_mod('nav_menu_locations', $menus);
-		}
+		// upgrade of string translations is now in upgrade_1_2_1
+		// upgrade of nav menus is now in upgrade_1_2_3
 	}
 
 	/*
@@ -329,21 +257,6 @@ class PLL_Upgrade {
 	 * @since 1.2.1
 	 */
 	protected function upgrade_1_2_1() {
-		$action = is_admin() ? 'admin_init' : 'wp_loaded'; // admin_init for wp-ecommerce
-
-		add_action($action, array(&$this, 'wp_loaded_upgrade_1_2_1')); // once wp-rewrite is available
-
-		if (did_action($action))
-			$this->wp_loaded_upgrade_1_2_1();
-	}
-
-	/*
-	 * upgrades if the previous version is < 1.2.1
-	 * actions that need to be taken after $wp_rewrite is available
-	 *
-	 * @since 1.2.1
-	 */
-	public function wp_loaded_upgrade_1_2_1() {
 		// strings translations
 		foreach(get_terms('language', array('hide_empty' => 0)) as $lang) {
 			if ($strings = get_option('polylang_mo'.$lang->term_id)) {
@@ -351,6 +264,79 @@ class PLL_Upgrade {
 				foreach ($strings as $msg)
 					$mo->add_entry($mo->make_entry($msg[0], $msg[1]));
 				$mo->export_to_db($lang);
+			}
+		}
+	}
+
+	/*
+	 * upgrades if the previous version is < 1.2.3
+	 * uprades multilingual menus depending on the old version due to multiple changes in menus management
+	 *
+	 * @since 1.2.3
+	 */
+	public function upgrade_1_2_3() {
+		// old version < 1.1
+		// multilingal locations and switcher item were stored in a dedicated option
+		if (version_compare($this->options['version'], '1.1', '<')) {
+			if ($menu_lang = get_option('polylang_nav_menus')) {
+				foreach ($menu_lang as $location => $arr) {
+					if (!in_array($location, array_keys(get_registered_nav_menus())))
+						continue;
+
+					$switch_options = array_slice($arr, -5, 5);
+					$translations = array_diff_key($arr, $switch_options);
+					$has_switcher = array_shift($switch_options);
+
+					foreach (get_terms('language', array('hide_empty' => 0)) as $lang) {
+						// move nav menus locations
+						if (!empty($translations[$lang->slug]))
+							$locations[$location][$lang->slug] = $translations[$lang->slug];
+
+						// create the menu items for the language switcher
+						if (!empty($has_switcher)) {
+							$menu_item_db_id = wp_update_nav_menu_item($translations[$lang->slug], 0, array(
+								'menu-item-title' => __('Language switcher', 'polylang'),
+								'menu-item-url' => '#pll_switcher',
+								'menu-item-status' => 'publish'
+							));
+
+							update_post_meta($menu_item_db_id, '_pll_menu_item', $switch_options);
+						}
+					}
+				}
+
+				if (!empty($locations))
+					$this->options['nav_menus'][get_option('stylesheet')] = $locations;
+
+				delete_option('polylang_nav_menus');
+			}
+
+		}
+
+		elseif (empty($this->options['nav_menus'])) {
+			$menus = get_theme_mod('nav_menu_locations');
+
+			if (is_array($menus)) {
+				// if old version < 1.2
+				// clean the WP option as it was a bad idea to pollute it
+				if (version_compare($this->options['version'], '1.2', '<')) {
+					foreach ($menus as $loc => $menu) {
+						if ($pos = strpos($loc, '#'))
+							unset($menus[$loc]);
+					}
+
+					set_theme_mod('nav_menu_locations', $menus);
+				}
+
+				// get the multilingual locations
+				foreach ($menus as $loc => $menu) {
+					foreach (get_terms('language', array('hide_empty' => 0)) as $lang) {
+						$arr[$loc][$lang->slug] = pll_get_term($menu, $lang);
+					}
+				}
+
+				if (!empty($arr))
+					$this->options['nav_menus'][get_option('stylesheet')] = $arr;
 			}
 		}
 	}
