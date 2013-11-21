@@ -279,9 +279,12 @@ class PLL_Model {
 	 * @return bool|int post id or term id of the translation, flase if there is none
 	 */
 	public function get_translation($type, $id, $lang) {
+		if (!$lang = $this->get_language($lang))
+			return false;
+
 		$translations = $this->get_translations($type, $id);
-		$slug = $this->get_language($lang)->slug;
-		return isset($translations[$slug]) ? (int) $translations[$slug] : false;
+
+		return isset($translations[$lang->slug]) ? (int) $translations[$lang->slug] : false;
 	}
 
 	/*

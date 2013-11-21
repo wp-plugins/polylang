@@ -138,14 +138,14 @@ class PLL_Frontend_Nav_Menu {
 	 * @return array|bool modified list of nav menus locations
 	 */
 	public function nav_menu_locations($menus) {
-		if (is_array($menus))
+		if (is_array($menus)) {
 			$theme = get_option('stylesheet');
 
 			foreach ($menus as $loc => $menu) {
 				if (!empty($this->options['nav_menus'][$theme][$loc][$this->curlang->slug]))
 					$menus[$loc] = $this->options['nav_menus'][$theme][$loc][$this->curlang->slug];
 			}
-
+		}
 		return $menus;
 	}
 

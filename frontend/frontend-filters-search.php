@@ -47,7 +47,7 @@ class PLL_Frontend_Filters_Search {
 				// take care to modify only the url in the <form> tag
 				preg_match('#<form.+>#', $form, $matches);
 				$old = reset($matches);
-				$new = str_replace(trailingslashit($this->links->home), $this->links->get_home_url('', true), $old);
+				$new = preg_replace('#' . $this->links->home . '\/?#', $this->links->get_home_url('', true), $old);
 				$form = str_replace($old, $new, $form);
 			}
 			else
@@ -75,14 +75,10 @@ class PLL_Frontend_Filters_Search {
 	 * @param object $wp_admin_bar
 	 */
 	public function admin_bar_search_menu($wp_admin_bar) {
-		$form = sprintf('
-			<form action="%s" method="get" id="adminbarsearch">
-				<input class="adminbar-input" name="s" id="adminbar-search" tabindex="10" type="text" value="" maxlength="150" />
-				<input type="submit" class="adminbar-button" value="%s"/>
-			</form>',
-			esc_url(get_option('home')),
-			__('Search')
-		);
+		$form  = '<form action="' . esc_url( home_url( '/' ) ) . '" method="get" id="adminbarsearch">';
+		$form .= '<input class="adminbar-input" name="s" id="adminbar-search" type="text" value="" maxlength="150" />';
+		$form .= '<input type="submit" class="adminbar-button" value="' . __('Search') . '"/>';
+		$form .= '</form>';
 
 		$wp_admin_bar->add_menu(array(
 			'parent' => 'top-secondary',

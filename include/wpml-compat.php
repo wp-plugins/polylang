@@ -7,17 +7,18 @@
  * defines two WPML constants once the language has been defined
  * the compatibility with WPML is not perfect on admin side as the constants are defined
  * in 'setup_theme' by Polylang (based on user info) and 'plugins_loaded' by WPML (based on cookie)
+ * moreover I believe that WPML can set ICL_LANGUAGE_CODE to 'all' which I dont want to do with Polylang
  *
  * @since 0.9.5
  */
 function pll_define_wpml_constants() {
 	$code = PLL_ADMIN ? get_user_meta(get_current_user_id(), 'pll_filter_content', true) : pll_current_language();
 
-	if(!defined('ICL_LANGUAGE_CODE'))
-		define('ICL_LANGUAGE_CODE', PLL_ADMIN && empty($code) ? 'all' : $code);
+	if(!defined('ICL_LANGUAGE_CODE') && !empty($code))
+		define('ICL_LANGUAGE_CODE', $code);
 
-	if(!defined('ICL_LANGUAGE_NAME'))
-		define('ICL_LANGUAGE_NAME', empty($code) ? '' : $GLOBALS['polylang']->model->get_language($code)->name);
+	if(!defined('ICL_LANGUAGE_NAME') && !empty($code))
+		define('ICL_LANGUAGE_NAME', $GLOBALS['polylang']->model->get_language($code)->name);
 }
 
 add_action('pll_language_defined', 'pll_define_wpml_constants');

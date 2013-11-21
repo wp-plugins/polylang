@@ -68,6 +68,11 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 
 == Changelog ==
 
+= 1.2.4 =
+
+* Bug correction: admin bar search does not filter by language
+* Bug correction: various warnings
+
 = 1.2.3 (2013-11-17) =
 
 * Avoid fatal error when ugrading with Nextgen Gallery active
