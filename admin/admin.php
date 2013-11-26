@@ -145,9 +145,13 @@ class PLL_Admin extends PLL_Base {
 		$this->pref_lang = apply_filters('pll_admin_preferred_language', $this->pref_lang);
 
 		// inform that the admin language has been set
-		$curlang = $this->model->get_language(get_locale());
-		$GLOBALS['text_direction'] = $curlang->is_rtl ? 'rtl' : 'ltr'; // force text direction according to language setting
-		do_action('pll_language_defined', $curlang->slug, $curlang);
+		// only if the admin language is one of the Polylang defined language
+		if ($curlang = $this->model->get_language(get_locale())) {
+			$GLOBALS['text_direction'] = $curlang->is_rtl ? 'rtl' : 'ltr'; // force text direction according to language setting
+			do_action('pll_language_defined', $curlang->slug, $curlang);
+		}
+		else
+			do_action('pll_no_language_defined'); // to load overriden textdomains
 	}
 
 	/*

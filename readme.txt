@@ -15,7 +15,7 @@ Polylang 1.2 introduces major internal changes. More than ever, make a database 
 
 = Features  =
 
-Polylang allows you to create a bilingual or multilingual WordPress site. You write posts, pages and create categories and post tags as usual, and then define the language for each of them. The translation of a post, whether it is in the default language or not, is optional. The translation has to be done by the site editor as Polylang not integrate any automatic or professional translation service.
+Polylang allows you to create a bilingual or multilingual WordPress site. You write posts, pages and create categories and post tags as usual, and then define the language for each of them. The translation of a post, whether it is in the default language or not, is optional. The translation has to be done by the site editor as Polylang does not integrate any automatic or professional translation service.
 
 * You can use as many languages as you want. RTL language scripts are supported. WordPress languages files are automatically downloaded and updated.
 * You can translate posts, pages, media, categories, post tags, menus, widgets... Custom post types, custom taxonomies, sticky posts and post formats, RSS feeds and all default WordPress widgets are supported.
@@ -70,7 +70,9 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 
 = 1.2.4 =
 
+* Better support for theme customizer
 * Bug correction: admin bar search does not filter by language
+* Bug correction: possible conflict on secondary query when querying taxonomies or single page
 * Bug correction: various warnings
 
 = 1.2.3 (2013-11-17) =

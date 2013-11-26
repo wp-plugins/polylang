@@ -22,10 +22,7 @@ class PLL_Frontend_Nav_Menu {
 		add_filter('nav_menu_link_attributes', array(&$this, 'nav_menu_link_attributes'), 10, 3);
 
 		// filters menus by language
-		if (isset($_POST['wp_customize'], $_POST['customized']))
-			add_action('pll_language_defined', array(&$this, 'customizer_locations')); // theme customizer
-		else
-			add_filter('theme_mod_nav_menu_locations', array($this, 'nav_menu_locations'), 20);
+		add_filter('theme_mod_nav_menu_locations', array($this, 'nav_menu_locations'), 20);
 	}
 
 	/*
@@ -139,35 +136,34 @@ class PLL_Frontend_Nav_Menu {
 	 */
 	public function nav_menu_locations($menus) {
 		if (is_array($menus)) {
-			$theme = get_option('stylesheet');
+			// support for theme customizer
+			// let's look for multilingual menu locations directly in $_POST as tehre are not in customizer object
+			if (isset($_POST['wp_customize'], $_POST['customized'])) {
+				$customized = json_decode(wp_unslash($_POST['customized']));
 
-			foreach ($menus as $loc => $menu) {
-				if (!empty($this->options['nav_menus'][$theme][$loc][$this->curlang->slug]))
-					$menus[$loc] = $this->options['nav_menus'][$theme][$loc][$this->curlang->slug];
-			}
-		}
-		return $menus;
-	}
-
-	/*
-	 * hack $_POST to allow the customizer to find the right menu in the right language
-	 *
-	 * @since 1.2
-	 */
-	public function customizer_locations() {
-		$customized = json_decode($_POST['customized']);
-
-		if (is_object($customized)) {
-			foreach ($customized as $key => $c) {
-				if (false !== strpos($key, 'nav_menu_locations[')) {
-					$loc = substr(trim($key, ']'), 19);
-					if (($pos = strpos($loc, '___')) && substr($loc, $pos+3) == $this->curlang->slug) {
-						$loc = 'nav_menu_locations[' . substr($loc, 0, $pos) . ']';
-						$customized->$loc = $c;
+				if (is_object($customized)) {
+					foreach ($customized as $key => $c) {
+						if (false !== strpos($key, 'nav_menu_locations[')) {
+							$loc = substr(trim($key, ']'), 19);
+							if (($pos = strpos($loc, '___')) && substr($loc, $pos+3) == $this->curlang->slug) {
+								$loc = substr($loc, 0, $pos);
+								$menus[$loc] = $c;
+							}
+						}
 					}
 				}
 			}
-			$_POST['customized'] = json_encode($customized);
+
+			// otherwise get multilingual menu locations from DB
+			else {
+				$theme = get_option('stylesheet');
+
+				foreach ($menus as $loc => $menu) {
+					if (!empty($this->options['nav_menus'][$theme][$loc][$this->curlang->slug]))
+						$menus[$loc] = $this->options['nav_menus'][$theme][$loc][$this->curlang->slug];
+				}
+			}
 		}
+		return $menus;
 	}
 }

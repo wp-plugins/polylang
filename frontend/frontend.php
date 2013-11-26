@@ -74,10 +74,18 @@ class PLL_Frontend extends PLL_Base{
 	public function parse_query($query) {
 		$qv = $query->query_vars;
 
+		// to avoid conflict beetwen taxonomies
+		$has_tax = false;
+		if (isset($query->tax_query->queries))
+			foreach ($query->tax_query->queries as $tax)
+				if (pll_is_translated_taxonomy($tax['taxonomy']))
+					$has_tax = true;
+
 		// allow filtering recent posts and secondary queries by the current language
 		// take care not to break queries for non visible post types such as nav_menu_items
 		// do not filter if lang is set to an empty value
-		if (/*$query->is_home &&*/ !empty($this->curlang) && !isset($qv['lang']) && (empty($qv['post_type']) || $this->model->is_translated_post_type($qv['post_type'])))
+		// do not filter single page and translated taxonomies
+		if (/*$query->is_home &&*/ !empty($this->curlang) && !isset($qv['lang']) && !$has_tax && empty($qv['page_id']) && empty($qv['pagename']) && (empty($qv['post_type']) || $this->model->is_translated_post_type($qv['post_type'])))
 			$query->set('lang', $this->curlang->slug);
 
 		// modifies query vars when the language is queried
@@ -98,12 +106,6 @@ class PLL_Frontend extends PLL_Base{
 				unset($query->queried_object);
 			}
 		}
-
-		// to avoid conflict beetwen taxonomies
-		if (isset($query->tax_query->queries))
-			foreach ($query->tax_query->queries as $tax)
-				if (pll_is_translated_taxonomy($tax['taxonomy']))
-					unset($query->query_vars['lang']);
 	}
 
 	/*

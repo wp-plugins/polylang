@@ -52,8 +52,8 @@ class PLL_Switcher {
 			$classes = array('lang-item', 'lang-item-' . esc_attr($id), 'lang-item-' . esc_attr($slug));
 
 			if ($current_lang = pll_current_language() == $slug) {
-				if ($hide_current)
-					continue; // hide current language
+				if ($hide_current && !$dropdown)
+					continue; // hide current language except for dropdown
 				else
 					$classes[] = 'current-lang';
 			}

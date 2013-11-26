@@ -55,7 +55,7 @@ class PLL_Admin_Filters {
 	 */
 	public function in_widget_form($widget) {
 		$dropdown = new PLL_Walker_Dropdown();
-		printf('<p><label for="%1$s">%2$s%3$s</label></p>',
+		printf('<p><label for="%1$s">%2$s %3$s</label></p>',
 			esc_attr( $widget->id.'_lang_choice'),
 			__('The widget is displayed for:', 'polylang'),
 			$dropdown->walk(

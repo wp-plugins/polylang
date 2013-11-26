@@ -65,6 +65,15 @@ class PLL_Frontend_Filters {
 		add_action('save_post', array(&$this, 'save_post'), 200, 2);
 		add_action('create_term', array(&$this, 'save_term'), 10, 3);
 		add_action('edit_term', array(&$this, 'save_term'), 10, 3);
+
+		// support theme customizer
+		// FIXME of course does not work if 'transport' is set to 'postMessage'
+		if (isset($_POST['wp_customize'], $_POST['customized'])) {
+			add_filter('pre_option_page_on_front', 'pll_get_post', 20);
+			add_filter('pre_option_page_for_post', 'pll_get_post', 20);
+			add_filter('pre_option_blogname', 'pll__', 20);
+			add_filter('pre_option_blogdescription', 'pll__', 20);
+		}
 	}
 
 	/*
