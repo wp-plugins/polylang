@@ -117,7 +117,7 @@ class PLL_Admin_Filters_Columns {
 			printf('<a class="%1$s" title="%2$s" href="%3$s"></a>',
 				$id == $post_id ? 'pll_icon_tick' : 'pll_icon_edit',
 				esc_attr(get_post($id)->post_title),
-				esc_url(get_edit_post_link($id, true ))
+				esc_url(get_edit_post_link($id))
 			);
 
 		// link to add a new translation
@@ -194,8 +194,8 @@ class PLL_Admin_Filters_Columns {
 		if (false === strpos($column, 'language_') || !($lang = $inline ? $this->model->get_language($_POST['inline_lang_choice']) : $this->model->get_term_language($term_id)))
 			return;
 
-		$post_type = isset($GLOBALS['post_type']) ? $GLOBALS['post_type'] : $_POST['post_type']; // 2nd case for quick edit
-		$taxonomy = isset($GLOBALS['taxonomy']) ? $GLOBALS['taxonomy'] : $_POST['taxonomy'];
+		$post_type = isset($GLOBALS['post_type']) ? $GLOBALS['post_type'] : $_REQUEST['post_type']; // 2nd case for quick edit
+		$taxonomy = isset($GLOBALS['taxonomy']) ? $GLOBALS['taxonomy'] : $_REQUEST['taxonomy'];
 		$language = $this->model->get_language(substr($column, 9));
 
 		if ($column == $this->get_first_language_column())
@@ -210,10 +210,17 @@ class PLL_Admin_Filters_Columns {
 			);
 
 		// link to add a new translation
-		else
+		else {
+			$args = array(
+				'taxonomy'  => $taxonomy,
+				'post_type' => $post_type,
+				'from_tag'  => $term_id,
+				'new_lang'  => $language->slug
+			);
 			printf('<a class="pll_icon_add" title="%1$s" href="%2$s"></a>',
 				__('Add new translation', 'polylang'),
-				esc_url(admin_url(sprintf('edit-tags.php?taxonomy=%1$s&from_tag=%2$d&new_lang=%3$s', $taxonomy, $term_id, $language->slug)))
+				esc_url(add_query_arg($args, admin_url('edit-tags.php')))
 			);
+		}
 	}
 }

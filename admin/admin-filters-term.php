@@ -59,8 +59,8 @@ class PLL_Admin_Filters_Term {
 	 */
 	public function add_term_form() {
 		$taxonomy = $_GET['taxonomy'];
+		$post_type = isset($GLOBALS['post_type']) ? $GLOBALS['post_type'] : $_REQUEST['post_type'];
 		$lang = isset($_GET['new_lang']) ? $this->model->get_language($_GET['new_lang']) : $this->pref_lang;
-
 		$dropdown = new PLL_Walker_Dropdown();
 
 		printf('
@@ -90,7 +90,7 @@ class PLL_Admin_Filters_Term {
 		$term_id = $tag->term_id;
 		$lang = $this->model->get_term_language($term_id);
 		$taxonomy = $tag->taxonomy;
-
+		$post_type = isset($GLOBALS['post_type']) ? $GLOBALS['post_type'] : $_REQUEST['post_type'];
 		$dropdown = new PLL_Walker_Dropdown();
 
 		printf('

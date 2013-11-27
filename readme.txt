@@ -73,7 +73,8 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 * Better support for theme customizer
 * Bug correction: admin bar search does not filter by language
 * Bug correction: possible conflict on secondary query when querying taxonomies or single page
-* Bug correction: various warnings
+* Bug correction: post type is not included in url when editing or adding a term translation
+* Bug correction: various warnings and PHP notices
 
 = 1.2.3 (2013-11-17) =
 

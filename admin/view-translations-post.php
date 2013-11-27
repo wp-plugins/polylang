@@ -26,15 +26,21 @@
 				esc_attr($value)
 			);
 			if ($lang) {
+				$args = array(
+					'post_type' => $post_type,
+					'from_post' => $post_ID,
+					'new_lang'  => $language->slug
+				);
+
 				$link = $value ?
 					sprintf(
 						'<a href="%1$s">%2$s</a>',
-						esc_url(admin_url('post.php?action=edit&post=' . $value)),
+						esc_url(get_edit_post_link($value)),
 						__('Edit','polylang')
 					) :
 					sprintf(
 						'<a href="%1$s">%2$s</a>',
-						esc_url(admin_url('post-new.php?post_type=' . $post_type . '&from_post=' . $post_ID . '&new_lang=' . $language->slug)),
+						esc_url(add_query_arg($args, admin_url('post-new.php'))),
 						__('Add new','polylang')
 					);?>
 				<td><?php echo $link ?><td><?php

@@ -58,7 +58,7 @@ else { // WP 3.5+ ?>
 					'<td><input type="hidden" name="media_tr_lang[%s]" value="%d" /><a href="%s">%s</a></td>',
  					esc_attr($language->slug),
 					esc_attr($translation_id),
-					esc_url(admin_url(sprintf('post.php?post=%d&action=edit', $translation_id))),
+					esc_url(get_edit_post_link($translation_id)),
 					__('Edit','polylang')
 				);
 			}
