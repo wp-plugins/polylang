@@ -18,15 +18,15 @@ else {
 			echo '<th class="tr-edit-column">'.__('Edit', 'polylang').'</th>';?>
 	</tr></thead>
 	<tbody>
-		<?php foreach ($this->get_languages_list() as $language) {
+		<?php foreach ($this->model->get_languages_list() as $language) {
 			if ($language->term_id == $lang->term_id)
 				continue;
 
 			// look for any existing translation in this language
 			$translation = 0;
-			if (isset($term_id) && $translation_id = $this->get_translation('term', $term_id, $language))
+			if (isset($term_id) && $translation_id = $this->model->get_translation('term', $term_id, $language))
 				$translation = get_term($translation_id, $taxonomy);
-			if (isset($_GET['from_tag']) && $translation_id = $this->get_term($_GET['from_tag'], $language))
+			if (isset($_GET['from_tag']) && $translation_id = $this->model->get_term($_GET['from_tag'], $language))
 				$translation = get_term($translation_id, $taxonomy);?>
 
 			<tr><td class="tr-language-column"><?php echo esc_html($language->name);?></td><?php
@@ -48,17 +48,19 @@ else {
 					echo '<td>'.__('No untranslated term', 'polylang').'</td>';
 
 				// do not display the add new link in add term form ($term_id not set !!!)
-				if (isset($term_id))
+				if (isset($term_id)) {
+					$args = array(
+						'taxonomy'  => $taxonomy,
+						'post_type' => $post_type,
+						'from_tag'  => $term_id,
+						'new_lang'  => $language->slug
+					);
 					printf(
 						'<td class="tr-edit-column"><a href="%1$s">%2$s</a></td>',
-						esc_url(admin_url(sprintf(
-							'edit-tags.php?taxonomy=%1$s&from_tag=%2$d&new_lang=%3$s',
-							$taxonomy,
-							$term_id,
-							$language->slug
-						))),
+						esc_url(add_query_arg($args, admin_url('edit-tags.php'))),
 						__('Add new','polylang')
 					);
+				}
 			}
 
 			// a translation exists
@@ -72,11 +74,7 @@ else {
 				if (isset($term_id))
 					printf(
 						'<td class="tr-edit-column"><a href="%1$s">%2$s</a></td>',
-						esc_url(admin_url(sprintf(
-							'edit-tags.php?action=edit&amp;taxonomy=%1$s&tag_ID=%2$d',
-							$taxonomy,
-							$translation->term_id
-						))),
+						esc_url(get_edit_term_link($translation->term_id, $taxonomy, $post_type)),
 						__('Edit','polylang')
 					);
 			} ?>
