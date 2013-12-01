@@ -75,10 +75,11 @@ class PLL_Frontend extends PLL_Base{
 		$qv = $query->query_vars;
 
 		// to avoid conflict beetwen taxonomies
+		// FIXME generalize post format like taxonomies (untranslated but filtered)
 		$has_tax = false;
 		if (isset($query->tax_query->queries))
 			foreach ($query->tax_query->queries as $tax)
-				if (pll_is_translated_taxonomy($tax['taxonomy']))
+				if ('post_format' != $tax['taxonomy'])
 					$has_tax = true;
 
 		// allow filtering recent posts and secondary queries by the current language

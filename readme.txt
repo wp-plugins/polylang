@@ -68,6 +68,11 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 
 == Changelog ==
 
+= 1.2.5 =
+
+* Bug correction: conflict with unstranslated taxonomies
+* Bug correction: possible malformed translation archive url in language switcher
+
 = 1.2.4 (2013-11-28) =
 
 * Better support for theme customizer

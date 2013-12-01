@@ -79,7 +79,7 @@ class PLL_Choose_Lang_Url extends PLL_Choose_lang {
 		}
 
 		// the language is not correctly set so let's redirect to the correct url for this object
-		if (isset($language) && (empty($this->curlang) || $language->slug != $this->curlang->slug)) {
+		if (!empty($language) && (empty($this->curlang) || $language->slug != $this->curlang->slug)) {
 			$root = $this->options['rewrite'] ? '/' : '/language/';
 			foreach ($this->model->get_languages_list() as $lang)
 				$languages[] = $root . $lang->slug;

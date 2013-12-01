@@ -67,7 +67,7 @@ class PLL_Links_Directory {
 
 		if (!empty($languages)) {
 			global $wp_rewrite;
-			$pattern = '#' . ($this->options['rewrite'] ? '' : 'language\/') . '('.implode('|', $languages).')\/#';
+			$pattern = '#' . ($this->options['rewrite'] ? '' : '\/language') . '\/('.implode('|', $languages).')\/#';
 			$url = preg_replace($pattern, $wp_rewrite->root, $url);
 		}
 		return $url;
