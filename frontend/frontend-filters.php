@@ -37,6 +37,9 @@ class PLL_Frontend_Filters {
 		// filter sticky posts by current language
 		add_filter('option_sticky_posts', array(&$this, 'option_sticky_posts'));
 
+		// adds cache domain when querying terms
+		add_filter('get_terms_args', array(&$this, 'get_terms_args'));
+
 		// filters categories and post tags by language
 		add_filter('terms_clauses', array(&$this, 'terms_clauses'), 10, 3);
 
@@ -138,6 +141,21 @@ class PLL_Frontend_Filters {
 	}
 
 	/*
+	 * adds language dependent cache domain when explicitely querying terms per language
+	 * useful as the 'lang' parameter is not included in cache key by WordPress
+	 *
+	 * @since 1.3
+	 */
+	public function get_terms_args($args) {
+		if (isset($args['lang'])) {
+			$key = '_' . (is_array($lang) ? implode(',', $lang) : $lang);
+			$args['cache_domain'] = empty($args['cache_domain']) ? 'pll' . $key : $args['cache_domain'] . $key;
+		}
+
+		return $args;
+	}
+
+	/*
 	 * filters categories and post tags by language when needed
 	 *
 	 * @since 0.2
@@ -232,7 +250,7 @@ class PLL_Frontend_Filters {
 	 * @return null|string
 	 */
 	public function get_user_metadata($null, $id, $meta_key) {
-		return $meta_key == 'description' ? get_user_meta($id, 'description_'.$this->curlang->slug, true) : $null;
+		return $meta_key == 'description' && $this->curlang->slug != $this->options['default_lang'] ? get_user_meta($id, 'description_'.$this->curlang->slug, true) : $null;
 	}
 
 	/*

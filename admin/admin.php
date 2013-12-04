@@ -92,8 +92,8 @@ class PLL_Admin extends PLL_Base {
 		// 2 => 1 if loaded even if languages have not been defined yet, 0 otherwise
 		$scripts = array(
 			'admin' => array( array('settings_page_mlang'), array('jquery', 'wp-ajax-response', 'postbox'), 1 ),
-			'post'  => array( array('post', 'media', 'async-upload', 'edit'),  array('jquery', 'wp-ajax-response'), 0 ),
-			'term'  => array( array('edit-tags'), array('jquery', 'wp-ajax-response'), 0 ),
+			'post'  => array( array('post', 'media', 'async-upload', 'edit'),  array('jquery', 'wp-ajax-response', 'inline-edit-post'), 0 ),
+			'term'  => array( array('edit-tags'), array('jquery', 'wp-ajax-response', 'inline-edit-tax'), 0 ),
 			'user'  => array( array('profile', 'user-edit'), array('jquery'), 0 ),
 		);
 
@@ -102,6 +102,11 @@ class PLL_Admin extends PLL_Base {
 				wp_enqueue_script('pll_'.$script, POLYLANG_URL .'/js/'.$script.$suffix.'.js', $v[1], POLYLANG_VERSION);
 
 		wp_enqueue_style('polylang_admin', POLYLANG_URL .'/css/admin'.$suffix.'.css', array(), POLYLANG_VERSION);
+
+		// backward compatibility WP < 3.8
+		// don't load this for old versions
+		if (version_compare($GLOBALS['wp_version'], '3.8alpha' , '>='))
+			wp_enqueue_style('polylang_admin_mobi', POLYLANG_URL .'/css/admin-mobi'.$suffix.'.css', array(), POLYLANG_VERSION);
 	}
 
 	/*
@@ -197,7 +202,7 @@ class PLL_Admin extends PLL_Base {
 		$all_item = (object) array(
 			'slug' => 'all',
 			'name' => __('Show all languages', 'polylang'),
-			'flag' => sprintf('<img src="%s" style="margin-bottom: -3px"/>', POLYLANG_URL .'/flags/all.png')
+			'flag' => '<span class="ab-icon"></span>'
 		);
 
 		// $_GET['lang'] is numeric when editing a language, not when selecting a new language in the filter
@@ -208,19 +213,21 @@ class PLL_Admin extends PLL_Base {
 
 		$wp_admin_bar->add_menu(array(
 			'id'     => 'languages',
-			'title'  =>  empty($selected->flag) ? esc_html($selected->name) : $selected->flag .'&nbsp;'. esc_html($selected->name),
+			'title'  => $selected->flag . '<span class="ab-label">'. esc_html($selected->name) . '</span>',
 			'meta'  => array('title' => __('Filters content by language', 'polylang')),
 		));
 
 		foreach (array_merge(array($all_item), $this->model->get_languages_list()) as $lang) {
-			if ($selected == $lang->slug)
+			if ($selected->slug == $lang->slug)
 				continue;
+
+			$img = empty($lang->flag) ? '' : (false !== strpos($lang->flag, 'img') ? $lang->flag . '&nbsp;' : $lang->flag);
 
 			$wp_admin_bar->add_menu(array(
 				'parent' => 'languages',
 				'id'     => $lang->slug,
-				'title'  => empty($lang->flag) ? esc_html($lang->name) : $lang->flag .'&nbsp;'. esc_html($lang->name),
-				'href'   => esc_url(add_query_arg('lang', $lang->slug, $url)),
+				'title'  => $lang->flag . esc_html($lang->name),
+				'href'   => esc_url(add_query_arg('lang', $lang->slug, remove_query_arg('paged',$url))),
 			));
 		}
 	}

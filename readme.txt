@@ -11,8 +11,6 @@ Polylang adds multilingual content management support to WordPress.
 
 == Description ==
 
-Polylang 1.2 introduces major internal changes. More than ever, make a database backup if you ugrade from 1.1.6 or older.
-
 = Features  =
 
 Polylang allows you to create a bilingual or multilingual WordPress site. You write posts, pages and create categories and post tags as usual, and then define the language for each of them. The translation of a post, whether it is in the default language or not, is optional. The translation has to be done by the site editor as Polylang does not integrate any automatic or professional translation service.
@@ -63,74 +61,19 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 == Upgrade Notice ==
 
-= 1.2.4 =
-Polylang 1.2 introduced major internal changes. More than ever, make a database backup before upgrading from 1.1.6 or older! If you are using a version older than 0.8, please ugrade to 0.9.8 before ugrading to 1.2.4
+= 1.3 =
+Polylang 1.2 introduced major internal changes. More than ever, make a database backup before upgrading from 1.1.6 or older! If you are using a version older than 0.8, please ugrade to 0.9.8 before ugrading to 1.3
 
 == Changelog ==
 
-= 1.2.5 =
+= 1.3 =
 
+* Refresh admin UI for better look in WP3.8 and more dynamic comportment
+* Improved performance by optimizing some queries for WP 3.5+
+* The user biography in default language is now stored in default WordPress usermeta
 * Bug correction: conflict with unstranslated taxonomies
 * Bug correction: possible malformed translation archive url in language switcher
-
-= 1.2.4 (2013-11-28) =
-
-* Better support for theme customizer
-* Bug correction: admin bar search does not filter by language
-* Bug correction: possible conflict on secondary query when querying taxonomies or single page
-* Bug correction: post type is not included in url when editing or adding a term translation
-* Bug correction: various warnings and PHP notices
-
-= 1.2.3 (2013-11-17) =
-
-* Avoid fatal error when ugrading with Nextgen Gallery active
-* Bug correction: menus locations of non default language are lost at theme deactivation
-* Bug correction: impossible to set menus locations of non default language in some specific cases
-* Bug correction: bbpress admin is broken
-
-= 1.2.2 (2013-11-14) =
-
-* Updated Polish translation thanks to [Bartosz](http://www.dfactory.eu/)
-* Delay strings translations upgrade from 'wp_loaded' to 'admin_init' to avoid fatal error when wp-ecommerce is active
-* Remove Jetpack infinite scroll compatibility code as it seems useless with new Polylang 1.2 code structure
-* Bug correction: fatal error when doing ajax on frontend
-* Bug correction: ICL_LANGUAGE_CODE incorrectly defined when doing ajax on frontend
-* Bug correction: ['current_lang'] and ['no-translation'] indexes disappeared from pll_the_languages raw output
-* Bug correction: invalid argument supplied for foreach() in /polylang/include/mo.php on line 57
-* Bug correction: cookie may not be correctly set
-* Bug correction: languages columns may not be displayed in custom post types and custom taxonomies tables
-
-= 1.2.1 (2013-11-11) =
-
-* Update badly encoded Latvian translation
-* Suppress one query in PLL_WPML_Config when not in multisite
-* Bug correction: strings translations are not correctly upgraded
-* Bug correction: nav menus locations are not correctly upgraded for non default language
-
-= 1.2 (2013-11-10) =
-
-This version does include important changes in database. More than ever, make a database backup before upgrading
-
-* Add Arabic translation contributed by [Anas Sulaiman](http://ahs.pw/)
-* Major rewrite with new structure
-* Change the language and translations model from meta to taxonomy (no extra termmeta table created anymore)
-* Move the strings translations from option to a custom post type
-* Add support for language code in subdomain and for one different domain per language (experimental)
-* Add support of wordpress importer plugin. Export must have been done with Polylang 1.2+ (experimental)
-* Add support for theme navigation customizer (was de-activated by Polylang since WP 3.4)
-* Request confirmation for deleting a language
-* Better management of default category for each language
-* Now check if date and post type archives are translated before displaying the language switcher
-* Update management of the 'copy' action of the custom fields section in wpml-config.xml
-* Add support for ICL_LANGUAGE_CODE and ICL_LANGUAGE_NAME of the WPML API on admin side
-* Add support of WPSEO custom strings translations when the language is set from content
-* Modify admin language filter for valid html and better visibility
-* Synchronization is now disabled by default (due to too much conflicts / questions on the forum)
-* Include rel="alternate" hreflang="x" selflink per google recommendation
-* Improve inline documentation
-* Bug correction: wrong datatype for second argument in polylang/include/auto-translate.php (introduced in 1.1.6)
-* Bug correction: same id is used for all language items in menu
-* Bug correction: wpml-config.xml file not loaded for sitewide active plugins on network installations
-* Bug correction: page parent dropdown list (in page attributes metabox) not correctly displayed when switching from a language with empty list
+* Bug correction: a wrong language may be displayed in quick edit dropdown
+* Bug correction: it is possible to add multiple translations (in the same language) for a single taxonomy term
 
 See changelog.txt for full changelog

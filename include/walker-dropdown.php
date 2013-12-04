@@ -49,8 +49,9 @@ class PLL_Walker_Dropdown extends Walker {
 	 */
 	function walk($elements, $args = array()) {
 		return sprintf(
-			'<select name="%1$s" id="%1$s"%2$s>' . "\n" . '%3$s' . "\n" . '</select>'."\n",
-			empty($args['name']) ? 'lang_choice' : esc_attr($args['name']),
+			'<select name="%1$s" %2$s%3$s>' . "\n" . '%4$s' . "\n" . '</select>'."\n",
+			($name = empty($args['name']) ? 'lang_choice' : esc_attr($args['name'])),
+			isset($args['id']) && !$args['id'] ? '' : ' id="' . (empty($args['id']) ? $name : esc_attr($args['id'])) . '"',
 			empty($args['class']) ? '' : ' class="' . esc_attr($args['class']) . '"',
 			parent::walk($elements, -1, $args)
 		);

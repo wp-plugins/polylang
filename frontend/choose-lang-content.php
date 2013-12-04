@@ -101,7 +101,7 @@ class PLL_Choose_Lang_Content extends PLL_Choose_lang {
 		// use $query->query['s'] as is_search is not set when search is empty
 		// http://wordpress.org/support/topic/search-for-empty-string-in-default-language
 		if ($this->options['hide_default'] && !isset($qv['lang']) && ($is_archive || isset($query->query['s']) || (count($query->query) == 1 && !empty($qv['feed'])) ))
-			$query->set('lang', $this->options['default_lang']);
+			$this->set_lang_query_var($query, $this->model->get_language($this->options['default_lang']));
 	}
 
 	/*

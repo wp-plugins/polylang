@@ -151,17 +151,19 @@ case 'strings': ?>
 break;
 
 // settings tab
-case 'settings': ?>
+case 'settings': ?><?php
+	$content_with_no_languages = $this->model->get_objects_with_no_lang() && $this->options['default_lang'];
+	$page_on_front = get_option('page_on_front'); ?>
 
-<div class="form-wrap">
 	<form id="options-lang" method="post" action="admin.php?page=mlang&amp;tab=settings&amp;noheader=true" class="validate">
 	<?php wp_nonce_field('options-lang', '_wpnonce_options-lang');?>
 	<input type="hidden" name="pll_action" value="options" />
 
 	<table class="form-table">
-
 		<tr>
-			<th><label for='default_lang'><?php _e('Default language', 'polylang');?></label></th>
+			<th <?php echo $content_with_no_languages ? 'rowspan=2' : ''; ?>>
+				<label for='default_lang'><?php _e('Default language', 'polylang');?></label>
+			</th>
 			<td><?php
 				$dropdown = new PLL_Walker_Dropdown;
 				echo $dropdown->walk($listlanguages, array('name' => 'default_lang', 'selected' => $this->options['default_lang']));?>
@@ -169,9 +171,8 @@ case 'settings': ?>
 		</tr><?php
 
 		// posts or terms without language set
-		if ($this->model->get_objects_with_no_lang() && $this->options['default_lang']) {?>
+		if ($content_with_no_languages) {?>
 			<tr>
-				<th></th>
 				<td>
 					<label style="color: red"><?php
 						printf(
@@ -182,6 +183,7 @@ case 'settings': ?>
 				</td>
 			</tr><?php
 		}?>
+
 
 		<tr>
 			<th><?php _e('Detect browser language', 'polylang');?></th>
@@ -197,42 +199,43 @@ case 'settings': ?>
 		</tr>
 
 		<tr>
-			<th scope="row"><?php _e('URL modifications', 'polylang') ?></th>
-			<td>
+			<th rowspan = <?php echo $page_on_front ? 4 : 3; ?>><?php _e('URL modifications', 'polylang') ?></th>
+			<td><fieldset id='pll-force-lang'>
 				<label><?php
 					printf(
 						'<input name="force_lang" type="radio" value="0" %s /> %s',
 						$this->options['force_lang'] ? '' : 'checked="checked"',
-						__('The language is set from content. Posts, pages, categories and tags urls are not modified.', 'polylang')
+						__('The language is set from content', 'polylang')
 					);?>
 				</label>
+				<p class="description"><?php _e('Posts, pages, categories and tags urls are not modified.', 'polylang');?></p>
 				<label><?php
 					printf(
-						'<input name="force_lang" type="radio" value="1" %s %s/> %s %s',
+						'<input name="force_lang" type="radio" value="1" %s %s/> %s',
 						$using_permalinks ? '' : 'disabled=1',
-						$this->options['force_lang'] == 1 ? 'checked="checked"' : '',
-						__('The language is set from the directory name in pretty permalinks. Example:', 'polylang'),
-						'<code>'.esc_html(home_url('en/my-post/')).'</code>'
+						1 == $this->options['force_lang'] ? 'checked="checked"' : '',
+						__('The language is set from the directory name in pretty permalinks', 'polylang')
 					);?>
 				</label>
+				<p class="description"><?php echo __('Example:', 'polylang') . ' <code>'.esc_html(home_url('en/my-post/')).'</code>';?></p>
 				<label><?php
 					printf(
-						'<input name="force_lang" type="radio" value="2" %s %s/> %s %s',
+						'<input name="force_lang" type="radio" value="2" %s %s/> %s',
 						$using_permalinks ? '' : 'disabled=1',
-						$this->options['force_lang'] == 2 ? 'checked="checked"' : '',
-						__('The language is set from the subdomain name in pretty permalinks. Example:', 'polylang'),
-						'<code>'.esc_html(str_replace(array('://', 'www.'), array('://en.', ''), home_url('my-post/'))).'</code>'
+						2 == $this->options['force_lang'] ? 'checked="checked"' : '',
+						__('The language is set from the subdomain name in pretty permalinks', 'polylang')
 					);?>
 				</label>
+				<p class="description"><?php echo __('Example:', 'polylang') . ' <code>'.esc_html(str_replace(array('://', 'www.'), array('://en.', ''), home_url('my-post/'))).'</code>';?></p>
 				<label><?php
 					printf(
 						'<input name="force_lang" type="radio" value="3" %s %s/> %s',
 						$using_permalinks ? '' : 'disabled=1',
-						$this->options['force_lang'] == 3 ? 'checked="checked"' : '',
-						__('The language is set from different domains:', 'polylang')
+						3 == $this->options['force_lang'] ? 'checked="checked"' : '',
+						__('The language is set from different domains', 'polylang')
 					);?>
 				</label>
-				<table class="pll-domains-table"><?php
+				<table id="pll-domains-table" <?php echo 3 == $this->options['force_lang'] ? '' : 'style="display: none;"'; ?>><?php
 					foreach ($listlanguages as  $lg) {
 						printf(
 							'<tr><td><label for="pll-domain[%1$s]">%2$s</label></td>' .
@@ -244,26 +247,11 @@ case 'settings': ?>
 						);
 					}?>
 				</table>
-				<br />
-				<label><?php
-					printf(
-						'<input name="rewrite" type="radio" value="1" %s %s/> %s %s',
-						$using_permalinks ? '' : 'disabled',
-						$this->options['rewrite'] ? 'checked="checked"' : '',
-						__('Remove /language/ in pretty permalinks. Example:', 'polylang'),
-						'<code>'.esc_html(home_url('en/')).'</code>'
-					);?>
-				</label>
-				<label><?php
-					printf(
-						'<input name="rewrite" type="radio" value="0" %s %s/> %s %s',
-						$using_permalinks ? '' : 'disabled',
-						$this->options['rewrite'] ? '' : 'checked="checked"',
-						 __('Keep /language/ in pretty permalinks. Example:', 'polylang'),
-						'<code>'.esc_html(home_url('language/en/')).'</code>'
-					);?>
-				</label>
-				<br />
+			</fieldset></td>
+		</tr>
+
+		<tr>
+			<td id="pll-hide-default" <?php echo 3 > $this->options['force_lang'] ? '' : 'style="display: none;"'; ?>><fieldset>
 				<label><?php
 					printf(
 						'<input name="hide_default" type="checkbox" value="1" %s /> %s',
@@ -271,20 +259,54 @@ case 'settings': ?>
 						__('Hide URL language information for default language', 'polylang')
 					);?>
 				</label>
-				<br />
-				<label><?php
-					printf(
-						'<input name="redirect_lang" type="checkbox" value="1" %s %s/> %s',
-						get_option('page_on_front') ? '' : 'disabled',
-						$this->options['redirect_lang'] ? 'checked="checked"' :'',
-						sprintf(
-							__('When using static front page, redirect the language page (example: %s) to the front page in the right language', 'polylang'),
-							'<code>'.esc_html(home_url('en/')).'</code>'
-						)
-					);?>
-				</label>
-			</td>
-		</tr>
+			</fieldset></td>
+		</tr><?php
+
+		if ($using_permalinks) { ?>
+			<tr>
+				<td id="pll-rewrite" <?php echo 2 > $this->options['force_lang'] ? '' : 'style="display: none;"'; ?>><fieldset>
+					<label><?php
+						printf(
+							'<input name="rewrite" type="radio" value="1" %s %s/> %s',
+							$using_permalinks ? '' : 'disabled',
+							$this->options['rewrite'] ? 'checked="checked"' : '',
+							__('Remove /language/ in pretty permalinks', 'polylang')
+						);?>
+					</label>
+					<p class="description"><?php echo __('Example:', 'polylang') . ' <code>'.esc_html(home_url('en/')).'</code>';?></p>
+					<label><?php
+						printf(
+							'<input name="rewrite" type="radio" value="0" %s %s/> %s',
+							$using_permalinks ? '' : 'disabled',
+							$this->options['rewrite'] ? '' : 'checked="checked"',
+							 __('Keep /language/ in pretty permalinks', 'polylang')
+						);?>
+					</label>
+					<p class="description"><?php echo __('Example:', 'polylang') . ' <code>'.esc_html(home_url('language/en/')).'</code>';?></p>
+				</fieldset></td>
+			</tr><?php
+		}
+
+		if ($page_on_front) { ?>
+			<tr>
+				<td><fieldset>
+					<label><?php
+						printf(
+							'<input name="redirect_lang" type="checkbox" value="1" %s/> %s',
+							$this->options['redirect_lang'] ? 'checked="checked"' :'',
+							__('The front page url contains the language code instead of the page name or page id', 'polylang')
+						);?>
+					</label>
+					<p class="description"><?php
+						printf(
+							__('Example: %s instead of %s', 'polylang'),
+							'<code>'.esc_html(home_url('/en/')).'</code>',
+							'<code>'.esc_html(_get_page_link($page_on_front)).'</code>'
+						); ?>
+					</p>
+				</fieldset></td>
+			</tr><?php
+		}?>
 
 		<tr>
 			<th scope="row"><?php _e('Media', 'polylang') ?></th>
@@ -314,7 +336,7 @@ case 'settings': ?>
 							);
 						}?>
 					</ul>
-					<p><?php _e('Activate languages and translations for custom post types.', 'polylang');?></p>
+					<p class="description"><?php _e('Activate languages and translations for custom post types.', 'polylang');?></p>
 				</td>
 			</tr><?php
 		}
@@ -334,7 +356,7 @@ case 'settings': ?>
 							);
 						}?>
 					</ul>
-					<p><?php _e('Activate languages and translations for custom taxonomies.', 'polylang');?></p>
+					<p class="description"><?php _e('Activate languages and translations for custom taxonomies.', 'polylang');?></p>
 				</td>
 			</tr><?php
 		}?>
@@ -351,7 +373,7 @@ case 'settings': ?>
 							esc_html($str)
 						);?>
 				</ul>
-				<p><?php _e('The synchronization options allow to maintain exact same values (or translations in the case of taxonomies and page parent) of meta content between the translations of a post or page.', 'polylang');?></p>
+				<p class="description"><?php _e('The synchronization options allow to maintain exact same values (or translations in the case of taxonomies and page parent) of meta content between the translations of a post or page.', 'polylang');?></p>
 			</td>
 		</tr>
 
@@ -359,8 +381,7 @@ case 'settings': ?>
 
 	<?php submit_button(); // since WP 3.1 ?>
 
-	</form>
-</div><!-- form-wrap --><?php
+	</form><?php
 break;
 
 default:

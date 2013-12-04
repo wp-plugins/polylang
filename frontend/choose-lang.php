@@ -152,7 +152,7 @@ abstract class PLL_Choose_Lang {
 			if ($this->page_on_front && $page_id = $this->model->get_post($this->page_on_front, $this->curlang))
 				set_query_var('page_id', $page_id);
 			else
-				set_query_var('lang', $this->curlang->slug);
+				$this->set_lang_query_var($GLOBALS['wp_query'], $this->curlang);
 		}
 		// redirect to the home page in the right language
 		// test to avoid crash if get_home_url returns something wrong
@@ -229,7 +229,7 @@ abstract class PLL_Choose_Lang {
 
 			if (!empty($page_id) && $this->model->get_post($page_id, $this->model->get_post_language($this->page_for_posts)) == $this->page_for_posts) {
 				$this->set_language($this->model->get_post_language($page_id));
-				$query->set('lang', $this->curlang->slug);
+				$this->set_lang_query_var($query, $this->curlang);
 				$query->is_singular = $query->is_page = false;
 				$query->is_home = $query->is_posts_page = true;
 			}
@@ -238,7 +238,29 @@ abstract class PLL_Choose_Lang {
 		// backward compatibility WP < 3.4, sets a language for theme preview
 		if (is_preview() && is_front_page()) {
 			$this->set_language($this->get_preferred_language());
-			$query->set('lang', $this->curlang->slug);
+			$this->set_lang_query_var($query, $this->curlang);
+		}
+	}
+
+	/*
+	 * sets the language in query
+	 * optimized for WP 3.5+
+	 *
+	 * @since 1.3
+	 */
+	public function set_lang_query_var(&$query, $lang) {
+		// backward compatibility WP < 3.5
+		if (version_compare($GLOBALS['wp_version'], '3.5' , '<')) {
+			$query->set('lang', $lang->slug);
+		}
+		else {
+			// defining directly the tax_query (rather than setting 'lang' avoids transforming the query by WP)
+			$query->query_vars['tax_query'][] = array(
+				'taxonomy' => 'language',
+				'field'    => 'term_taxonomy_id', // since WP 3.5
+				'terms'    => $lang->term_taxonomy_id,
+				'operator' => 'IN'
+			);
 		}
 	}
 }

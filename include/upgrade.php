@@ -88,7 +88,7 @@ class PLL_Upgrade {
 	 * @since 1.2
 	 */
 	public function _upgrade() {
-		foreach (array('0.9', '1.0', '1.1', '1.2', '1.2.1', '1.2.3') as $version)
+		foreach (array('0.9', '1.0', '1.1', '1.2', '1.2.1', '1.2.3', '1.3') as $version)
 			if (version_compare($this->options['version'], $version, '<'))
 				call_user_func(array(&$this, 'upgrade_' . str_replace('.', '_', $version)));
 
@@ -343,10 +343,43 @@ class PLL_Upgrade {
 
 	/*
 	 * upgrades if the previous version is < 1.3
-	 * FIXME don't delete old data in 1.2, just in case...
-	 * ready for the next version
+	 * moves the user biographies in default language to the 'description' user meta
+	 * multisite compatible
+	 *
+	 * @since 1.3
 	 */
 	protected function upgrade_1_3() {
+		if (is_multisite()) {
+			foreach ($GLOBALS['wpdb']->get_col("SELECT blog_id FROM $wpdb->blogs") as $blog_id)
+				$this->update_users($blog_id);
+		}
+		else
+			$this->update_users();
+	}
+
+	/*
+	 * moves the user biographies in default language to the 'description' user meta
+	 *
+	 * @since 1.3
+	 */
+	protected function update_users($blog_id = 0) {
+		$usermeta = 'description_' . $this->options['default_lang'];
+		$query = new WP_User_Query(array('blog_id' => $blog_id ? $blog_id : $GLOBALS['blog_id'], 'meta_key' => $usermeta));
+
+		foreach ($query->get_results() as $user) {
+			$desc = get_user_meta($user->ID, $usermeta, true);
+			if (!empty($desc)) {
+				update_user_meta($user->ID, 'description', $desc);
+				delete_user_meta($user->ID, $usermeta);
+			}
+		}
+	}
+
+	/*
+	 * FIXME don't delete old data in 1.2, just in case...
+	 * ready for a next version
+	 */
+	protected function upgrade_1_4() {
 		// suppress data of the old model < 1.2
 		global $wpdb;
 		$wpdb->termmeta = $wpdb->prefix . 'termmeta'; // registers the termmeta table in wpdb

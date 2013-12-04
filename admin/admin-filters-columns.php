@@ -101,7 +101,7 @@ class PLL_Admin_Filters_Columns {
 	 */
 	public function post_column($column, $post_id) {
 		$inline = defined('DOING_AJAX') && $_REQUEST['action'] == 'inline-save' ? 1 : 0;
-		if (false === strpos($column, 'language_') || !($lang = $inline ? $this->model->get_language($_POST['post_lang_choice']) : $this->model->get_post_language($post_id)))
+		if (false === strpos($column, 'language_') || !($lang = $inline ? $this->model->get_language($_POST['inline_lang_choice']) : $this->model->get_post_language($post_id)))
 			return;
 
 		$post_type = isset($GLOBALS['post_type']) ? $GLOBALS['post_type'] : $_POST['post_type']; // 2nd case for quick edit
@@ -113,7 +113,7 @@ class PLL_Admin_Filters_Columns {
 
 
 		// link to edit post (or a translation)
-		if ($id = ($inline && $lang->slug != $_POST['old_lang']) ? ($language->slug == $lang->slug ? $post_id : 0) : $this->model->get_post($post_id, $language))
+		if ($id = $inline ? ($language->slug == $lang->slug ? $post_id : 0) : $this->model->get_post($post_id, $language))
 			printf('<a class="%1$s" title="%2$s" href="%3$s"></a>',
 				$id == $post_id ? 'pll_icon_tick' : 'pll_icon_edit',
 				esc_attr(get_post($id)->post_title),
@@ -142,7 +142,6 @@ class PLL_Admin_Filters_Columns {
 	 */
 	public function quick_edit_custom_box($column, $type) {
 		if ($column == $this->get_first_language_column()) {
-			$name = $type == 'edit-tags' ? 'inline_lang_choice' : 'post_lang_choice';
 
 			$elements = $this->model->get_languages_list();
 			if (current_filter() == 'bulk_edit_custom_box')
@@ -152,16 +151,14 @@ class PLL_Admin_Filters_Columns {
 			printf(
 				'<fieldset class="inline-edit-col-left">
 					<div class="inline-edit-col">
-						<input type="hidden" value="" name = "old_lang">' // a hidden field to pass the old language to ajax request
-						.'<label for="%s" class="alignleft">
+						<label class="alignleft">
 							<span class="title">%s</span>
 							%s
 						</label>
 					</div>
 				</fieldset>',
-				$name,
 				__('Language', 'polylang'),
-				$dropdown->walk($elements, array('name' => $name))
+				$dropdown->walk($elements, array('name' => 'inline_lang_choice', 'id' => ''))
 			);
 		}
 		return $column;
@@ -202,7 +199,7 @@ class PLL_Admin_Filters_Columns {
 			printf('<div class="hidden" id="lang_%d">%s</div>', esc_attr($term_id), esc_html($lang->slug));
 
 		// link to edit term (or a translation)
-		if ($id = ($inline && $lang->slug != $_POST['old_lang']) ? ($language->slug == $lang->slug ? $term_id : 0) : $this->model->get_term($term_id, $language))
+		if ($id = $inline ? ($language->slug == $lang->slug ? $term_id : 0) : $this->model->get_term($term_id, $language))
 			printf('<a class="%1$s" title="%2$s" href="%3$s"></a>',
 				$id == $term_id ? 'pll_icon_tick' : 'pll_icon_edit',
 				esc_attr(get_term($id, $taxonomy)->name),

@@ -45,7 +45,6 @@ class PLL_Admin_Filters {
 
 	}
 
-
 	/*
 	 * modifies the widgets forms to add our language dropdwown list
 	 *
@@ -99,8 +98,12 @@ class PLL_Admin_Filters {
 	 */
 	public function personal_options_update($user_id) {
 		update_user_meta($user_id, 'user_lang', $_POST['user_lang']); // admin language
-		foreach ($this->model->get_languages_list() as $lang)
-			update_user_meta($user_id, 'description_'.$lang->slug, $_POST['description_'.$lang->slug]); // biography translations
+
+		// biography translations
+		foreach ($this->model->get_languages_list() as $lang) {
+			$meta = $lang->slug == $this->options['default_lang'] ? 'description' : 'description_'.$lang->slug;
+			update_user_meta($user_id, $meta, $_POST['description_'.$lang->slug]);
+		}
 	}
 
 	/*
@@ -132,16 +135,18 @@ class PLL_Admin_Filters {
 		);
 
 		// hidden informations to modify the biography form with js
-		foreach ($this->model->get_languages_list() as $lang)
+		foreach ($this->model->get_languages_list() as $lang) {
+			$meta = $lang->slug == $this->options['default_lang'] ? 'description' : 'description_'.$lang->slug;
 			printf('<input type="hidden" class="biography" name="%s-%s" value="%s" />',
 				esc_attr($lang->slug),
 				esc_attr($lang->name),
-				esc_attr(get_user_meta($profileuser->ID, 'description_'.$lang->slug, true))
+				esc_attr(get_user_meta($profileuser->ID, $meta, true))
 			);
+		}
 	}
 
 	/*
-	 * ugrades languages files after a core upgrade
+	 * ugprades languages files after a core upgrade
 	 *
 	 * @since 0.6
 	 *

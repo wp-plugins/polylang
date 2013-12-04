@@ -201,17 +201,20 @@ class PLL_Admin_Filters_Post {
 			return;
 
 		// bulk edit does not modify the language
-		if (isset($_GET['bulk_edit']) && $_REQUEST['post_lang_choice'] == -1)
+		if (isset($_GET['bulk_edit']) && $_REQUEST['inline_lang_choice'] == -1)
 			return;
 
 		if ($id = wp_is_post_revision($post_id))
 			$post_id = $id;
 
 		// save language
-		if (isset($_REQUEST['post_lang_choice'])) {
-			if (($lang = $this->model->get_post_language($post_id)) && $lang->slug != $_REQUEST['post_lang_choice'])
-				$this->model->delete_translation('post', $post_id); // in case the language is modified using inline edit
+		if (isset($_REQUEST['post_lang_choice']))
 			$this->model->set_post_language($post_id, $_REQUEST['post_lang_choice']);
+
+		elseif (isset($_REQUEST['inline_lang_choice'])) {
+			if (($lang = $this->model->get_post_language($post_id)) && $lang->slug != $_REQUEST['inline_lang_choice'])
+				$this->model->delete_translation('post', $post_id);
+			$this->model->set_post_language($post_id, $_REQUEST['inline_lang_choice']);
 		}
 
 		elseif (isset($_GET['new_lang']))
