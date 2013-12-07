@@ -39,7 +39,7 @@ class PLL_Walker_Dropdown extends Walker {
 	}
 
 	/*
-	 * starts teh output of the dropdown list
+	 * starts the output of the dropdown list
 	 *
 	 * @since 1.2
 	 *

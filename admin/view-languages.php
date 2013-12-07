@@ -5,7 +5,7 @@
 <?php screen_icon('options-general'); ?>
 <h2 class="nav-tab-wrapper"><?php
 // display tabs
-foreach ($tabs as $key=>$name)
+foreach ($tabs as $key => $name)
 	printf(
 		'<a href="options-general.php?page=mlang&amp;tab=%s" class="nav-tab %s">%s</a>',
 		$key,
@@ -212,7 +212,7 @@ case 'settings': ?><?php
 				<label><?php
 					printf(
 						'<input name="force_lang" type="radio" value="1" %s %s/> %s',
-						$using_permalinks ? '' : 'disabled=1',
+						$using_permalinks ? '' : 'disabled="disabled"',
 						1 == $this->options['force_lang'] ? 'checked="checked"' : '',
 						__('The language is set from the directory name in pretty permalinks', 'polylang')
 					);?>
@@ -221,7 +221,7 @@ case 'settings': ?><?php
 				<label><?php
 					printf(
 						'<input name="force_lang" type="radio" value="2" %s %s/> %s',
-						$using_permalinks ? '' : 'disabled=1',
+						$using_permalinks ? '' : 'disabled="disabled"',
 						2 == $this->options['force_lang'] ? 'checked="checked"' : '',
 						__('The language is set from the subdomain name in pretty permalinks', 'polylang')
 					);?>
@@ -230,7 +230,7 @@ case 'settings': ?><?php
 				<label><?php
 					printf(
 						'<input name="force_lang" type="radio" value="3" %s %s/> %s',
-						$using_permalinks ? '' : 'disabled=1',
+						$using_permalinks ? '' : 'disabled="disabled"',
 						3 == $this->options['force_lang'] ? 'checked="checked"' : '',
 						__('The language is set from different domains', 'polylang')
 					);?>
@@ -243,7 +243,7 @@ case 'settings': ?><?php
 							esc_attr($lg->slug),
 							esc_attr($lg->name),
 							esc_url($lg->slug == $this->options['default_lang'] ? get_option('home') : (isset($this->options['domains'][$lg->slug]) ? $this->options['domains'][$lg->slug] : '')),
-							!$using_permalinks || $lg->slug == $this->options['default_lang'] ? 'disabled=1' : ''
+							!$using_permalinks || $lg->slug == $this->options['default_lang'] ? 'disabled="disabled"' : ''
 						);
 					}?>
 				</table>
@@ -268,7 +268,7 @@ case 'settings': ?><?php
 					<label><?php
 						printf(
 							'<input name="rewrite" type="radio" value="1" %s %s/> %s',
-							$using_permalinks ? '' : 'disabled',
+							$using_permalinks ? '' : 'disabled="disabled"',
 							$this->options['rewrite'] ? 'checked="checked"' : '',
 							__('Remove /language/ in pretty permalinks', 'polylang')
 						);?>
@@ -277,7 +277,7 @@ case 'settings': ?><?php
 					<label><?php
 						printf(
 							'<input name="rewrite" type="radio" value="0" %s %s/> %s',
-							$using_permalinks ? '' : 'disabled',
+							$using_permalinks ? '' : 'disabled="disabled"',
 							$this->options['rewrite'] ? '' : 'checked="checked"',
 							 __('Keep /language/ in pretty permalinks', 'polylang')
 						);?>

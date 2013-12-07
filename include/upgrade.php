@@ -350,21 +350,29 @@ class PLL_Upgrade {
 	 */
 	protected function upgrade_1_3() {
 		if (is_multisite()) {
-			foreach ($GLOBALS['wpdb']->get_col("SELECT blog_id FROM $wpdb->blogs") as $blog_id)
-				$this->update_users($blog_id);
+			foreach ($GLOBALS['wpdb']->get_col("SELECT blog_id FROM $wpdb->blogs") as $blog_id) {
+				switch_to_blog($blog_id);
+				$this->_upgrade_1_3();
+			}
+			restore_current_blog();
 		}
-		else
-			$this->update_users();
+		else {
+			$this->_upgrade_1_3();
+		}
 	}
 
 	/*
+	 * cleans language cache as new properties have been added in PLL_Language
 	 * moves the user biographies in default language to the 'description' user meta
 	 *
 	 * @since 1.3
 	 */
-	protected function update_users($blog_id = 0) {
+	protected function _upgrade_1_3() {
+		global $polylang;
+		$polylang->model->clean_languages_cache();
+
 		$usermeta = 'description_' . $this->options['default_lang'];
-		$query = new WP_User_Query(array('blog_id' => $blog_id ? $blog_id : $GLOBALS['blog_id'], 'meta_key' => $usermeta));
+		$query = new WP_User_Query(array('blog_id' => $GLOBALS['blog_id'], 'meta_key' => $usermeta));
 
 		foreach ($query->get_results() as $user) {
 			$desc = get_user_meta($user->ID, $usermeta, true);

@@ -71,9 +71,14 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 * Refresh admin UI for better look in WP3.8 and more dynamic comportment
 * Improved performance by optimizing some queries for WP 3.5+
 * The user biography in default language is now stored in default WordPress usermeta
+* Add language parameter in API function pll_home_url and allow to call it on admin
 * Bug correction: conflict with unstranslated taxonomies
 * Bug correction: possible malformed translation archive url in language switcher
 * Bug correction: a wrong language may be displayed in quick edit dropdown
 * Bug correction: it is possible to add multiple translations (in the same language) for a single taxonomy term
+* Bug correction: non public post types and taxonomies are visible in Polylang settings
+* Bug correction: the language is always chosen from cookie (or browser preferences) in some installations
+* Bug correction: Firefox language preference is not recognized when comparison is made on locale (instead of ISO 639-1 language code)
+* Bug correction: incorrect tax_query in PLL_Auto_Translate
 
 See changelog.txt for full changelog

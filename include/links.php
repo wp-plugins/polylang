@@ -73,5 +73,18 @@ class PLL_Links {
 		return $links[$link] = in_array($tax, $this->model->taxonomies) ?
 			$this->links_model->add_language_to_link($link, $this->model->get_term_language($term->term_id)) : $link;
 	}
+
+	/*
+	 * returns the home url in the requested language
+	 *
+	 * @since 1.3
+	 *
+	 * @param object|string $language
+	 * @param bool $is_search optional wether we need the home url for a search form, defaults to false
+	 */
+	public function get_home_url($language, $is_search = false) {
+		$language = is_object($language) ? $language : $this->model->get_language($language);
+		return $is_search ? $language->search_url : $language->home_url;
+	}
 }
 

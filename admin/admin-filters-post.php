@@ -262,6 +262,11 @@ class PLL_Admin_Filters_Post {
 			$translations[$lang] = ($tr_id && $this->model->get_post_language((int) $tr_id)->slug == $lang) ? (int) $tr_id : 0;
 
 		$this->model->save_translations('post', $post_id, $translations);
+
+		// refresh language cache when a static front page has been translated
+		if (($pof = get_option('page_on_front')) && in_array($pof, $translations))
+			$this->model->clean_languages_cache();
+
 		do_action('pll_save_post', $post_id, $post, $translations);
 	}
 

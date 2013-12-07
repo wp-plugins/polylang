@@ -194,6 +194,7 @@ pll_tagBox = {
 			var $select = $edit_row.find(':input[name="inline_lang_choice"]');
 			$select.find('option:selected').removeProp('selected');
 			var lang = $('#lang_' + $post_id).html();
+			$("input[name='old_lang']").val(lang);
 			$select.find('option[value="'+lang+'"]').prop('selected', true);
 		}
 	}

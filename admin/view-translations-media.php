@@ -26,12 +26,13 @@ if (version_compare($GLOBALS['wp_version'], '3.5', '<')) {?>
 			}
 
 			// no translation
-			else
+			else {
 				printf(
 					'<td class="tr-edit-column"><a href="%1$s">%2$s</a></td>',
 					esc_url(admin_url(sprintf('admin.php?action=translate_media&from_media=%d&new_lang=%s', $post_id, $language->slug))),
 					__('Add new','polylang')
-				);?>
+				);
+			}?>
 			</tr><?php
 		} // foreach ?>
 	</tbody>
@@ -64,11 +65,13 @@ else { // WP 3.5+ ?>
 			}
 
 			// no translation
-			else
-				printf('<td><a href="%1$s">%2$s</a></td>',
+			else {
+				printf(
+					'<td><a href="%1$s">%2$s</a></td>',
 					esc_url(admin_url(sprintf('admin.php?action=translate_media&from_media=%d&new_lang=%s', $post_id, $language->slug))),
 					__('Add new','polylang')
-				);?>
+				);
+			}?>
 			</tr><?php
 		} // foreach ?>
 	</tbody>

@@ -26,7 +26,7 @@ abstract class PLL_Choose_Lang {
 		$this->page_on_front = get_option('page_on_front');
 		$this->page_for_posts = get_option('page_for_posts');
 
-		if (PLL_AJAX_ON_FRONT || false === stripos($_SERVER['SCRIPT_NAME'], 'index.php'))
+		if (PLL_AJAX_ON_FRONT || false === stripos($_SERVER['SCRIPT_FILENAME'], 'index.php'))
 			$this->set_language(empty($_REQUEST['lang']) ? $this->get_preferred_language() : $this->model->get_language($_REQUEST['lang']));
 
 		add_action('pre_comment_on_post', array(&$this, 'pre_comment_on_post')); // sets the language of comment
@@ -112,7 +112,7 @@ abstract class PLL_Choose_Lang {
 			$listlanguages = $this->model->get_languages_list(array('hide_empty' => true)); // hides languages with no post
 			foreach (array_keys($accept_langs) as $accept_lang) {
 				foreach ($listlanguages as $language)
-					if (empty($pref_lang) && (0 === stripos($accept_lang, $language->slug) || $accept_lang == str_replace('_', '-', $language->locale)) )
+					if (empty($pref_lang) && (0 === stripos($accept_lang, $language->slug) || 0 == strcasecmp($accept_lang, str_replace('_', '-', $language->locale))) )
 						$pref_lang = $language;
 			}
 		} // options['browser']

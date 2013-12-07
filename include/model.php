@@ -23,16 +23,19 @@ class PLL_Model {
 		// register our taxonomies as soon as possible
 		// this is early registration, not ready for rewrite rules as wp_rewrite will be setup later
 		// FIXME should I supply an 'update_count_callback' for taxonomies other than 'language' (currently not needed by PLL)?
-		foreach (array('language', 'term_language', 'post_translations', 'term_translations') as $tax)
+		foreach (array('language', 'term_language', 'post_translations', 'term_translations') as $tax) {
 			register_taxonomy($tax,
 				false !== strpos($tax, 'term_') ? 'term' : null ,
 				array('label' => false, 'public' => false, 'query_var' => false, 'rewrite' => false, '_pll' => true)
 			);
+		}
 
 		add_filter('get_terms', array(&$this, '_prime_terms_cache'), 10, 2);
 		add_filter('wp_get_object_terms', array(&$this, 'wp_get_object_terms'), 10, 3);
 
+		// we need to clean languages cache when editing a language or when editing page of front
 		add_action('edited_term_taxonomy', array(&$this, 'clean_languages_cache'), 10, 2);
+		add_action('update_option_page_on_front', array(&$this, 'clean_languages_cache'));
 
 		// registers completely the language taxonomy
 		add_action('setup_theme', array(&$this, 'register_taxonomy'), 1);
@@ -112,8 +115,9 @@ class PLL_Model {
 					$term = $t;
 			}
 		}
-		else
+		else {
 			$term = reset($term);
+		}
 
 		return empty($term) ? false : $term;
 	}
@@ -145,10 +149,14 @@ class PLL_Model {
 
 				if (!empty($languages) && !empty($term_languages)) {
 					array_walk($languages, create_function('&$v, $k, $term_languages', '$v = new PLL_Language($v, $term_languages[$v->name]);'), $term_languages);
-					set_transient('pll_languages_list', $languages);
+
+					// need to wait for $wp_rewrite availibility to set homepage urls
+					$this->_languages = $languages;
+					did_action('setup_theme') ? $this->_languages_urls() : add_action('setup_theme', array(&$this, '_languages_urls'));
 				}
-				else
+				else {
 					$languages = array(); // in case something went wrong
+				}
 			}
 
 			// add flags (not in db cache as they may be different on frontend and admin)
@@ -165,6 +173,20 @@ class PLL_Model {
 		$languages = array_filter($this->languages, create_function('$v', sprintf('return $v->count || !%d;', $hide_empty)));
 
 		return empty($fields) ? $languages : wp_list_pluck($languages, $fields);
+	}
+
+	/*
+	 * fills home urls in language list and set transient in db
+	 * delayed to be sure we have access to $wp_rewrite
+	 *
+	 * @since 1.3
+	 */
+	public function _languages_urls() {
+		foreach ($this->_languages as $language)
+			$language->set_home_url();
+
+		set_transient('pll_languages_list', $this->_languages);
+		$this->languages = array_merge($this->languages, $this->_languages); // in case flags are already set
 	}
 
 	/*

@@ -33,9 +33,6 @@ class PLL_Admin_Filters {
 		add_action('edit_user_profile_update', array(&$this, 'personal_options_update'));
 		add_action('personal_options', array(&$this, 'personal_options'));
 
-		// refresh rewrite rules if the 'page_on_front' option is modified
-		add_action('update_option_page_on_front', 'flush_rewrite_rules');
-
 		// ugrades languages files after a core upgrade (timing is important)
 		// FIXME private action ? is there a better way to do this ?
 		add_action( '_core_updated_successfully', array(&$this, 'upgrade_languages'), 1); // since WP 3.3
