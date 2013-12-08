@@ -88,11 +88,10 @@ class PLL_Frontend extends PLL_Base{
 		// do not filter single page and translated taxonomies to avoid conflicts
 		if (!empty($this->curlang) && !isset($qv['lang']) && !$has_tax && empty($qv['page_id']) && empty($qv['pagename']) && (empty($qv['post_type']) || $this->model->is_translated_post_type($qv['post_type']))) {
 			$this->choose_lang->set_lang_query_var($query, $this->curlang);
-			$set_lang = true;
 		}
 
 		// modifies query vars when the language is queried
-		if (!empty($qv['lang']) || !empty($set_lang)) {
+		if (!empty($qv['lang'])) {
 			// remove pages query when the language is set unless we do a search
 			if (empty($qv['post_type']) && !$query->is_search)
 				$query->set('post_type', 'post');

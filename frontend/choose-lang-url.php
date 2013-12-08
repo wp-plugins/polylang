@@ -61,7 +61,7 @@ class PLL_Choose_Lang_Url extends PLL_Choose_lang {
 	}
 
 	/*
-	 * if the language code is not in agreement with the language od the content
+	 * if the language code is not in agreement with the language of the content
 	 * redirects incoming links to the proper URL
 	 *
 	 * @since 0.9.6

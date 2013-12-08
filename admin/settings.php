@@ -265,6 +265,7 @@ class PLL_Settings {
 					if (!empty($nolang['terms']))
 						$this->model->set_language_in_mass('term', $nolang['terms'], $this->options['default_lang']);
 				}
+
 				wp_redirect('admin.php?page=mlang&tab=settings&updated=true'); // updated=true interpreted by WP
 				exit;
 				break;

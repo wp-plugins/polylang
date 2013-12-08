@@ -209,12 +209,12 @@ class PLL_Admin_Filters_Post {
 
 		// save language
 		if (isset($_REQUEST['post_lang_choice']))
-			$this->model->set_post_language($post_id, $_REQUEST['post_lang_choice']);
+			$this->model->set_post_language($post_id, $lang = $_REQUEST['post_lang_choice']);
 
 		elseif (isset($_REQUEST['inline_lang_choice'])) {
-			if (($lang = $this->model->get_post_language($post_id)) && $lang->slug != $_REQUEST['inline_lang_choice'])
+			if (($old_lang = $this->model->get_post_language($post_id)) && $old_lang->slug != $_REQUEST['inline_lang_choice'])
 				$this->model->delete_translation('post', $post_id);
-			$this->model->set_post_language($post_id, $_REQUEST['inline_lang_choice']);
+			$this->model->set_post_language($post_id, $lang = $_REQUEST['inline_lang_choice']);
 		}
 
 		elseif (isset($_GET['new_lang']))
@@ -232,23 +232,22 @@ class PLL_Admin_Filters_Post {
 		else
 			$this->model->set_post_language($post_id, $this->pref_lang);
 
-		if (!isset($_POST['post_lang_choice']))
-			return;
-
 		// make sure we get save terms in the right language (especially tags with same name in different languages)
-		if ($_POST['post_lang_choice']) {
+		if (!empty($lang)) {
 			// FIXME quite a lot of query in foreach
 			foreach ($this->model->taxonomies as $tax) {
 				$terms = get_the_terms($post_id, $tax);
+
 				if (is_array($terms)) {
 					$newterms = array();
 					foreach ($terms as $term) {
-						if ($newterm = $this->model->get_term_by('name', $term->name, $tax, $_POST['post_lang_choice']))
+						if ($newterm = $this->model->get_term_by('name', $term->name, $tax, $lang))
 							$newterms[] = (int) $newterm->term_id; // cast is important otherwise we get 'numeric' tags
 
 						elseif (!is_wp_error($term_info = wp_insert_term($term->name, $tax))) // create the term in the correct language
 							$newterms[] = (int) $term_info['term_id'];
 					}
+
 					wp_set_object_terms($post_id, $newterms, $tax);
 				}
 			}

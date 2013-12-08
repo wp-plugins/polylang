@@ -53,6 +53,8 @@ class PLL_Admin extends PLL_Base {
 		if (!$this->model->get_languages_list())
 			return;
 
+		$this->links = new PLL_Links($this->links_model);
+
 		// filter admin language for users
 		// we must not call user info before WordPress defines user roles in wp-settings.php
 		add_filter('setup_theme', array(&$this, 'init_user'));
@@ -177,7 +179,6 @@ class PLL_Admin extends PLL_Base {
 	 * @since 1.2
 	 */
 	public function add_filters() {
-		$this->links = new PLL_Links($this->links_model);
 		$this->filters = new PLL_Admin_Filters($this->links_model, $this->pref_lang);
 		$this->filters_columns = new PLL_Admin_Filters_Columns($this->model);
 		$this->filters_post = new PLL_Admin_Filters_Post($this->model, $this->pref_lang);
@@ -303,7 +304,7 @@ class PLL_Admin extends PLL_Base {
 				}
 				// try to download theme files if exist (will not return false if failed)
 				// FIXME not updated when the theme is updated outside a core update
-				foreach (array('twentyten', 'twentyeleven', 'twentytwelve', 'twentythirteen') as $theme) {
+				foreach (array('twentyten', 'twentyeleven', 'twentytwelve', 'twentythirteen', 'twentyfourteen') as $theme) {
 					if (!is_dir($theme_dir = get_theme_root()."/$theme/languages"))
 						continue; // the theme is not present
 

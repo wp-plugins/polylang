@@ -97,6 +97,6 @@ class PLL_Links_Domain {
 	 * @return string language home link or unmodified term link
 	 */
 	function term_link($link, $term, $tax) {
-		return 'language' == $tax ? $this->options['domains'][$term->slug] : $link;
+		return 'language' == $tax && !empty($this->options['domains'][$term->slug]) ? $this->options['domains'][$term->slug] : $link;
 	}
 }

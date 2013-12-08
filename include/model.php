@@ -33,9 +33,11 @@ class PLL_Model {
 		add_filter('get_terms', array(&$this, '_prime_terms_cache'), 10, 2);
 		add_filter('wp_get_object_terms', array(&$this, 'wp_get_object_terms'), 10, 3);
 
-		// we need to clean languages cache when editing a language or when editing page of front
+		// we need to clean languages cache when editing a language,
+		// when editing page of front or when modifying the permalink structure
 		add_action('edited_term_taxonomy', array(&$this, 'clean_languages_cache'), 10, 2);
 		add_action('update_option_page_on_front', array(&$this, 'clean_languages_cache'));
+		add_action('update_option_permalink_structure', array(&$this, 'clean_languages_cache'));
 
 		// registers completely the language taxonomy
 		add_action('setup_theme', array(&$this, 'register_taxonomy'), 1);
@@ -186,7 +188,7 @@ class PLL_Model {
 			$language->set_home_url();
 
 		set_transient('pll_languages_list', $this->_languages);
-		$this->languages = array_merge($this->languages, $this->_languages); // in case flags are already set
+		unset($this->languages, $this->_languages); // in case flags were already set
 	}
 
 	/*

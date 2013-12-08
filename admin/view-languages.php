@@ -199,7 +199,7 @@ case 'settings': ?><?php
 		</tr>
 
 		<tr>
-			<th rowspan = <?php echo $page_on_front ? 4 : 3; ?>><?php _e('URL modifications', 'polylang') ?></th>
+			<th rowspan = <?php echo ($page_on_front ? 3 : 2) + $using_permalinks; ?>><?php _e('URL modifications', 'polylang') ?></th>
 			<td><fieldset id='pll-force-lang'>
 				<label><?php
 					printf(
@@ -300,7 +300,7 @@ case 'settings': ?><?php
 					<p class="description"><?php
 						printf(
 							__('Example: %s instead of %s', 'polylang'),
-							'<code>'.esc_html(home_url('/en/')).'</code>',
+							'<code>'.esc_html(get_term_link($this->model->get_post_language($page_on_front), 'language')).'</code>',
 							'<code>'.esc_html(_get_page_link($page_on_front)).'</code>'
 						); ?>
 					</p>

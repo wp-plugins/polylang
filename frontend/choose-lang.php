@@ -132,8 +132,9 @@ abstract class PLL_Choose_Lang {
 	protected function home_language() {
 		// test referer in case PLL_COOKIE is set to false
 		// thanks to Ov3rfly http://wordpress.org/support/topic/enhance-feature-when-front-page-is-visited-set-language-according-to-browser
+		$is_self_referer = isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $this->domain) !== false;
 		$this->set_language(
-			$this->options['hide_default'] && ((isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $this->domain) !== false)) ?
+			$this->options['hide_default'] && ($is_self_referer || !$this->options['browser']) ?
 				$this->model->get_language($this->options['default_lang']) :
 				$this->get_preferred_language() // sets the language according to browser preference or default language
 		);

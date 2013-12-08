@@ -165,12 +165,12 @@ class PLL_Admin_Filters_Term {
 			$this->model->set_term_language($term_id, $_POST['term_lang_choice']);
 
 		elseif (isset($_POST['inline_lang_choice'])) {
-			// don't use term_lang_choice for quick edit to avoid conflict with the "add term" form
-			if ($this->model->get_term_language($term_id)->slug != $_POST['inline_lang_choice'])
+			if (isset($_POST['inline-save-tax']) && $this->model->get_term_language($term_id)->slug != $_POST['inline_lang_choice'])
 				$this->model->delete_translation('term', $term_id);
 			$this->model->set_term_language($term_id, $_POST['inline_lang_choice']);
 		}
-		elseif (isset($_POST['post_lang_choice']))
+
+		elseif (isset($_POST['post_lang_choice'])) // FIXME should be useless now
 			$this->model->set_term_language($term_id, $_POST['post_lang_choice']);
 
 		elseif ($this->model->get_term_language($term_id))
@@ -223,10 +223,18 @@ class PLL_Admin_Filters_Term {
 		// if the new term has the same name as a language, we *need* to differentiate the term
 		// see http://core.trac.wordpress.org/ticket/23199
 		if (term_exists($name, 'language') && !term_exists($name, $taxonomy) && (!$slug || $slug == $name))
-			$slug = $name.'-'.$taxonomy; // a convenient slug which may be modified later by the user
+			$slug = $name . '-' . $taxonomy; // a convenient slug which may be modified later by the user
 
-		return !$slug && in_array($taxonomy, $this->model->taxonomies) && term_exists($name, $taxonomy) ?
-			$name.'-'.$this->model->get_language($_POST['term_lang_choice'])->slug : $slug;
+		// if the term already exists in another language
+		if (!$slug && in_array($taxonomy, $this->model->taxonomies) && term_exists($name, $taxonomy)) {
+			if (isset($_POST['term_lang_choice']))
+				$slug = $name . '-' . $this->model->get_language($_POST['term_lang_choice'])->slug;
+
+			elseif (isset($_POST['inline_lang_choice']))
+				$slug = $name . '-' . $this->model->get_language($_POST['inline_lang_choice'])->slug;
+		}
+
+		return $slug;
 	}
 
 	/*
