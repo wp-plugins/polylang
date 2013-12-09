@@ -318,7 +318,7 @@ class PLL_Settings {
 		global $wp_registered_widgets;
 		$sidebars = wp_get_sidebars_widgets();
 		foreach ($sidebars as $sidebar => $widgets) {
-			if ($sidebar == 'wp_inactive_widgets' || !isset($widgets))
+			if ($sidebar == 'wp_inactive_widgets' || empty($widgets))
 				continue;
 
 			foreach ($widgets as $widget) {

@@ -28,7 +28,7 @@ The plugin admin interface is currently available in 30 languages: English, Fren
 
 = Credits =
 
-Most of the flags icons included with Polylang are coming from [famfamfam](http://famfamfam.com/) and are public domain. Icons are coming from [Icomoon](http://icomoon.io/) and are licensed under GPL. Wherever third party code has been used, credit has been given in the code’s comments.
+Most of the flags included with Polylang are coming from [famfamfam](http://famfamfam.com/) and are public domain. Icons are coming from [Icomoon](http://icomoon.io/) and are licensed under GPL. Wherever third party code has been used, credit has been given in the code’s comments.
 
 = Do you like Polylang? =
 
@@ -76,6 +76,7 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 * Improved performance by optimizing some queries for WP 3.5+
 * The user biography in default language is now stored in default WordPress usermeta
 * Add language parameter in API function pll_home_url and allow to call it on admin side
+* Calling 'get_terms' with the 'lang' parameter now uses a cache object per language
 * Bug correction: conflict with unstranslated taxonomies
 * Bug correction: possible malformed translation archive url in language switcher
 * Bug correction: a wrong language may be displayed in quick edit dropdown
@@ -85,4 +86,4 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 * Bug correction: Firefox language preference is not recognized when comparison is made on locale (instead of ISO 639-1 language code)
 * Bug correction: incorrect tax_query in PLL_Auto_Translate
 
-See changelog.txt for full changelog
+See changelog.txt for older changelog

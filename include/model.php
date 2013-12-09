@@ -48,6 +48,9 @@ class PLL_Model {
 
 		// just in case someone would like to display the language description ;-)
 		add_filter('language_description', create_function('$v', "return '';"));
+
+		// adds cache domain when querying terms
+		add_filter('get_terms_args', array(&$this, 'get_terms_args'));
 	}
 
 	/*
@@ -528,7 +531,6 @@ class PLL_Model {
 			),
 			'public' => false, // avoid displaying the 'like post tags text box' in the quick edit
 			'query_var' => 'lang',
-			'update_count_callback' => '_update_post_term_count',
 			'_pll' => true // polylang taxonomy
 		));
 	}
@@ -726,5 +728,20 @@ class PLL_Model {
 		}
 
 		return empty($counts[$lang->term_taxonomy_id]) ? 0 : $counts[$lang->term_taxonomy_id];
+	}
+
+	/*
+	 * adds language dependent cache domain when explicitely querying terms per language
+	 * useful as the 'lang' parameter is not included in cache key by WordPress
+	 *
+	 * @since 1.3
+	 */
+	public function get_terms_args($args) {
+		if (isset($args['lang'])) {
+			$key = '_' . (is_array($lang) ? implode(',', $lang) : $lang);
+			$args['cache_domain'] = empty($args['cache_domain']) ? 'pll' . $key : $args['cache_domain'] . $key;
+		}
+
+		return $args;
 	}
 }
