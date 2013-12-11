@@ -232,7 +232,7 @@ class PLL_Frontend_Filters {
 	 * @return null|string
 	 */
 	public function get_user_metadata($null, $id, $meta_key) {
-		return $meta_key == 'description' ? get_user_meta($id, 'description_'.$this->curlang->slug, true) : $null;
+		return $meta_key == 'description' && $this->curlang->slug != $this->options['default_lang'] ? get_user_meta($id, 'description_'.$this->curlang->slug, true) : $null;
 	}
 
 	/*

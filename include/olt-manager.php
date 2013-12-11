@@ -49,30 +49,34 @@ class PLL_OLT_Manager {
 		remove_filter('gettext_with_context', array(&$this, 'gettext_with_context'), 10, 4);
 		$new_locale = get_locale();
 
-		// now we can load all overriden text domains with the right language
-		foreach ($this->list_textdomains as $textdomain) {
-			if (!load_textdomain($textdomain['domain'], str_replace("{$this->default_locale}.mo", "$new_locale.mo", $textdomain['mo'])))
-				// since WP 3.5 themes may store languages files in /wp-content/languages/themes
-				if (!load_textdomain($textdomain['domain'], WP_LANG_DIR . "/themes/{$textdomain['domain']}-$new_locale.mo"))
-					// since WP 3.7 plugins may store languages files in /wp-content/languages/plugins
-					load_textdomain($textdomain['domain'], WP_LANG_DIR . "/plugins/{$textdomain['domain']}-$new_locale.mo");
+		if ('en_US' != $new_locale) { // save some time for en_US
+			// now we can load all overriden text domains with the right language
+			foreach ($this->list_textdomains as $textdomain) {
+				if (!load_textdomain($textdomain['domain'], str_replace("{$this->default_locale}.mo", "$new_locale.mo", $textdomain['mo']))) {
+					// since WP 3.5 themes may store languages files in /wp-content/languages/themes
+					if (!load_textdomain($textdomain['domain'], WP_LANG_DIR . "/themes/{$textdomain['domain']}-$new_locale.mo")) {
+						// since WP 3.7 plugins may store languages files in /wp-content/languages/plugins
+						load_textdomain($textdomain['domain'], WP_LANG_DIR . "/plugins/{$textdomain['domain']}-$new_locale.mo");
+					}
+				}
+			}
+
+			// translate labels of post types and taxonomies
+			foreach ($GLOBALS['wp_taxonomies'] as $tax)
+				$this->translate_labels($tax);
+			foreach ($GLOBALS['wp_post_types'] as $pt)
+				$this->translate_labels($pt);
+
+			// act only if the language has not been set early (before default textdomain loading and $wp_locale creation
+			if (did_action('after_setup_theme')) {
+				// reinitializes wp_locale for weekdays and months
+				unset($GLOBALS['wp_locale']);
+				$GLOBALS['wp_locale'] = new WP_Locale();
+			}
+
+			// allow plugins to translate text the same way we do for post types and taxonomies labels
+			do_action_ref_array('pll_translate_labels', array(&$this->labels));
 		}
-
-		// translate labels of post types and taxonomies
-		foreach ($GLOBALS['wp_taxonomies'] as $tax)
-			$this->translate_labels($tax);
-		foreach ($GLOBALS['wp_post_types'] as $pt)
-			$this->translate_labels($pt);
-
-		// act only if the language has not been set early (before default textdomain loading and $wp_locale creation
-		if (did_action('after_setup_theme')) {
-			// reinitializes wp_locale for weekdays and months
-			unset($GLOBALS['wp_locale']);
-			$GLOBALS['wp_locale'] = new WP_Locale();
-		}
-
-		// allow plugins to translate text the same way we do for post types and taxonomies labels
-		do_action_ref_array('pll_translate_labels', array(&$this->labels));
 
 		// free memory
 		unset($this->default_locale, $this->list_textdomains, $this->labels);
@@ -104,7 +108,7 @@ class PLL_OLT_Manager {
 	 * @return string unmodified $translation
 	 */
 	public function gettext($translation, $text, $domain) {
-		$this->labels[$text] =  array('domain' => $domain);
+		$this->labels[$text] = array('domain' => $domain);
 		return $translation;
 	}
 
@@ -120,7 +124,7 @@ class PLL_OLT_Manager {
 	 * @return string unmodified $translation
 	 */
 	public function gettext_with_context($translation, $text, $context, $domain) {
-		$this->labels[$text] =  array('domain' => $domain, 'context' => $context);
+		$this->labels[$text] = array('domain' => $domain, 'context' => $context);
 		return $translation;
 	}
 
@@ -132,11 +136,13 @@ class PLL_OLT_Manager {
 	 * @param object $type either a post type or a taxonomy
 	 */
 	public function translate_labels($type) {
-		foreach($type->labels as $key => $label)
-			if (is_string($label) && isset($this->labels[$label]))
+		foreach($type->labels as $key => $label) {
+			if (is_string($label) && isset($this->labels[$label])) {
 				$type->labels->$key = isset($this->labels[$label]['context']) ?
 					_x($label, $this->labels[$label]['context'], $this->labels[$label]['domain']) :
 					__($label, $this->labels[$label]['domain']);
+			}
+		}
 	}
 
 	/*

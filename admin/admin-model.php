@@ -297,7 +297,6 @@ class PLL_Admin_Model extends PLL_Model {
 			$values = array_unique($values);
 			$wpdb->query("INSERT INTO $wpdb->term_relationships (object_id, term_taxonomy_id) VALUES " . implode(',', $values));
 			$lang->update_count(); // updating term count is mandatory (thanks to AndyDeGroo)
-			$this->clean_languages_cache(); // to update the posts count in (cached) languages list
 		}
 	}
 
@@ -378,7 +377,7 @@ class PLL_Admin_Model extends PLL_Model {
 		}
 
 		// update terms
-		if (!empty($uy))
+		if (!empty($ut))
 			$wpdb->query("UPDATE $wpdb->term_taxonomy
 				SET description = ( CASE term_id " . implode(' ', $ut['case']) . " END )
 				WHERE term_id IN ( " . implode(',', $ut['in']) . " )");

@@ -33,9 +33,6 @@ class PLL_Admin_Filters {
 		add_action('edit_user_profile_update', array(&$this, 'personal_options_update'));
 		add_action('personal_options', array(&$this, 'personal_options'));
 
-		// refresh rewrite rules if the 'page_on_front' option is modified
-		add_action('update_option_page_on_front', 'flush_rewrite_rules');
-
 		// ugrades languages files after a core upgrade (timing is important)
 		// FIXME private action ? is there a better way to do this ?
 		add_action( '_core_updated_successfully', array(&$this, 'upgrade_languages'), 1); // since WP 3.3
@@ -44,7 +41,6 @@ class PLL_Admin_Filters {
 		add_filter('comments_clauses', array(&$this, 'comments_clauses'), 10, 2);
 
 	}
-
 
 	/*
 	 * modifies the widgets forms to add our language dropdwown list
@@ -99,8 +95,12 @@ class PLL_Admin_Filters {
 	 */
 	public function personal_options_update($user_id) {
 		update_user_meta($user_id, 'user_lang', $_POST['user_lang']); // admin language
-		foreach ($this->model->get_languages_list() as $lang)
-			update_user_meta($user_id, 'description_'.$lang->slug, $_POST['description_'.$lang->slug]); // biography translations
+
+		// biography translations
+		foreach ($this->model->get_languages_list() as $lang) {
+			$meta = $lang->slug == $this->options['default_lang'] ? 'description' : 'description_'.$lang->slug;
+			update_user_meta($user_id, $meta, $_POST['description_'.$lang->slug]);
+		}
 	}
 
 	/*
@@ -132,16 +132,18 @@ class PLL_Admin_Filters {
 		);
 
 		// hidden informations to modify the biography form with js
-		foreach ($this->model->get_languages_list() as $lang)
+		foreach ($this->model->get_languages_list() as $lang) {
+			$meta = $lang->slug == $this->options['default_lang'] ? 'description' : 'description_'.$lang->slug;
 			printf('<input type="hidden" class="biography" name="%s-%s" value="%s" />',
 				esc_attr($lang->slug),
 				esc_attr($lang->name),
-				esc_attr(get_user_meta($profileuser->ID, 'description_'.$lang->slug, true))
+				esc_attr(get_user_meta($profileuser->ID, $meta, true))
 			);
+		}
 	}
 
 	/*
-	 * ugrades languages files after a core upgrade
+	 * ugprades languages files after a core upgrade
 	 *
 	 * @since 0.6
 	 *

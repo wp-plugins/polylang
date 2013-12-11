@@ -97,21 +97,8 @@ class PLL_Frontend_Links extends PLL_Links {
 	 * @return string modified link
 	 */
 	public function page_link($link, $id) {
-		static $posts = array(); // cache the results
-
-		if ($this->options['redirect_lang'] && $this->page_on_front && $lang = $this->model->get_post_language($id)) {
-			if (!isset($posts[$lang->slug][$this->page_on_front]))
-				$posts[$lang->slug][$this->page_on_front] = $this->model->get_post($this->page_on_front, $lang);
-			if ($id == $posts[$lang->slug][$this->page_on_front])
-				return $this->options['hide_default'] && $lang->slug == $this->options['default_lang'] ? trailingslashit($this->home) : get_term_link($lang, 'language');
-		}
-
-		if ($this->page_on_front && $this->options['hide_default']) {
-			if (!isset($posts[$this->options['default_lang']][$this->page_on_front]))
-				$posts[$this->options['default_lang']][$this->page_on_front] = $this->model->get_post($this->page_on_front, $this->options['default_lang']);
-			if ($id == $posts[$this->options['default_lang']][$this->page_on_front])
-				return trailingslashit($this->home);
-		}
+		if ($this->page_on_front && ($lang = $this->model->get_post_language($id)) && $id == $this->model->get_post($this->page_on_front, $lang))
+			return $lang->home_url;
 
 		return _get_page_link($id);
 	}
@@ -274,26 +261,9 @@ class PLL_Frontend_Links extends PLL_Links {
 	 * @param bool $is_search optional wether we need the home url for a search form, defaults to false
 	 */
 	public function get_home_url($language = '', $is_search = false) {
-		static $home_urls = array(); // used for cache
-
 		if (empty($language))
 			$language = $this->curlang;
 
-		if (isset($home_urls[$language->slug][$is_search]))
-			return $home_urls[$language->slug][$is_search];
-
-		if ($this->options['default_lang'] == $language->slug && $this->options['hide_default'])
-			return $home_urls[$language->slug][$is_search] = trailingslashit($this->home);
-
-		// a static page is used as front page : /!\ don't use get_page_link to avoid infinite loop
-		// don't use this for search form
-		if (!$is_search && $this->page_on_front && $id = $this->model->get_post($this->page_on_front, $language))
-			return $home_urls[$language->slug][$is_search] = $this->page_link('', $id);
-
-		$link = get_term_link($language, 'language');
-
-		// add a trailing slash as done by WP on homepage (otherwise could break the search form when the permalink structure does not include one)
-		// only for pretty permalinks
-		return $home_urls[$language->slug][$is_search] = $this->using_permalinks ? trailingslashit($link) : $link;
+		return parent::get_home_url($language, $is_search);
 	}
 }

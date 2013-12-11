@@ -125,7 +125,7 @@ class PLL_Frontend_Auto_Translate {
 							$arr[] = (($tag = get_term_by($field, $t, $q['taxonomy'])) && ($tr_id = pll_get_term($tag->term_id)) && !is_wp_error($tr = get_term($tr_id, $q['taxonomy']))) ?
 								$tr->$field : $t;
 
-						$qv['tax_query'][$key]['terms'] = implode(',', $arr);
+						$qv['tax_query'][$key]['terms'] = $arr;
 					}
 				}
 			}

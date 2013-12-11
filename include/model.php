@@ -23,16 +23,21 @@ class PLL_Model {
 		// register our taxonomies as soon as possible
 		// this is early registration, not ready for rewrite rules as wp_rewrite will be setup later
 		// FIXME should I supply an 'update_count_callback' for taxonomies other than 'language' (currently not needed by PLL)?
-		foreach (array('language', 'term_language', 'post_translations', 'term_translations') as $tax)
+		foreach (array('language', 'term_language', 'post_translations', 'term_translations') as $tax) {
 			register_taxonomy($tax,
 				false !== strpos($tax, 'term_') ? 'term' : null ,
 				array('label' => false, 'public' => false, 'query_var' => false, 'rewrite' => false, '_pll' => true)
 			);
+		}
 
 		add_filter('get_terms', array(&$this, '_prime_terms_cache'), 10, 2);
 		add_filter('wp_get_object_terms', array(&$this, 'wp_get_object_terms'), 10, 3);
 
+		// we need to clean languages cache when editing a language,
+		// when editing page of front or when modifying the permalink structure
 		add_action('edited_term_taxonomy', array(&$this, 'clean_languages_cache'), 10, 2);
+		add_action('update_option_page_on_front', array(&$this, 'clean_languages_cache'));
+		add_action('update_option_permalink_structure', array(&$this, 'clean_languages_cache'));
 
 		// registers completely the language taxonomy
 		add_action('setup_theme', array(&$this, 'register_taxonomy'), 1);
@@ -43,6 +48,9 @@ class PLL_Model {
 
 		// just in case someone would like to display the language description ;-)
 		add_filter('language_description', create_function('$v', "return '';"));
+
+		// adds cache domain when querying terms
+		add_filter('get_terms_args', array(&$this, 'get_terms_args'));
 	}
 
 	/*
@@ -79,6 +87,7 @@ class PLL_Model {
 	 * @param array $taxonomies terms taxonomies
 	 * @return array unmodified $terms
 	 */
+	// FIXME is that useful? or even desirable?
 	public function wp_get_object_terms($terms, $object_ids, $taxonomies) {
 		$taxonomies = explode("', '", trim($taxonomies, "'"));
 		if (!in_array('term_translations', $taxonomies))
@@ -111,8 +120,9 @@ class PLL_Model {
 					$term = $t;
 			}
 		}
-		else
+		else {
 			$term = reset($term);
+		}
 
 		return empty($term) ? false : $term;
 	}
@@ -144,10 +154,14 @@ class PLL_Model {
 
 				if (!empty($languages) && !empty($term_languages)) {
 					array_walk($languages, create_function('&$v, $k, $term_languages', '$v = new PLL_Language($v, $term_languages[$v->name]);'), $term_languages);
-					set_transient('pll_languages_list', $languages);
+
+					// need to wait for $wp_rewrite availibility to set homepage urls
+					$this->_languages = $languages;
+					did_action('setup_theme') ? $this->_languages_urls() : add_action('setup_theme', array(&$this, '_languages_urls'));
 				}
-				else
+				else {
 					$languages = array(); // in case something went wrong
+				}
 			}
 
 			// add flags (not in db cache as they may be different on frontend and admin)
@@ -164,6 +178,20 @@ class PLL_Model {
 		$languages = array_filter($this->languages, create_function('$v', sprintf('return $v->count || !%d;', $hide_empty)));
 
 		return empty($fields) ? $languages : wp_list_pluck($languages, $fields);
+	}
+
+	/*
+	 * fills home urls in language list and set transient in db
+	 * delayed to be sure we have access to $wp_rewrite
+	 *
+	 * @since 1.3
+	 */
+	public function _languages_urls() {
+		foreach ($this->_languages as $language)
+			$language->set_home_url();
+
+		set_transient('pll_languages_list', $this->_languages);
+		unset($this->languages, $this->_languages); // in case flags were already set
 	}
 
 	/*
@@ -503,7 +531,6 @@ class PLL_Model {
 			),
 			'public' => false, // avoid displaying the 'like post tags text box' in the quick edit
 			'query_var' => 'lang',
-			'update_count_callback' => '_update_post_term_count',
 			'_pll' => true // polylang taxonomy
 		));
 	}
@@ -667,7 +694,7 @@ class PLL_Model {
 				if ( strlen($q['m']) > 5 )
 					$where .= $wpdb->prepare(" AND MONTH({$wpdb->posts}.post_date) = %d", substr($q['m'], 4, 2));
 				if ( strlen($q['m']) > 7 )
-					$where .= $wpdb->prepare(" AND  DAYOFMONTH({$wpdb->posts}.post_date) = %d", substr($q['m'], 6, 2));
+					$where .= $wpdb->prepare(" AND DAYOFMONTH({$wpdb->posts}.post_date) = %d", substr($q['m'], 6, 2));
 			}
 
 			if (!empty($q['year']))
@@ -677,7 +704,7 @@ class PLL_Model {
 				$where .= $wpdb->prepare(" AND MONTH({$wpdb->posts}.post_date) = %d", $q['monthnum']);
 
 			if (!empty($q['day']))
-				$where .= $wpdb->prepare(" AND  DAYOFMONTH({$wpdb->posts}.post_date) = %d", $q['day']);
+				$where .= $wpdb->prepare(" AND DAYOFMONTH({$wpdb->posts}.post_date) = %d", $q['day']);
 
 			if (!empty($q['author_name'])) {
 				$author = get_user_by('slug',  sanitize_title_for_query($q['author_name']));
@@ -701,5 +728,20 @@ class PLL_Model {
 		}
 
 		return empty($counts[$lang->term_taxonomy_id]) ? 0 : $counts[$lang->term_taxonomy_id];
+	}
+
+	/*
+	 * adds language dependent cache domain when explicitely querying terms per language
+	 * useful as the 'lang' parameter is not included in cache key by WordPress
+	 *
+	 * @since 1.3
+	 */
+	public function get_terms_args($args) {
+		if (isset($args['lang'])) {
+			$key = '_' . (is_array($lang) ? implode(',', $lang) : $lang);
+			$args['cache_domain'] = empty($args['cache_domain']) ? 'pll' . $key : $args['cache_domain'] . $key;
+		}
+
+		return $args;
 	}
 }
