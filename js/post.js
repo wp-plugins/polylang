@@ -180,6 +180,7 @@ pll_tagBox = {
 })(jQuery);
 
 // quick edit
+// thanks to WP Dreamer http://wpdreamer.com/2012/03/manage-wordpress-posts-using-bulk-edit-and-quick-edit/
 (function($) {
 	var $wp_inline_edit = inlineEditPost.edit;
 

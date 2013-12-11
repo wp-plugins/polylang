@@ -694,7 +694,7 @@ class PLL_Model {
 				if ( strlen($q['m']) > 5 )
 					$where .= $wpdb->prepare(" AND MONTH({$wpdb->posts}.post_date) = %d", substr($q['m'], 4, 2));
 				if ( strlen($q['m']) > 7 )
-					$where .= $wpdb->prepare(" AND  DAYOFMONTH({$wpdb->posts}.post_date) = %d", substr($q['m'], 6, 2));
+					$where .= $wpdb->prepare(" AND DAYOFMONTH({$wpdb->posts}.post_date) = %d", substr($q['m'], 6, 2));
 			}
 
 			if (!empty($q['year']))
@@ -704,7 +704,7 @@ class PLL_Model {
 				$where .= $wpdb->prepare(" AND MONTH({$wpdb->posts}.post_date) = %d", $q['monthnum']);
 
 			if (!empty($q['day']))
-				$where .= $wpdb->prepare(" AND  DAYOFMONTH({$wpdb->posts}.post_date) = %d", $q['day']);
+				$where .= $wpdb->prepare(" AND DAYOFMONTH({$wpdb->posts}.post_date) = %d", $q['day']);
 
 			if (!empty($q['author_name'])) {
 				$author = get_user_by('slug',  sanitize_title_for_query($q['author_name']));
