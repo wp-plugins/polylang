@@ -738,7 +738,7 @@ class PLL_Model {
 	 */
 	public function get_terms_args($args) {
 		if (isset($args['lang'])) {
-			$key = '_' . (is_array($lang) ? implode(',', $lang) : $lang);
+			$key = '_' . (is_array($args['lang']) ? implode(',', $args['lang']) : $args['lang']);
 			$args['cache_domain'] = empty($args['cache_domain']) ? 'pll' . $key : $args['cache_domain'] . $key;
 		}
 

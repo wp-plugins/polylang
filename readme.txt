@@ -69,7 +69,11 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 
 == Changelog ==
 
-= 1.3 =
+= 1.3.1 =
+
+* Bug correction: Fatal error on settings page if a static front page without language is set
+
+= 1.3 (2013-12-11) =
 
 * Refresh admin UI for better look in WP 3.8 and more dynamic comportment
 * The "Detect browser language" option does now also controls returning visits (based on cookie).

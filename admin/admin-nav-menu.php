@@ -245,7 +245,7 @@ class PLL_Admin_Nav_Menu {
 			return;
 
 		// get all the menus in the post language
-		$menus = get_terms('nav_menu', array('lang'=>$lang, 'fields'=>'ids', 'hide_empty'=>false));
+		$menus = get_terms('nav_menu', array('lang' => $lang, 'fields' => 'ids', 'hide_empty' => false));
 		$menus = implode(',', $menus);
 
 		add_filter('option_nav_menu_options', create_function('$a', "\$a['auto_add'] = array_intersect(\$a['auto_add'], array($menus)); return \$a;"));

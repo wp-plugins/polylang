@@ -344,30 +344,10 @@ class PLL_Upgrade {
 	/*
 	 * upgrades if the previous version is < 1.3
 	 * moves the user biographies in default language to the 'description' user meta
-	 * multisite compatible
 	 *
 	 * @since 1.3
 	 */
 	protected function upgrade_1_3() {
-		if (is_multisite()) {
-			foreach ($GLOBALS['wpdb']->get_col("SELECT blog_id FROM $wpdb->blogs") as $blog_id) {
-				switch_to_blog($blog_id);
-				$this->_upgrade_1_3();
-			}
-			restore_current_blog();
-		}
-		else {
-			$this->_upgrade_1_3();
-		}
-	}
-
-	/*
-	 * cleans language cache as new properties have been added in PLL_Language
-	 * moves the user biographies in default language to the 'description' user meta
-	 *
-	 * @since 1.3
-	 */
-	protected function _upgrade_1_3() {
 		global $polylang;
 		$polylang->model->clean_languages_cache();
 
