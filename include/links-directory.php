@@ -104,6 +104,19 @@ class PLL_Links_Directory {
 	}
 
 	/*
+	 * returns the home url
+	 * links_model interface
+	 *
+	 * @since 1.3.1
+	 *
+	 * @param object $lang PLL_Language object
+	 * @return string
+	 */
+	public function home_url($lang) {
+		return $this->options['hide_default'] && $lang->slug == $this->options['default_lang'] ? $this->home : get_term_link($lang, 'language');
+	}
+
+	/*
 	 * optionaly removes 'language' in permalinks so that we get http://www.myblog/en/ instead of http://www.myblog/language/en/
 	 *
 	 * @since 1.2

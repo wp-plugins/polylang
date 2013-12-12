@@ -300,10 +300,10 @@ case 'settings': ?><?php
 					<p class="description"><?php
 						// that's nice to display the right home urls but don't forget that the page on front may have no language yet
 						$lang = $this->model->get_post_language($page_on_front);
-						$lang_url = $lang ? get_term_link($lang, 'language') : home_url('en/');
+						$lang = $lang ? $lang : $this->model->get_language($this->options['default_lang']);
 						printf(
 							__('Example: %s instead of %s', 'polylang'),
-							'<code>' . esc_html($lang_url) . '</code>',
+							'<code>' . esc_html($this->links_model->home_url($lang)) . '</code>',
 							'<code>' . esc_html(_get_page_link($page_on_front)) . '</code>'
 						); ?>
 					</p>

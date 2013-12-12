@@ -48,7 +48,7 @@ class PLL_Admin extends PLL_Base {
 	 */
 	public function init() {
 		if (PLL_SETTINGS)
-			$this->settings_page = new PLL_Settings($this->model);
+			$this->settings_page = new PLL_Settings($this->links_model);
 
 		if (!$this->model->get_languages_list())
 			return;

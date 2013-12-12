@@ -71,7 +71,8 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 
 = 1.3.1 =
 
-* Bug correction: Fatal error on settings page if a static front page without language is set
+* Bug correction: fatal error on settings page if a static front page without language is set
+* Bug correction: wrong home url when using different domains per language
 
 = 1.3 (2013-12-11) =
 

@@ -6,7 +6,7 @@
  * @since 1.2
  */
 class PLL_Settings {
-	public $model, $options;
+	public $links_model, $model, $options;
 	protected $strings = array(); // strings to translate
 
 	/*
@@ -16,9 +16,10 @@ class PLL_Settings {
 	 *
 	 * @param object $model instance of PLL_Model
 	 */
-	public function __construct(&$model) {
-		$this->model = &$model;
-		$this->options = &$model->options;
+	public function __construct(&$links_model) {
+		$this->links_model = &$links_model;
+		$this->model = &$links_model->model;
+		$this->options = &$this->model->options;
 
 		// adds screen options and the about box in the languages admin panel
 		add_action('load-settings_page_mlang',  array(&$this, 'load_page'));

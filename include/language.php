@@ -97,15 +97,12 @@ class PLL_Language {
 	public function set_home_url() {
 		$options = get_option('polylang');
 
-		if ($options['default_lang'] == $this->slug && $options['hide_default'])
-			return $this->home_url = $this->search_url = trailingslashit(get_option('home'));
-
 		// a static page is used as front page : /!\ don't use get_page_link to avoid infinite loop
 		// don't use this for search form
 		if (!$options['redirect_lang'] && ($page_on_front = get_option('page_on_front')) && $id = pll_get_post($page_on_front, $this))
 			$this->home_url = _get_page_link($id);
 
-		$link = get_term_link($this, 'language');
+		$link = $GLOBALS['polylang']->links_model->home_url($this);
 
 		// add a trailing slash as done by WP on homepage (otherwise could break the search form when the permalink structure does not include one)
 		// only for pretty permalinks
