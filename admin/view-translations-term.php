@@ -39,13 +39,19 @@ else {
 					<td>
 						<?php printf('<select name="term_tr_lang[%1$s]" id="tr_lang_%1$s">', esc_attr($language->slug)); ?>
 							<option value="0"></option><?php
-							foreach ($translations as $translation)
-								printf('<option value="%s">%s</option>', esc_attr($translation->term_id), esc_html($translation->name));?>
+							foreach ($translations as $translation) {
+								printf(
+									'<option value="%s">%s</option>',
+									esc_attr($translation->term_id),
+									esc_html($translation->name)
+								);
+							}?>
 						</select>
 					</td><?php
 				}
-				else
-					echo '<td>'.__('No untranslated term', 'polylang').'</td>';
+				else {?>
+					<td><?php _e('No untranslated term', 'polylang'); ?></td><?php
+				}
 
 				// do not display the add new link in add term form ($term_id not set !!!)
 				if (isset($term_id)) {
@@ -71,12 +77,13 @@ else {
 					esc_attr($translation->term_id),
 					esc_html($translation->name)
 				);
-				if (isset($term_id))
+				if (isset($term_id)) {
 					printf(
 						'<td class="tr-edit-column"><a href="%1$s">%2$s</a></td>',
 						esc_url(get_edit_term_link($translation->term_id, $taxonomy, $post_type)),
 						__('Edit','polylang')
 					);
+				}
 			} ?>
 			</tr><?php
 		} // foreach ?>

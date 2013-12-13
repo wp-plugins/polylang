@@ -201,17 +201,20 @@ class PLL_Admin_Filters_Post {
 			return;
 
 		// bulk edit does not modify the language
-		if (isset($_GET['bulk_edit']) && $_REQUEST['post_lang_choice'] == -1)
+		if (isset($_GET['bulk_edit']) && $_REQUEST['inline_lang_choice'] == -1)
 			return;
 
 		if ($id = wp_is_post_revision($post_id))
 			$post_id = $id;
 
 		// save language
-		if (isset($_REQUEST['post_lang_choice'])) {
-			if (($lang = $this->model->get_post_language($post_id)) && $lang->slug != $_REQUEST['post_lang_choice'])
-				$this->model->delete_translation('post', $post_id); // in case the language is modified using inline edit
-			$this->model->set_post_language($post_id, $_REQUEST['post_lang_choice']);
+		if (isset($_REQUEST['post_lang_choice']))
+			$this->model->set_post_language($post_id, $lang = $_REQUEST['post_lang_choice']);
+
+		elseif (isset($_REQUEST['inline_lang_choice'])) {
+			if (($old_lang = $this->model->get_post_language($post_id)) && $old_lang->slug != $_REQUEST['inline_lang_choice'])
+				$this->model->delete_translation('post', $post_id);
+			$this->model->set_post_language($post_id, $lang = $_REQUEST['inline_lang_choice']);
 		}
 
 		elseif (isset($_GET['new_lang']))
@@ -229,23 +232,22 @@ class PLL_Admin_Filters_Post {
 		else
 			$this->model->set_post_language($post_id, $this->pref_lang);
 
-		if (!isset($_POST['post_lang_choice']))
-			return;
-
 		// make sure we get save terms in the right language (especially tags with same name in different languages)
-		if ($_POST['post_lang_choice']) {
+		if (!empty($lang)) {
 			// FIXME quite a lot of query in foreach
 			foreach ($this->model->taxonomies as $tax) {
 				$terms = get_the_terms($post_id, $tax);
+
 				if (is_array($terms)) {
 					$newterms = array();
 					foreach ($terms as $term) {
-						if ($newterm = $this->model->get_term_by('name', $term->name, $tax, $_POST['post_lang_choice']))
+						if ($newterm = $this->model->get_term_by('name', $term->name, $tax, $lang))
 							$newterms[] = (int) $newterm->term_id; // cast is important otherwise we get 'numeric' tags
 
 						elseif (!is_wp_error($term_info = wp_insert_term($term->name, $tax))) // create the term in the correct language
 							$newterms[] = (int) $term_info['term_id'];
 					}
+
 					wp_set_object_terms($post_id, $newterms, $tax);
 				}
 			}
@@ -259,6 +261,11 @@ class PLL_Admin_Filters_Post {
 			$translations[$lang] = ($tr_id && $this->model->get_post_language((int) $tr_id)->slug == $lang) ? (int) $tr_id : 0;
 
 		$this->model->save_translations('post', $post_id, $translations);
+
+		// refresh language cache when a static front page has been translated
+		if (($pof = get_option('page_on_front')) && in_array($pof, $translations))
+			$this->model->clean_languages_cache();
+
 		do_action('pll_save_post', $post_id, $post, $translations);
 	}
 

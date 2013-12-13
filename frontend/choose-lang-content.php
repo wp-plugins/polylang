@@ -2,6 +2,7 @@
 
 /*
  * Choose the language when it is set from content
+ * The language is set either in parse_query with priority 2 or in wp with priority 5
  *
  * @since 1.2
  */
@@ -100,8 +101,10 @@ class PLL_Choose_Lang_Content extends PLL_Choose_lang {
 		// sets the language in case we hide the default language
 		// use $query->query['s'] as is_search is not set when search is empty
 		// http://wordpress.org/support/topic/search-for-empty-string-in-default-language
-		if ($this->options['hide_default'] && !isset($qv['lang']) && ($is_archive || isset($query->query['s']) || (count($query->query) == 1 && !empty($qv['feed'])) ))
-			$query->set('lang', $this->options['default_lang']);
+		if ($this->options['hide_default'] && !isset($qv['lang']) && ($is_archive || isset($query->query['s']) || (count($query->query) == 1 && !empty($qv['feed'])) )) {
+			$this->set_language($this->model->get_language($this->options['default_lang']));
+			$this->set_lang_query_var($query, $this->curlang);
+		}
 	}
 
 	/*

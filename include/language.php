@@ -21,6 +21,8 @@
  * is_rtl              => 1 if the language is rtl
  * flag_url            => url of the flag
  * flag                => html img of the flag
+ * home_url            => home url in this language
+ * search_url          => home url to use in search forms
  *
  * @since 1.2
  */
@@ -84,5 +86,28 @@ class PLL_Language {
 	public function update_count() {
 		wp_update_term_count($this->term_taxonomy_id, 'language'); // posts count
 		wp_update_term_count($this->tl_term_taxonomy_id, 'term_language'); // terms count
+	}
+
+	/*
+	 * set home_url and search_url properties
+	 *
+	 * @since 1.3
+	 *
+	 */
+	public function set_home_url() {
+		$options = get_option('polylang');
+
+		// a static page is used as front page : /!\ don't use get_page_link to avoid infinite loop
+		// don't use this for search form
+		if (!$options['redirect_lang'] && ($page_on_front = get_option('page_on_front')) && $id = pll_get_post($page_on_front, $this))
+			$this->home_url = _get_page_link($id);
+
+		$link = $GLOBALS['polylang']->links_model->home_url($this);
+
+		// add a trailing slash as done by WP on homepage (otherwise could break the search form when the permalink structure does not include one)
+		// only for pretty permalinks
+		$this->search_url = get_option('using_permalinks') ? trailingslashit($link) : $link;
+
+		$this->home_url = empty($this->home_url) ? $this->search_url : $this->home_url;
 	}
 }

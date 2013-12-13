@@ -4,11 +4,13 @@
 
 <p><em><?php $post_type == 'page' ? _e('ID of pages in other languages:', 'polylang') : _e('ID of posts in other languages:', 'polylang');?></em></p>
 <table>
-	<thead><tr>
-		<th><?php _e('Language', 'polylang');?></th>
-		<th><?php $post_type == 'page' ? _e('Page ID', 'polylang') : _e('Post ID', 'polylang');?></th>
-		<th><?php  _e('Edit', 'polylang');?></th>
-	</tr></thead>
+	<thead>
+		<tr>
+			<th><?php _e('Language', 'polylang');?></th>
+			<th><?php $post_type == 'page' ? _e('Page ID', 'polylang') : _e('Post ID', 'polylang');?></th>
+			<th><?php  _e('Edit', 'polylang');?></th>
+		</tr>
+	</thead>
 
 	<tbody>
 	<?php foreach ($this->model->get_languages_list() as $language) {
@@ -25,24 +27,28 @@
 				esc_attr($language->slug),
 				esc_attr($value)
 			);
-			if ($lang) {
-				$args = array(
-					'post_type' => $post_type,
-					'from_post' => $post_ID,
-					'new_lang'  => $language->slug
-				);
 
-				$link = $value ?
-					sprintf(
+			if ($lang) {
+				if ($value) {
+					$link = sprintf(
 						'<a href="%1$s">%2$s</a>',
 						esc_url(get_edit_post_link($value)),
 						__('Edit','polylang')
-					) :
-					sprintf(
+					);
+				}
+				else {
+					$args = array(
+						'post_type' => $post_type,
+						'from_post' => $post_ID,
+						'new_lang'  => $language->slug
+					);
+
+					$link = sprintf(
 						'<a href="%1$s">%2$s</a>',
 						esc_url(add_query_arg($args, admin_url('post-new.php'))),
 						__('Add new','polylang')
-					);?>
+					);
+				} ?>
 				<td><?php echo $link ?><td><?php
 			}?>
 			</tr><?php

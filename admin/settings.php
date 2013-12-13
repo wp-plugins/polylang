@@ -6,7 +6,7 @@
  * @since 1.2
  */
 class PLL_Settings {
-	public $model, $options;
+	public $links_model, $model, $options;
 	protected $strings = array(); // strings to translate
 
 	/*
@@ -16,9 +16,10 @@ class PLL_Settings {
 	 *
 	 * @param object $model instance of PLL_Model
 	 */
-	public function __construct(&$model) {
-		$this->model = &$model;
-		$this->options = &$model->options;
+	public function __construct(&$links_model) {
+		$this->links_model = &$links_model;
+		$this->model = &$links_model->model;
+		$this->options = &$this->model->options;
 
 		// adds screen options and the about box in the languages admin panel
 		add_action('load-settings_page_mlang',  array(&$this, 'load_page'));
@@ -34,16 +35,31 @@ class PLL_Settings {
 	 */
 	public function load_page() {
 		// test of $_GET['tab'] avoids displaying the automatically generated screen options on other tabs
-		if ((!defined('PLL_DISPLAY_ABOUT') || PLL_DISPLAY_ABOUT) && (!isset($_GET['tab']) || $_GET['tab'] == 'lang'))
-			add_meta_box('pll_about_box', __('About Polylang', 'polylang'), create_function('', "include(PLL_ADMIN_INC.'/view-about.php');"), 'settings_page_mlang', 'normal');
+		if ((!defined('PLL_DISPLAY_ABOUT') || PLL_DISPLAY_ABOUT) && (!isset($_GET['tab']) || $_GET['tab'] == 'lang')) {
+			add_meta_box(
+				'pll_about_box',
+				__('About Polylang', 'polylang'),
+				create_function('', "include(PLL_ADMIN_INC.'/view-about.php');"),
+				'settings_page_mlang',
+				'normal'
+			);
+		}
 
+		if (!isset($_GET['tab']) || $_GET['tab'] == 'lang') {
+			add_screen_option('per_page', array(
+				'label'   => __('Languages', 'polylang'),
+				'default' => 10,
+				'option'  => 'pll_lang_per_page'
+			));
+		}
 
-		if (!isset($_GET['tab']) || $_GET['tab'] == 'lang')
-			add_screen_option('per_page', array('label' => __('Languages', 'polylang'), 'default' => 10, 'option' => 'pll_lang_per_page'));
-
-
-		if (isset($_GET['tab']) && $_GET['tab'] == 'strings')
-			add_screen_option('per_page', array('label' => __('Strings translations', 'polylang'), 'default' => 10, 'option' => 'pll_strings_per_page'));
+		if (isset($_GET['tab']) && $_GET['tab'] == 'strings') {
+			add_screen_option('per_page', array(
+				'label'   => __('Strings translations', 'polylang'),
+				'default' => 10,
+				'option'  => 'pll_strings_per_page'
+			));
+		}
 	}
 
 	/*
@@ -112,8 +128,13 @@ class PLL_Settings {
 				break;
 
 			case 'settings':
-				$post_types = array_unique(apply_filters('pll_get_post_types', array_diff(get_post_types(array('_builtin' => false)), get_post_types(array('_pll' => true))), true));
-				$taxonomies = array_unique(apply_filters('pll_get_taxonomies', array_diff(get_taxonomies(array('_builtin' => false)), get_taxonomies(array('_pll' => true))), true));
+				$post_types = get_post_types(array('public' => true, '_builtin' => false));
+				$post_types = array_diff($post_types, get_post_types(array('_pll' => true)));
+				$post_types = array_unique(apply_filters('pll_get_post_types', $post_types, true));
+
+				$taxonomies = get_taxonomies(array('public' => true, '_builtin' => false));
+				$taxonomies = array_diff($taxonomies, get_taxonomies(array('_pll' => true)));
+				$taxonomies = array_unique(apply_filters('pll_get_taxonomies', $taxonomies , true));
 				break;
 
 			default:
@@ -217,9 +238,11 @@ class PLL_Settings {
 					$this->options[$key] = isset($_POST[$key]) ? (int) $_POST[$key] : 0;
 
 				// FIXME : TODO error message if not a valid url
-				if (isset($_POST['domains']) && is_array($_POST['domains']))
-					foreach ($_POST['domains'] as $key => $domain)
+				if (isset($_POST['domains']) && is_array($_POST['domains'])) {
+					foreach ($_POST['domains'] as $key => $domain) {
 						$this->options['domains'][$key] = esc_url_raw(trim($domain));
+					}
+				}
 
 				foreach (array('browser', 'hide_default', 'redirect_lang', 'media_support') as $key)
 					$this->options[$key] = isset($_POST[$key]) ? 1 : 0;
@@ -233,6 +256,9 @@ class PLL_Settings {
 				// it seems useless to refresh permastruct here
 				flush_rewrite_rules();
 
+				// refresh language cache in case home urls have been modified
+				$this->model->clean_languages_cache();
+
 				// fills existing posts & terms with default language
 				if (isset($_POST['fill_languages']) && $nolang = $this->model->get_objects_with_no_lang()) {
 					if (!empty($nolang['posts']))
@@ -240,6 +266,7 @@ class PLL_Settings {
 					if (!empty($nolang['terms']))
 						$this->model->set_language_in_mass('term', $nolang['terms'], $this->options['default_lang']);
 				}
+
 				wp_redirect('admin.php?page=mlang&tab=settings&updated=true'); // updated=true interpreted by WP
 				exit;
 				break;
@@ -292,7 +319,7 @@ class PLL_Settings {
 		global $wp_registered_widgets;
 		$sidebars = wp_get_sidebars_widgets();
 		foreach ($sidebars as $sidebar => $widgets) {
-			if ($sidebar == 'wp_inactive_widgets' || !isset($widgets))
+			if ($sidebar == 'wp_inactive_widgets' || empty($widgets))
 				continue;
 
 			foreach ($widgets as $widget) {

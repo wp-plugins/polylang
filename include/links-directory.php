@@ -26,6 +26,9 @@ class PLL_Links_Directory {
 
 		add_action ('setup_theme', array(&$this, 'add_permastruct'));
 
+		// refresh rewrite rules if the 'page_on_front' option is modified
+		add_action('update_option_page_on_front', 'flush_rewrite_rules');
+
 		// make sure to prepare rewrite rules when flushing
 		add_action ('pre_option_rewrite_rules', array(&$this, 'prepare_rewrite_rules'));
 	}
@@ -67,8 +70,8 @@ class PLL_Links_Directory {
 
 		if (!empty($languages)) {
 			global $wp_rewrite;
-			$pattern = '#' . ($this->options['rewrite'] ? '' : 'language\/') . '('.implode('|', $languages).')\/#';
-			$url = preg_replace($pattern, $wp_rewrite->root, $url);
+			$pattern = '#' . ($this->options['rewrite'] ? '' : '\/language') . '\/('.implode('|', $languages).')\/#';
+			$url = preg_replace($pattern, $wp_rewrite->root . '/', $url);
 		}
 		return $url;
 	}
@@ -98,6 +101,19 @@ class PLL_Links_Directory {
 		$root = $this->options['rewrite'] ? '' : 'language/';
 		$pattern = '#\/'.$root.'('.implode('|', $this->model->get_languages_list(array('fields' => 'slug'))).')\/#';
 		return preg_match($pattern, trailingslashit($_SERVER['REQUEST_URI']), $matches) ? $matches[1] : ''; // $matches[1] is the slug of the requested language
+	}
+
+	/*
+	 * returns the home url
+	 * links_model interface
+	 *
+	 * @since 1.3.1
+	 *
+	 * @param object $lang PLL_Language object
+	 * @return string
+	 */
+	public function home_url($lang) {
+		return $this->options['hide_default'] && $lang->slug == $this->options['default_lang'] ? $this->home : get_term_link($lang, 'language');
 	}
 
 	/*

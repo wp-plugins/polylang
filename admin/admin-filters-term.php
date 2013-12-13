@@ -33,6 +33,7 @@ class PLL_Admin_Filters_Term {
 
 		// adds actions related to languages when creating or saving categories and post tags
 		add_filter('wp_dropdown_cats', array(&$this, 'wp_dropdown_cats'));
+		add_filter('pre_insert_term', array(&$this, 'pre_insert_term'), 10, 2);
 		add_action('create_term', array(&$this, 'save_term'), 10, 3);
 		add_action('edit_term', array(&$this, 'save_term'), 10, 3);
 		add_filter('pre_term_name', array(&$this, 'pre_term_name'));
@@ -73,6 +74,9 @@ class PLL_Admin_Filters_Term {
 			$dropdown->walk($this->model->get_languages_list(), array('name' => 'term_lang_choice', 'value' => 'term_id', 'selected' => $lang ? $lang->term_id : '')),
 			__('Sets the language', 'polylang')
 		);
+
+		if (!empty($_GET['from_tag']))
+			printf('<input type="hidden" name="from_tag" value="%d" />', $_GET['from_tag']);
 
 		// adds translation fields
 		echo '<div id="term-translations" class="form-field">';
@@ -130,6 +134,17 @@ class PLL_Admin_Filters_Term {
 		return $output;
 	}
 
+	public function pre_insert_term($term, $taxonomy) {
+		if (isset($_POST['action'], $_POST['from_tag'], $_POST['term_lang_choice']) && 'add-tag' == $_POST['action'] && $this->model->get_translation('term', $_POST['from_tag'], $_POST['term_lang_choice'])) {
+			$from_term = get_term($_POST['from_tag'], $taxonomy);
+			return new WP_Error('term_translation_exists', sprintf(
+				__('A translation does already exist for %s', 'polylang'),
+				$from_term->name
+			));
+		}
+		return $term;
+	}
+
 	/*
 	 * called when a category or post tag is created or edited
 	 * saves language and translations
@@ -148,13 +163,14 @@ class PLL_Admin_Filters_Term {
 		// save language
 		if (isset($_POST['term_lang_choice']))
 			$this->model->set_term_language($term_id, $_POST['term_lang_choice']);
-		if (isset($_POST['inline_lang_choice'])) {
-			// don't use term_lang_choice for quick edit to avoid conflict with the "add term" form
-			if ($this->model->get_term_language($term_id)->slug != $_POST['inline_lang_choice'])
+
+		elseif (isset($_POST['inline_lang_choice'])) {
+			if (isset($_POST['inline-save-tax']) && $this->model->get_term_language($term_id)->slug != $_POST['inline_lang_choice'])
 				$this->model->delete_translation('term', $term_id);
 			$this->model->set_term_language($term_id, $_POST['inline_lang_choice']);
 		}
-		elseif (isset($_POST['post_lang_choice']))
+
+		elseif (isset($_POST['post_lang_choice'])) // FIXME should be useless now
 			$this->model->set_term_language($term_id, $_POST['post_lang_choice']);
 
 		elseif ($this->model->get_term_language($term_id))
@@ -207,10 +223,18 @@ class PLL_Admin_Filters_Term {
 		// if the new term has the same name as a language, we *need* to differentiate the term
 		// see http://core.trac.wordpress.org/ticket/23199
 		if (term_exists($name, 'language') && !term_exists($name, $taxonomy) && (!$slug || $slug == $name))
-			$slug = $name.'-'.$taxonomy; // a convenient slug which may be modified later by the user
+			$slug = $name . '-' . $taxonomy; // a convenient slug which may be modified later by the user
 
-		return !$slug && in_array($taxonomy, $this->model->taxonomies) && term_exists($name, $taxonomy) ?
-			$name.'-'.$this->model->get_language($_POST['term_lang_choice'])->slug : $slug;
+		// if the term already exists in another language
+		if (!$slug && in_array($taxonomy, $this->model->taxonomies) && term_exists($name, $taxonomy)) {
+			if (isset($_POST['term_lang_choice']))
+				$slug = $name . '-' . $this->model->get_language($_POST['term_lang_choice'])->slug;
+
+			elseif (isset($_POST['inline_lang_choice']))
+				$slug = $name . '-' . $this->model->get_language($_POST['inline_lang_choice'])->slug;
+		}
+
+		return $slug;
 	}
 
 	/*
