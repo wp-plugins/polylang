@@ -92,22 +92,23 @@ class PLL_Language {
 	 * set home_url and search_url properties
 	 *
 	 * @since 1.3
-	 *
 	 */
 	public function set_home_url() {
-		$options = get_option('polylang');
-
-		// a static page is used as front page : /!\ don't use get_page_link to avoid infinite loop
-		// don't use this for search form
-		if (!$options['redirect_lang'] && ($page_on_front = get_option('page_on_front')) && $id = pll_get_post($page_on_front, $this))
-			$this->home_url = _get_page_link($id);
-
-		$link = $GLOBALS['polylang']->links_model->home_url($this);
+		// home url for search form (can't use the page url if a static page is used as front page)
+		$this->search_url = $GLOBALS['polylang']->links_model->home_url($this);
 
 		// add a trailing slash as done by WP on homepage (otherwise could break the search form when the permalink structure does not include one)
 		// only for pretty permalinks
-		$this->search_url = get_option('using_permalinks') ? trailingslashit($link) : $link;
+		if (get_option('using_permalinks'))
+			$this->search_url = trailingslashit($link);
 
-		$this->home_url = empty($this->home_url) ? $this->search_url : $this->home_url;
+		$options = get_option('polylang');
+
+		// a static page is used as front page
+		if (!$options['redirect_lang'] && ($page_on_front = get_option('page_on_front')) && $id = pll_get_post($page_on_front, $this))
+			$this->home_url = _get_page_link($id); // /!\ don't use get_page_link to avoid infinite loop
+
+		else
+			$this->home_url = $this->search_url;
 	}
 }

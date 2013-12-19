@@ -154,21 +154,16 @@ class PLL_Model {
 
 				if (!empty($languages) && !empty($term_languages)) {
 					array_walk($languages, create_function('&$v, $k, $term_languages', '$v = new PLL_Language($v, $term_languages[$v->name]);'), $term_languages);
-
-					// need to wait for $wp_rewrite availibility to set homepage urls
-					$this->_languages = $languages;
-					did_action('setup_theme') ? $this->_languages_urls() : add_action('setup_theme', array(&$this, '_languages_urls'));
 				}
 				else {
 					$languages = array(); // in case something went wrong
 				}
 			}
 
-			// add flags (not in db cache as they may be different on frontend and admin)
-			foreach ($languages as $lang)
-				$lang->set_flag();
-
 			$this->languages = $languages;
+
+			// need to wait for $wp_rewrite availibility to set homepage urls
+			did_action('setup_theme') ? $this->_languages_list() : add_action('setup_theme', array(&$this, '_languages_list'));
 		}
 
 		$args = wp_parse_args($args, array('hide_empty' => false));
@@ -181,17 +176,28 @@ class PLL_Model {
 	}
 
 	/*
-	 * fills home urls in language list and set transient in db
-	 * delayed to be sure we have access to $wp_rewrite
+	 * fills home urls and flags in language list and set transient in db
+	 * delayed to be sure we have access to $wp_rewrite for home urls
+	 * home urls are not cached in db if PLL_CACHE_HOME_URLS is set to false
 	 *
-	 * @since 1.3
+	 * @since 1.3.2
 	 */
-	public function _languages_urls() {
-		foreach ($this->_languages as $language)
-			$language->set_home_url();
+	public function _languages_list() {
+		if (false === get_transient('pll_languages_list')) {
+			if (!defined('PLL_CACHE_HOME_URL') || PLL_CACHE_HOME_URL) {
+				foreach ($this->languages as $language)
+					$language->set_home_url();
+			}
+			set_transient('pll_languages_list', $this->languages);
+		}
 
-		set_transient('pll_languages_list', $this->_languages);
-		unset($this->languages, $this->_languages); // in case flags were already set
+		foreach ($this->languages as $language) {
+			if (defined('PLL_CACHE_HOME_URL') && !PLL_CACHE_HOME_URL)
+				$language->set_home_url();
+
+			// add flags (not in db cache as they may be different on frontend and admin)
+			$language->set_flag();
+		}
 	}
 
 	/*

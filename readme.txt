@@ -69,6 +69,10 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 
 == Changelog ==
 
+= 1.3.2 =
+
+* Add the possibility not to cache homepage urls with option PLL_CACHE_HOME_URL (for users having several domains).
+
 = 1.3.1 (2013-12-13) =
 
 * Bug correction: fatal error on settings page if a static front page without language is set
