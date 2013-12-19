@@ -72,6 +72,8 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 = 1.3.2 =
 
 * Add the possibility not to cache homepage urls with option PLL_CACHE_HOME_URL (for users having several domains).
+* the function get_pages is now filtered by language
+* Improve performance when filtering pages (less queries)
 
 = 1.3.1 (2013-12-13) =
 

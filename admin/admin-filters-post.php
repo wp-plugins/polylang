@@ -38,6 +38,7 @@ class PLL_Admin_Filters_Post {
 
 		// filters the pages by language in the parent dropdown list in the page attributes metabox
 		add_filter('page_attributes_dropdown_pages_args', array(&$this, 'page_attributes_dropdown_pages_args'), 10, 2);
+		add_filter('get_pages', array(&$this, 'get_pages'), 10, 2);
 	}
 
 	/*
@@ -293,12 +294,34 @@ class PLL_Admin_Filters_Post {
 	 * @return array modified arguments
 	 */
 	public function page_attributes_dropdown_pages_args($dropdown_args, $post) {
-		$lang = isset($_POST['lang']) ? $this->model->get_language($_POST['lang']) : $this->model->get_post_language($post->ID); // ajax or not ?
-		if (!$lang)
-			$lang = $this->pref_lang;
+		$dropdown_args['lang'] = isset($_POST['lang']) ? $this->model->get_language($_POST['lang']) : $this->model->get_post_language($post->ID); // ajax or not ?
+		if (!$dropdown_args['lang'])
+			$dropdown_args['lang'] = $this->pref_lang;
 
-		$pages = implode(',', pll_exclude_pages($lang));
-		$dropdown_args['exclude'] = isset($dropdown_args['exclude']) ? $dropdown_args['exclude'] . ',' . $pages : $pages;
 		return $dropdown_args;
+	}
+
+
+	/*
+	 * filters get_pages
+	 *
+	 * @since 1.3.2
+	 *
+	 * @param array $pages an array of pages already queried
+	 * @param array $args get_pages arguments
+	 * @return array modified list of pages
+	 */
+	public function get_pages($pages, $args) {
+		// filters the pages in the parent dropdown list in the page attributes metabox
+		// language parameter added in page_attributes_dropdown_pages_args
+		if (!empty($args['lang'])) {
+			$lang = $this->model->get_language($args['lang']);
+		}
+
+		// admin language filter
+		elseif ($lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true))
+		 	$lang = $this->model->get_language($lg);
+
+		return empty($lang) ? $pages : $this->model->get_pages($pages, $args, $lang);
 	}
 }

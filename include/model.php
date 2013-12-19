@@ -750,4 +750,59 @@ class PLL_Model {
 
 		return $args;
 	}
+
+	/*
+	 * filters get_pages per language
+	 *
+	 * @since 1.3.2
+	 *
+	 * @param array $pages an array of pages already queried
+	 * @param array $args get_pages arguments
+	 * @param object $language language to keep
+	 * @return array modified list of pages
+	 */
+	public function get_pages($pages, $args, $language) {
+		if (empty($pages) || !$this->is_translated_post_type($args['post_type']))
+			return $pages;
+
+		static $once = false;
+
+		// obliged to redo the page query if we want to get the right number
+		if (!empty($args['number']) && !$once) {
+			$once = true; // avoid infinite loop
+
+			$r = array(
+				'lang' => 0, // so this query is not filtered by our pre_get_post filter in PLL_Frontend_Filters
+				'numberposts' => -1,
+				'nopaging'    => true,
+				'post_type'   => $args['post_type'],
+				'fields'      => 'ids',
+				'tax_query'   => array(array(
+					'taxonomy' => 'language',
+					'field'    => 'term_taxonomy_id', // since WP 3.5
+					'terms'    => $language->term_taxonomy_id,
+					'operator' => 'NOT IN'
+				))
+			);
+
+			// backward compatibility WP < 3.5
+			if (version_compare($GLOBALS['wp_version'], '3.5' , '<')) {
+				unset($r['tax_query']['field']);
+				$r['tax_query']['terms'] = $language->term_id;
+			}
+
+			$args['exclude'] = array_merge($args['exclude'], get_posts($r));
+			$pages = get_pages($args);
+		}
+
+		update_post_caches($pages, $args['post_type']); // not done by WP
+
+		foreach ($pages as $key => $page) {
+			$lang = $this->get_post_language($page->ID);
+			if (empty($lang) || $language->slug != $lang->slug)
+				unset($pages[$key]);
+		}
+
+		return $pages;
+	}
 }

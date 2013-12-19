@@ -40,8 +40,8 @@ class PLL_Frontend_Filters {
 		// filters categories and post tags by language
 		add_filter('terms_clauses', array(&$this, 'terms_clauses'), 10, 3);
 
-		// filters the pages according to the current language in wp_list_pages
-		add_filter('wp_list_pages_excludes', array(&$this, 'wp_list_pages_excludes'));
+		// filters the get_pages function according to the current language
+		add_filter('get_pages', array(&$this, 'get_pages'), 10, 2);
 
 		// filters the comments according to the current language
 		add_filter('comments_clauses', array(&$this, 'comments_clauses'), 10, 2);
@@ -157,16 +157,17 @@ class PLL_Frontend_Filters {
 	}
 
 	/*
-	 * excludes pages which are not in the current language for wp_list_pages
-	 * useful for the pages widget
+	 * filters get_pages per language
 	 *
-	 * @since 0.4
+	 * @since 1.3.2
 	 *
-	 * @param array $pages list of page ids to exclude from wp_list_pages
-	 * @return array modified list of page ids
+	 * @param array $pages an array of pages already queried
+	 * @param array $args get_pages arguments
+	 * @return array modified list of pages
 	 */
-	public function wp_list_pages_excludes($pages) {
-		return array_merge($pages, pll_exclude_pages($this->curlang));
+	public function get_pages($pages, $args) {
+		$lang = empty($args['lang']) ? $this->curlang : $this->model->get_language($args['lang']);
+		return $this->model->get_pages($pages, $args, $lang);
 	}
 
 	/*
