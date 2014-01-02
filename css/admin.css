@@ -69,51 +69,50 @@ th[class*='column-language_'] {
 
 /* languages metabox in post.php */
 #post-translations table {
+	table-layout: fixed;
 	width: 100%;
-	text-align: left;
-	font-size: 11px;
-	margin: 0 6px;
+}
+
+#post-translations a {
+	text-decoration: none;
+}
+
+#post-translations .pll-language-column, #post-translations .pll-edit-column {
+	width: 10%;
 }
 
 #post-translations td {
-	font-size: 11px;
+	padding: 2px;
 }
 
-/* language and translations in edit-tags.php as well as media translations in upload.php */
+#post-translations .spinner, #term-translations .spinner {
+	float: none;
+	margin: 0;
+	background-position: center;
+	width: auto;
+}
+
+.pll-edit-column {
+	text-align: center;
+}
+
+/* specific case for media */
+#post-translations .pll-media-language-column {
+	width: 60%;
+}
+
+/* language and translations in edit-tags.php */
 #term-translations table {
 	width: 97%;
 }
 
-#term-translations .term-translations th, .media-item .describe .media-translations th {
-  padding: 8px 10px;
+#term-translations .pll-language-column {
+  line-height: 28px;
+  width: 20%;
 }
 
-#term-translations .term-translations td, .media-item .describe .media-translations td {
-  font-size: 12px;
-  line-height: 26px;
-  margin-bottom: 9px;
-  padding: 4px 10px;
-}
-
-.tr-language-column {
-	width: 35%;
-}
-
-div#term-translations select[id*='tr_lang_'] {
-	width: 95%;
-}
-
-tr#term-translations select[id*='tr_lang_'] {
-	width: 65%;
-}
-
-.tr-edit-column {
-	width: 15%;
-}
-
-/* media translations in upload.php */
-.media-translations {
-	width: 460px;
+#term-translations .pll-edit-column {
+  width: 10%;
 }
 
 /* icon fonts */

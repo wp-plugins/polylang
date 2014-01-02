@@ -2,7 +2,7 @@
 Contributors: Chouby
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CCWWYUUQV8F4E
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, international, localization
-Requires at least: 3.1
+Requires at least: 3.5
 Tested up to: 3.8
 Stable tag: 1.3.1
 License: GPLv2 or later
@@ -69,11 +69,16 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 
 == Changelog ==
 
-= 1.3.2 =
+= 1.4 =
 
+* Minimum WordPress version is now v3.5
+* Refresh translations metaboxes: now translated posts are chosen in a dropdown list
+* Add specific management of translated featured tag in Twenty Fourteen
 * Add the possibility not to cache homepage urls with option PLL_CACHE_HOME_URL (for users having several domains).
-* the function get_pages is now filtered by language
-* Improve performance when filtering pages (less queries)
+* The function get_pages is now filtered by language
+* Various performance improvements
+* Pre 1.2 data will be removed from DB at first upgrade at least 60 days after upgrade to 1.4
+* Removed some duplicate code between admin and frontend
 * Bug correction: incorrect pagination when using domains or subdomains
 
 = 1.3.1 (2013-12-13) =

@@ -1,13 +1,11 @@
 <?php
 
 /*
- * setup miscellaneous admin filters
+ * setup miscellaneous admin filters as well as filters common to admin and frontend
  *
  * @since 1.2
  */
-class PLL_Admin_Filters {
-	public $links_model, $model, $options;
-	public $pref_lang;
+class PLL_Admin_Filters extends PLL_Filters {
 
 	/*
 	 * constructor: setups filters and actions
@@ -15,14 +13,10 @@ class PLL_Admin_Filters {
 	 * @since 1.2
 	 *
 	 * @param object $links_model
-	 * @param object $pref_lang language chosen in admin filter or default language
+	 * @param object $curlang language chosen in admin filter
 	 */
-	public function __construct(&$links_model, $pref_lang) {
-		$this->links_model = &$links_model;
-		$this->model = &$links_model->model;
-		$this->options = &$this->model->options;
-
-		$this->pref_lang = $pref_lang;
+	public function __construct(&$links_model, &$curlang) {
+		parent::__construct($links_model, $curlang);
 
 		// widgets languages filter
 		add_action('in_widget_form', array(&$this, 'in_widget_form'));
@@ -36,10 +30,6 @@ class PLL_Admin_Filters {
 		// ugrades languages files after a core upgrade (timing is important)
 		// FIXME private action ? is there a better way to do this ?
 		add_action( '_core_updated_successfully', array(&$this, 'upgrade_languages'), 1); // since WP 3.3
-
-		// filters comments by language
-		add_filter('comments_clauses', array(&$this, 'comments_clauses'), 10, 2);
-
 	}
 
 	/*
@@ -154,27 +144,5 @@ class PLL_Admin_Filters {
 		foreach ($this->model->get_languages_list() as $language)
 			if ($language->locale != $_POST['locale']) // do not (re)update the language files of a localized WordPress
 				PLL_Admin::download_mo($language->locale, $version);
-	}
-
-	/*
-	 * filters comments by language
-	 *
-	 * @since 0.9
-	 *
-	 * @param array $clauses sql clauses
-	 * @param object $query WP_Comment_Query object
-	 * @return array modified clauses
-	 */
-	public function comments_clauses($clauses, $query) {
-		if (!empty($query->query_vars['lang']))
-			$lang = $query->query_vars['lang'];
-
-		elseif (!empty($_GET['lang']) && $_GET['lang'] != 'all')
-			$lang = $this->model->get_language($_GET['lang']);
-
-		elseif ($lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true))
-		 	$lang = $this->model->get_language($lg);
-
-		return empty($lang) ? $clauses : $this->model->comments_clauses($clauses, $lang);
 	}
 }

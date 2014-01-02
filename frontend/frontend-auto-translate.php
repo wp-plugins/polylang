@@ -34,7 +34,7 @@ class PLL_Frontend_Auto_Translate {
 		global $wpdb;
 		$qv = &$query->query_vars;
 
-		if (!empty($qv['post_type']) && !$this->model->is_translated_post_type($qv['post_type']))
+		if ($query->is_main_query() || !empty($qv['lang']) || (!empty($qv['post_type']) && !$this->model->is_translated_post_type($qv['post_type'])))
 			return;
 
 		$sign = create_function('$n', 'return $n > 0 ? 1 : ($n < 0 ? -1 : 0);');
@@ -99,37 +99,37 @@ class PLL_Frontend_Auto_Translate {
 			}
 		}
 
-		if (isset($this->model->taxonomies) && is_array($this->model->taxonomies)) {
-			// custom taxonomies
-			// according to codex, this type of query is deprecated as of WP 3.1 but it does not appear in WP 3.5 source code
-			foreach (array_diff($this->model->taxonomies, array('category', 'post_tag')) as $taxonomy) {
-				$tax = get_taxonomy($taxonomy);
-				$arr = array();
-				if (!empty($qv[$tax->query_var])) {
-					$sep = strpos($qv[$tax->query_var], ',') !== false ? ',' : '+'; // two possible separators
-					foreach (explode($sep, $qv[$tax->query_var]) as $slug)
-						$arr[] = (($tag = get_term_by('slug', $slug, $taxonomy)) && ($tr_id = pll_get_term($tag->term_id)) && !is_wp_error($tr = get_term($tr_id, $taxonomy))) ?
-							$tr->slug : $slug;
 
-					$qv[$tax->query_var] = implode($sep, $arr);
-				}
+		// custom taxonomies
+		// according to codex, this type of query is deprecated as of WP 3.1 but it does not appear in WP 3.5 source code
+		foreach (array_intersect($this->model->get_translated_taxonomies(), get_taxonomies(array('_builtin' => false))) as $taxonomy) {
+			$tax = get_taxonomy($taxonomy);
+			$arr = array();
+			if (!empty($qv[$tax->query_var])) {
+				$sep = strpos($qv[$tax->query_var], ',') !== false ? ',' : '+'; // two possible separators
+				foreach (explode($sep, $qv[$tax->query_var]) as $slug)
+					$arr[] = (($tag = get_term_by('slug', $slug, $taxonomy)) && ($tr_id = pll_get_term($tag->term_id)) && !is_wp_error($tr = get_term($tr_id, $taxonomy))) ?
+						$tr->slug : $slug;
+
+				$qv[$tax->query_var] = implode($sep, $arr);
 			}
+		}
 
-			// tax_query since WP 3.1
-			if (!empty($qv['tax_query']) && is_array($qv['tax_query'])) {
-				foreach ($qv['tax_query'] as $key => $q) {
-					if (isset($q['taxonomy']) && in_array($q['taxonomy'], $this->model->taxonomies)) {
-						$arr = array();
-						$field = isset($q['field']) && in_array($q['field'], array('slug', 'name')) ? $q['field'] : 'term_id';
-						foreach ( (array) $q['terms'] as $t)
-							$arr[] = (($tag = get_term_by($field, $t, $q['taxonomy'])) && ($tr_id = pll_get_term($tag->term_id)) && !is_wp_error($tr = get_term($tr_id, $q['taxonomy']))) ?
-								$tr->$field : $t;
+		// tax_query since WP 3.1
+		if (!empty($qv['tax_query']) && is_array($qv['tax_query'])) {
+			foreach ($qv['tax_query'] as $key => $q) {
+				if (isset($q['taxonomy']) && $this->model->is_translated_taxonomy($q['taxonomy'])) {
+					$arr = array();
+					$field = isset($q['field']) && in_array($q['field'], array('slug', 'name')) ? $q['field'] : 'term_id';
+					foreach ( (array) $q['terms'] as $t)
+						$arr[] = (($tag = get_term_by($field, $t, $q['taxonomy'])) && ($tr_id = pll_get_term($tag->term_id)) && !is_wp_error($tr = get_term($tr_id, $q['taxonomy']))) ?
+							$tr->$field : $t;
 
-						$qv['tax_query'][$key]['terms'] = $arr;
-					}
+					$qv['tax_query'][$key]['terms'] = $arr;
 				}
 			}
 		}
+
 
 		// p, page_id, post_parent can only take one id
 		foreach (array('p', 'page_id', 'post_parent') as $key)

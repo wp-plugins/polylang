@@ -311,7 +311,7 @@ class PLL_Admin_Model extends PLL_Model {
 		$posts = get_posts(array(
 			'numberposts' => -1,
 			'nopaging'    => true,
-			'post_type'   => $this->post_types,
+			'post_type'   => $this->get_translated_post_types(),
 			'post_status' => 'any',
 			'fields'      => 'ids',
 			'tax_query'   => array(array(
@@ -321,7 +321,7 @@ class PLL_Admin_Model extends PLL_Model {
 			))
 		));
 
-		$terms = get_terms($this->taxonomies, array('get'=>'all', 'fields'=>'ids'));
+		$terms = get_terms($this->get_translated_taxonomies(), array('get'=>'all', 'fields'=>'ids'));
 		$groups = $this->get_languages_list(array('fields' => 'tl_term_id'));
 		$tr_terms = get_objects_in_term($groups, 'term_language');
 		$terms = array_unique(array_diff($terms, $tr_terms)); // array_unique to avoid duplicates if a term is in more than one taxonomy

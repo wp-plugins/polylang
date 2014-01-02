@@ -44,7 +44,7 @@ class PLL_Links {
 		if (isset($links[$link]))
 			return $links[$link];
 
-		if ('post_type_link' == current_filter() && !in_array($post->post_type, $this->model->post_types))
+		if ('post_type_link' == current_filter() && !$this->model->is_translated_post_type($post->post_type))
 			return $links[$link] = $link;
 
 		if ('_get_page_link' == current_filter()) // this filter uses the ID instead of the post object
@@ -70,7 +70,7 @@ class PLL_Links {
 		if (isset($links[$link]))
 			return $links[$link];
 
-		return $links[$link] = in_array($tax, $this->model->taxonomies) ?
+		return $links[$link] = $this->model->is_translated_taxonomy($tax) ?
 			$this->links_model->add_language_to_link($link, $this->model->get_term_language($term->term_id)) : $link;
 	}
 

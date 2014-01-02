@@ -22,7 +22,7 @@ class PLL_Frontend extends PLL_Base{
 		add_action('pll_language_defined', array(&$this, 'pll_language_defined'), 1, 2);
 
 		// filters posts by language
-		add_filter('parse_query', array(&$this, 'parse_query'), 6); // after PLL_Frontend_Filters::parse_query
+		add_filter('parse_query', array(&$this, 'parse_query'), 6);
 
 		// not before 'check_language_code_in_url'
 		if (!defined('PLL_AUTO_TRANSLATE') || PLL_AUTO_TRANSLATE)

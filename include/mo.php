@@ -32,9 +32,12 @@ class PLL_MO extends MO {
 		foreach ($this->entries as $entry)
 			$strings[] = array($entry->singular, $this->translate($entry->singular));
 
-		$lang_id = is_object($lang) ? $lang->term_id : $lang;
-		$post = get_page_by_title('polylang_mo_' . $lang_id, ARRAY_A, 'polylang_mo'); // wp_insert_post wants an array
-		$post['post_title'] = 'polylang_mo_' . $lang_id;
+		$post = get_post($lang->mo_id, ARRAY_A); // wp_insert_post wants an array
+
+		if (empty($post))
+				$GLOBALS['polylang']->model->clean_languages_cache(); // to set mo_id
+
+		$post['post_title'] = 'polylang_mo_' . $lang->term_id;
 		// json_encode would take less space but is slower to decode
 		// wp_insert_post expects slashed data
 		$post['post_content'] = addslashes(serialize($strings));
@@ -51,8 +54,7 @@ class PLL_MO extends MO {
 	 * @param object $lang the language in which we want to get strings
 	 */
 	public function import_from_db($lang) {
-		$lang_id = is_object($lang) ? $lang->term_id : $lang;
-		$post = get_page_by_title('polylang_mo_' . $lang_id, OBJECT, 'polylang_mo');
+		$post = get_post($lang->mo_id, OBJECT);
 		if (!empty($post)) {
 			$strings = unserialize($post->post_content);
 			if (is_array($strings)) {
@@ -60,5 +62,18 @@ class PLL_MO extends MO {
 					$this->add_entry($this->make_entry($msg[0], $msg[1]));
 			}
 		}
+	}
+
+	/*
+	 * returns the post id of the post storing the strings translations
+	 *
+	 * @since 1.4
+	 *
+	 * @param object $lang
+	 * @return int
+	 */
+	public static function get_id($lang) {
+		global $wpdb;
+		return $wpdb->get_var($wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_title = %s AND post_type= %s", 'polylang_mo_' . $lang->term_id, 'polylang_mo'));
 	}
 }

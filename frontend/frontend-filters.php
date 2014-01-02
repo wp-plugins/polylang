@@ -5,10 +5,7 @@
  *
  * @since 1.2
  */
-class PLL_Frontend_Filters {
-	public $links_model, $model, $options;
-	public $curlang;
-
+class PLL_Frontend_Filters extends PLL_Filters{
 	/*
 	 * constructor: setups filters and actions
 	 *
@@ -18,17 +15,10 @@ class PLL_Frontend_Filters {
 	 * @param object $curlang
 	 */
 	public function __construct(&$links_model, &$curlang) {
-		$this->links_model = &$links_model;
-		$this->model = &$links_model->model;
-		$this->options = &$this->model->options;
-
-		$this->curlang = &$curlang;
+		parent::__construct($links_model, $curlang);
 
 		// filters the WordPress locale
 		add_filter('locale', array(&$this, 'get_locale'));
-
-		// backward compatibility WP < 3.4, modifies the language information in rss feed
-		add_filter('option_rss_language', array(&$this, 'option_rss_language'));
 
 		// translates page for posts and page on front
 		add_filter('option_page_for_posts', array(&$this, 'translate_page'));
@@ -39,12 +29,6 @@ class PLL_Frontend_Filters {
 
 		// filters categories and post tags by language
 		add_filter('terms_clauses', array(&$this, 'terms_clauses'), 10, 3);
-
-		// filters the get_pages function according to the current language
-		add_filter('get_pages', array(&$this, 'get_pages'), 10, 2);
-
-		// filters the comments according to the current language
-		add_filter('comments_clauses', array(&$this, 'comments_clauses'), 10, 2);
 
 		// rewrites archives, next and previous post links to filter them by language
 		foreach (array('getarchives', 'get_previous_post', 'get_next_post') as $filter)
@@ -86,19 +70,6 @@ class PLL_Frontend_Filters {
 	 */
 	public function get_locale($locale) {
 		return $this->curlang->locale;
-	}
-
-	/*
-	 * modifies the language information in rss feed
-	 * backward compatibility WP < 3.4
-	 *
-	 * @since 0.8
-	 *
-	 * @param string $value
-	 * @return string
-	 */
-	public function option_rss_language($value) {
-		return get_bloginfo_rss('language');
 	}
 
 	/*
@@ -149,38 +120,11 @@ class PLL_Frontend_Filters {
 	 */
 	public function terms_clauses($clauses, $taxonomies, $args) {
 		// does nothing except on taxonomies which are filterable
-		if (!array_intersect($taxonomies, $this->model->taxonomies))
+		if (!$this->model->is_translated_taxonomy($taxonomies))
 			return $clauses;
 
 		// adds our clauses to filter by language
 		return $this->model->terms_clauses($clauses, isset($args['lang']) ? $args['lang'] : $this->curlang);
-	}
-
-	/*
-	 * filters get_pages per language
-	 *
-	 * @since 1.3.2
-	 *
-	 * @param array $pages an array of pages already queried
-	 * @param array $args get_pages arguments
-	 * @return array modified list of pages
-	 */
-	public function get_pages($pages, $args) {
-		$lang = empty($args['lang']) ? $this->curlang : $this->model->get_language($args['lang']);
-		return $this->model->get_pages($pages, $args, $lang);
-	}
-
-	/*
-	 * filters the comments according to the current language mainly for the recent comments widget
-	 *
-	 * @since 0.2
-	 *
-	 * @param array $clauses
-	 * @param object $query
-	 * @return array modified $clauses
-	 */
-	public function comments_clauses($clauses, $query) {
-		return $this->model->comments_clauses($clauses, isset($query->query_vars['lang']) ? $query->query_vars['lang'] : $this->curlang);
 	}
 
 	/*
@@ -205,7 +149,7 @@ class PLL_Frontend_Filters {
 	 */
 	public function posts_where($sql) {
 		preg_match("#post_type = '([^']+)'#", $sql, $matches);	// find the queried post type
-		return !empty($matches[1]) && in_array($matches[1], $this->model->post_types) ? $sql . $this->model->where_clause($this->curlang, 'post') : $sql;
+		return !empty($matches[1]) && $this->model->is_translated_post_type($matches[1]) ? $sql . $this->model->where_clause($this->curlang, 'post') : $sql;
 	}
 
 	/*
@@ -246,7 +190,7 @@ class PLL_Frontend_Filters {
 	 * @param object $post
 	 */
 	public function save_post($post_id, $post) {
-		if (in_array($post->post_type, $this->model->post_types)) {
+		if ($this->model->is_translated_post_type($post->post_type)) {
 			if (isset($_REQUEST['lang']))
 				$this->model->set_post_language($post_id, $_REQUEST['lang']);
 
@@ -272,7 +216,7 @@ class PLL_Frontend_Filters {
 	 * @param string $taxonomy
 	 */
 	public function save_term($term_id, $tt_id, $taxonomy) {
-		if (in_array($taxonomy, $this->model->taxonomies)) {
+		if ($this->model->is_translated_taxonomy($taxonomy)) {
 			if (isset($_REQUEST['lang']))
 				$this->model->set_term_language($term_id, $_REQUEST['lang']);
 

@@ -23,6 +23,7 @@
  * flag                => html img of the flag
  * home_url            => home url in this language
  * search_url          => home url to use in search forms
+ * mo_id               => id of the post storing strings translations
  *
  * @since 1.2
  */
@@ -51,6 +52,8 @@ class PLL_Language {
 		$this->is_rtl = $description['rtl'];
 
 		$this->description = &$this->locale; // backward compatibility with Polylang < 1.2
+
+		$this->mo_id = PLL_MO::get_id($this);
 	}
 
 	/*
@@ -72,7 +75,7 @@ class PLL_Language {
 		$this->flag = apply_filters('pll_get_flag', empty($this->flag_url) ? '' :
 			sprintf(
 				'<img src="%s" title="%s" alt="%s" />',
-				esc_url($this->flag_url),
+				$this->flag_url,
 				esc_attr(apply_filters('pll_flag_title', $this->name, $this->slug, $this->locale)),
 				esc_attr($this->name)
 			));

@@ -6,7 +6,7 @@
  * @since 1.2
  */
 class PLL_Admin_Filters_Post {
-	public $model, $options, $pref_lang;
+	public $model, $options, $curlang, $pref_lang;
 
 	/*
 	 * constructor: setups filters and actions
@@ -16,9 +16,10 @@ class PLL_Admin_Filters_Post {
 	 * @param object $model instance of PLL_Model
 	 * @param object $pref_lang language chosen in admin filter or default language
 	 */
-	public function __construct(&$model, $pref_lang) {
+	public function __construct(&$model, &$curlang, $pref_lang) {
 		$this->model = &$model;
 		$this->options = &$model->options;
+		$this->curlang = &$curlang;
 		$this->pref_lang = $pref_lang;
 
 		// filters posts, pages and media by language
@@ -30,6 +31,8 @@ class PLL_Admin_Filters_Post {
 		// ajax response for changing the language in the post metabox
 		add_action('wp_ajax_post_lang_choice', array(&$this,'post_lang_choice'));
 
+		add_action('wp_ajax_post_translation_choice', array(&$this,'post_translation_choice'));
+
 		// adds actions and filters related to languages when creating, saving or deleting posts and pages
 		add_action('save_post', array(&$this, 'save_post'), 21, 2); // priority 21 to come after advanced custom fields (20) and before the event calendar which breaks everything after 25
 		add_action('before_delete_post', array(&$this, 'delete_post'));
@@ -38,7 +41,6 @@ class PLL_Admin_Filters_Post {
 
 		// filters the pages by language in the parent dropdown list in the page attributes metabox
 		add_filter('page_attributes_dropdown_pages_args', array(&$this, 'page_attributes_dropdown_pages_args'), 10, 2);
-		add_filter('get_pages', array(&$this, 'get_pages'), 10, 2);
 	}
 
 	/*
@@ -52,21 +54,21 @@ class PLL_Admin_Filters_Post {
 		$qvars = &$query->query_vars;
 
 		// do not filter post types such as nav_menu_item
-		if (isset($qvars['post_type']) && !in_array($qvars['post_type'], $this->model->post_types)) {
+		if (isset($qvars['post_type']) && !$this->model->is_translated_post_type($qvars['post_type'])) {
 			unset ($qvars['lang']);
 			return;
 		}
 
 		// filters the list of media by language when uploading from post
-		if ($this->options['media_support'] && ($GLOBALS['pagenow'] == 'media-upload.php' || // backward compatibility WP < 3.5
-			($GLOBALS['pagenow'] == 'admin-ajax.php' && isset($_REQUEST['action']) && $_REQUEST['action'] == 'query-attachments')) && // WP 3.5+
+		if ($this->options['media_support'] &&
+			$GLOBALS['pagenow'] == 'admin-ajax.php' && isset($_REQUEST['action']) && $_REQUEST['action'] == 'query-attachments' && // WP 3.5+
 			isset($_REQUEST['post_id']) && $lang = $this->model->get_post_language($_REQUEST['post_id']))
 			$query->set('lang', $lang->slug);
 
-		if (isset($qvars['post_type']) && in_array($qvars['post_type'], $this->model->post_types) && !isset($qvars['lang']) && $lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true))
-			$qvars['lang'] = $lg;
+		if (isset($qvars['post_type']) && $this->model->is_translated_post_type($qvars['post_type']) && !isset($qvars['lang']) && !empty($this->curlang))
+			$qvars['lang'] = $this->curlang->slug;
 
-		if ((isset($qvars['post_type']) && !in_array($qvars['post_type'], $this->model->post_types)) || (isset($qvars['lang']) && $qvars['lang'] == 'all'))
+		if ((isset($qvars['post_type']) && !$this->model->is_translated_post_type($qvars['post_type'])) || (isset($qvars['lang']) && $qvars['lang'] == 'all'))
 			unset ($qvars['lang']);
 	}
 
@@ -78,7 +80,7 @@ class PLL_Admin_Filters_Post {
 	 * @param string $post_type
 	 */
 	public function add_meta_boxes($post_type) {
-		if (in_array($post_type, $this->model->post_types))
+		if ($this->model->is_translated_post_type($post_type))
 			add_meta_box('ml_box', __('Languages','polylang'), array(&$this, 'post_language'), $post_type, 'side', 'high');
 
 		// replace tag metabox by our own
@@ -109,8 +111,8 @@ class PLL_Admin_Filters_Post {
 
 		// NOTE: the class "tags-input" allows to include the field in the autosave $_POST (see autosave.js)
 		printf('
-			<p><em>%s</em></p>
-			<p>%s<br /></p>
+			<p><strong>%s</strong></p>
+			%s
 			<div id="post-translations" class="translations">',
 			__('Language', 'polylang'),
 			$dropdown->walk($this->model->get_languages_list(), array(
@@ -187,6 +189,20 @@ class PLL_Admin_Filters_Post {
 	}
 
 	/*
+	 * ajax response for changing a translation in the post metabox
+	 *
+	 * @since 1.4
+	 */
+	public function post_translation_choice() {
+		$link = $_POST['value'] ?
+			$this->edit_translation_link($_POST['value']) :
+			$this->add_new_translation_link($_POST['post_id'], get_post_type($_POST['post_id']), $this->model->get_language($_POST['lang']));
+
+		$x = new WP_Ajax_Response(array('what' => 'link', 'data' => $link));
+		$x->send();
+	}
+
+	/*
 	 * called when a post (or page) is saved, published or updated
 	 * saves languages and translations
 	 * checks the terms saved are in the right language
@@ -198,7 +214,7 @@ class PLL_Admin_Filters_Post {
 	 */
 	public function save_post($post_id, $post) {
 		// does nothing except on post types which are filterable
-		if (!in_array($post->post_type, $this->model->post_types))
+		if (!$this->model->is_translated_post_type($post->post_type))
 			return;
 
 		// bulk edit does not modify the language
@@ -236,7 +252,7 @@ class PLL_Admin_Filters_Post {
 		// make sure we get save terms in the right language (especially tags with same name in different languages)
 		if (!empty($lang)) {
 			// FIXME quite a lot of query in foreach
-			foreach ($this->model->taxonomies as $tax) {
+			foreach ($this->model->get_translated_taxonomies() as $tax) {
 				$terms = get_the_terms($post_id, $tax);
 
 				if (is_array($terms)) {
@@ -301,27 +317,77 @@ class PLL_Admin_Filters_Post {
 		return $dropdown_args;
 	}
 
-
 	/*
-	 * filters get_pages
+	 * returns all posts in the $post_type in the $post_language which have no translation in the $translation_language
 	 *
-	 * @since 1.3.2
+	 * @since 1.4
 	 *
-	 * @param array $pages an array of pages already queried
-	 * @param array $args get_pages arguments
-	 * @return array modified list of pages
+	 * @param string $post_type
+	 * @param object $post_language the language of the post we want to translate
+	 * @param object $translation_language the language in which we are looking untranslated terms
+	 * @return array
 	 */
-	public function get_pages($pages, $args) {
-		// filters the pages in the parent dropdown list in the page attributes metabox
-		// language parameter added in page_attributes_dropdown_pages_args
-		if (!empty($args['lang'])) {
-			$lang = $this->model->get_language($args['lang']);
+	public function get_posts_not_translated($post_type, $post_language, $translation_language) {
+		$posts = get_posts(array(
+			'lang'        => 0, // avoid admin language filter
+			'numberposts' => -1,
+			'nopaging'    => true,
+			'post_status' => 'any',
+			'post_type'   => $post_type,
+			'orderby'     => 'title',
+			'order'       => 'ASC',
+			'tax_query'   => array(array(
+				'taxonomy' => 'language',
+				'field'    => 'term_taxonomy_id', // WP 3.5+
+				'terms'    => $post_language->term_taxonomy_id
+			))
+		));
+
+		foreach ($posts as $key => $post) {
+			if ($this->model->get_translation('post', $post->ID, $translation_language))
+				unset($posts[$key]);
 		}
 
-		// admin language filter
-		elseif ($lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true))
-		 	$lang = $this->model->get_language($lg);
+		return $posts;
+	}
 
-		return empty($lang) ? $pages : $this->model->get_pages($pages, $args, $lang);
+	/*
+	 * returns html markup for a translation link
+	 *
+	 * @since 1.4
+	 *
+	 * @param int $value translation post id
+	 * @return string
+	 */
+	public function edit_translation_link($value) {
+		return sprintf(
+			'<div class="spinner"></div><a href="%1$s" class="pll_icon_edit" title="%2$s"></a>',
+			esc_url(get_edit_post_link($value)),
+			__('Edit', 'polylang')
+		);
+	}
+
+	/*
+	 * returns html markup to add a new translation
+	 *
+	 * @since 1.4
+	 *
+	 * @param int $post_ID post id of the post to translate
+	 * @param string $post_type
+	 * @param object $language language of the new translation
+	 * @return string
+	 */
+	public function add_new_translation_link($post_ID, $post_type, $language) {
+		$args = array(
+			'post_type' => $post_type,
+			'from_post' => $post_ID,
+			'new_lang'  => $language->slug
+		);
+
+		return sprintf(
+			'<div class="spinner"></div><a href="%1$s" class="pll_icon_add" title="%2$s"></a>',
+			esc_url(add_query_arg($args, admin_url('post-new.php'))),
+			__('Add new', 'polylang')
+		);
 	}
 }

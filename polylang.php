@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://polylang.wordpress.com/
-Version: 1.3.1.3
+Version: 1.4dev12
 Author: Frédéric Demarle
 Description: Adds multilingual capability to WordPress
 Text Domain: polylang
@@ -29,8 +29,8 @@ Domain Path: /languages
  *
  */
 
-define('POLYLANG_VERSION', '1.3.1.3');
-define('PLL_MIN_WP_VERSION', '3.1');
+define('POLYLANG_VERSION', '1.4dev12');
+define('PLL_MIN_WP_VERSION', '3.5');
 
 define('POLYLANG_BASENAME', plugin_basename(__FILE__)); // plugin name as known by WP
 
@@ -243,8 +243,10 @@ class Polylang {
 	public function autoload($class) {
 		$class = str_replace('_', '-', strtolower(substr($class, 4)));
 		foreach (array(PLL_INC, PLL_FRONT_INC, PLL_ADMIN_INC) as $path)
-			if (file_exists($file = "$path/$class.php"))
+			if (file_exists($file = "$path/$class.php")) {
 				require_once($file);
+				break;
+			}
 	}
 
 	/*

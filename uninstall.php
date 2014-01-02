@@ -120,6 +120,7 @@ class PLL_Uninstall {
 
 		//delete transients
 		delete_transient('pll_languages_list');
+		delete_transient('pll_upgrade_1_4');
 	}
 }
 

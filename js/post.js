@@ -222,6 +222,36 @@ jQuery(document).ready(function($) {
 		);
 	});
 
+	// ajax for changing a translation in post languages metabox
+	function change_translations() {
+		var td = $(this).parent().siblings('.pll-edit-column');
+		td.children('a').hide();
+		td.children('.spinner').show();
+
+		var data = {
+			action: 'post_translation_choice',
+			lang: $('#post_lang_choice').attr('value'),
+			post_id: $('#post_ID').attr('value'),
+			value: $(this).attr('value')
+		}
+
+		$.post(ajaxurl, data , function(response) {
+			var res = wpAjax.parseAjaxResponse(response, 'ajax-response');
+			$.each(res.responses, function() {
+				switch (this.what) {
+					case 'link':
+						td.children('.spinner').hide();
+						td.html(this.data);
+						break;
+					default:
+						break;
+				}
+			});
+		});
+	}
+
+	$("select[name*='post_tr_lang']").change(change_translations);
+
 	// ajax for changing the post's language in the languages metabox
 	$('#post_lang_choice').change( function() {
 		var data = {
@@ -237,6 +267,7 @@ jQuery(document).ready(function($) {
 				switch (this.what) {
 					case 'translations': // translations fields
 						$('#post-translations').html(this.data);
+						$("select[name*='post_tr_lang']").change(change_translations);
 						break;
 					case 'taxonomy': // categories metabox for posts
 						var tax = this.data;
@@ -291,7 +322,7 @@ jQuery(document).ready(function($) {
 			$.each(res.responses, function() {
 				switch (this.what) {
 					case 'translations': // translations fields
-						$('.translations').html(this.data); // backward compatibility WP < 3.5
+						$('.translations').html(this.data);
 						$('.compat-field-translations').html(this.data); // WP 3.5+
 						break;
 					default:

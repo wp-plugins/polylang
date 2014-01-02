@@ -124,9 +124,7 @@ class PLL_Links_Directory {
 	function add_permastruct() {
 		// language information always in front of the uri ('with_front' => false)
 		// the 3rd parameter structure has been modified in WP 3.4
-		// backward compatibility WP < 3.4
-		add_permastruct('language', $this->options['rewrite'] ? '%language%' : 'language/%language%',
-			version_compare($GLOBALS['wp_version'], '3.4' , '<') ? false : array('with_front' => false));
+		add_permastruct('language', $this->options['rewrite'] ? '%language%' : 'language/%language%', array('with_front' => false));
 	}
 
 	/*
@@ -185,13 +183,13 @@ class PLL_Links_Directory {
 			$slug = $wp_rewrite->root . ($this->options['rewrite'] ? '' : 'language/') . '('.implode('|', $languages).')/';
 
 		// for custom post type archives
-		$cpts = array_intersect($this->model->post_types, get_post_types(array('_builtin' => false)));
+		$cpts = array_intersect($this->model->get_translated_post_types(), get_post_types(array('_builtin' => false)));
 		$cpts = $cpts ? '#post_type=('.implode('|', $cpts).')#' : '';
 
 		foreach ($rules as $key => $rule) {
 			// we don't need the lang parameter for post types and taxonomies
 			// moreover adding it would create issues for pages and taxonomies
-			if ($this->options['force_lang'] && in_array($filter, array_merge($this->model->post_types, $this->model->taxonomies))) {
+			if ($this->options['force_lang'] && in_array($filter, array_merge($this->model->get_translated_post_types(), $this->model->get_translated_taxonomies()))) {
 				if (isset($slug))
 					$newrules[$slug.str_replace($wp_rewrite->root, '', $key)] = str_replace(
 						array('[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '[1]'),

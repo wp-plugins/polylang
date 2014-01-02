@@ -104,7 +104,7 @@ class PLL_Frontend_Links extends PLL_Links {
 		if ($this->page_on_front && ($lang = $this->model->get_post_language($id)) && $id == $this->model->get_post($this->page_on_front, $lang))
 			return $lang->home_url;
 
-		return _get_page_link($id);
+		return $link;
 	}
 
 	/*
@@ -155,15 +155,22 @@ class PLL_Frontend_Links extends PLL_Links {
 		if (!(did_action('template_redirect') || did_action('login_init')) || rtrim($url,'/') != $this->home)
 			return $url;
 
-		$white_list = apply_filters('pll_home_url_white_list',  array(
-			array('file' => get_theme_root()),
-			array('function' => 'wp_nav_menu'),
-			array('function' => 'login_footer')
-		));
+		static $white_list, $black_list; // avoid evaluating this at each function call
 
-		$black_list = apply_filters('pll_home_url_black_list',  array(array('function' => 'get_search_form')));
+		if (empty($white_list)) {
+			$white_list = apply_filters('pll_home_url_white_list',  array(
+				array('file' => get_theme_root()),
+				array('function' => 'wp_nav_menu'),
+				array('function' => 'login_footer')
+			));
+		}
 
-		foreach (array_reverse(debug_backtrace(/*!DEBUG_BACKTRACE_PROVIDE_OBJECT|DEBUG_BACKTRACE_IGNORE_ARGS*/)) as $trace) {
+		if (empty($black_list))
+			$black_list = apply_filters('pll_home_url_black_list',  array(array('function' => 'get_search_form')));
+
+		$traces = version_compare(PHP_VERSION, '5.2.5', '>=') ? debug_backtrace(false) : debug_backtrace();
+
+		foreach ($traces as $trace) {
 			// searchform.php is not passed through get_search_form filter prior to WP 3.6
 			// backward compatibility WP < 3.6
 			if (isset($trace['file']) && strpos($trace['file'], 'searchform.php'))

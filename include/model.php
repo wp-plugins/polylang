@@ -7,7 +7,6 @@
  */
 class PLL_Model {
 	public $options;
-	public $post_types = array(), $taxonomies = array(); // post types & taxonomies to filter by language
 	private $languages; // used to cache the list of languages
 
 	/*
@@ -42,9 +41,8 @@ class PLL_Model {
 		// registers completely the language taxonomy
 		add_action('setup_theme', array(&$this, 'register_taxonomy'), 1);
 
-		// setups post types and taxonomies to translate
+		// setups post types to translate
 		add_action('registered_post_type', array(&$this, 'registered_post_type'));
-		add_action('registered_taxonomy', array(&$this, 'registered_taxonomy'));
 
 		// just in case someone would like to display the language description ;-)
 		add_filter('language_description', create_function('$v', "return '';"));
@@ -63,13 +61,10 @@ class PLL_Model {
 	 * @return array unmodified $terms
 	 */
 	public function _prime_terms_cache($terms, $taxonomies) {
-		foreach ($terms as $term) {
-			if (is_object($term)) {
-				if (in_array($term->taxonomy, $this->taxonomies))
-					$term_ids[] = $term->term_id;
+		if ($this->is_translated_taxonomy($taxonomies)) {
+			foreach ($terms as $term) {
+				$term_ids[] = is_object($term) ? $term->term_id : $term;
 			}
-			elseif (array_intersect($taxonomies, $this->taxonomies))
-				$term_ids[] = $term;
 		}
 
 		if (!empty($term_ids))
@@ -180,7 +175,7 @@ class PLL_Model {
 	 * delayed to be sure we have access to $wp_rewrite for home urls
 	 * home urls are not cached in db if PLL_CACHE_HOME_URLS is set to false
 	 *
-	 * @since 1.3.2
+	 * @since 1.4
 	 */
 	public function _languages_list() {
 		if (false === get_transient('pll_languages_list')) {
@@ -331,7 +326,7 @@ class PLL_Model {
 	 * @return array an associative array of translations with language code as key and translation id as value
 	 */
 	public function get_translations($type, $id) {
-		$type = ($type == 'post' || in_array($type, $this->post_types)) ? 'post' : (($type == 'term' || in_array($type, $this->taxonomies)) ? 'term' : false);
+		$type = ($type == 'post' || $this->is_translated_post_type($type)) ? 'post' : (($type == 'term' || $this->is_translated_taxonomy($type)) ? 'term' : false);
 		return $type && ($term = $this->get_object_term($id, $type . '_translations')) && !empty($term) ? unserialize($term->description) : array();
 	}
 
@@ -483,28 +478,6 @@ class PLL_Model {
 	}
 
 	/*
-	 * adds clauses to comments query to filter them by language - used in both frontend and admin
-	 *
-	 * @since 1.2
-	 *
-	 * @param array $clauses the list of sql clauses in comments query
-	 * @param object $lang PLL_Language object
-	 * @return array modifed list of clauses
-	 */
-	public function comments_clauses($clauses, $lang) {
-		global $wpdb;
-		if (!empty($lang)) {
-			// if this clause is not already added by WP
-			if (!strpos($clauses['join'], '.ID'))
-				$clauses['join'] .= " JOIN $wpdb->posts ON $wpdb->posts.ID = $wpdb->comments.comment_post_ID";
-
-			$clauses['join'] .= $this->join_clause('post');
-			$clauses['where'] .= $this->where_clause($lang, 'post');
-		}
-		return $clauses;
-	}
-
-	/*
 	 * adds terms clauses to get_terms to filter them by languages - used in both frontend and admin
 	 *
 	 * @since 1.2
@@ -528,8 +501,7 @@ class PLL_Model {
 	 */
 	public function register_taxonomy() {
 		// registers the language taxonomy
-		// object types will be set later once all custom post types are registered
-		register_taxonomy('language', $this->post_types, array(
+		register_taxonomy('language', $this->get_translated_post_types(), array(
 			'labels' => array(
 				'name' => __('Languages', 'polylang'),
 				'singular_name' => __('Language', 'polylang'),
@@ -542,32 +514,29 @@ class PLL_Model {
 	}
 
 	/*
-	 * post types that need to be translated
+	 * returns post types that need to be translated
 	 *
 	 * @since 1.2
 	 *
-	 * @return array array of post types names for which Polylang manages languages and translations
+	 * @param bool $filter true if we should return only valid registered post types
+	 * @return array post type names for which Polylang manages languages and translations
 	 */
-	protected function get_post_types() {
-		$post_types = array('post' => 'post', 'page' => 'page');
-		if (!empty($this->options['media_support']))
-			$post_types['attachement'] = 'attachment';
+	public function get_translated_post_types($filter = true) {
+		static $post_types = array();
 
-		if (is_array($this->options['post_types']))
-			$post_types = array_merge($post_types,  $this->options['post_types']);
+		if (!$post_types) {
+			$post_types = array('post' => 'post', 'page' => 'page');
 
-		return apply_filters('pll_get_post_types', $post_types , false);
-	}
+			if (!empty($this->options['media_support']))
+				$post_types['attachement'] = 'attachment';
 
-	/*
-	 * returns valid registered post types that need to be translated
-	 *
-	 * @since 1.2
-	 *
-	 * @return array array of registered post type names for which Polylang manages languages and translations
-	 */
-	public function get_translated_post_types() {
-		return $this->post_types = array_intersect($this->get_post_types(), get_post_types());
+			if (is_array($this->options['post_types']))
+				$post_types = array_merge($post_types,  $this->options['post_types']);
+
+			$post_types = apply_filters('pll_get_post_types', $post_types , false);
+		}
+
+		return $filter ? array_intersect($post_types, get_post_types()) : $post_types;
 	}
 
 	/*
@@ -578,8 +547,7 @@ class PLL_Model {
 	 * @param string $post_type post type name
 	 */
 	public function registered_post_type($post_type) {
-		if (in_array($post_type, $this->get_post_types())) {
-			$this->post_types[$post_type] = $post_type;
+		if ($this->is_translated_post_type($post_type)) {
 			register_taxonomy_for_object_type('language', $post_type);
 			register_taxonomy_for_object_type('post_translations', $post_type);
 		}
@@ -593,46 +561,31 @@ class PLL_Model {
 	 * @param string|array $post_type post type name or array of post type names
 	 */
 	public function is_translated_post_type($post_type) {
-		return (is_array($post_type) && array_intersect($post_type, $this->post_types) || in_array($post_type, $this->post_types));
+		$post_types = $this->get_translated_post_types(false);
+		return (is_array($post_type) && array_intersect($post_type, $post_types) || in_array($post_type, $post_types));
 	}
 
 	/*
-	 * taxonomies that need to be translated
+	 * return taxonomies that need to be translated
 	 *
 	 * @since 1.2
 	 *
-	 * @return array array of taxonomy names for which Polylang manages languages and translations
-	 */
-	protected function get_taxonomies() {
-		$taxonomies = array('category' => 'category', 'post_tag' => 'post_tag');
-
-		if (is_array($this->options['taxonomies']))
-			$taxonomies = array_merge($taxonomies, $this->options['taxonomies']);
-
-		return apply_filters('pll_get_taxonomies', $taxonomies, false);
-	}
-
-	/*
-	 * return valid registered taxonomies that need to be translated
-	 *
-	 * @since 1.2
-	 *
+	 * @param bool $filter true if we should return only valid registered taxonmies
 	 * @return array array of registered taxonomy names for which Polylang manages languages and translations
 	 */
-	public function get_translated_taxonomies() {
-		return $this->taxonomies = array_intersect($this->get_taxonomies(), get_taxonomies());
-	}
+	public function get_translated_taxonomies($filter = true) {
+		static $taxonomies = array();
 
-	/*
-	 * check if registered post type must be translated
-	 *
-	 * @since 1.2
-	 *
-	 * @param string $taxonomy taxonomy name
-	 */
-	public function registered_taxonomy($taxonomy) {
-		if (in_array($taxonomy, $this->get_taxonomies()))
-			$this->taxonomies[$taxonomy] = $taxonomy;
+		if (!$taxonomies) {
+			$taxonomies = array('category' => 'category', 'post_tag' => 'post_tag');
+
+			if (is_array($this->options['taxonomies']))
+				$taxonomies = array_merge($taxonomies, $this->options['taxonomies']);
+
+			$taxonomies = apply_filters('pll_get_taxonomies', $taxonomies, false);
+		}
+
+		return $filter ? array_intersect($taxonomies, get_taxonomies()) : $taxonomies;
 	}
 
 	/*
@@ -643,7 +596,8 @@ class PLL_Model {
 	 * @param string|array $tax taxonomy name or array of taxonomy names
 	 */
 	public function is_translated_taxonomy($tax) {
-		return (is_array($tax) && array_intersect($tax, $this->taxonomies) || in_array($tax, $this->taxonomies));
+		$taxonomies = $this->get_translated_taxonomies(false);
+		return (is_array($tax) && array_intersect($tax, $taxonomies) || in_array($tax, $taxonomies));
 	}
 
 	/*
@@ -749,60 +703,5 @@ class PLL_Model {
 		}
 
 		return $args;
-	}
-
-	/*
-	 * filters get_pages per language
-	 *
-	 * @since 1.3.2
-	 *
-	 * @param array $pages an array of pages already queried
-	 * @param array $args get_pages arguments
-	 * @param object $language language to keep
-	 * @return array modified list of pages
-	 */
-	public function get_pages($pages, $args, $language) {
-		if (empty($pages) || !$this->is_translated_post_type($args['post_type']))
-			return $pages;
-
-		static $once = false;
-
-		// obliged to redo the page query if we want to get the right number
-		if (!empty($args['number']) && !$once) {
-			$once = true; // avoid infinite loop
-
-			$r = array(
-				'lang' => 0, // so this query is not filtered by our pre_get_post filter in PLL_Frontend_Filters
-				'numberposts' => -1,
-				'nopaging'    => true,
-				'post_type'   => $args['post_type'],
-				'fields'      => 'ids',
-				'tax_query'   => array(array(
-					'taxonomy' => 'language',
-					'field'    => 'term_taxonomy_id', // since WP 3.5
-					'terms'    => $language->term_taxonomy_id,
-					'operator' => 'NOT IN'
-				))
-			);
-
-			// backward compatibility WP < 3.5
-			if (version_compare($GLOBALS['wp_version'], '3.5' , '<')) {
-				unset($r['tax_query']['field']);
-				$r['tax_query']['terms'] = $language->term_id;
-			}
-
-			$args['exclude'] = array_merge($args['exclude'], get_posts($r));
-			$pages = get_pages($args);
-		}
-
-		update_post_caches($pages, $args['post_type']); // not done by WP
-
-		foreach ($pages as $key => $page) {
-			$lang = $this->get_post_language($page->ID);
-			if (empty($lang) || $language->slug != $lang->slug)
-				unset($pages[$key]);
-		}
-
-		return $pages;
 	}
 }

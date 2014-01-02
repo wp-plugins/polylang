@@ -11,83 +11,56 @@ else {
 	<label><?php _e('Translations', 'polylang');?></label><?php
 }?>
 <table class="widefat term-translations">
-	<thead><tr><?php
-		echo '<th class="tr-language-column">'.__('Language', 'polylang').'</th>';
-		echo '<th>'.__('Translation', 'polylang').'</th>';
-		if (isset($term_id))
-			echo '<th class="tr-edit-column">'.__('Edit', 'polylang').'</th>';?>
-	</tr></thead>
-	<tbody>
-		<?php foreach ($this->model->get_languages_list() as $language) {
-			if ($language->term_id == $lang->term_id)
-				continue;
+	<?php foreach ($this->model->get_languages_list() as $language) {
+		if ($language->term_id == $lang->term_id)
+			continue;
 
-			// look for any existing translation in this language
-			$translation = 0;
-			if (isset($term_id) && $translation_id = $this->model->get_translation('term', $term_id, $language))
-				$translation = get_term($translation_id, $taxonomy);
-			if (isset($_GET['from_tag']) && $translation_id = $this->model->get_term($_GET['from_tag'], $language))
-				$translation = get_term($translation_id, $taxonomy);?>
+		$translations = $this->get_terms_not_translated($taxonomy, $language, $lang);
 
-			<tr><td class="tr-language-column"><?php echo esc_html($language->name);?></td><?php
+		// look for any existing translation in this language
+		$translation = 0;
+		if (isset($term_id) && $translation_id = $this->model->get_translation('term', $term_id, $language))
+			$translation = get_term($translation_id, $taxonomy);
+		if (isset($_GET['from_tag']) && $translation_id = $this->model->get_term($_GET['from_tag'], $language))
+			$translation = get_term($translation_id, $taxonomy);
 
-			// no translation exists in this language
-			if (!$translation) {
-				// look for untranslated terms in this language
-				$translations = $this->get_terms_not_translated($taxonomy, $language, $lang);
-				if (!empty($translations)) { ?>
-					<td>
-						<?php printf('<select name="term_tr_lang[%1$s]" id="tr_lang_%1$s">', esc_attr($language->slug)); ?>
-							<option value="0"></option><?php
-							foreach ($translations as $translation) {
-								printf(
-									'<option value="%s">%s</option>',
-									esc_attr($translation->term_id),
-									esc_html($translation->name)
-								);
-							}?>
-						</select>
-					</td><?php
-				}
-				else {?>
-					<td><?php _e('No untranslated term', 'polylang'); ?></td><?php
-				}
+		$link = '';
 
-				// do not display the add new link in add term form ($term_id not set !!!)
-				if (isset($term_id)) {
-					$args = array(
-						'taxonomy'  => $taxonomy,
-						'post_type' => $post_type,
-						'from_tag'  => $term_id,
-						'new_lang'  => $language->slug
-					);
-					printf(
-						'<td class="tr-edit-column"><a href="%1$s">%2$s</a></td>',
-						esc_url(add_query_arg($args, admin_url('edit-tags.php'))),
-						__('Add new','polylang')
-					);
-				}
+		if ($translation) {
+			foreach ($translations as $key => $term) {
+				if ($term->term_id == $translation->term_id)
+					unset($translations[$key]);
 			}
 
-			// a translation exists
-			else {
-				printf(
-					'<td><input type="hidden" name="term_tr_lang[%s]" value="%d" />%s</td>',
-					esc_attr($language->slug),
-					esc_attr($translation->term_id),
-					esc_html($translation->name)
-				);
-				if (isset($term_id)) {
-					printf(
-						'<td class="tr-edit-column"><a href="%1$s">%2$s</a></td>',
-						esc_url(get_edit_term_link($translation->term_id, $taxonomy, $post_type)),
-						__('Edit','polylang')
-					);
-				}
+			array_unshift($translations, $translation);
+
+			$link = $this->edit_translation_link($translation->term_id, $taxonomy, $post_type);
+		}
+
+		elseif (isset($term_id)) { // do not display the add new link in add term form ($term_id not set !!!)
+			$link = $this->add_new_translation_link($term_id, $taxonomy, $post_type, $language);
+		} ?>
+
+		<tr><?php
+			if (isset($term_id)) { ?>
+				<td class = "pll-language-column"><?php echo esc_html($language->name); ?></td>
+				<td class = "pll-edit-column"><?php echo $link;?></td><?php
+			}
+			else { ?>
+				<td class = "pll-language-column"><?php echo $language->flag ? $language->flag : esc_html($language->slug); ?></td><?php
 			} ?>
-			</tr><?php
-		} // foreach ?>
-	</tbody>
+			<td class = "pll-translation-column"><?php
+				printf('<select name="term_tr_lang[%1$s]" id="tr_lang_%1$s"><option value="">%2$s</option>%3$s</select>',
+					esc_attr($language->slug),
+					__('None'),
+					walk_category_dropdown_tree($translations, 0, array(
+						'selected' => empty($translation) ? 0 : $translation->term_id,
+						'show_count' => 0
+					))
+				); ?>
+			</td>
+		</tr><?php
+	} // foreach ?>
 </table><?php
 
 if (isset($term_id)) {

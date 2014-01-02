@@ -190,7 +190,7 @@ abstract class PLL_Choose_Lang {
 	 * @param object $query instance of WP_Query
 	 */
 	public function parse_main_query($query) {
-		if (empty($GLOBALS['wp_the_query']) || $query !== $GLOBALS['wp_the_query'])
+		if (!$query->is_main_query())
 			return;
 
 		$qv = $query->query_vars;
@@ -235,33 +235,21 @@ abstract class PLL_Choose_Lang {
 				$query->is_home = $query->is_posts_page = true;
 			}
 		}
-
-		// backward compatibility WP < 3.4, sets a language for theme preview
-		if (is_preview() && is_front_page()) {
-			$this->set_language($this->get_preferred_language());
-			$this->set_lang_query_var($query, $this->curlang);
-		}
 	}
 
 	/*
 	 * sets the language in query
-	 * optimized for WP 3.5+
+	 * optimized for (needs) WP 3.5+
 	 *
 	 * @since 1.3
 	 */
 	public function set_lang_query_var(&$query, $lang) {
-		// backward compatibility WP < 3.5
-		if (version_compare($GLOBALS['wp_version'], '3.5' , '<')) {
-			$query->set('lang', $lang->slug);
-		}
-		else {
-			// defining directly the tax_query (rather than setting 'lang' avoids transforming the query by WP)
-			$query->query_vars['tax_query'][] = array(
-				'taxonomy' => 'language',
-				'field'    => 'term_taxonomy_id', // since WP 3.5
-				'terms'    => $lang->term_taxonomy_id,
-				'operator' => 'IN'
-			);
-		}
+		// defining directly the tax_query (rather than setting 'lang' avoids transforming the query by WP)
+		$query->query_vars['tax_query'][] = array(
+			'taxonomy' => 'language',
+			'field'    => 'term_taxonomy_id', // since WP 3.5
+			'terms'    => $lang->term_taxonomy_id,
+			'operator' => 'IN'
+		);
 	}
 }
