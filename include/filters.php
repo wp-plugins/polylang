@@ -98,7 +98,7 @@ class PLL_Filters {
 
 		// filters the queried list of pages by language
 		if (!$once) {
-			$ids = array_intersect($ids, get_objects_in_term($language->term_id, 'language'));
+			$ids = array_intersect($ids, $this->model->get_objects_in_language($language));
 
 			foreach ($pages as $key => $page) {
 				if (!in_array($page->ID, $ids))

@@ -8,12 +8,13 @@
 class PLL_MO extends MO {
 
 	/*
-	 * registers the polylang_mo custom post type
+	 * registers the polylang_mo custom post type, only at first object creation
 	 *
 	 * @since 1.2
 	 */
 	public function __construct() {
-		register_post_type('polylang_mo', array('rewrite' => false, 'query_var' => false, '_pll' => true));
+		if (!post_type_exists('polylang_mo'))
+			register_post_type('polylang_mo', array('rewrite' => false, 'query_var' => false, '_pll' => true));
 	}
 
 	/*

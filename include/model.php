@@ -704,4 +704,22 @@ class PLL_Model {
 
 		return $args;
 	}
+
+	/*
+	 * returns ids of objects in a language similarly to get_objects_in_term for a taxonomy
+	 * faster than get_objects_in_term as it avoids a JOIN
+	 *
+	 * @since 1.4
+	 *
+	 * @param object $lang a PLL_Language object
+	 * @param string $type optional, either 'post' or 'term', defaults to 'post'
+	 * @return array
+	 */
+	public function get_objects_in_language($lang, $type = 'post') {
+		global $wpdb;
+		return $wpdb->get_col($wpdb->prepare("
+			SELECT object_id FROM $wpdb->term_relationships WHERE term_taxonomy_id = %d",
+			'term' == $type ? $lang->tl_term_taxonomy_id : $lang->term_taxonomy_id
+		));
+	}
 }
