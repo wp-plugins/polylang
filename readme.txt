@@ -81,6 +81,7 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 * Pre 1.2 data will be removed from DB at first upgrade at least 60 days after upgrade to 1.4
 * Removed some duplicate code between admin and frontend
 * Bug correction: incorrect pagination when using domains or subdomains
+* Bug correction: post format link not translated
 
 = 1.3.1 (2013-12-13) =
 

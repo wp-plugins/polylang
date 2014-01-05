@@ -9,7 +9,7 @@
 			continue;?>
 
 		<tr>
-			<td class = "pll-media-language-column"><?php echo $language->name; ?></td>
+			<td class = "pll-media-language-column"><?php echo esc_html($language->name); ?></td>
 			<td class = "pll-edit-column"><?php
 				// the translation exists
 				if (($translation_id = $this->model->get_translation('post', $post_id, $language)) && $translation_id != $post_id) {
