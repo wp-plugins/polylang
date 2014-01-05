@@ -73,6 +73,7 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 
 * Minimum WordPress version is now v3.5
 * Refresh translations metaboxes: now translated posts are chosen in a dropdown list
+* Check if translated archives for category, tag and post format are empty before displaying the language switcher
 * Add specific management of translated featured tag in Twenty Fourteen
 * Add the possibility not to cache homepage urls with option PLL_CACHE_HOME_URL (for users having several domains).
 * The function get_pages is now filtered by language

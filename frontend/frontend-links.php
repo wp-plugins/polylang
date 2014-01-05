@@ -214,7 +214,7 @@ class PLL_Frontend_Links extends PLL_Links {
 			$url = get_permalink($id);
 
 		// page for posts
-		// FIXME the last test should useless now since I test is_posts_page
+		// FIXME the last test should be useless now since I test is_posts_page
 		elseif ($wp_query->is_posts_page && !empty($wp_query->queried_object_id) && ($id = $this->model->get_post($wp_query->queried_object_id, $language)) && $id == $this->model->get_post($this->page_for_posts, $language))
 			$url = get_permalink($id);
 
@@ -227,15 +227,18 @@ class PLL_Frontend_Links extends PLL_Links {
 
 			if (!$lang || $language->slug == $lang->slug)
 				$url = get_term_link($term, $term->taxonomy); // self link
-			elseif ($link_id = $this->model->get_translation('term', $term->term_id, $language))
-				$url = get_term_link(get_term($link_id, $term->taxonomy), $term->taxonomy);
+			elseif ($tr_id = $this->model->get_translation('term', $term->term_id, $language)) {
+				$tr_term = get_term($tr_id, $term->taxonomy);
+				if ($tr_term && $tr_term->count)
+					$url = get_term_link($tr_term, $term->taxonomy);
+			}
 		}
 
 		elseif (is_search())
 			$url = $this->get_archive_url($language);
 
 		elseif (is_archive()) {
-			$keys = array('post_type', 'm', 'year', 'monthnum', 'day', 'author', 'author_name');
+			$keys = array('post_type', 'm', 'year', 'monthnum', 'day', 'author', 'author_name', 'post_format');
 			// check if there are existing translations before creating the url
 			if ($this->model->count_posts($language, array_intersect_key($qv, array_flip($keys))))
 				$url = $this->get_archive_url($language);
