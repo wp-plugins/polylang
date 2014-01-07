@@ -55,8 +55,8 @@ class PLL_MO extends MO {
 	 * @param object $lang the language in which we want to get strings
 	 */
 	public function import_from_db($lang) {
-		$post = get_post($lang->mo_id, OBJECT);
-		if (!empty($post)) {
+		if (!empty($lang->mo_id)) {
+			$post = get_post($lang->mo_id, OBJECT);
 			$strings = unserialize($post->post_content);
 			if (is_array($strings)) {
 				foreach ($strings as $msg)
