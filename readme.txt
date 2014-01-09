@@ -82,6 +82,7 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 * Removed some duplicate code between admin and frontend
 * Bug correction: incorrect pagination when using domains or subdomains
 * Bug correction: post format link not translated
+* Bug correction: impossible to us child terms with same name in hierarchical taxonomies
 
 = 1.3.1 (2013-12-13) =
 

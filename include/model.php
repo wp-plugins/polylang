@@ -602,29 +602,30 @@ class PLL_Model {
 
 	/*
 	 * it is possible to have several terms with the same name in the same taxonomy (one per language)
-	 * but the native get_term_by will return only one term
+	 * but the native term_exists will return true even if only one exists
 	 * so here the function adds the language parameter
 	 *
-	 * @since 1.2
+	 * @since 1.4
 	 *
-	 * @param string $field currently the only possibility is 'name'
-	 * @param string $value the term name
+	 * @param string $term_name the term name
 	 * @param string $taxonomy taxonomy name
+	 * @param int $parent parent term id
 	 * @param string|object $language the language slug or object
 	 * @return null|int the term_id of the found term
 	 */
-	public function get_term_by($field, $value, $taxonomy, $language) {
+	public function term_exists($term_name, $taxonomy, $parent, $language) {
 		global $wpdb;
 
-		if ('name' != $field)
-			return NULL;
+		$select = "SELECT t.term_id FROM $wpdb->terms AS t";
+		$join = " INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id";
+		$join .= $this->join_clause('term');
+		$where = $wpdb->prepare(" WHERE tt.taxonomy = %s AND t.name = %s", $taxonomy, $term_name);
+		$where .= $this->where_clause($this->get_language($language), 'term');
 
-		return $wpdb->get_row("SELECT t.*, tt.* FROM $wpdb->terms AS t"
-			. " INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id"
-			. $this->join_clause('term')
-			. $wpdb->prepare(" WHERE tt.taxonomy = %s AND t.name = %s", $taxonomy, $value)
-			. $this->where_clause($this->get_language($language), 'term')
-		);
+		if ($parent > 0)
+			$where .= $wpdb->prepare(" AND tt.parent = %d", $parent);
+
+		return $wpdb->get_var($select . $join . $where);
 	}
 
 	/*
