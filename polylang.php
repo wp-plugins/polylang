@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://polylang.wordpress.com/
-Version: 1.4dev17
+Version: 1.4dev18
 Author: Frédéric Demarle
 Description: Adds multilingual capability to WordPress
 Text Domain: polylang
@@ -10,7 +10,7 @@ Domain Path: /languages
 */
 
 /*
- * Copyright 2011-2013 Frédéric Demarle
+ * Copyright 2011-2014 Frédéric Demarle
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ Domain Path: /languages
  *
  */
 
-define('POLYLANG_VERSION', '1.4dev17');
+define('POLYLANG_VERSION', '1.4dev18');
 define('PLL_MIN_WP_VERSION', '3.5');
 
 define('POLYLANG_BASENAME', plugin_basename(__FILE__)); // plugin name as known by WP
@@ -84,9 +84,9 @@ class Polylang {
 		if (isset($_GET['action'], $_GET['plugin']) && 'deactivate' == $_GET['action'] && plugin_basename(__FILE__) == $_GET['plugin'])
 			return;
 
-		// avoid loading polylang admin for frontend ajax requests if 'pll_load_front' is set (thanks to g100g)
+		// avoid loading polylang admin for frontend ajax requests
 		if (!defined('PLL_AJAX_ON_FRONT'))
-			define('PLL_AJAX_ON_FRONT', isset($_REQUEST['pll_load_front']));
+			define('PLL_AJAX_ON_FRONT', defined('DOING_AJAX') && DOING_AJAX && empty($_REQUEST['pll_ajax_backend']));
 
 		if (!defined('PLL_ADMIN'))
 			define('PLL_ADMIN', defined('DOING_CRON') || (is_admin() && !PLL_AJAX_ON_FRONT));

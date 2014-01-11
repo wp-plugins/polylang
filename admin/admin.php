@@ -28,6 +28,7 @@ class PLL_Admin extends PLL_Base {
 
 		// setup js scripts and css styles
 		add_action('admin_enqueue_scripts', array(&$this, 'admin_enqueue_scripts'));
+		add_action('admin_print_footer_scripts', array(&$this, 'admin_print_footer_scripts'));
 
 		// adds a 'settings' link in the plugins table
 		add_filter('plugin_action_links_' . POLYLANG_BASENAME, array(&$this, 'plugin_action_links'));
@@ -104,6 +105,30 @@ class PLL_Admin extends PLL_Base {
 		// don't load this for old versions
 		if (version_compare($GLOBALS['wp_version'], '3.8alpha' , '>='))
 			wp_enqueue_style('polylang_admin_mobi', POLYLANG_URL .'/css/admin-mobi'.$suffix.'.css', array(), POLYLANG_VERSION);
+	}
+
+	/*
+	 * sets pll_ajax_backend on all backend ajax request
+	 *
+	 * @since 1.4
+	 */
+	public function admin_print_footer_scripts() { ?>
+
+<script type="text/javascript">
+	if (typeof jQuery != 'undefined') {
+		(function($){
+			$.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+				if (typeof options.data == 'string') {
+					options.data = 'pll_ajax_backend=1&'+options.data;
+				}
+				else {
+					options.data = $.extend(options.data, {pll_ajax_backend: true});
+				}
+			});
+		})(jQuery)
+	}
+</script><?php
+
 	}
 
 	/*
