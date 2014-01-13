@@ -80,11 +80,13 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 * The function get_pages is now filtered by language
 * Ajax requests on frontend are now automatically detected. It is no more necessary to set 'pll_load_front' :)
 * Various performance improvements
+* 'pll_get_post_types' and 'pll_get_taxonomies' filters must be added *before* 'after_setup_theme' is fired
 * Pre 1.2 data will be removed from DB at first upgrade at least 60 days after upgrade to 1.4
 * Removed some duplicate code between admin and frontend
 * Bug correction: incorrect pagination when using domains or subdomains
 * Bug correction: post format link not translated
 * Bug correction: impossible to us child terms with same name in hierarchical taxonomies
+* Bug correction: the terms list table is filtered according to new translation language instead of admin language filter
 
 = 1.3.1 (2013-12-13) =
 

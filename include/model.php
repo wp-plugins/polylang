@@ -522,15 +522,21 @@ class PLL_Model {
 	 * @return array post type names for which Polylang manages languages and translations
 	 */
 	public function get_translated_post_types($filter = true) {
-		$post_types = array('post' => 'post', 'page' => 'page');
+		static $post_types = array();
 
-		if (!empty($this->options['media_support']))
-			$post_types['attachement'] = 'attachment';
+		// the post types list is cached for better better performance
+		// wait for 'after_setup_theme' to apply the cache to allow themes adding the filter in functions.php
+		if (!$post_types || !did_action('after_setup_theme')) {
+			$post_types = array('post' => 'post', 'page' => 'page');
 
-		if (is_array($this->options['post_types']))
-			$post_types = array_merge($post_types,  $this->options['post_types']);
+			if (!empty($this->options['media_support']))
+				$post_types['attachement'] = 'attachment';
 
-		$post_types = apply_filters('pll_get_post_types', $post_types , false);
+			if (is_array($this->options['post_types']))
+				$post_types = array_merge($post_types,  $this->options['post_types']);
+
+			$post_types = apply_filters('pll_get_post_types', $post_types , false);
+		}
 
 		return $filter ? array_intersect($post_types, get_post_types()) : $post_types;
 	}
@@ -570,12 +576,16 @@ class PLL_Model {
 	 * @return array array of registered taxonomy names for which Polylang manages languages and translations
 	 */
 	public function get_translated_taxonomies($filter = true) {
-		$taxonomies = array('category' => 'category', 'post_tag' => 'post_tag');
+		static $taxonomies = array();
 
-		if (is_array($this->options['taxonomies']))
-			$taxonomies = array_merge($taxonomies, $this->options['taxonomies']);
+		if (!$taxonomies || !did_action('after_setup_theme')) {
+			$taxonomies = array('category' => 'category', 'post_tag' => 'post_tag');
 
-		$taxonomies = apply_filters('pll_get_taxonomies', $taxonomies, false);
+			if (is_array($this->options['taxonomies']))
+				$taxonomies = array_merge($taxonomies, $this->options['taxonomies']);
+
+			$taxonomies = apply_filters('pll_get_taxonomies', $taxonomies, false);
+		}
 
 		return $filter ? array_intersect($taxonomies, get_taxonomies()) : $taxonomies;
 	}
