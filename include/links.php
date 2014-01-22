@@ -44,7 +44,7 @@ class PLL_Links {
 		if (isset($links[$link]))
 			return $links[$link];
 
-		if ('post_type_link' == current_filter() && !in_array($post->post_type, $this->model->post_types))
+		if ('post_type_link' == current_filter() && !$this->model->is_translated_post_type($post->post_type))
 			return $links[$link] = $link;
 
 		if ('_get_page_link' == current_filter()) // this filter uses the ID instead of the post object
@@ -70,8 +70,21 @@ class PLL_Links {
 		if (isset($links[$link]))
 			return $links[$link];
 
-		return $links[$link] = in_array($tax, $this->model->taxonomies) ?
+		return $links[$link] = $this->model->is_translated_taxonomy($tax) ?
 			$this->links_model->add_language_to_link($link, $this->model->get_term_language($term->term_id)) : $link;
+	}
+
+	/*
+	 * returns the home url in the requested language
+	 *
+	 * @since 1.3
+	 *
+	 * @param object|string $language
+	 * @param bool $is_search optional wether we need the home url for a search form, defaults to false
+	 */
+	public function get_home_url($language, $is_search = false) {
+		$language = is_object($language) ? $language : $this->model->get_language($language);
+		return $is_search ? $language->search_url : $language->home_url;
 	}
 }
 

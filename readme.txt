@@ -2,16 +2,14 @@
 Contributors: Chouby
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CCWWYUUQV8F4E
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, international, localization
-Requires at least: 3.1
-Tested up to: 3.7.1
-Stable tag: 1.2.4
+Requires at least: 3.5
+Tested up to: 3.8
+Stable tag: 1.4
 License: GPLv2 or later
 
 Polylang adds multilingual content management support to WordPress.
 
 == Description ==
-
-Polylang 1.2 introduces major internal changes. More than ever, make a database backup if you ugrade from 1.1.6 or older.
 
 = Features  =
 
@@ -26,8 +24,11 @@ Polylang allows you to create a bilingual or multilingual WordPress site. You wr
 
 = Translators =
 
-The plugin admin interface is currently available in 30 languages: English, French, German by [Christian Ries](http://www.singbyfoot.lu), Russian by [yoyurec](http://yoyurec.in.ua) and unostar, Greek by [theodotos](http://www.ubuntucy.org), Dutch by [AlbertGn](http://wordpress.org/support/profile/albertgn), Hebrew by [ArielK](http://www.arielk.net), Polish by [Peter Paciorkiewicz](http://www.paciorkiewicz.pl) and [Bartosz](http://www.dfactory.eu/), Latvian by [@AndyDeGroo](http://twitter.com/AndyDeGroo), Italian by [Luca Barbetti](http://wordpress.org/support/profile/lucabarbetti), Danish by [Compute](http://wordpress.org/support/profile/compute), Spanish by Curro, Portuguese by [Vitor Carvalho](http://vcarvalho.com/), Lithuanian by [Naglis Jonaitis](http://najo.lt/), Turkish by [darchws](http://darch.ws/), Finnish by [Jani Alha](http://www.wysiwyg.fi), Bulgarian by [pavelsof](http://wordpress.org/support/profile/pavelsof), Belarusian by [Alexander Markevitch](http://fourfeathers.by/), Afrikaans by [Kobus Joubert](http://translate3d.com/), Hungarian by Csaba Erdei, Norwegian by [Tom Boersma](http://www.oransje.com/), Slovak by [Branco (WebHostingGeeks.com)](http://webhostinggeeks.com/user-reviews/), Swedish by [matsii](http://wordpress.org/support/profile/matsii), Catalan by [Núria Martínez Berenguer](http://www.linkedin.com/profile/view?id=127867004&trk=nav_responsive_tab_profile&locale=en_US), Ukrainian by [cmd soft](http://www.cmd-soft.com/), Estonian by [Ahto Naris](http://profiles.wordpress.org/ahtonaris/), Venetian by Michele Brunelli, simplified Chinese by [Changmeng Hu](http://www.wpdaxue.com), Indonesian by [ajoull](http://www.ajoull.com/), Arabic by [Anas Sulaiman](http://ahs.pw/)
+The plugin admin interface is currently available in 31 languages: English, French, German by [Christian Ries](http://www.singbyfoot.lu), Russian by [yoyurec](http://yoyurec.in.ua) and unostar, Greek by [theodotos](http://www.ubuntucy.org), Dutch by [AlbertGn](http://wordpress.org/support/profile/albertgn), Hebrew by [ArielK](http://www.arielk.net), Polish by [Peter Paciorkiewicz](http://www.paciorkiewicz.pl) and [Bartosz](http://www.dfactory.eu/), Latvian by [@AndyDeGroo](http://twitter.com/AndyDeGroo), Italian by [Luca Barbetti](http://wordpress.org/support/profile/lucabarbetti), Danish by [Compute](http://wordpress.org/support/profile/compute), Spanish by Curro, Portuguese by [Vitor Carvalho](http://vcarvalho.com/), Lithuanian by [Naglis Jonaitis](http://najo.lt/), Turkish by [darchws](http://darch.ws/), Finnish by [Jani Alha](http://www.wysiwyg.fi), Bulgarian by [pavelsof](http://wordpress.org/support/profile/pavelsof), Belarusian by [Alexander Markevitch](http://fourfeathers.by/), Afrikaans by [Kobus Joubert](http://translate3d.com/), Hungarian by Csaba Erdei, Norwegian by [Tom Boersma](http://www.oransje.com/), Slovak by [Branco (WebHostingGeeks.com)](http://webhostinggeeks.com/user-reviews/), Swedish by [matsii](http://wordpress.org/support/profile/matsii) and [Jon Täng](http://jontang.se), Catalan by [Núria Martínez Berenguer](http://www.linkedin.com/profile/view?id=127867004&trk=nav_responsive_tab_profile&locale=en_US), Ukrainian by [cmd soft](http://www.cmd-soft.com/), Estonian by [Ahto Naris](http://profiles.wordpress.org/ahtonaris/), Venetian by Michele Brunelli, simplified Chinese by [Changmeng Hu](http://www.wpdaxue.com), Indonesian by [ajoull](http://www.ajoull.com/), Arabic by [Anas Sulaiman](http://ahs.pw/), traditional Chinese by [香腸](http://sofree.cc/)
 
+= Credits =
+
+Most of the flags included with Polylang are coming from [famfamfam](http://famfamfam.com/) and are public domain. Icons are coming from [Icomoon](http://icomoon.io/) and are licensed under GPL. Wherever third party code has been used, credit has been given in the code’s comments.
 
 = Do you like Polylang? =
 
@@ -59,73 +60,32 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 == Screenshots ==
 
-1. The Polylang languages admin panel in WordPress 3.3.1
+1. The Polylang languages admin panel in WordPress 3.8
 
 == Upgrade Notice ==
 
-= 1.2.4 =
-Polylang 1.2 introduced major internal changes. More than ever, make a database backup before upgrading from 1.1.6 or older! If you are using a version older than 0.8, please ugrade to 0.9.8 before ugrading to 1.2.4
+= 1.4 =
+Polylang 1.2 introduced major internal changes. More than ever, make a database backup before upgrading from 1.1.6 or older! If you are using a version older than 0.8, please ugrade to 0.9.8 before ugrading to 1.3
 
 == Changelog ==
 
-= 1.2.4 (2013-11-28) =
+= 1.4 (2014-01-22) =
 
-* Better support for theme customizer
-* Bug correction: admin bar search does not filter by language
-* Bug correction: possible conflict on secondary query when querying taxonomies or single page
-* Bug correction: post type is not included in url when editing or adding a term translation
-* Bug correction: various warnings and PHP notices
+* Add Traditionial Chinese translation contributed by [香腸](http://sofree.cc/)
+* Minimum WordPress version is now v3.5
+* Refresh translations metaboxes: now translated posts are chosen in a dropdown list
+* Check if translated archives for category, tag and post format are empty before displaying the language switcher
+* Add specific management of translated featured tag in Twenty Fourteen
+* Add the possibility not to cache homepage urls with option PLL_CACHE_HOME_URL (for users having several domains).
+* The function get_pages is now filtered by language
+* Ajax requests on frontend are now automatically detected. It is no more necessary to set 'pll_load_front' :)
+* Various performance improvements
+* 'pll_get_post_types' and 'pll_get_taxonomies' filters must be added *before* 'after_setup_theme' is fired
+* Pre 1.2 data will be removed from DB at first upgrade at least 60 days after upgrade to 1.4
+* Removed some duplicate code between admin and frontend
+* Bug correction: incorrect pagination when using domains or subdomains
+* Bug correction: post format link not translated
+* Bug correction: impossible to use child terms with same name in hierarchical taxonomies
+* Bug correction: the terms list table is filtered according to new translation language instead of admin language filter
 
-= 1.2.3 (2013-11-17) =
-
-* Avoid fatal error when ugrading with Nextgen Gallery active
-* Bug correction: menus locations of non default language are lost at theme deactivation
-* Bug correction: impossible to set menus locations of non default language in some specific cases
-* Bug correction: bbpress admin is broken
-
-= 1.2.2 (2013-11-14) =
-
-* Updated Polish translation thanks to [Bartosz](http://www.dfactory.eu/)
-* Delay strings translations upgrade from 'wp_loaded' to 'admin_init' to avoid fatal error when wp-ecommerce is active
-* Remove Jetpack infinite scroll compatibility code as it seems useless with new Polylang 1.2 code structure
-* Bug correction: fatal error when doing ajax on frontend
-* Bug correction: ICL_LANGUAGE_CODE incorrectly defined when doing ajax on frontend
-* Bug correction: ['current_lang'] and ['no-translation'] indexes disappeared from pll_the_languages raw output
-* Bug correction: invalid argument supplied for foreach() in /polylang/include/mo.php on line 57
-* Bug correction: cookie may not be correctly set
-* Bug correction: languages columns may not be displayed in custom post types and custom taxonomies tables
-
-= 1.2.1 (2013-11-11) =
-
-* Update badly encoded Latvian translation
-* Suppress one query in PLL_WPML_Config when not in multisite
-* Bug correction: strings translations are not correctly upgraded
-* Bug correction: nav menus locations are not correctly upgraded for non default language
-
-= 1.2 (2013-11-10) =
-
-This version does include important changes in database. More than ever, make a database backup before upgrading
-
-* Add Arabic translation contributed by [Anas Sulaiman](http://ahs.pw/)
-* Major rewrite with new structure
-* Change the language and translations model from meta to taxonomy (no extra termmeta table created anymore)
-* Move the strings translations from option to a custom post type
-* Add support for language code in subdomain and for one different domain per language (experimental)
-* Add support of wordpress importer plugin. Export must have been done with Polylang 1.2+ (experimental)
-* Add support for theme navigation customizer (was de-activated by Polylang since WP 3.4)
-* Request confirmation for deleting a language
-* Better management of default category for each language
-* Now check if date and post type archives are translated before displaying the language switcher
-* Update management of the 'copy' action of the custom fields section in wpml-config.xml
-* Add support for ICL_LANGUAGE_CODE and ICL_LANGUAGE_NAME of the WPML API on admin side
-* Add support of WPSEO custom strings translations when the language is set from content
-* Modify admin language filter for valid html and better visibility
-* Synchronization is now disabled by default (due to too much conflicts / questions on the forum)
-* Include rel="alternate" hreflang="x" selflink per google recommendation
-* Improve inline documentation
-* Bug correction: wrong datatype for second argument in polylang/include/auto-translate.php (introduced in 1.1.6)
-* Bug correction: same id is used for all language items in menu
-* Bug correction: wpml-config.xml file not loaded for sitewide active plugins on network installations
-* Bug correction: page parent dropdown list (in page attributes metabox) not correctly displayed when switching from a language with empty list
-
-See changelog.txt for full changelog
+See changelog.txt for older changelog

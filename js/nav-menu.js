@@ -47,6 +47,17 @@ jQuery(document).ready(function($) {
 					label.prepend(cb);
 				}
 			});
+
+			// disallow unchecking both show names and show flags
+			$('.menu-item-data-object-id').each(function() {
+				var id = $(this).attr('value');
+				$('#edit-menu-item-show_flags-'+id).change(function() {
+					if ('checked' != $(this).attr('checked'))
+						$('#edit-menu-item-show_names-'+id).prop('checked', true);
+				});
+			});
+
 		}
 	});
+
 });

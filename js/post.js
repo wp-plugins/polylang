@@ -179,6 +179,28 @@ pll_tagBox = {
 
 })(jQuery);
 
+// quick edit
+// thanks to WP Dreamer http://wpdreamer.com/2012/03/manage-wordpress-posts-using-bulk-edit-and-quick-edit/
+(function($) {
+	var $wp_inline_edit = inlineEditPost.edit;
+
+	inlineEditPost.edit = function( id ) {
+		$wp_inline_edit.apply( this, arguments );
+		var $post_id = 0;
+		if ( typeof( id ) == 'object' )
+			$post_id = parseInt( this.getId( id ) );
+
+		if ( $post_id > 0 ) {
+			var $edit_row = $( '#edit-' + $post_id );
+			var $select = $edit_row.find(':input[name="inline_lang_choice"]');
+			$select.find('option:selected').removeProp('selected');
+			var lang = $('#lang_' + $post_id).html();
+			$("input[name='old_lang']").val(lang);
+			$select.find('option[value="'+lang+'"]').prop('selected', true);
+		}
+	}
+})(jQuery);
+
 jQuery(document).ready(function($) {
 	// collect taxonomies - code partly copied from WordPress
 	var taxonomies = new Array();
@@ -200,6 +222,36 @@ jQuery(document).ready(function($) {
 		);
 	});
 
+	// ajax for changing a translation in post languages metabox
+	function change_translations() {
+		var td = $(this).parent().siblings('.pll-edit-column');
+		td.children('a').hide();
+		td.children('.spinner').show();
+
+		var data = {
+			action: 'post_translation_choice',
+			lang: $('#post_lang_choice').attr('value'),
+			post_id: $('#post_ID').attr('value'),
+			value: $(this).attr('value')
+		}
+
+		$.post(ajaxurl, data , function(response) {
+			var res = wpAjax.parseAjaxResponse(response, 'ajax-response');
+			$.each(res.responses, function() {
+				switch (this.what) {
+					case 'link':
+						td.children('.spinner').hide();
+						td.html(this.data);
+						break;
+					default:
+						break;
+				}
+			});
+		});
+	}
+
+	$("select[name*='post_tr_lang']").change(change_translations);
+
 	// ajax for changing the post's language in the languages metabox
 	$('#post_lang_choice').change( function() {
 		var data = {
@@ -215,6 +267,7 @@ jQuery(document).ready(function($) {
 				switch (this.what) {
 					case 'translations': // translations fields
 						$('#post-translations').html(this.data);
+						$("select[name*='post_tr_lang']").change(change_translations);
 						break;
 					case 'taxonomy': // categories metabox for posts
 						var tax = this.data;
@@ -256,16 +309,6 @@ jQuery(document).ready(function($) {
 		});
 	}
 
-	// quick edit
-	$('#the-list').on('click', 'a.editinline', function(){
-		inlineEditPost.revert();
-		var post_id = inlineEditPost.getId(this);
-		var lang = $('#lang_'+post_id).html();
-		$("input[name='old_lang']").val(lang);
-		$('#post_lang_choice option:selected').removeProp('selected');
-		$('#post_lang_choice option[value="'+lang+'"]').attr('selected', 'selected'); // FIXME why prop('selected', true) does not work?
-	});
-
 	// ajax for changing the media's language
 	$('.media_lang_choice').change( function() {
 		var data = {
@@ -279,7 +322,7 @@ jQuery(document).ready(function($) {
 			$.each(res.responses, function() {
 				switch (this.what) {
 					case 'translations': // translations fields
-						$('.translations').html(this.data); // backward compatibility WP < 3.5
+						$('.translations').html(this.data);
 						$('.compat-field-translations').html(this.data); // WP 3.5+
 						break;
 					default:

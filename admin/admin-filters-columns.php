@@ -7,7 +7,7 @@
  * @since 1.2
  */
 class PLL_Admin_Filters_Columns {
-	public $model;
+	public $model, $curlang;
 
 	/*
 	 * constructor: setups filters and actions
@@ -16,11 +16,12 @@ class PLL_Admin_Filters_Columns {
 	 *
 	 * @param object $model instance of PLL_Model
 	 */
-	public function __construct(&$model) {
+	public function __construct(&$model, &$curlang) {
 		$this->model = &$model;
+		$this->curlang = &$curlang;
 
 		// add the language and translations columns in 'All Posts', 'All Pages' and 'Media library' panels
-		foreach ($this->model->post_types as $type) {
+		foreach ($this->model->get_translated_post_types() as $type) {
 			// use the latest filter late as some plugins purely overwrite what's done by others :(
 			// specific case for media
 			add_filter('manage_'. ($type == 'attachment' ? 'upload' : 'edit-'. $type) .'_columns', array(&$this, 'add_post_column'), 100);
@@ -32,7 +33,7 @@ class PLL_Admin_Filters_Columns {
 		add_filter('bulk_edit_custom_box', array(&$this, 'quick_edit_custom_box'), 10, 2);
 
 		// adds the language column in the 'Categories' and 'Post Tags' tables
-		foreach ($this->model->taxonomies as $tax) {
+		foreach ($this->model->get_translated_taxonomies() as $tax) {
 			add_filter('manage_edit-'.$tax.'_columns', array(&$this, 'add_term_column'));
 			add_action('manage_'.$tax.'_custom_column', array(&$this, 'term_column'), 10, 3);
 		}
@@ -54,10 +55,11 @@ class PLL_Admin_Filters_Columns {
 			$columns = array_slice($columns, 0, $n);
 		}
 
-		foreach ($this->model->get_languages_list() as $language)
+		foreach ($this->model->get_languages_list() as $language) {
 			// don't add the column for the filtered language
-			if ($language->slug != get_user_meta(get_current_user_id(), 'pll_filter_content', true))
+			if (empty($this->curlang) || $language->slug != $this->curlang->slug)
 				$columns['language_'.$language->slug] = $language->flag ? $language->flag : esc_html($language->slug);
+		}
 
 		return isset($end) ? array_merge($columns, $end) : $columns;
 	}
@@ -70,9 +72,10 @@ class PLL_Admin_Filters_Columns {
 	 * @return string first language column name
 	 */
 	protected function get_first_language_column() {
-		foreach ($this->model->get_languages_list() as $language)
-			if ($language->slug != get_user_meta(get_current_user_id(), 'pll_filter_content', true))
+		foreach ($this->model->get_languages_list() as $language) {
+			if (empty($this->curlang) || $language->slug != $this->curlang->slug)
 				$columns[] = 'language_'.$language->slug;
+		}
 
 		return reset($columns);
 	}
@@ -100,8 +103,10 @@ class PLL_Admin_Filters_Columns {
 	 * @param int $post_id
 	 */
 	public function post_column($column, $post_id) {
-		$inline = defined('DOING_AJAX') && $_REQUEST['action'] == 'inline-save' ? 1 : 0;
-		if (false === strpos($column, 'language_') || !($lang = $inline ? $this->model->get_language($_POST['post_lang_choice']) : $this->model->get_post_language($post_id)))
+		$inline = defined('DOING_AJAX') && $_REQUEST['action'] == 'inline-save';
+		$lang = $inline ? $this->model->get_language($_POST['inline_lang_choice']) : $this->model->get_post_language($post_id);
+
+		if (false === strpos($column, 'language_') || !$lang)
 			return;
 
 		$post_type = isset($GLOBALS['post_type']) ? $GLOBALS['post_type'] : $_POST['post_type']; // 2nd case for quick edit
@@ -113,15 +118,16 @@ class PLL_Admin_Filters_Columns {
 
 
 		// link to edit post (or a translation)
-		if ($id = ($inline && $lang->slug != $_POST['old_lang']) ? ($language->slug == $lang->slug ? $post_id : 0) : $this->model->get_post($post_id, $language))
+		// use $_POST['old_lang'] to detect if the language has been modified in quick edit
+		if ($id = ($inline && $lang->slug != $_POST['old_lang']) ? ($language->slug == $lang->slug ? $post_id : 0) : $this->model->get_post($post_id, $language)) {
 			printf('<a class="%1$s" title="%2$s" href="%3$s"></a>',
 				$id == $post_id ? 'pll_icon_tick' : 'pll_icon_edit',
 				esc_attr(get_post($id)->post_title),
 				esc_url(get_edit_post_link($id))
 			);
-
+		}
 		// link to add a new translation
-		else
+		else {
 			printf('<a class="pll_icon_add" title="%1$s" href="%2$s"></a>',
 				__('Add new translation', 'polylang'),
 				esc_url(admin_url('manage_media_custom_column' == current_filter() ?
@@ -129,6 +135,7 @@ class PLL_Admin_Filters_Columns {
 					'post-new.php?post_type=' . $post_type . '&from_post=' . $post_id . '&new_lang=' . $language->slug
 				))
 			);
+		}
 	}
 
 	/*
@@ -142,26 +149,25 @@ class PLL_Admin_Filters_Columns {
 	 */
 	public function quick_edit_custom_box($column, $type) {
 		if ($column == $this->get_first_language_column()) {
-			$name = $type == 'edit-tags' ? 'inline_lang_choice' : 'post_lang_choice';
 
 			$elements = $this->model->get_languages_list();
 			if (current_filter() == 'bulk_edit_custom_box')
 				array_unshift($elements, (object) array('slug' => -1, 'name' => __('&mdash; No Change &mdash;')));
 
 			$dropdown = new PLL_Walker_Dropdown();
+			// the hidden field 'old_lang' allows to pass the old language to ajax request
 			printf(
 				'<fieldset class="inline-edit-col-left">
 					<div class="inline-edit-col">
-						<input type="hidden" value="" name = "old_lang">' // a hidden field to pass the old language to ajax request
-						.'<label for="%s" class="alignleft">
+						<input type="hidden" value="" name="old_lang">
+						<label class="alignleft">
 							<span class="title">%s</span>
 							%s
 						</label>
 					</div>
 				</fieldset>',
-				$name,
 				__('Language', 'polylang'),
-				$dropdown->walk($elements, array('name' => $name))
+				$dropdown->walk($elements, array('name' => 'inline_lang_choice', 'id' => ''))
 			);
 		}
 		return $column;
@@ -202,12 +208,13 @@ class PLL_Admin_Filters_Columns {
 			printf('<div class="hidden" id="lang_%d">%s</div>', esc_attr($term_id), esc_html($lang->slug));
 
 		// link to edit term (or a translation)
-		if ($id = ($inline && $lang->slug != $_POST['old_lang']) ? ($language->slug == $lang->slug ? $term_id : 0) : $this->model->get_term($term_id, $language))
+		if ($id = ($inline && $lang->slug != $_POST['old_lang']) ? ($language->slug == $lang->slug ? $term_id : 0) : $this->model->get_term($term_id, $language)) {
 			printf('<a class="%1$s" title="%2$s" href="%3$s"></a>',
 				$id == $term_id ? 'pll_icon_tick' : 'pll_icon_edit',
 				esc_attr(get_term($id, $taxonomy)->name),
 				esc_url(get_edit_term_link($id, $taxonomy, $post_type))
 			);
+		}
 
 		// link to add a new translation
 		else {

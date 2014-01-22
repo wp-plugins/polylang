@@ -61,8 +61,8 @@ msgstr ""
 "Finalment, si t'agrada aquest plugin i el trobes útil per al teu negoci, "
 "pots fer-ne un donatiu. L'autor t'ho agrairà enormement."
 
-#: admin/admin-filters-post.php:76 admin/admin.php:83 admin/admin.php:187
-#: admin/settings.php:42 admin/settings.php:57 include/model.php:490
+#: admin/admin-filters-post.php:81 admin/admin.php:76 admin/settings.php:42
+#: admin/settings.php:57 include/model.php:501
 msgid "Languages"
 msgstr "Idiomes"
 
@@ -86,57 +86,57 @@ msgstr "Oculta l'idioma actual"
 msgid "Displays as dropdown"
 msgstr "Mostra com a menú desplegable"
 
-#: admin/admin.php:188
+#: admin/admin.php:212
 msgid "Filters content by language"
 msgstr "Filters content by language"
 
-#: admin/admin.php:183
+#: admin/admin.php:199
 msgid "Show all languages"
 msgstr "Mostra tots els idiomes"
 
-#: admin/admin-filters-columns.php:126 admin/admin-filters-columns.php:215
+#: admin/admin-filters-columns.php:126 admin/admin-filters-columns.php:218
 msgid "Add new translation"
 msgstr "Afegeix traducció nova"
 
-#: admin/admin-filters-columns.php:163 admin/admin-filters-media.php:58
-#: admin/admin-filters-post.php:109 admin/admin-filters-term.php:72
-#: admin/admin-filters-term.php:106 admin/view-translations-media.php:7
+#: admin/admin-filters-columns.php:160 admin/admin-filters-media.php:57
+#: admin/admin-filters-post.php:114 admin/admin-filters-term.php:73
+#: admin/admin-filters-term.php:110 admin/view-translations-media.php:7
 #: admin/view-translations-media.php:45 admin/view-translations-post.php:8
-#: admin/view-translations-term.php:15 include/model.php:491
+#: admin/view-translations-term.php:15 include/model.php:502
 msgid "Language"
 msgstr "Idioma"
 
-#: admin/admin-filters-media.php:73 admin/admin-filters-media.php:112
+#: admin/admin-filters-media.php:72 admin/admin-filters-media.php:111
 #: admin/table-string.php:111 admin/view-translations-media.php:42
 #: admin/view-translations-term.php:6 admin/view-translations-term.php:11
 msgid "Translations"
 msgstr "Traduccions"
 
-#: admin/admin-filters-term.php:74 admin/admin-filters-term.php:108
+#: admin/admin-filters-term.php:75 admin/admin-filters-term.php:112
 msgid "Sets the language"
 msgstr "Estableix l'idioma"
 
-#: admin/admin-filters.php:60
+#: admin/admin-filters.php:59
 msgid "The widget is displayed for:"
 msgstr "El widget es mostra per a:"
 
-#: admin/admin-filters.php:63 include/model.php:492
+#: admin/admin-filters.php:62 include/model.php:503
 msgid "All languages"
 msgstr "Tots els idiomes"
 
-#: admin/admin-filters.php:120
+#: admin/admin-filters.php:123
 msgid "Admin language"
 msgstr "Idioma de l'administrador"
 
-#: admin/admin-filters.php:123
+#: admin/admin-filters.php:126
 msgid "Wordpress default"
 msgstr "Opció per defecte de Wordpress"
 
-#: admin/admin.php:123 admin/settings.php:62
+#: admin/admin.php:116 admin/settings.php:62
 msgid "Settings"
 msgstr "Paràmetres"
 
-#: admin/admin-filters.php:151
+#: admin/admin-filters.php:156
 msgid "Upgrading language files&#8230;"
 msgstr "S'estan actualitzant els arxius d'idioma&#8230;"
 
@@ -172,60 +172,60 @@ msgstr ""
 "S'ha creat l'idioma, però l'arxiu d'aquest idioma de WordPress no s'ha "
 "descarregat. Si us plau, instal·la'l manualment."
 
-#: admin/settings.php:305
+#: admin/settings.php:308
 msgid "Widget title"
 msgstr "Títol del widget"
 
 # @ polylang
-#: admin/settings.php:323
+#: admin/settings.php:326
 msgid "Taxonomies"
 msgstr "Taxonomies"
 
 # @ polylang
-#: admin/settings.php:324
+#: admin/settings.php:327
 msgid "Custom fields"
 msgstr "Camps personalitzats"
 
 # @ polylang
-#: admin/settings.php:325
+#: admin/settings.php:328
 msgid "Comment status"
 msgstr "Estat del comentari"
 
 # @ polylang
-#: admin/settings.php:326
+#: admin/settings.php:329
 msgid "Ping status"
 msgstr "Estat dels pings"
 
 # @ polylang
-#: admin/settings.php:327
+#: admin/settings.php:330
 msgid "Sticky posts"
 msgstr "Entrades adherides (sticky)"
 
 # @ polylang
-#: admin/settings.php:328
+#: admin/settings.php:331
 msgid "Published date"
 msgstr "Data de publicació"
 
 # @ polylang
-#: admin/settings.php:329
+#: admin/settings.php:332
 msgid "Post format"
 msgstr "Format de l'entrada"
 
-#: admin/settings.php:330
+#: admin/settings.php:333
 msgid "Page parent"
 msgstr "Pàgina mare"
 
 # @ polylang
-#: admin/settings.php:331
+#: admin/settings.php:334
 msgid "Page template"
 msgstr "Plantilla de la pàgina"
 
-#: admin/settings.php:332
+#: admin/settings.php:335
 msgid "Page order"
 msgstr "Ordre de la pàgina"
 
 # @ polylang
-#: admin/settings.php:333
+#: admin/settings.php:336
 msgid "Featured image"
 msgstr "Imatge destacada"
 
@@ -297,9 +297,9 @@ msgstr "Ordre"
 msgid "Position of the language in the language switcher"
 msgstr "Posició al selector d'idioma"
 
-#: admin/admin-nav-menu.php:51 admin/admin-nav-menu.php:79
-#: admin/admin-nav-menu.php:82 admin/admin-nav-menu.php:113
-#: admin/admin-nav-menu.php:170 include/upgrade.php:175
+#: admin/admin-nav-menu.php:52 admin/admin-nav-menu.php:90
+#: admin/admin-nav-menu.php:93 admin/admin-nav-menu.php:124
+#: admin/admin-nav-menu.php:181 include/upgrade.php:298
 msgid "Language switcher"
 msgstr "Selector d'idioma"
 
@@ -311,11 +311,11 @@ msgstr "Cerca traduccions"
 msgid "Clean strings translation database"
 msgstr "Neteja la base de dades de traduccions de cadenes"
 
-#: admin/view-languages.php:164
+#: admin/view-languages.php:165
 msgid "Default language"
 msgstr "Idioma predeterminat"
 
-#: admin/view-languages.php:179
+#: admin/view-languages.php:180
 msgid ""
 "There are posts, pages, categories or tags without language set. Do you want "
 "to set them all to default language ?"
@@ -323,11 +323,11 @@ msgstr ""
 "Hi ha entrades, pàgines, categories o etiquetes sense idioma establert. Per "
 "establir-hi l'idioma predeterminat, marca aquesta casella."
 
-#: admin/view-languages.php:187
+#: admin/view-languages.php:189
 msgid "Detect browser language"
 msgstr "Detecta l'idioma del navegador"
 
-#: admin/view-languages.php:193
+#: admin/view-languages.php:195
 msgid ""
 "When the front page is visited, set the language according to the browser "
 "preference"
@@ -335,77 +335,52 @@ msgstr ""
 "Estableix l'idioma d'acord amb les preferències del navegador quan es visita "
 "la pàgina principal"
 
-#: admin/view-languages.php:200
+#: admin/view-languages.php:202
 msgid "URL modifications"
 msgstr "Modificacions d'URL"
 
-#: admin/view-languages.php:206
-msgid ""
-"The language is set from content. Posts, pages, categories and tags urls are "
-"not modified."
-msgstr ""
-"L'idioma s'estableix per al contingut. Les URL de les entrades, pàgines, "
-"categories i etiquetes no seran modificades"
-
-#: admin/view-languages.php:253
-msgid "Remove /language/ in pretty permalinks. Example:"
-msgstr "Treu /idioma/ als enllaços permanents amigables. Exemple:"
-
-#: admin/view-languages.php:262
-msgid "Keep /language/ in pretty permalinks. Example:"
-msgstr "Mantén /idioma/ als enllaços permanents amigables: Exemple:"
-
-#: admin/view-languages.php:271
+#: admin/view-languages.php:259
 msgid "Hide URL language information for default language"
 msgstr "Oculta la informació d'idioma de l'URL a l'idioma predeterminat"
 
-#: admin/view-languages.php:281
-#, php-format
-msgid ""
-"When using static front page, redirect the language page (example: %s) to "
-"the front page in the right language"
-msgstr ""
-"En fer servir una pàgina principal estàtica, redirigeix la pàgina d'idioma "
-"(per exemple: %s) a la pàgina d'inici en l'idioma correcte"
-
 # @ polylang
-#: admin/view-languages.php:290
+#: admin/view-languages.php:312
 msgid "Media"
 msgstr "Mitjans"
 
 # @ polylang
-#: admin/view-languages.php:296
+#: admin/view-languages.php:318
 msgid "Activate languages and translations for media"
 msgstr "Activa idiomes i traduccions per als mitjans"
 
-#: admin/view-languages.php:303
+#: admin/view-languages.php:365
 msgid "Synchronization"
 msgstr "Sincronització"
 
 # @ polylang
-#: admin/view-languages.php:320
+#: admin/view-languages.php:326
 msgid "Custom post types"
 msgstr "Tipus d'entrada personalitzats"
 
 # @ polylang
-#: admin/view-languages.php:333
+#: admin/view-languages.php:339
 msgid "Activate languages and translations for custom post types."
 msgstr "Activa idiomes i traduccions per a tipus d'entrada personalitzats."
 
 # @ polylang
-#: admin/view-languages.php:340
+#: admin/view-languages.php:346
 msgid "Custom taxonomies"
 msgstr "Taxonomies personalitzades"
 
 # @ polylang
-#: admin/view-languages.php:353
+#: admin/view-languages.php:359
 msgid "Activate languages and translations for custom taxonomies."
 msgstr "Activa idiomes i traduccions per a taxonomies personalitzades."
 
 #: admin/table-languages.php:54 admin/view-translations-media.php:24
 #: admin/view-translations-media.php:62 admin/view-translations-post.php:10
-#: admin/view-translations-post.php:33 admin/view-translations-term.php:18
-#: admin/view-translations-term.php:80
+#: admin/view-translations-post.php:39 admin/view-translations-term.php:18
+#: admin/view-translations-term.php:78
 msgid "Edit"
 msgstr "Edita"
 
@@ -439,7 +414,7 @@ msgid "Translation"
 msgstr "Traducció"
 
 #: admin/view-translations-media.php:33 admin/view-translations-media.php:70
-#: admin/view-translations-post.php:38 admin/view-translations-term.php:60
+#: admin/view-translations-post.php:44 admin/view-translations-term.php:61
 msgid "Add new"
 msgstr "Afegeix"
 
@@ -481,7 +456,7 @@ msgstr "Títol:"
 msgid "Adds multilingual capability to WordPress"
 msgstr "Afegeix capacitat multilingüística a Wordpress"
 
-#: polylang.php:157
+#: polylang.php:159
 #, php-format
 msgid "You are using WordPress %s. Polylang requires at least WordPress %s."
 msgstr ""
@@ -489,7 +464,7 @@ msgstr ""
 "%s."
 
 # @ polylang
-#: include/upgrade.php:75
+#: include/upgrade.php:76
 msgid ""
 "Polylang has been deactivated because you upgraded from a too old version."
 msgstr ""
@@ -497,7 +472,7 @@ msgstr ""
 "antiga."
 
 # @ polylang
-#: include/upgrade.php:77
+#: include/upgrade.php:78
 #, php-format
 msgid "Please upgrade first to %s before ugrading to %s."
 msgstr "Actualitza'l primer a %s abans d'actualizar-lo a %s."
@@ -527,20 +502,6 @@ msgstr ""
 "Fes servir aquesta opció per treure de la base de dades cadenes que no es "
 "fan servir, per exemple, després de desinstal·lar un plugin."
 
-#: admin/view-languages.php:214
-msgid ""
-"The language is set from the directory name in pretty permalinks. Example:"
-msgstr ""
-"L'idioma s'extreu del nom del directori dels enllaços permanents amigables. "
-"Exemple:"
-
-#: admin/view-languages.php:223
-msgid ""
-"The language is set from the subdomain name in pretty permalinks. Example:"
-msgstr ""
-"L'idioma s'extreu del nom del subdomini dels enllaços permanents amigables. "
-"Exemple:"
-
 # @ polylang
 #: admin/view-languages.php:314
 msgid ""
@@ -554,12 +515,71 @@ msgstr ""
 
 #: admin/settings.php:75
 msgid "The language code contains invalid characters"
-msgstr "El codi d'idioma conté caràcters invàlids."
+msgstr "El codi d'idioma conté caràcters invàlids"
 
 # @ polylang
-#: admin/view-languages.php:232
-msgid "The language is set from different domains:"
-msgstr "L'idioma s'extreu a partir dels diversos dominis:"
+#: admin/view-languages.php:208
+msgid "The language is set from content"
+msgstr "L'idioma s'extreu del contingut"
+
+#: admin/view-languages.php:211
+msgid "Posts, pages, categories and tags urls are not modified."
+msgstr "L'url de les entrades, pàgines, categories i etiquetes no es modifica."
+
+#: admin/view-languages.php:217
+msgid "The language is set from the directory name in pretty permalinks"
+msgstr "L'idioma s'extreu del nom del directori dels enllaços amigables"
+
+# @ polylang
+#: admin/view-languages.php:220 admin/view-languages.php:229
+#: admin/view-languages.php:276 admin/view-languages.php:285
+msgid "Example:"
+msgstr "Exemple:"
+
+#: admin/view-languages.php:226
+msgid "The language is set from the subdomain name in pretty permalinks"
+msgstr "L'idioma s'extreu del nom del subdomini dels enllaços amigables"
+
+# @ polylang
+#: admin/view-languages.php:235
+msgid "The language is set from different domains"
+msgstr "L'idioma s'extreu a partir dels diversos dominis"
+
+#: admin/view-languages.php:273
+msgid "Remove /language/ in pretty permalinks"
+msgstr "Esborra la part /idioma/ dels enllaços amigables"
+
+#: admin/view-languages.php:282
+msgid "Keep /language/ in pretty permalinks"
+msgstr "Mantén /idioma/ dels enllaços amigables"
+
+# @ polylang
+#: admin/view-languages.php:297
+msgid ""
+"The front page url contains the language code instead of the page name or "
+"page id"
+msgstr ""
+"L'url de la pàgina principal conté el codi d'idioma en comptes del nom o id "
+"de la pàgina"
+
+# @ polylang
+#: admin/admin-filters-term.php:141
+#, php-format
+msgid "A translation does already exist for %s"
+msgstr "Ja existeix una traducció per a %s"
+
+# @ polylang
+#: admin/view-languages.php:302
+#, php-format
+msgid "Example: %s instead of %s"
+msgstr "Exemple: %s en comptes de %s"
+
+#~ msgid ""
+#~ "When using static front page, redirect the language page (example: %s) to "
+#~ "the front page in the right language"
+#~ msgstr ""
+#~ "En fer servir una pàgina principal estàtica, redirigeix la pàgina "
+#~ "d'idioma (per exemple: %s) a la pàgina d'inici en l'idioma correcte"
 
 #~ msgid ""
 #~ "The language code, for example /en/, is added to all urls when using "

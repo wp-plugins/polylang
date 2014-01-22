@@ -88,9 +88,12 @@ class PLL_Upgrade {
 	 * @since 1.2
 	 */
 	public function _upgrade() {
-		foreach (array('0.9', '1.0', '1.1', '1.2', '1.2.1', '1.2.3') as $version)
+		foreach (array('0.9', '1.0', '1.1', '1.2', '1.2.1', '1.2.3', '1.3', '1.4') as $version)
 			if (version_compare($this->options['version'], $version, '<'))
 				call_user_func(array(&$this, 'upgrade_' . str_replace('.', '_', $version)));
+
+		if (absint(get_transient('pll_upgrade_1_4')) < time())
+			$this->delete_pre_1_2_data();
 
 		$this->options['version'] = POLYLANG_VERSION;
 		update_option('polylang', $this->options);
@@ -343,10 +346,42 @@ class PLL_Upgrade {
 
 	/*
 	 * upgrades if the previous version is < 1.3
-	 * FIXME don't delete old data in 1.2, just in case...
-	 * ready for the next version
+	 * moves the user biographies in default language to the 'description' user meta
+	 *
+	 * @since 1.3
 	 */
 	protected function upgrade_1_3() {
+		$usermeta = 'description_' . $this->options['default_lang'];
+		$query = new WP_User_Query(array('blog_id' => $GLOBALS['blog_id'], 'meta_key' => $usermeta));
+
+		foreach ($query->get_results() as $user) {
+			$desc = get_user_meta($user->ID, $usermeta, true);
+			if (!empty($desc)) {
+				update_user_meta($user->ID, 'description', $desc);
+				delete_user_meta($user->ID, $usermeta);
+			}
+		}
+	}
+
+	/*
+	 * upgrades if the previous version is < 1.4
+	 * sets a transient to delete old model data
+	 * deletes language cache (due to bug correction in home urls in 1.3.1 and added mo_id in 1.4)
+	 *
+	 * @since 1.4
+	 */
+	protected function upgrade_1_4() {
+		set_transient('pll_upgrade_1_4', time() + 60 * 24 * 60 * 60); // 60 days
+		delete_transient('pll_languages_list');
+	}
+
+	/*
+	 * old data were not deleted in 1.2, just in case...
+	 * delete them at first upgrade at least 60 days after upgrade to 1.4
+	 *
+	 * @since 1.4
+	 */
+	protected function delete_pre_1_2_data() {
 		// suppress data of the old model < 1.2
 		global $wpdb;
 		$wpdb->termmeta = $wpdb->prefix . 'termmeta'; // registers the termmeta table in wpdb
@@ -367,5 +402,7 @@ class PLL_Upgrade {
 		$languages = get_terms('language', array('hide_empty'=>false));
 		foreach ($languages as $lang)
 			delete_option('polylang_mo'.$lang->term_id);
+
+		delete_transient('pll_upgrade_1_4');
 	}
 }
