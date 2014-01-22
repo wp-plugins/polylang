@@ -57,7 +57,6 @@ class PLL_Admin extends PLL_Base {
 		add_filter('setup_theme', array(&$this, 'init_user'));
 
 		// adds the languages in admin bar
-		// FIXME: OK for WP 3.2 and newer (the admin bar is not displayed on admin side for WP 3.1)
 		add_action('admin_bar_menu', array(&$this, 'admin_bar_menu'), 100); // 100 determines the position
 
 		// setup filters for admin pages
@@ -259,7 +258,7 @@ class PLL_Admin extends PLL_Base {
 	/*
 	 * downloads mofiles from http://svn.automattic.com/wordpress-i18n/
 	 * FIXME is it the best class for this?
-	 * FIXME use language packs API coming with WP 3.7 instead
+	 * FIXME use language packs API coming with WP 3.7 instead (does not seem to work fully yet)
 	 *
 	 * @since 0.6
 	 *

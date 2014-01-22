@@ -395,7 +395,7 @@ class PLL_Admin_Filters_Term {
 		elseif (!empty($_GET['new_lang']) && empty($args['page']))
 			$lang = $this->model->get_language($_GET['new_lang']);
 
-		// FIXME can we simplify how we deal wit the admin language filter?
+		// FIXME can we simplify how we deal with the admin language filter?
 		// the language filter selection has just changed
 		// test $screen->base to avoid interference between the language filter and the post language selection and the category parent dropdown list
 		elseif (!empty($_GET['lang']) && !(isset($screen) && in_array($screen->base, array('post', 'edit-tags')))) {

@@ -173,7 +173,7 @@ class PLL_Model {
 	/*
 	 * fills home urls and flags in language list and set transient in db
 	 * delayed to be sure we have access to $wp_rewrite for home urls
-	 * home urls are not cached in db if PLL_CACHE_HOME_URLS is set to false
+	 * home urls are not cached in db if PLL_CACHE_HOME_URL is set to false
 	 *
 	 * @since 1.4
 	 */

@@ -35,7 +35,7 @@ class PLL_Uninstall {
 	 */
 	function uninstall() {
 		// suppress data of the old model < 1.2
-		// FIXME: to remove in 1.3
+		// FIXME: to remove when support for v1.1.6 will be dropped
 		global $wpdb;
 		$wpdb->termmeta = $wpdb->prefix . 'termmeta'; // registers the termmeta table in wpdb
 
@@ -81,7 +81,7 @@ class PLL_Uninstall {
 			wp_delete_post($id, true);
 
 		// delete the strings translations (<1.2)
-		// FIXME: to remove in 1.3
+		// FIXME: to remove when support for v1.1.6 will be dropped
 		foreach ($languages as $lang)
 			delete_option('polylang_mo'.$lang->term_id);
 
