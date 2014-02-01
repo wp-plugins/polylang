@@ -87,16 +87,18 @@ class PLL_Admin extends PLL_Base {
 		// 0 => the pages on which to load the script
 		// 1 => the scripts it needs to work
 		// 2 => 1 if loaded even if languages have not been defined yet, 0 otherwise
+		// 3 => 1 if loaded in footer
+		// FIXME: check if I can load more scripts in footer
 		$scripts = array(
-			'admin' => array( array('settings_page_mlang'), array('jquery', 'wp-ajax-response', 'postbox'), 1 ),
-			'post'  => array( array('post', 'media', 'async-upload', 'edit'),  array('jquery', 'wp-ajax-response', 'inline-edit-post'), 0 ),
-			'term'  => array( array('edit-tags'), array('jquery', 'wp-ajax-response'), 0 ),
-			'user'  => array( array('profile', 'user-edit'), array('jquery'), 0 ),
+			'admin' => array( array('settings_page_mlang'), array('jquery', 'wp-ajax-response', 'postbox'), 1 , 0),
+			'post'  => array( array('post', 'media', 'async-upload', 'edit'),  array('jquery', 'wp-ajax-response', 'inline-edit-post'), 0 , 0),
+			'term'  => array( array('edit-tags'), array('jquery', 'wp-ajax-response'), 0, 1),
+			'user'  => array( array('profile', 'user-edit'), array('jquery'), 0 , 0),
 		);
 
 		foreach ($scripts as $script => $v)
 			if (in_array($screen->base, $v[0]) && ($v[2] || $this->model->get_languages_list()))
-				wp_enqueue_script('pll_'.$script, POLYLANG_URL .'/js/'.$script.$suffix.'.js', $v[1], POLYLANG_VERSION);
+				wp_enqueue_script('pll_'.$script, POLYLANG_URL .'/js/'.$script.$suffix.'.js', $v[1], POLYLANG_VERSION, $v[3]);
 
 		wp_enqueue_style('polylang_admin', POLYLANG_URL .'/css/admin'.$suffix.'.css', array(), POLYLANG_VERSION);
 

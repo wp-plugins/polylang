@@ -229,7 +229,8 @@ class PLL_Frontend_Links extends PLL_Links {
 				$url = get_term_link($term, $term->taxonomy); // self link
 			elseif ($tr_id = $this->model->get_translation('term', $term->term_id, $language)) {
 				$tr_term = get_term($tr_id, $term->taxonomy);
-				if ($tr_term && $tr_term->count)
+				// check if translated term (or children) have posts
+				if ($tr_term && ($tr_term->count || (is_taxonomy_hierarchical($term->taxonomy) && array_sum(wp_list_pluck(get_terms($term->taxonomy, array('child_of' => $tr_term->term_id, 'lang' => $language->slug)), 'count')))))
 					$url = get_term_link($tr_term, $term->taxonomy);
 			}
 		}

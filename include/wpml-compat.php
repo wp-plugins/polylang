@@ -153,12 +153,12 @@ if (!function_exists('icl_link_to_element')) {
  *
  * @param int $id object id
  * @param string $type, post type or taxonomy name of the object, defaults to 'post'
- * @param bool $return_original_if_missing true if Polylang should return the original id if the translation is missiing
+ * @param bool $return_original_if_missing optional, true if Polylang should return the original id if the translation is missing, defaults to false
  * @param string $lang optional language code, defaults to current language
  * @return int|null the object id of the translation, null if the translation is missing and $return_original_if_missing set to false
  */
 if (!function_exists('icl_object_id')) {
-	function icl_object_id($id, $type, $return_original_if_missing, $lang = false) {
+	function icl_object_id($id, $type, $return_original_if_missing = false, $lang = false) {
 		global $polylang;
 		return isset($polylang) && ($lang = $lang ? $lang : pll_current_language()) && ($tr_id = $polylang->model->get_translation($type, $id, $lang)) ? $tr_id :
 			($return_original_if_missing ? $id : null);

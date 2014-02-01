@@ -184,20 +184,6 @@ case 'settings': ?><?php
 			</tr><?php
 		}?>
 
-
-		<tr>
-			<th><?php _e('Detect browser language', 'polylang');?></th>
-			<td>
-				<label><?php
-					printf(
-						'<input name="browser" type="checkbox" value="1" %s /> %s',
-						$this->options['browser'] ? 'checked="checked"' :'',
-						__('When the front page is visited, set the language according to the browser preference', 'polylang')
-					);?>
-				</label>
-			</td>
-		</tr>
-
 		<tr>
 			<th rowspan = <?php echo ($page_on_front ? 3 : 2) + $using_permalinks; ?>><?php _e('URL modifications', 'polylang') ?></th>
 			<td><fieldset id='pll-force-lang'>
@@ -309,7 +295,20 @@ case 'settings': ?><?php
 					</p>
 				</fieldset></td>
 			</tr><?php
-		}?>
+		} ?>
+
+		<tr id="pll-detect-browser" <?php echo 3 > $this->options['force_lang'] ? '' : 'style="display: none;"'; ?>>
+			<th><?php _e('Detect browser language', 'polylang');?></th>
+			<td>
+				<label><?php
+					printf(
+						'<input name="browser" type="checkbox" value="1" %s /> %s',
+						$this->options['browser'] ? 'checked="checked"' :'',
+						__('When the front page is visited, set the language according to the browser preference', 'polylang')
+					);?>
+				</label>
+			</td>
+		</tr>
 
 		<tr>
 			<th scope="row"><?php _e('Media', 'polylang') ?></th>

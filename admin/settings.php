@@ -247,6 +247,9 @@ class PLL_Settings {
 				foreach (array('browser', 'hide_default', 'redirect_lang', 'media_support') as $key)
 					$this->options[$key] = isset($_POST[$key]) ? 1 : 0;
 
+				if (3 == $this->options['force_lang'])
+					$this->options['browser'] = $this->options['hide_default'] = 0;
+
 				foreach (array('sync', 'post_types', 'taxonomies') as $key)
 					$this->options[$key] = empty($_POST[$key]) ? array() : array_keys($_POST[$key], 1);
 

@@ -88,7 +88,7 @@ class PLL_Upgrade {
 	 * @since 1.2
 	 */
 	public function _upgrade() {
-		foreach (array('0.9', '1.0', '1.1', '1.2', '1.2.1', '1.2.3', '1.3', '1.4') as $version)
+		foreach (array('0.9', '1.0', '1.1', '1.2', '1.2.1', '1.2.3', '1.3', '1.4', '1.4.1') as $version)
 			if (version_compare($this->options['version'], $version, '<'))
 				call_user_func(array(&$this, 'upgrade_' . str_replace('.', '_', $version)));
 
@@ -374,6 +374,18 @@ class PLL_Upgrade {
 		set_transient('pll_upgrade_1_4', time() + 60 * 24 * 60 * 60); // 60 days
 		delete_transient('pll_languages_list');
 	}
+
+	/*
+	 * upgrades if the previous version is < 1.4.1
+	 * disables the browser detection when using multiple domains
+	 *
+	 * @since 1.4.1
+	 */
+	protected function upgrade_1_4_1() {
+		if (3 == $this->options['force_lang'])
+			$this->options['browser'] = $this->options['hide_default'] = 0;
+	}
+
 
 	/*
 	 * old data were not deleted in 1.2, just in case...

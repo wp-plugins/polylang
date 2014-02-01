@@ -20,6 +20,7 @@ jQuery(document).ready(function($) {
 		var value = $(this).attr('value');
 		pll_toggle($('#pll-domains-table'), 3 == value);
 		pll_toggle($("#pll-hide-default"), 3 > value);
+		pll_toggle($("#pll-detect-browser"), 3 > value);
 		pll_toggle($("#pll-rewrite"), 2 > value);
 
 		pll_toggle($("#pll-url-complements"), 3 > value || $("input[name='redirect_lang']").size());
