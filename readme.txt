@@ -76,6 +76,7 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 * Fix: the language switcher does not display the correct link for translated parent categories if only children have posts
 * Fix: 3rd parameter of icl_object_id is not optional
 * Fix: issue when combining multiple domains and browser detection -> the combination is now forbidden
+* Fix: conflict Shiba Media Library: link between media translations is lost when using media quick edit
 
 = 1.4 (2014-01-22) =
 

@@ -149,10 +149,11 @@ class PLL_Admin_Filters_Media {
 	 */
 	public function save_media($post, $attachment) {
 		$this->model->set_post_language($post['ID'], $attachment['language']); // the language is no more automatically saved by WP since WP 3.5
-		$this->model->delete_translation('post', $post['ID']);
 
 		// save translations after checking the translated media is in the right language
 		if (isset($_POST['media_tr_lang'])) {
+			$this->model->delete_translation('post', $post['ID']);
+
 			foreach ($_POST['media_tr_lang'] as $lang=>$tr_id) {
 				$translations[$lang] = $this->model->get_post_language((int) $tr_id)->slug == $lang && $tr_id != $post['ID'] ? (int) $tr_id : 0;
 			}
