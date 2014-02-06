@@ -620,7 +620,7 @@ class PLL_WPML_Config {
 				if ($tax['attributes']['translate'] == 1 && !$hide)
 					$taxonomies[$tax['value']] = $tax['value'];
 				elseif ($hide)
-					unset ($types[$tax['value']]); // the author decided what to do with the taxonomy so don't allow the user to change this
+					unset ($taxonomies[$tax['value']]); // the author decided what to do with the taxonomy so don't allow the user to change this
 			}
 		}
 

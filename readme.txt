@@ -77,6 +77,7 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 * Fix: 3rd parameter of icl_object_id is not optional
 * Fix: issue when combining multiple domains and browser detection -> the combination is now forbidden
 * Fix: conflict Shiba Media Library: link between media translations is lost when using media quick edit
+* Fix: notice when using taxonomies in wpml-config.xml
 
 = 1.4 (2014-01-22) =
 
