@@ -78,6 +78,7 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 * Fix: issue when combining multiple domains and browser detection -> the combination is now forbidden
 * Fix: conflict Shiba Media Library: link between media translations is lost when using media quick edit
 * Fix: notice when using taxonomies in wpml-config.xml
+* FIx: incorrect post format link
 
 = 1.4 (2014-01-22) =
 

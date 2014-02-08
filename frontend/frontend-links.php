@@ -43,6 +43,9 @@ class PLL_Frontend_Links extends PLL_Links {
 		foreach (array('feed_link', 'author_link', 'post_type_archive_link', 'year_link', 'month_link', 'day_link') as $filter)
 			add_filter($filter, array(&$this, 'archive_link'), 20);
 
+		// rewrites post format links
+		add_filter('term_link', array(&$this, 'term_link'), 20, 3);
+
 		// rewrites next and previous post links when not automatically done by WordPress
 		if ($this->options['force_lang'] > 1)
 			add_filter('get_pagenum_link', array(&$this, 'archive_link'), 20);
