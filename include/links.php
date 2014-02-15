@@ -7,6 +7,7 @@
  */
 class PLL_Links {
 	public $links_model, $model, $options;
+	public $links;
 
 	/*
 	 * constructor
@@ -39,19 +40,17 @@ class PLL_Links {
 	 * @return string modified post link
 	 */
 	public function post_link($link, $post) {
-		static $links = array();
-
-		if (isset($links[$link]))
-			return $links[$link];
+		if (isset($this->links[$link]))
+			return $this->links[$link];
 
 		if ('post_type_link' == current_filter() && !$this->model->is_translated_post_type($post->post_type))
-			return $links[$link] = $link;
+			return $this->links[$link] = $link;
 
 		if ('_get_page_link' == current_filter()) // this filter uses the ID instead of the post object
 			$post = get_post($post);
 
 		// /!\ when post_status in not "publish", WP does not use pretty permalinks
-		return $links[$link] = $post->post_status != 'publish' ? $link : $this->links_model->add_language_to_link($link, $this->model->get_post_language($post->ID));
+		return $this->links[$link] = $post->post_status != 'publish' ? $link : $this->links_model->add_language_to_link($link, $this->model->get_post_language($post->ID));
 	}
 
 	/*
@@ -65,12 +64,10 @@ class PLL_Links {
 	 * @return string modified term link
 	 */
 	public function term_link($link, $term, $tax) {
-		static $links = array();
+		if (isset($this->links[$link]))
+			return $this->links[$link];
 
-		if (isset($links[$link]))
-			return $links[$link];
-
-		return $links[$link] = $this->model->is_translated_taxonomy($tax) ?
+		return $this->links[$link] = $this->model->is_translated_taxonomy($tax) ?
 			$this->links_model->add_language_to_link($link, $this->model->get_term_language($term->term_id)) : $link;
 	}
 
