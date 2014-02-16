@@ -6,14 +6,12 @@
  * @since 1.2
  */
 class PLL_Admin extends PLL_Base {
-	public $pref_lang;
+	public $curlang, $pref_lang;
 	public $settings_page, $filters, $filters_columns, $filters_post, $filters_term, $nav_menu, $sync, $filters_media;
 
 	/*
 	 * loads the polylang text domain
 	 * setups filters and action needed on all admin pages and on plugins page
-	 * loads the settings pages or the filters base on the request
-	 * manages the admin language filter and the "admin preferred language"
 	 *
 	 * @since 1.2
 	 *
@@ -30,6 +28,7 @@ class PLL_Admin extends PLL_Base {
 
 		// setup js scripts and css styles
 		add_action('admin_enqueue_scripts', array(&$this, 'admin_enqueue_scripts'));
+		add_action('admin_print_footer_scripts', array(&$this, 'admin_print_footer_scripts'));
 
 		// adds a 'settings' link in the plugins table
 		add_filter('plugin_action_links_' . POLYLANG_BASENAME, array(&$this, 'plugin_action_links'));
@@ -37,10 +36,8 @@ class PLL_Admin extends PLL_Base {
 	}
 
 	/*
-	 * loads the polylang text domain
 	 * setups filters and action needed on all admin pages and on plugins page
 	 * loads the settings pages or the filters base on the request
-	 * manages the admin language filter and the "admin preferred language"
 	 *
 	 * @since 1.2
 	 *
@@ -48,18 +45,18 @@ class PLL_Admin extends PLL_Base {
 	 */
 	public function init() {
 		if (PLL_SETTINGS)
-			$this->settings_page = new PLL_Settings($this->model);
+			$this->settings_page = new PLL_Settings($this->links_model);
 
 		if (!$this->model->get_languages_list())
 			return;
 
+		$this->links = new PLL_Links($this->links_model);
+
 		// filter admin language for users
 		// we must not call user info before WordPress defines user roles in wp-settings.php
 		add_filter('setup_theme', array(&$this, 'init_user'));
-		add_filter('locale', array(&$this, 'get_locale'));
 
 		// adds the languages in admin bar
-		// FIXME: OK for WP 3.2 and newer (the admin bar is not displayed on admin side for WP 3.1)
 		add_action('admin_bar_menu', array(&$this, 'admin_bar_menu'), 100); // 100 determines the position
 
 		// setup filters for admin pages
@@ -90,18 +87,49 @@ class PLL_Admin extends PLL_Base {
 		// 0 => the pages on which to load the script
 		// 1 => the scripts it needs to work
 		// 2 => 1 if loaded even if languages have not been defined yet, 0 otherwise
+		// 3 => 1 if loaded in footer
+		// FIXME: check if I can load more scripts in footer
 		$scripts = array(
-			'admin' => array( array('settings_page_mlang'), array('jquery', 'wp-ajax-response', 'postbox'), 1 ),
-			'post'  => array( array('post', 'media', 'async-upload', 'edit'),  array('jquery', 'wp-ajax-response'), 0 ),
-			'term'  => array( array('edit-tags'), array('jquery', 'wp-ajax-response'), 0 ),
-			'user'  => array( array('profile', 'user-edit'), array('jquery'), 0 ),
+			'admin' => array( array('settings_page_mlang'), array('jquery', 'wp-ajax-response', 'postbox'), 1 , 0),
+			'post'  => array( array('post', 'media', 'async-upload', 'edit'),  array('jquery', 'wp-ajax-response', 'inline-edit-post'), 0 , 0),
+			'term'  => array( array('edit-tags'), array('jquery', 'wp-ajax-response'), 0, 1),
+			'user'  => array( array('profile', 'user-edit'), array('jquery'), 0 , 0),
 		);
 
 		foreach ($scripts as $script => $v)
 			if (in_array($screen->base, $v[0]) && ($v[2] || $this->model->get_languages_list()))
-				wp_enqueue_script('pll_'.$script, POLYLANG_URL .'/js/'.$script.$suffix.'.js', $v[1], POLYLANG_VERSION);
+				wp_enqueue_script('pll_'.$script, POLYLANG_URL .'/js/'.$script.$suffix.'.js', $v[1], POLYLANG_VERSION, $v[3]);
 
 		wp_enqueue_style('polylang_admin', POLYLANG_URL .'/css/admin'.$suffix.'.css', array(), POLYLANG_VERSION);
+
+		// backward compatibility WP < 3.8
+		// don't load this for old versions
+		if (version_compare($GLOBALS['wp_version'], '3.8alpha' , '>='))
+			wp_enqueue_style('polylang_admin_mobi', POLYLANG_URL .'/css/admin-mobi'.$suffix.'.css', array(), POLYLANG_VERSION);
+	}
+
+	/*
+	 * sets pll_ajax_backend on all backend ajax request
+	 *
+	 * @since 1.4
+	 */
+	public function admin_print_footer_scripts() { ?>
+
+<script type="text/javascript">
+	if (typeof jQuery != 'undefined') {
+		(function($){
+			$.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+				if (typeof options.data == 'string') {
+					options.data = 'pll_ajax_backend=1&'+options.data;
+				}
+				else {
+					options.data = $.extend(options.data, {pll_ajax_backend: true});
+				}
+			});
+		})(jQuery)
+	}
+</script><?php
+
 	}
 
 	/*
@@ -136,13 +164,19 @@ class PLL_Admin extends PLL_Base {
 	 * @since 1.2.3
 	 */
 	public function init_user() {
-		// admin language filter
+		// language for admin language filter: may be empty
+		// $_GET['lang'] is numeric when editing a language, not when selecting a new language in the filter
 		if (!defined('DOING_AJAX') && !empty($_GET['lang']) && !is_numeric($_GET['lang']))
 			update_user_meta(get_current_user_id(), 'pll_filter_content', ($lang = $this->model->get_language($_GET['lang'])) ? $lang->slug : '');
 
-		// set preferred language for use in filters
-		$this->pref_lang = $this->model->get_language(($lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true)) ? $lg : $this->options['default_lang']);
+		$this->curlang = $this->model->get_language(get_user_meta(get_current_user_id(), 'pll_filter_content', true));
+
+		// set preferred language for use when saving posts and terms: must not be empty
+		$this->pref_lang = empty($this->curlang) ? $this->model->get_language($this->options['default_lang']) : $this->curlang;
 		$this->pref_lang = apply_filters('pll_admin_preferred_language', $this->pref_lang);
+
+		// backend locale
+		add_filter('locale', array(&$this, 'get_locale'));
 
 		// inform that the admin language has been set
 		// only if the admin language is one of the Polylang defined language
@@ -172,11 +206,11 @@ class PLL_Admin extends PLL_Base {
 	 * @since 1.2
 	 */
 	public function add_filters() {
-		$this->links = new PLL_Links($this->links_model);
-		$this->filters = new PLL_Admin_Filters($this->links_model, $this->pref_lang);
-		$this->filters_columns = new PLL_Admin_Filters_Columns($this->model);
-		$this->filters_post = new PLL_Admin_Filters_Post($this->model, $this->pref_lang);
-		$this->filters_term = new PLL_Admin_Filters_Term($this->model, $this->pref_lang);
+		// all these are separated just for convenience and maintainability
+		$this->filters = new PLL_Admin_Filters($this->links_model, $this->curlang);
+		$this->filters_columns = new PLL_Admin_Filters_Columns($this->model, $this->curlang);
+		$this->filters_post = new PLL_Admin_Filters_Post($this->model, $this->curlang, $this->pref_lang);
+		$this->filters_term = new PLL_Admin_Filters_Term($this->model, $this->curlang, $this->pref_lang);
 		$this->nav_menu = new PLL_Admin_Nav_Menu($this->model);
 		$this->sync = new PLL_Admin_Sync($this->model);
 
@@ -197,30 +231,28 @@ class PLL_Admin extends PLL_Base {
 		$all_item = (object) array(
 			'slug' => 'all',
 			'name' => __('Show all languages', 'polylang'),
-			'flag' => sprintf('<img src="%s" style="margin-bottom: -3px"/>', POLYLANG_URL .'/flags/all.png')
+			'flag' => '<span class="ab-icon"></span>'
 		);
 
-		// $_GET['lang'] is numeric when editing a language, not when selecting a new language in the filter
-		$selected = !empty($_GET['lang']) && !is_numeric($_GET['lang']) && ($lang = $this->model->get_language($_GET['lang'])) ? $lang->slug :
-			(($lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true)) ? $lg : 'all');
-
-		$selected = ('all' == $selected) ? $all_item : $this->model->get_language($selected);
+		$selected = empty($this->curlang) ? $all_item : $this->curlang;
 
 		$wp_admin_bar->add_menu(array(
 			'id'     => 'languages',
-			'title'  =>  empty($selected->flag) ? esc_html($selected->name) : $selected->flag .'&nbsp;'. esc_html($selected->name),
+			'title'  => $selected->flag . '<span class="ab-label">'. esc_html($selected->name) . '</span>',
 			'meta'  => array('title' => __('Filters content by language', 'polylang')),
 		));
 
 		foreach (array_merge(array($all_item), $this->model->get_languages_list()) as $lang) {
-			if ($selected == $lang->slug)
+			if ($selected->slug == $lang->slug)
 				continue;
+
+			$img = empty($lang->flag) ? '' : (false !== strpos($lang->flag, 'img') ? $lang->flag . '&nbsp;' : $lang->flag);
 
 			$wp_admin_bar->add_menu(array(
 				'parent' => 'languages',
 				'id'     => $lang->slug,
-				'title'  => empty($lang->flag) ? esc_html($lang->name) : $lang->flag .'&nbsp;'. esc_html($lang->name),
-				'href'   => esc_url(add_query_arg('lang', $lang->slug, $url)),
+				'title'  => $lang->flag . esc_html($lang->name),
+				'href'   => esc_url(add_query_arg('lang', $lang->slug, remove_query_arg('paged',$url))),
 			));
 		}
 	}
@@ -228,7 +260,7 @@ class PLL_Admin extends PLL_Base {
 	/*
 	 * downloads mofiles from http://svn.automattic.com/wordpress-i18n/
 	 * FIXME is it the best class for this?
-	 * FIXME use language packs API coming with WP 3.7 instead
+	 * FIXME use language packs API coming with WP 3.7 instead (does not seem to work fully yet)
 	 *
 	 * @since 0.6
 	 *
@@ -296,7 +328,7 @@ class PLL_Admin extends PLL_Base {
 				}
 				// try to download theme files if exist (will not return false if failed)
 				// FIXME not updated when the theme is updated outside a core update
-				foreach (array('twentyten', 'twentyeleven', 'twentytwelve', 'twentythirteen') as $theme) {
+				foreach (array('twentyten', 'twentyeleven', 'twentytwelve', 'twentythirteen', 'twentyfourteen') as $theme) {
 					if (!is_dir($theme_dir = get_theme_root()."/$theme/languages"))
 						continue; // the theme is not present
 

@@ -23,9 +23,6 @@ class PLL_Links_Subdomain {
 		$this->options = &$model->options;
 
 		$this->home = get_option('home');
-
-		// returns the correct language link
-		add_filter('term_link', array(&$this, 'term_link'), 10, 3);
 	}
 
 	/*
@@ -91,16 +88,15 @@ class PLL_Links_Subdomain {
 	}
 
 	/*
-	 * returns the correct language link
+	 * returns the home url
+	 * links_model interface
 	 *
-	 * @since 1.2
+	 * @since 1.3.1
 	 *
-	 * @param string $link term link
-	 * @param object $term term
-	 * @param string $tax taxonomy name
-	 * @return string language home link or unmodified term link
+	 * @param object $lang PLL_Language object
+	 * @return string
 	 */
-	function term_link($link, $term, $tax) {
-		return 'language' == $tax ? $this->add_language_to_link($this->home, $term) : $link;
+	public function home_url($lang) {
+		return $this->add_language_to_link($this->home, $lang);
 	}
 }

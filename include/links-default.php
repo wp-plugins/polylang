@@ -8,7 +8,8 @@
  * @since 1.2
  */
 class PLL_Links_Default {
-	public $model;
+	public $model, $options;
+	protected $home;
 
 	/*
 	 * constructor
@@ -19,6 +20,9 @@ class PLL_Links_Default {
 	 */
 	public function __construct(&$model) {
 		$this->model = &$model;
+		$this->options = &$model->options;
+
+		$this->home = get_option('home');
 	}
 
 	/*
@@ -72,5 +76,18 @@ class PLL_Links_Default {
 	public function get_language_from_url() {
 		$pattern = '#lang=('.implode('|', $this->model->get_languages_list(array('fields' => 'slug'))).')#';
 		return preg_match($pattern, trailingslashit($_SERVER['REQUEST_URI']), $matches) ? $matches[1] : ''; // $matches[1] is the slug of the requested language
+	}
+
+	/*
+	 * returns the home url
+	 * links_model interface
+	 *
+	 * @since 1.3.1
+	 *
+	 * @param object $lang PLL_Language object
+	 * @return string
+	 */
+	public function home_url($lang) {
+		return $this->options['hide_default'] && $lang->slug == $this->options['default_lang'] ? $this->home : get_term_link($lang, 'language');
 	}
 }

@@ -70,7 +70,7 @@ class PLL_Admin_Sync {
 		// copy or synchronize terms
 		if (!$sync || in_array('taxonomies', $this->options['sync'])) {
 			// FIXME quite a lot of query in foreach
-			foreach ($this->model->taxonomies as $tax) {
+			foreach ($this->model->get_translated_taxonomies() as $tax) {
 				$newterms = array();
 				$terms = get_the_terms($from, $tax);
 				if (is_array($terms)) {
