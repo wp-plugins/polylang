@@ -69,6 +69,10 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 
 == Changelog ==
 
+= 1.4.2 =
+
+* Fix: error 404 on category links when setting the language by content (introduced in 1.4.1)
+
 = 1.4.1 (2014-02-16) =
 
 * Add: Czech translation contributed by [Přemysl Karbula](http://www.premyslkarbula.cz)

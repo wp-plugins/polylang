@@ -90,8 +90,8 @@ class PLL_Frontend_Links extends PLL_Links {
 		if (isset($this->links[$link]))
 			return $this->links[$link];
 
-		return $this->links[$link] = $tax == 'post_format' ?
-			$this->links_model->add_language_to_link($link, $this->curlang) : parent::term_link($link, $term, $tax);
+		return $this->links[$link] = $tax == 'post_format' ? $this->links_model->add_language_to_link($link, $this->curlang) :
+			($this->options['force_lang'] ? parent::term_link($link, $term, $tax) : $link);
 	}
 
 	/*
