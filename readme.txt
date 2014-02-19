@@ -71,6 +71,7 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 
 = 1.4.2 =
 
+* Add: check multiple post types archives in language switcher
 * Fix: error 404 on category links when setting the language by content (introduced in 1.4.1)
 
 = 1.4.1 (2014-02-16) =
