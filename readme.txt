@@ -73,6 +73,7 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 
 * Add: check multiple post types archives in language switcher
 * Fix: error 404 on category links when setting the language by content (introduced in 1.4.1)
+* Fix: Undefined property: theme_MenuItem::$classes in /frontend/frontend-nav-menu.php on line 96
 
 = 1.4.1 (2014-02-16) =
 

@@ -93,12 +93,15 @@ class PLL_Frontend_Nav_Menu {
 		$r_ids = $k_ids = array();
 
 		foreach ($items as $item) {
-			if (is_array($item->classes) && in_array('current-lang', $item->classes)) {
-				$item->classes = array_diff($item->classes, array('current-menu-item'));
-				$r_ids = array_merge($r_ids, $this->get_ancestors($item)); // remove the classes for these ancestors
+			if (!empty($item->classes) && is_array($item->classes)) {
+				if (in_array('current-lang', $item->classes)) {
+					$item->classes = array_diff($item->classes, array('current-menu-item'));
+					$r_ids = array_merge($r_ids, $this->get_ancestors($item)); // remove the classes for these ancestors
+				}
+				elseif (in_array('current-menu-item', $item->classes)) {
+					$k_ids = array_merge($k_ids, $this->get_ancestors($item)); // keep the classes for these ancestors
+				}
 			}
-			elseif (is_array($item->classes) && in_array('current-menu-item', $item->classes))
-				$k_ids = array_merge($k_ids, $this->get_ancestors($item)); // keep the classes for these ancestors
 		}
 
 		$r_ids = array_diff($r_ids, $k_ids);
