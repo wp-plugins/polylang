@@ -107,7 +107,7 @@ class PLL_Frontend_Nav_Menu {
 		$r_ids = array_diff($r_ids, $k_ids);
 
 		foreach ($items as $item) {
-			if (in_array($item->db_id, $r_ids))
+			if (!empty($item->db_id) && in_array($item->db_id, $r_ids))
 				$item->classes = array_diff($item->classes, array('current-menu-ancestor', 'current-menu-parent', 'current_page_parent', 'current_page_ancestor'));
 		}
 
