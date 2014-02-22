@@ -140,8 +140,9 @@ class PLL_Frontend_Links extends PLL_Links {
 	 */
 	public function redirect_canonical($redirect_url, $requested_url) {
 		global $wp_query;
-		if (is_page() && !is_feed() && isset($wp_query->queried_object) && 'page' == get_option('show_on_front') && $wp_query->queried_object->ID == get_option('page_on_front'))
-			return $this->options['redirect_lang'] ? $this->get_home_url() : false;
+		if (is_page() && !is_feed() && isset($wp_query->queried_object) && 'page' == get_option('show_on_front') && $wp_query->queried_object->ID == get_option('page_on_front')) {
+			return $this->get_home_url();
+		}
 		return $redirect_url;
 	}
 
