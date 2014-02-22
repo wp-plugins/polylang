@@ -328,20 +328,23 @@ class PLL_Admin_Filters_Post {
 	 * @return array
 	 */
 	public function get_posts_not_translated($post_type, $post_language, $translation_language) {
+		add_filter('posts_fields', array(&$this, 'get_posts_not_translated_fields'));
 		$posts = get_posts(array(
-			'lang'        => 0, // avoid admin language filter
-			'numberposts' => -1,
-			'nopaging'    => true,
-			'post_status' => 'any',
-			'post_type'   => $post_type,
-			'orderby'     => 'title',
-			'order'       => 'ASC',
-			'tax_query'   => array(array(
+			'suppress_filters' => 0, // to make the post_fields filter work
+			'lang'             => 0, // avoid admin language filter
+			'numberposts'      => -1,
+			'nopaging'         => true,
+			'post_status'      => 'any',
+			'post_type'        => $post_type,
+			'orderby'          => 'title',
+			'order'            => 'ASC',
+			'tax_query'        => array(array(
 				'taxonomy' => 'language',
 				'field'    => 'term_taxonomy_id', // WP 3.5+
 				'terms'    => $post_language->term_taxonomy_id
 			))
 		));
+		remove_filter('posts_fields', array(&$this, 'get_posts_not_translated_fields'));
 
 		foreach ($posts as $key => $post) {
 			if ($this->model->get_translation('post', $post->ID, $translation_language))
@@ -349,6 +352,19 @@ class PLL_Admin_Filters_Post {
 		}
 
 		return $posts;
+	}
+
+	/*
+	 * filters the fields returned by get_posts in get_posts_not_translated to decrease memory usage
+	 *
+	 * @since 1.4.2
+	 *
+	 * @param string $fields not used
+	 * @return string fields to get from database
+	 */
+	public function get_posts_not_translated_fields($fields) {
+		global $wpdb;
+		return "$wpdb->posts.ID, $wpdb->posts.post_title, $wpdb->posts.post_parent";
 	}
 
 	/*
