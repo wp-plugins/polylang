@@ -71,7 +71,7 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 
 = 1.4.2 =
 
-* Add: check multiple post types archives in language switcher
+* Add: check multiple post types in PLL_Model::count_posts
 * Fix: error 404 on category links when setting the language by content (introduced in 1.4.1)
 * Fix: PHP notices in frontend-nav-menu.php with Artisteer themes
 * Fix: decrease the memory usage of untranslated posts list
