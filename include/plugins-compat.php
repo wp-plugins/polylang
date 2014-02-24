@@ -1,7 +1,7 @@
 <?php
 
 /*
- * manages compatibility with 3rd party plugins
+ * manages compatibility with 3rd party plugins (and themes)
  * this class is available as soon as the plugin is loaded
  *
  * @since 1.0
@@ -31,6 +31,14 @@ class PLL_Plugins_Compat {
 
 		// Aqua Resizer
 		add_filter('pll_home_url_black_list', create_function('$arr', "return array_merge(\$arr, array(array('function' => 'aq_resize')));"));
+
+		// Twenty Fourteen
+		add_filter('transient_featured_content_ids', array(&$this, 'twenty_fourteen_featured_content_ids'));
+
+		if (!PLL_ADMIN)
+			add_filter('option_featured-content', array(&$this, 'twenty_fourteen_option_featured_content'));
+
+		add_action('widgets_init', array(&$this, 'twenty_fourteen_widgets_init'), 20);
 	}
 
 	/*
@@ -66,7 +74,6 @@ class PLL_Plugins_Compat {
 	 * useful only when the language is set from content
 	 *
 	 * @since 1.2
-	 *
 	 */
 	public function wpseo_translate_options() {
 		if (defined('WPSEO_VERSION') && !PLL_ADMIN && did_action('wp_loaded')) {
@@ -103,5 +110,78 @@ class PLL_Plugins_Compat {
 		global $custom_field_template;
 		if (isset($custom_field_template, $_REQUEST['from_post'], $_REQUEST['new_lang']) && !empty($post))
 			$_REQUEST['post'] = $post->ID;
+	}
+
+	/*
+	 * rewrites the function Featured_Content::get_featured_post_ids()
+	 *
+	 * @since 1.4
+	 *
+	 * @param array $ids featured posts ids
+	 * @return array modified featured posts ids (include all languages)
+	 */
+	public function twenty_fourteen_featured_content_ids($featured_ids) {
+		if (false !== $featured_ids)
+			return $featured_ids;
+
+		$settings = Featured_Content::get_setting();
+
+		if (!$term = get_term_by( 'name', $settings['tag-name'], 'post_tag' ))
+			return $featured_ids;
+
+		// get fearured tag translations
+		$tags = $GLOBALS['polylang']->model->get_translations('term' ,$term->term_id);
+		$ids = array();
+
+		// Query for featured posts in all languages
+		// one query per language to get the correct number of posts per language
+		foreach ($tags as $tag) {
+			$_ids = get_posts(array(
+				'lang'        => 0, // avoid language filters
+				'fields'      => 'ids',
+				'numberposts' => $settings['quantity'],
+				'tax_query'   => array(array(
+					'taxonomy' => 'post_tag',
+					'terms'    => (int) $tag,
+				)),
+			));
+
+			$ids = array_merge($ids, $_ids);
+		}
+
+		$ids = array_map( 'absint', $ids );
+		set_transient( 'featured_content_ids', $ids );
+
+		return $ids;
+	}
+
+	/*
+	 * translates the featured tag id in featured content settings
+	 * mainly to allow hiding it when requested in featured content options
+	 * acts only on frontend
+	 *
+	 * @since 1.4
+	 *
+	 * @param array $settings featured content settings
+	 * @return array modified $settings
+	 */
+	public function twenty_fourteen_option_featured_content($settings) {
+		if ($settings['tag-id'] && $tr = pll_get_term($settings['tag-id']))
+			$settings['tag-id'] = $tr;
+
+		return $settings;
+	}
+
+	/*
+	 * overwrites the Twenty Fourteen Ephemera widget to allow translating strings when setting the language by content
+	 *
+	 * @since 1.4.1
+	 */
+	public function twenty_fourteen_widgets_init() {
+		// overwrites the Twenty Fourteen Ephemera widget to allow translating strings when setting the language by content
+		if (class_exists('Twenty_Fourteen_Ephemera_Widget')) {
+			unregister_widget('Twenty_Fourteen_Ephemera_Widget');
+			register_widget('PLL_Widget_Twenty_Fourteen_Ephemera');
+		}
 	}
 }

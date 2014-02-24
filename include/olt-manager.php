@@ -44,18 +44,21 @@ class PLL_OLT_Manager {
 	 */
 	public function load_textdomains() {
 		// our override_load_textdomain filter has done its job. let's remove it before calling load_textdomain
-		remove_filter('override_load_textdomain', array(&$this, 'mofile'));
+		remove_filter('override_load_textdomain', array(&$this, 'mofile'), 10, 3);
 		remove_filter('gettext', array(&$this, 'gettext'), 10, 3);
 		remove_filter('gettext_with_context', array(&$this, 'gettext_with_context'), 10, 4);
 		$new_locale = get_locale();
 
+		// don't try to save time for en_US as some users have theme written in another language
 		// now we can load all overriden text domains with the right language
 		foreach ($this->list_textdomains as $textdomain) {
-			if (!load_textdomain($textdomain['domain'], str_replace("{$this->default_locale}.mo", "$new_locale.mo", $textdomain['mo'])))
+			if (!load_textdomain($textdomain['domain'], str_replace("{$this->default_locale}.mo", "$new_locale.mo", $textdomain['mo']))) {
 				// since WP 3.5 themes may store languages files in /wp-content/languages/themes
-				if (!load_textdomain($textdomain['domain'], WP_LANG_DIR . "/themes/{$textdomain['domain']}-$new_locale.mo"))
+				if (!load_textdomain($textdomain['domain'], WP_LANG_DIR . "/themes/{$textdomain['domain']}-$new_locale.mo")) {
 					// since WP 3.7 plugins may store languages files in /wp-content/languages/plugins
 					load_textdomain($textdomain['domain'], WP_LANG_DIR . "/plugins/{$textdomain['domain']}-$new_locale.mo");
+				}
+			}
 		}
 
 		// translate labels of post types and taxonomies
@@ -104,7 +107,7 @@ class PLL_OLT_Manager {
 	 * @return string unmodified $translation
 	 */
 	public function gettext($translation, $text, $domain) {
-		$this->labels[$text] =  array('domain' => $domain);
+		$this->labels[$text] = array('domain' => $domain);
 		return $translation;
 	}
 
@@ -120,7 +123,7 @@ class PLL_OLT_Manager {
 	 * @return string unmodified $translation
 	 */
 	public function gettext_with_context($translation, $text, $context, $domain) {
-		$this->labels[$text] =  array('domain' => $domain, 'context' => $context);
+		$this->labels[$text] = array('domain' => $domain, 'context' => $context);
 		return $translation;
 	}
 
@@ -132,11 +135,21 @@ class PLL_OLT_Manager {
 	 * @param object $type either a post type or a taxonomy
 	 */
 	public function translate_labels($type) {
-		foreach($type->labels as $key => $label)
-			if (is_string($label) && isset($this->labels[$label]))
-				$type->labels->$key = isset($this->labels[$label]['context']) ?
-					_x($label, $this->labels[$label]['context'], $this->labels[$label]['domain']) :
-					__($label, $this->labels[$label]['domain']);
+		// use static array to avoid translating several times the same (default) labels
+		static $translated = array();
+
+		foreach($type->labels as $key => $label) {
+			if (is_string($label) && isset($this->labels[$label])) {
+				if (empty($translated[$label])) {
+					$type->labels->$key = $translated[$label] = isset($this->labels[$label]['context']) ?
+						_x($label, $this->labels[$label]['context'], $this->labels[$label]['domain']) :
+						__($label, $this->labels[$label]['domain']);
+				}
+				else {
+					$type->labels->$key = $translated[$label];
+				}
+			}
+		}
 	}
 
 	/*
