@@ -69,6 +69,11 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 
 == Changelog ==
 
+= 1.4.3 =
+
+* Add: Serbian translation contributed by Sinisa
+* Fix: comment form redirects to wp-admin when using multiple domains or subdomains.
+
 = 1.4.2 (2014-02-24) =
 
 * Add: check multiple post types in PLL_Model::count_posts

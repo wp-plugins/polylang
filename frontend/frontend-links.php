@@ -25,6 +25,11 @@ class PLL_Frontend_Links extends PLL_Links {
 		$this->page_for_posts = get_option('page_for_posts');
 
 		add_action('pll_language_defined', array(&$this, 'pll_language_defined'), 10, 2);
+
+		// adds the domain of the current language to allowed hosts for safe redirection
+		// only when using domains or subdomains
+		if ($this->options['force_lang'] > 1)
+			add_filter('allowed_redirect_hosts', array(&$this, 'allowed_redirect_hosts'));
 	}
 
 	/*
@@ -62,6 +67,19 @@ class PLL_Frontend_Links extends PLL_Links {
 		// modifies the home url
 		if (!defined('PLL_FILTER_HOME_URL') || PLL_FILTER_HOME_URL)
 			add_filter('home_url', array(&$this, 'home_url'), 10, 2);
+	}
+
+	/*
+	 * adds the domain of the current language to allowed hosts for safe redirection
+	 *
+	 * @since 1.4.3
+	 *
+	 * @param array $hosts allowed hosts
+	 * @return array
+	 */
+	public function allowed_redirect_hosts($hosts) {
+		$hosts[] = preg_replace('#http?://#', '', $this->get_home_url());
+		return $hosts;
 	}
 
 	/*
