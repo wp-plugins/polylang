@@ -78,7 +78,7 @@ class PLL_Frontend_Links extends PLL_Links {
 	 * @return array
 	 */
 	public function allowed_redirect_hosts($hosts) {
-		$hosts[] = preg_replace('#http?://#', '', $this->get_home_url());
+		$hosts[] = preg_replace('#https?://#', '', $this->get_home_url());
 		return $hosts;
 	}
 
