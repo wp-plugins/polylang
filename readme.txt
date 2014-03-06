@@ -73,6 +73,7 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 
 * Add: Serbian translation contributed by Sinisa
 * Fix: comment form redirects to wp-admin when using multiple domains or subdomains.
+* Fix: fatal error with old versions of PHP (tested on PHP 5.2.4)
 
 = 1.4.2 (2014-02-24) =
 

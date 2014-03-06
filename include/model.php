@@ -148,7 +148,10 @@ class PLL_Model {
 					array() : array_combine(wp_list_pluck($term_languages, 'name'), $term_languages);
 
 				if (!empty($languages) && !empty($term_languages)) {
-					array_walk($languages, create_function('&$v, $k, $term_languages', '$v = new PLL_Language($v, $term_languages[$v->name]);'), $term_languages);
+					// don't use array_map + create_function to instantiate an autoloaded class as it breaks badly in old versions of PHP
+					foreach ($languages as $k => $v) {
+						$languages[$k] = new PLL_Language($v, $term_languages[$v->name]);
+					}
 				}
 				else {
 					$languages = array(); // in case something went wrong
