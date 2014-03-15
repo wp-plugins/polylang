@@ -59,16 +59,14 @@ class PLL_Admin_Filters_Post {
 			return;
 		}
 
-		// filters the list of media by language when uploading from post
-		if ($this->options['media_support'] &&
-			$GLOBALS['pagenow'] == 'admin-ajax.php' && isset($_REQUEST['action']) && $_REQUEST['action'] == 'query-attachments' && // WP 3.5+
-			isset($_REQUEST['post_id']) && $lang = $this->model->get_post_language($_REQUEST['post_id']))
+		// filters the list of media (or wp-links) by language when uploading from post
+		if (isset($qvars['post_type']) && isset($_REQUEST['pll_post_id']) && $lang = $this->model->get_post_language($_REQUEST['pll_post_id']))
 			$query->set('lang', $lang->slug);
 
-		if (isset($qvars['post_type']) && $this->model->is_translated_post_type($qvars['post_type']) && !isset($qvars['lang']) && !empty($this->curlang))
+		if (isset($qvars['post_type']) && !isset($qvars['lang']) && !empty($this->curlang))
 			$qvars['lang'] = $this->curlang->slug;
 
-		if ((isset($qvars['post_type']) && !$this->model->is_translated_post_type($qvars['post_type'])) || (isset($qvars['lang']) && $qvars['lang'] == 'all'))
+		if (isset($qvars['lang']) && $qvars['lang'] == 'all')
 			unset ($qvars['lang']);
 	}
 

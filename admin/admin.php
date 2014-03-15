@@ -113,17 +113,26 @@ class PLL_Admin extends PLL_Base {
 	 *
 	 * @since 1.4
 	 */
-	public function admin_print_footer_scripts() { ?>
+	public function admin_print_footer_scripts() {
+		global $post_ID;
+		$str = 'pll_ajax_backend=1&';
+		$arr = 'pll_ajax_backend: true';
 
+		if (!empty($post_ID)) {
+			$str .= 'pll_post_id=' . (int) $post_ID . '&';
+			$arr .= ', pll_post_id: ' . (int) $post_ID;
+		}
+
+?>
 <script type="text/javascript">
 	if (typeof jQuery != 'undefined') {
 		(function($){
 			$.ajaxPrefilter(function (options, originalOptions, jqXHR) {
 				if (typeof options.data == 'string') {
-					options.data = 'pll_ajax_backend=1&'+options.data;
+					options.data = '<?php echo $str;?>'+options.data;
 				}
 				else {
-					options.data = $.extend(options.data, {pll_ajax_backend: true});
+					options.data = $.extend(options.data, {<?php echo $arr;?>});
 				}
 			});
 		})(jQuery)
