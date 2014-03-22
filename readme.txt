@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, international, localization
 Requires at least: 3.5
 Tested up to: 3.8
-Stable tag: 1.4.2
+Stable tag: 1.4.3
 License: GPLv2 or later
 
 Polylang adds multilingual content management support to WordPress.
@@ -69,12 +69,13 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 
 == Changelog ==
 
-= 1.4.3 =
+= 1.4.3 (2014-03-22) =
 
 * Add: Serbian translation contributed by Sinisa
 * Add: Myanmar translation contributed by Sithu Thwin
 * Fix: comment form redirects to wp-admin when using multiple domains or subdomains.
 * Fix: fatal error with old versions of PHP (tested on PHP 5.2.4)
+* Fix: Bad gateway experienced by users hosted by wpengine.com
 * Fix: links got from tiny MCE link button are filtered with admin language filter instead of current post language
 * Fix: possibly wrong redirection in check_language_code_in_url when using domains or subdomains
 
@@ -97,7 +98,6 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 * Fix: notice when using taxonomies in wpml-config.xml
 * Fix: incorrect post format link
 * Fix: Twenty Fourteen Ephemera widget strings are not translated
-* Fix: Bad gateway experienced by users hosted by wpengine.com
 
 = 1.4 (2014-01-22) =
 
