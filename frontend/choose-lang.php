@@ -26,7 +26,7 @@ abstract class PLL_Choose_Lang {
 		$this->page_on_front = get_option('page_on_front');
 		$this->page_for_posts = get_option('page_for_posts');
 
-		if (PLL_AJAX_ON_FRONT || false === stripos($_SERVER['SCRIPT_NAME'], 'index.php'))
+		if (PLL_AJAX_ON_FRONT || false === stripos($_SERVER['SCRIPT_FILENAME'], 'index.php'))
 			$this->set_language(empty($_REQUEST['lang']) ? $this->get_preferred_language() : $this->model->get_language($_REQUEST['lang']));
 
 		add_action('pre_comment_on_post', array(&$this, 'pre_comment_on_post')); // sets the language of comment
@@ -112,7 +112,7 @@ abstract class PLL_Choose_Lang {
 			$listlanguages = $this->model->get_languages_list(array('hide_empty' => true)); // hides languages with no post
 			foreach (array_keys($accept_langs) as $accept_lang) {
 				foreach ($listlanguages as $language)
-					if (empty($pref_lang) && (0 === stripos($accept_lang, $language->slug) || $accept_lang == str_replace('_', '-', $language->locale)) )
+					if (empty($pref_lang) && (0 === stripos($accept_lang, $language->slug) || 0 == strcasecmp($accept_lang, str_replace('_', '-', $language->locale))) )
 						$pref_lang = $language;
 			}
 		} // options['browser']
@@ -132,8 +132,9 @@ abstract class PLL_Choose_Lang {
 	protected function home_language() {
 		// test referer in case PLL_COOKIE is set to false
 		// thanks to Ov3rfly http://wordpress.org/support/topic/enhance-feature-when-front-page-is-visited-set-language-according-to-browser
+		$is_self_referer = isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $this->domain) !== false;
 		$this->set_language(
-			$this->options['hide_default'] && ((isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $this->domain) !== false)) ?
+			$this->options['hide_default'] && ($is_self_referer || !$this->options['browser']) ?
 				$this->model->get_language($this->options['default_lang']) :
 				$this->get_preferred_language() // sets the language according to browser preference or default language
 		);
@@ -152,7 +153,7 @@ abstract class PLL_Choose_Lang {
 			if ($this->page_on_front && $page_id = $this->model->get_post($this->page_on_front, $this->curlang))
 				set_query_var('page_id', $page_id);
 			else
-				set_query_var('lang', $this->curlang->slug);
+				$this->set_lang_query_var($GLOBALS['wp_query'], $this->curlang);
 		}
 		// redirect to the home page in the right language
 		// test to avoid crash if get_home_url returns something wrong
@@ -189,7 +190,7 @@ abstract class PLL_Choose_Lang {
 	 * @param object $query instance of WP_Query
 	 */
 	public function parse_main_query($query) {
-		if (empty($GLOBALS['wp_the_query']) || $query !== $GLOBALS['wp_the_query'])
+		if (!$query->is_main_query())
 			return;
 
 		$qv = $query->query_vars;
@@ -229,16 +230,26 @@ abstract class PLL_Choose_Lang {
 
 			if (!empty($page_id) && $this->model->get_post($page_id, $this->model->get_post_language($this->page_for_posts)) == $this->page_for_posts) {
 				$this->set_language($this->model->get_post_language($page_id));
-				$query->set('lang', $this->curlang->slug);
+				$this->set_lang_query_var($query, $this->curlang);
 				$query->is_singular = $query->is_page = false;
 				$query->is_home = $query->is_posts_page = true;
 			}
 		}
+	}
 
-		// backward compatibility WP < 3.4, sets a language for theme preview
-		if (is_preview() && is_front_page()) {
-			$this->set_language($this->get_preferred_language());
-			$query->set('lang', $this->curlang->slug);
-		}
+	/*
+	 * sets the language in query
+	 * optimized for (needs) WP 3.5+
+	 *
+	 * @since 1.3
+	 */
+	public function set_lang_query_var(&$query, $lang) {
+		// defining directly the tax_query (rather than setting 'lang' avoids transforming the query by WP)
+		$query->query_vars['tax_query'][] = array(
+			'taxonomy' => 'language',
+			'field'    => 'term_taxonomy_id', // since WP 3.5
+			'terms'    => $lang->term_taxonomy_id,
+			'operator' => 'IN'
+		);
 	}
 }
