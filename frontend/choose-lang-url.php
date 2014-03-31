@@ -69,19 +69,24 @@ class PLL_Choose_Lang_Url extends PLL_Choose_lang {
 	 * @since 0.9.6
 	 */
 	public function check_language_code_in_url() {
+		global $wp_query, $post;
+
 		if (is_single() || is_page()) {
-			global $post;
 			if (isset($post->ID) && $this->model->is_translated_post_type($post->post_type))
 				$language = $this->model->get_post_language((int)$post->ID);
 		}
 		elseif (is_category() || is_tag() || is_tax()) {
-			$obj = $GLOBALS['wp_query']->get_queried_object();
+			$obj = $wp_query->get_queried_object();
 			if ($this->model->is_translated_taxonomy($obj->taxonomy))
 				$language = $this->model->get_term_language((int)$obj->term_id);
 		}
+		elseif ($wp_query->is_posts_page) {
+			$obj = $wp_query->get_queried_object();
+			$language = $this->model->get_post_language((int)$obj->ID);
+		}
 
 		// the language is not correctly set so let's redirect to the correct url for this object
-		if (!empty($language) && (empty($this->curlang) || $language->slug != $this->curlang->slug)) {
+		if (!empty($language)) {
 			$requested_url  = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 			$redirect_url = $this->links_model->remove_language_from_link($requested_url);
 			$redirect_url = $this->links_model->add_language_to_link($redirect_url, $language);

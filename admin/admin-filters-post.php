@@ -59,14 +59,16 @@ class PLL_Admin_Filters_Post {
 			return;
 		}
 
-		// filters the list of media (or wp-links) by language when uploading from post
-		if (isset($qvars['post_type']) && isset($_REQUEST['pll_post_id']) && $lang = $this->model->get_post_language($_REQUEST['pll_post_id']))
-			$query->set('lang', $lang->slug);
+		if (isset($qvars['post_type']) && !isset($qvars['lang'])) {
+			// filters the list of media (or wp-links) by language when uploading from post
+			if (isset($_REQUEST['pll_post_id']) && $lang = $this->model->get_post_language($_REQUEST['pll_post_id']))
+				$query->set('lang', $lang->slug);
 
-		if (isset($qvars['post_type']) && !isset($qvars['lang']) && !empty($this->curlang))
-			$qvars['lang'] = $this->curlang->slug;
+			elseif (!empty($this->curlang))
+				$qvars['lang'] = $this->curlang->slug;
+		}
 
-		if (isset($qvars['lang']) && $qvars['lang'] == 'all')
+		if (isset($qvars['lang']) && 'all' === $qvars['lang'])
 			unset ($qvars['lang']);
 	}
 

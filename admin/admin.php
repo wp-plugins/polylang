@@ -118,6 +118,7 @@ class PLL_Admin extends PLL_Base {
 		$str = 'pll_ajax_backend=1&';
 		$arr = 'pll_ajax_backend: true';
 
+		// FIXME Can I directly send the language from post.js rather than pll_post_id from here?
 		if (!empty($post_ID)) {
 			$str .= 'pll_post_id=' . (int) $post_ID . '&';
 			$arr .= ', pll_post_id: ' . (int) $post_ID;

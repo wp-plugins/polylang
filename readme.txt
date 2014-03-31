@@ -69,6 +69,11 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 
 == Changelog ==
 
+= 1.4.4 =
+
+* Fix: No post in translation dropdown after switching the language in edit post (introduced in 1.4.3)
+* Fix: No canonical redirection when there is no language code in url and the language code is not hidden for the default language
+
 = 1.4.3 (2014-03-22) =
 
 * Add: Serbian translation contributed by Sinisa
