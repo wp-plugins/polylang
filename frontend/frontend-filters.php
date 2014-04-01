@@ -163,7 +163,7 @@ class PLL_Frontend_Filters extends PLL_Filters{
 	 * @return bool|array false if we hide the widget, unmodified $instance otherwise
 	 */
 	public function widget_display_callback($instance, $widget) {
-		return !empty($this->options['widgets'][$widget->id]) && $this->options['widgets'][$widget->id] != $this->curlang->slug ? false : $instance;
+		return !empty($instance['pll_lang']) && $instance['pll_lang'] != $this->curlang->slug ? false : $instance;
 	}
 
 	/*

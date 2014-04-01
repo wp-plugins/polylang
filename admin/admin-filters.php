@@ -19,7 +19,7 @@ class PLL_Admin_Filters extends PLL_Filters {
 		parent::__construct($links_model, $curlang);
 
 		// widgets languages filter
-		add_action('in_widget_form', array(&$this, 'in_widget_form'));
+		add_action('in_widget_form', array(&$this, 'in_widget_form'), 10, 3);
 		add_filter('widget_update_callback', array(&$this, 'widget_update_callback'), 10, 4);
 
 		// language management for users
@@ -39,7 +39,7 @@ class PLL_Admin_Filters extends PLL_Filters {
 	 *
 	 * @param object $widget
 	 */
-	public function in_widget_form($widget) {
+	public function in_widget_form($widget, $return, $instance) {
 		$dropdown = new PLL_Walker_Dropdown();
 		printf('<p><label for="%1$s">%2$s %3$s</label></p>',
 			esc_attr( $widget->id.'_lang_choice'),
@@ -52,7 +52,7 @@ class PLL_Admin_Filters extends PLL_Filters {
 				array(
 					'name'        => $widget->id.'_lang_choice',
 					'class'       => 'tags-input',
-					'selected'    => empty($this->options['widgets'][$widget->id]) ? '' : $this->options['widgets'][$widget->id]
+					'selected'    => empty($instance['pll_lang']) ? '' : $instance['pll_lang']
 				)
 			)
 		);
@@ -64,15 +64,15 @@ class PLL_Admin_Filters extends PLL_Filters {
 	 *
 	 * @since 0.3
 	 *
-	 * @param array $instance not used
+	 * @param array $instance widget options
 	 * @param array $new_instance not used
 	 * @param array $old_instance not used
 	 * @param object $widget WP_Widget object
-	 * @return array unmodified $instance
+	 * @return array widget options
 	 */
 	public function widget_update_callback($instance, $new_instance, $old_instance, $widget) {
-		$this->options['widgets'][$widget->id] = $_POST[$widget->id.'_lang_choice'];
-		update_option('polylang', $this->options);
+		if (!empty($_POST[$widget->id.'_lang_choice']))
+			$instance['pll_lang'] = $_POST[$widget->id.'_lang_choice'];
 		return $instance;
 	}
 

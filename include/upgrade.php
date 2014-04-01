@@ -88,7 +88,7 @@ class PLL_Upgrade {
 	 * @since 1.2
 	 */
 	public function _upgrade() {
-		foreach (array('0.9', '1.0', '1.1', '1.2', '1.2.1', '1.2.3', '1.3', '1.4', '1.4.1') as $version)
+		foreach (array('0.9', '1.0', '1.1', '1.2', '1.2.1', '1.2.3', '1.3', '1.4', '1.4.1', '1.4.4') as $version)
 			if (version_compare($this->options['version'], $version, '<'))
 				call_user_func(array(&$this, 'upgrade_' . str_replace('.', '_', $version)));
 
@@ -386,6 +386,22 @@ class PLL_Upgrade {
 			$this->options['browser'] = $this->options['hide_default'] = 0;
 	}
 
+	/*
+	 * upgrades if the previous version is < 1.4.4
+	 * uprades widgets options for language filter
+	 *
+	 * @since 1.4.4
+	 */
+	protected function upgrade_1_4_4() {
+		foreach ($GLOBALS['wp_registered_widgets'] as $widget) {
+			if (!empty($this->options['widgets'][$widget['id']]) && !empty($widget['callback'][0]) && !empty($widget['params'][0]['number'])) {
+				$settings = $widget['callback'][0]->get_settings();
+				$settings[$widget['params'][0]['number']]['pll_lang'] = $this->options['widgets'][$widget['id']];
+				$widget['callback'][0]->save_settings($settings);
+			}
+		}
+		unset($this->options['widgets']);
+	}
 
 	/*
 	 * old data were not deleted in 1.2, just in case...
