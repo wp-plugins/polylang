@@ -334,7 +334,7 @@ class PLL_Settings {
 				$widget_settings = $wp_registered_widgets[$widget]['callback'][0]->get_settings();
 				$number = $wp_registered_widgets[$widget]['params'][0]['number'];
 				// don't enable widget title translation if the widget is visible in only one language or if there is no title
-				if (empty($this->options['widgets'][$widget]) && isset($widget_settings[$number]['title']) && $title = $widget_settings[$number]['title'])
+				if (empty($widget_settings[$number]['pll_lang']) && isset($widget_settings[$number]['title']) && $title = $widget_settings[$number]['title'])
 					$this->register_string(__('Widget title', 'polylang'), $title, 'Widget');
 			}
 		}

@@ -395,9 +395,12 @@ class PLL_Upgrade {
 	protected function upgrade_1_4_4() {
 		foreach ($GLOBALS['wp_registered_widgets'] as $widget) {
 			if (!empty($this->options['widgets'][$widget['id']]) && !empty($widget['callback'][0]) && !empty($widget['params'][0]['number'])) {
-				$settings = $widget['callback'][0]->get_settings();
-				$settings[$widget['params'][0]['number']]['pll_lang'] = $this->options['widgets'][$widget['id']];
-				$widget['callback'][0]->save_settings($settings);
+				$obj = $widget['callback'][0];
+				if (is_object($obj) && method_exists($obj, 'get_settings') && method_exists($obj, 'save_settings')) {
+					$settings = $obj->get_settings();
+					$settings[$widget['params'][0]['number']]['pll_lang'] = $this->options['widgets'][$widget['id']];
+					$obj->save_settings($settings);
+				}
 			}
 		}
 		unset($this->options['widgets']);

@@ -73,7 +73,7 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 
 * Fix: No post in translation dropdown after switching the language in edit post (introduced in 1.4.3)
 * Fix: No canonical redirection when there is no language code in url and the language code is not hidden for the default language
-* Fix: error at widget update in customizer in WP 3.9
+* Fix: incompatibility with widgets customizer introduced in WP 3.9
 
 = 1.4.3 (2014-03-22) =
 
