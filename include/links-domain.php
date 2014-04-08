@@ -81,6 +81,8 @@ class PLL_Links_Domain {
 		foreach ($this->options['domains'] as $key => $domain)
 			if ($domain == (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'])
 				return $key;
+
+		return $this->options['default_lang'];
 	}
 
 	/*

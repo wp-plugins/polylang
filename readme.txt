@@ -74,6 +74,7 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 * Fix: No post in translation dropdown after switching the language in edit post (introduced in 1.4.3)
 * Fix: No canonical redirection when there is no language code in url and the language code is not hidden for the default language
 * Fix: incompatibility with widgets customizer introduced in WP 3.9
+* Fix: Suppress language cookie when using multiple domains
 
 = 1.4.3 (2014-03-22) =
 
@@ -83,7 +84,7 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 * Fix: fatal error with old versions of PHP (tested on PHP 5.2.4)
 * Fix: Bad gateway experienced by users hosted by wpengine.com
 * Fix: links got from tiny MCE link button are filtered with admin language filter instead of current post language
-* Fix: possibly wrong redirection in check_language_code_in_url when using domains or subdomains
+* Fix: possibly wrong redirection in check_language_code_in_url when using multiple domains or subdomains
 
 = 1.4.2 (2014-02-24) =
 

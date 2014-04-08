@@ -122,7 +122,7 @@ class PLL_Admin_Model extends PLL_Model {
 				$number = $widget['params'][0]['number'];
 				if (is_object($obj) && method_exists($obj, 'get_settings') && method_exists($obj, 'save_settings')) {
 					$settings = $obj->get_settings();
-					if ($settings[$number]['pll_lang'] == $lang->slug) {
+					if (isset($settings[$number]['pll_lang']) && $settings[$number]['pll_lang'] == $lang->slug) {
 						unset($settings[$number]['pll_lang']);
 						$obj->save_settings($settings);
 					}
