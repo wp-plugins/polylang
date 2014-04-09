@@ -1,13 +1,11 @@
 <?php
 
 /*
- * setup miscellaneous admin filters
+ * setup miscellaneous admin filters as well as filters common to admin and frontend
  *
  * @since 1.2
  */
-class PLL_Admin_Filters {
-	public $links_model, $model, $options;
-	public $pref_lang;
+class PLL_Admin_Filters extends PLL_Filters {
 
 	/*
 	 * constructor: setups filters and actions
@@ -15,17 +13,13 @@ class PLL_Admin_Filters {
 	 * @since 1.2
 	 *
 	 * @param object $links_model
-	 * @param object $pref_lang language chosen in admin filter or default language
+	 * @param object $curlang language chosen in admin filter
 	 */
-	public function __construct(&$links_model, $pref_lang) {
-		$this->links_model = &$links_model;
-		$this->model = &$links_model->model;
-		$this->options = &$this->model->options;
-
-		$this->pref_lang = $pref_lang;
+	public function __construct(&$links_model, &$curlang) {
+		parent::__construct($links_model, $curlang);
 
 		// widgets languages filter
-		add_action('in_widget_form', array(&$this, 'in_widget_form'));
+		add_action('in_widget_form', array(&$this, 'in_widget_form'), 10, 3);
 		add_filter('widget_update_callback', array(&$this, 'widget_update_callback'), 10, 4);
 
 		// language management for users
@@ -33,18 +27,10 @@ class PLL_Admin_Filters {
 		add_action('edit_user_profile_update', array(&$this, 'personal_options_update'));
 		add_action('personal_options', array(&$this, 'personal_options'));
 
-		// refresh rewrite rules if the 'page_on_front' option is modified
-		add_action('update_option_page_on_front', 'flush_rewrite_rules');
-
 		// ugrades languages files after a core upgrade (timing is important)
 		// FIXME private action ? is there a better way to do this ?
 		add_action( '_core_updated_successfully', array(&$this, 'upgrade_languages'), 1); // since WP 3.3
-
-		// filters comments by language
-		add_filter('comments_clauses', array(&$this, 'comments_clauses'), 10, 2);
-
 	}
-
 
 	/*
 	 * modifies the widgets forms to add our language dropdwown list
@@ -53,7 +39,7 @@ class PLL_Admin_Filters {
 	 *
 	 * @param object $widget
 	 */
-	public function in_widget_form($widget) {
+	public function in_widget_form($widget, $return, $instance) {
 		$dropdown = new PLL_Walker_Dropdown();
 		printf('<p><label for="%1$s">%2$s %3$s</label></p>',
 			esc_attr( $widget->id.'_lang_choice'),
@@ -66,7 +52,7 @@ class PLL_Admin_Filters {
 				array(
 					'name'        => $widget->id.'_lang_choice',
 					'class'       => 'tags-input',
-					'selected'    => empty($this->options['widgets'][$widget->id]) ? '' : $this->options['widgets'][$widget->id]
+					'selected'    => empty($instance['pll_lang']) ? '' : $instance['pll_lang']
 				)
 			)
 		);
@@ -78,15 +64,15 @@ class PLL_Admin_Filters {
 	 *
 	 * @since 0.3
 	 *
-	 * @param array $instance not used
+	 * @param array $instance widget options
 	 * @param array $new_instance not used
 	 * @param array $old_instance not used
 	 * @param object $widget WP_Widget object
-	 * @return array unmodified $instance
+	 * @return array widget options
 	 */
 	public function widget_update_callback($instance, $new_instance, $old_instance, $widget) {
-		$this->options['widgets'][$widget->id] = $_POST[$widget->id.'_lang_choice'];
-		update_option('polylang', $this->options);
+		if (!empty($_POST[$widget->id.'_lang_choice']))
+			$instance['pll_lang'] = $_POST[$widget->id.'_lang_choice'];
 		return $instance;
 	}
 
@@ -99,8 +85,12 @@ class PLL_Admin_Filters {
 	 */
 	public function personal_options_update($user_id) {
 		update_user_meta($user_id, 'user_lang', $_POST['user_lang']); // admin language
-		foreach ($this->model->get_languages_list() as $lang)
-			update_user_meta($user_id, 'description_'.$lang->slug, $_POST['description_'.$lang->slug]); // biography translations
+
+		// biography translations
+		foreach ($this->model->get_languages_list() as $lang) {
+			$meta = $lang->slug == $this->options['default_lang'] ? 'description' : 'description_'.$lang->slug;
+			update_user_meta($user_id, $meta, $_POST['description_'.$lang->slug]);
+		}
 	}
 
 	/*
@@ -132,16 +122,18 @@ class PLL_Admin_Filters {
 		);
 
 		// hidden informations to modify the biography form with js
-		foreach ($this->model->get_languages_list() as $lang)
+		foreach ($this->model->get_languages_list() as $lang) {
+			$meta = $lang->slug == $this->options['default_lang'] ? 'description' : 'description_'.$lang->slug;
 			printf('<input type="hidden" class="biography" name="%s-%s" value="%s" />',
 				esc_attr($lang->slug),
 				esc_attr($lang->name),
-				esc_attr(get_user_meta($profileuser->ID, 'description_'.$lang->slug, true))
+				esc_attr(get_user_meta($profileuser->ID, $meta, true))
 			);
+		}
 	}
 
 	/*
-	 * ugrades languages files after a core upgrade
+	 * ugprades languages files after a core upgrade
 	 *
 	 * @since 0.6
 	 *
@@ -152,27 +144,5 @@ class PLL_Admin_Filters {
 		foreach ($this->model->get_languages_list() as $language)
 			if ($language->locale != $_POST['locale']) // do not (re)update the language files of a localized WordPress
 				PLL_Admin::download_mo($language->locale, $version);
-	}
-
-	/*
-	 * filters comments by language
-	 *
-	 * @since 0.9
-	 *
-	 * @param array $clauses sql clauses
-	 * @param object $query WP_Comment_Query object
-	 * @return array modified clauses
-	 */
-	public function comments_clauses($clauses, $query) {
-		if (!empty($query->query_vars['lang']))
-			$lang = $query->query_vars['lang'];
-
-		elseif (!empty($_GET['lang']) && $_GET['lang'] != 'all')
-			$lang = $this->model->get_language($_GET['lang']);
-
-		elseif ($lg = get_user_meta(get_current_user_id(), 'pll_filter_content', true))
-		 	$lang = $this->model->get_language($lg);
-
-		return empty($lang) ? $clauses : $this->model->comments_clauses($clauses, $lang);
 	}
 }

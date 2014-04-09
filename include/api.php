@@ -90,11 +90,16 @@ function pll_get_term($term_id, $slug = '') {
  *
  * @since 0.8
  *
+ * @param string $lang language code (optional on frontend)
  * @return string
  */
-function pll_home_url() {
+function pll_home_url($lang = '') {
 	global $polylang;
-	return $polylang instanceof PLL_Frontend &&  !empty($polylang->links) ? $polylang->links->get_home_url() : home_url('/');
+
+	if (empty($lang))
+		$lang = pll_current_language();
+
+	return isset($polylang) && !empty($polylang->links) && !empty($lang) ? $polylang->links->get_home_url($lang) : home_url('/');
 }
 
 /*

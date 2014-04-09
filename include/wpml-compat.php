@@ -12,13 +12,15 @@
  * @since 0.9.5
  */
 function pll_define_wpml_constants() {
-	$code = PLL_ADMIN ? get_user_meta(get_current_user_id(), 'pll_filter_content', true) : pll_current_language();
+	global $polylang;
 
-	if(!defined('ICL_LANGUAGE_CODE') && !empty($code))
-		define('ICL_LANGUAGE_CODE', $code);
+	if (!empty($polylang->curlang)) {
+		if(!defined('ICL_LANGUAGE_CODE'))
+			define('ICL_LANGUAGE_CODE', $polylang->curlang->slug);
 
-	if(!defined('ICL_LANGUAGE_NAME') && !empty($code))
-		define('ICL_LANGUAGE_NAME', $GLOBALS['polylang']->model->get_language($code)->name);
+		if(!defined('ICL_LANGUAGE_NAME'))
+			define('ICL_LANGUAGE_NAME', $polylang->curlang->name);
+	}
 }
 
 add_action('pll_language_defined', 'pll_define_wpml_constants');
@@ -151,12 +153,12 @@ if (!function_exists('icl_link_to_element')) {
  *
  * @param int $id object id
  * @param string $type, post type or taxonomy name of the object, defaults to 'post'
- * @param bool $return_original_if_missing true if Polylang should return the original id if the translation is missiing
+ * @param bool $return_original_if_missing optional, true if Polylang should return the original id if the translation is missing, defaults to false
  * @param string $lang optional language code, defaults to current language
  * @return int|null the object id of the translation, null if the translation is missing and $return_original_if_missing set to false
  */
 if (!function_exists('icl_object_id')) {
-	function icl_object_id($id, $type, $return_original_if_missing, $lang = false) {
+	function icl_object_id($id, $type, $return_original_if_missing = false, $lang = false) {
 		global $polylang;
 		return isset($polylang) && ($lang = $lang ? $lang : pll_current_language()) && ($tr_id = $polylang->model->get_translation($type, $id, $lang)) ? $tr_id :
 			($return_original_if_missing ? $id : null);
@@ -618,7 +620,7 @@ class PLL_WPML_Config {
 				if ($tax['attributes']['translate'] == 1 && !$hide)
 					$taxonomies[$tax['value']] = $tax['value'];
 				elseif ($hide)
-					unset ($types[$tax['value']]); // the author decided what to do with the taxonomy so don't allow the user to change this
+					unset ($taxonomies[$tax['value']]); // the author decided what to do with the taxonomy so don't allow the user to change this
 			}
 		}
 

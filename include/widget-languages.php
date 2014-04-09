@@ -105,13 +105,63 @@ class PLL_Widget_Languages extends WP_Widget {
 		$fields = '';
 		foreach (PLL_Switcher::get_switcher_options('widget') as $key => $str)
 			$fields .= sprintf(
-				'<input type="checkbox" class="checkbox" id="%1$s" name="%2$s" %3$s /> <label for="%1$s">%4$s</label><br />',
+				'<div class = "%5$s" %6$s><input type="checkbox" class="checkbox" id="%1$s" name="%2$s" %3$s/> <label for="%1$s">%4$s</label></div>',
 				$this->get_field_id($key),
 				$this->get_field_name($key),
 				$instance[$key] ? 'checked="checked"' : '',
-				esc_html($str)
+				esc_html($str),
+				'dropdown' == $key ? '' : 'no-dropdown-' . $this->id,
+				'dropdown' == $key || empty($instance['dropdown']) ? '' : 'style="display:none;"'
 			);
 
+
 		echo $title.'<p>'.$fields.'</p>';
+
+		// FIXME echoing script in form is not very clean
+		// but it does not work if enqueued properly :
+		// clicking save on a widget makes this code unreachable for the just saved widget (?!)
+		$this->admin_print_script();
+	}
+
+	/*
+	 * add javascript to control the language switcher options
+	 *
+	 * @since 1.3
+	 */
+	public function admin_print_script() {
+		static $js = '';
+
+		if ($js)
+			return;
+
+		$js = "
+			<script type='text/javascript'>
+				//<![CDATA[
+				jQuery(document).ready(function($) {
+					function pll_toggle(a, test) {
+						test ? a.show() : a.hide();
+					}
+
+					var widgets = new Array();
+					$('.widget-id').each( function(){
+						var this_id = $(this).attr('value');
+
+						// remove all options if dropdown is checked
+						$('#widget-'+this_id+'-dropdown').change(function() {
+							pll_toggle($('.no-dropdown-'+this_id), 'checked' != $(this).attr('checked'));
+						});
+
+						// disallow unchecking both show names and show flags
+						$('#widget-'+this_id+'-show_flags').change(function() {
+							if ('checked' != $(this).attr('checked'))
+								$('#widget-'+this_id+'-show_names').prop('checked', true);
+						});
+
+					});
+				});
+				//]]>
+			</script>";
+
+		echo $js;
 	}
 }

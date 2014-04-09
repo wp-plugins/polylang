@@ -25,6 +25,11 @@ class PLL_Frontend_Links extends PLL_Links {
 		$this->page_for_posts = get_option('page_for_posts');
 
 		add_action('pll_language_defined', array(&$this, 'pll_language_defined'), 10, 2);
+
+		// adds the domain of the current language to allowed hosts for safe redirection
+		// only when using domains or subdomains
+		if ($this->options['force_lang'] > 1)
+			add_filter('allowed_redirect_hosts', array(&$this, 'allowed_redirect_hosts'));
 	}
 
 	/*
@@ -43,6 +48,13 @@ class PLL_Frontend_Links extends PLL_Links {
 		foreach (array('feed_link', 'author_link', 'post_type_archive_link', 'year_link', 'month_link', 'day_link') as $filter)
 			add_filter($filter, array(&$this, 'archive_link'), 20);
 
+		// rewrites post format links
+		add_filter('term_link', array(&$this, 'term_link'), 20, 3);
+
+		// rewrites next and previous post links when not automatically done by WordPress
+		if ($this->options['force_lang'] > 1)
+			add_filter('get_pagenum_link', array(&$this, 'archive_link'), 20);
+
 		// modifies the page link in case the front page is not in the default language
 		add_filter('page_link', array(&$this, 'page_link'), 20, 2);
 
@@ -55,6 +67,19 @@ class PLL_Frontend_Links extends PLL_Links {
 		// modifies the home url
 		if (!defined('PLL_FILTER_HOME_URL') || PLL_FILTER_HOME_URL)
 			add_filter('home_url', array(&$this, 'home_url'), 10, 2);
+	}
+
+	/*
+	 * adds the domain of the current language to allowed hosts for safe redirection
+	 *
+	 * @since 1.4.3
+	 *
+	 * @param array $hosts allowed hosts
+	 * @return array
+	 */
+	public function allowed_redirect_hosts($hosts) {
+		$hosts[] = preg_replace('#https?://#', '', $this->get_home_url());
+		return $hosts;
 	}
 
 	/*
@@ -83,8 +108,8 @@ class PLL_Frontend_Links extends PLL_Links {
 		if (isset($this->links[$link]))
 			return $this->links[$link];
 
-		return $this->links[$link] = $tax == 'post_format' ?
-			$this->links_model->add_language_to_link($link, $this->model->get_term_language($term->term_id)) : parent::term_link($link, $term, $tax);
+		return $this->links[$link] = $tax == 'post_format' ? $this->links_model->add_language_to_link($link, $this->curlang) :
+			($this->options['force_lang'] ? parent::term_link($link, $term, $tax) : $link);
 	}
 
 	/*
@@ -97,23 +122,10 @@ class PLL_Frontend_Links extends PLL_Links {
 	 * @return string modified link
 	 */
 	public function page_link($link, $id) {
-		static $posts = array(); // cache the results
+		if ($this->page_on_front && ($lang = $this->model->get_post_language($id)) && $id == $this->model->get_post($this->page_on_front, $lang))
+			return $lang->home_url;
 
-		if ($this->options['redirect_lang'] && $this->page_on_front && $lang = $this->model->get_post_language($id)) {
-			if (!isset($posts[$lang->slug][$this->page_on_front]))
-				$posts[$lang->slug][$this->page_on_front] = $this->model->get_post($this->page_on_front, $lang);
-			if ($id == $posts[$lang->slug][$this->page_on_front])
-				return $this->options['hide_default'] && $lang->slug == $this->options['default_lang'] ? trailingslashit($this->home) : get_term_link($lang, 'language');
-		}
-
-		if ($this->page_on_front && $this->options['hide_default']) {
-			if (!isset($posts[$this->options['default_lang']][$this->page_on_front]))
-				$posts[$this->options['default_lang']][$this->page_on_front] = $this->model->get_post($this->page_on_front, $this->options['default_lang']);
-			if ($id == $posts[$this->options['default_lang']][$this->page_on_front])
-				return trailingslashit($this->home);
-		}
-
-		return _get_page_link($id);
+		return $link;
 	}
 
 	/*
@@ -146,8 +158,9 @@ class PLL_Frontend_Links extends PLL_Links {
 	 */
 	public function redirect_canonical($redirect_url, $requested_url) {
 		global $wp_query;
-		if (is_page() && !is_feed() && isset($wp_query->queried_object) && 'page' == get_option('show_on_front') && $wp_query->queried_object->ID == get_option('page_on_front'))
-			return $this->options['redirect_lang'] ? $this->get_home_url() : false;
+		if (is_page() && !is_feed() && isset($wp_query->queried_object) && 'page' == get_option('show_on_front') && $wp_query->queried_object->ID == get_option('page_on_front')) {
+			return $this->get_home_url();
+		}
 		return $redirect_url;
 	}
 
@@ -164,15 +177,22 @@ class PLL_Frontend_Links extends PLL_Links {
 		if (!(did_action('template_redirect') || did_action('login_init')) || rtrim($url,'/') != $this->home)
 			return $url;
 
-		$white_list = apply_filters('pll_home_url_white_list',  array(
-			array('file' => get_theme_root()),
-			array('function' => 'wp_nav_menu'),
-			array('function' => 'login_footer')
-		));
+		static $white_list, $black_list; // avoid evaluating this at each function call
 
-		$black_list = apply_filters('pll_home_url_black_list',  array(array('function' => 'get_search_form')));
+		if (empty($white_list)) {
+			$white_list = apply_filters('pll_home_url_white_list',  array(
+				array('file' => get_theme_root()),
+				array('function' => 'wp_nav_menu'),
+				array('function' => 'login_footer')
+			));
+		}
 
-		foreach (array_reverse(debug_backtrace(/*!DEBUG_BACKTRACE_PROVIDE_OBJECT|DEBUG_BACKTRACE_IGNORE_ARGS*/)) as $trace) {
+		if (empty($black_list))
+			$black_list = apply_filters('pll_home_url_black_list',  array(array('function' => 'get_search_form')));
+
+		$traces = version_compare(PHP_VERSION, '5.2.5', '>=') ? debug_backtrace(false) : debug_backtrace();
+
+		foreach ($traces as $trace) {
 			// searchform.php is not passed through get_search_form filter prior to WP 3.6
 			// backward compatibility WP < 3.6
 			if (isset($trace['file']) && strpos($trace['file'], 'searchform.php'))
@@ -216,7 +236,7 @@ class PLL_Frontend_Links extends PLL_Links {
 			$url = get_permalink($id);
 
 		// page for posts
-		// FIXME the last test should useless now since I test is_posts_page
+		// FIXME the last test should be useless now since I test is_posts_page
 		elseif ($wp_query->is_posts_page && !empty($wp_query->queried_object_id) && ($id = $this->model->get_post($wp_query->queried_object_id, $language)) && $id == $this->model->get_post($this->page_for_posts, $language))
 			$url = get_permalink($id);
 
@@ -229,15 +249,19 @@ class PLL_Frontend_Links extends PLL_Links {
 
 			if (!$lang || $language->slug == $lang->slug)
 				$url = get_term_link($term, $term->taxonomy); // self link
-			elseif ($link_id = $this->model->get_translation('term', $term->term_id, $language))
-				$url = get_term_link(get_term($link_id, $term->taxonomy), $term->taxonomy);
+			elseif ($tr_id = $this->model->get_translation('term', $term->term_id, $language)) {
+				$tr_term = get_term($tr_id, $term->taxonomy);
+				// check if translated term (or children) have posts
+				if ($tr_term && ($tr_term->count || (is_taxonomy_hierarchical($term->taxonomy) && array_sum(wp_list_pluck(get_terms($term->taxonomy, array('child_of' => $tr_term->term_id, 'lang' => $language->slug)), 'count')))))
+					$url = get_term_link($tr_term, $term->taxonomy);
+			}
 		}
 
 		elseif (is_search())
 			$url = $this->get_archive_url($language);
 
 		elseif (is_archive()) {
-			$keys = array('post_type', 'm', 'year', 'monthnum', 'day', 'author', 'author_name');
+			$keys = array('post_type', 'm', 'year', 'monthnum', 'day', 'author', 'author_name', 'post_format');
 			// check if there are existing translations before creating the url
 			if ($this->model->count_posts($language, array_intersect_key($qv, array_flip($keys))))
 				$url = $this->get_archive_url($language);
@@ -274,26 +298,9 @@ class PLL_Frontend_Links extends PLL_Links {
 	 * @param bool $is_search optional wether we need the home url for a search form, defaults to false
 	 */
 	public function get_home_url($language = '', $is_search = false) {
-		static $home_urls = array(); // used for cache
-
 		if (empty($language))
 			$language = $this->curlang;
 
-		if (isset($home_urls[$language->slug][$is_search]))
-			return $home_urls[$language->slug][$is_search];
-
-		if ($this->options['default_lang'] == $language->slug && $this->options['hide_default'])
-			return $home_urls[$language->slug][$is_search] = trailingslashit($this->home);
-
-		// a static page is used as front page : /!\ don't use get_page_link to avoid infinite loop
-		// don't use this for search form
-		if (!$is_search && $this->page_on_front && $id = $this->model->get_post($this->page_on_front, $language))
-			return $home_urls[$language->slug][$is_search] = $this->page_link('', $id);
-
-		$link = get_term_link($language, 'language');
-
-		// add a trailing slash as done by WP on homepage (otherwise could break the search form when the permalink structure does not include one)
-		// only for pretty permalinks
-		return $home_urls[$language->slug][$is_search] = $this->using_permalinks ? trailingslashit($link) : $link;
+		return parent::get_home_url($language, $is_search);
 	}
 }
