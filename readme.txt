@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, international, localization
 Requires at least: 3.5
 Tested up to: 3.9
-Stable tag: 1.4.4
+Stable tag: 1.4.4.2
 License: GPLv2 or later
 
 Polylang adds multilingual content management support to WordPress.
@@ -64,10 +64,16 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 == Upgrade Notice ==
 
-= 1.4.4 =
+= 1.4.4.1 =
 Polylang 1.2 introduced major internal changes. More than ever, make a database backup before upgrading from 1.1.6 or older! If you are using a version older than 0.8, please ugrade to 0.9.8 before ugrading to 1.4.2
 
 == Changelog ==
+
+= 1.4.5 =
+
+* Fix: Notice when combined with WPSEO 1.5+
+* Fix: Impossible to disable a widget language filter once set (introduced in 1.4.4)
+* Fix: Unexpected redirection of the homepage with language code when permalink structure has no trailing slash (introduced in 1.4.4)
 
 = 1.4.4 (2014-04-09) =
 

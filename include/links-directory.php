@@ -70,7 +70,7 @@ class PLL_Links_Directory {
 
 		if (!empty($languages)) {
 			global $wp_rewrite;
-			$pattern = '#' . ($this->options['rewrite'] ? '' : '\/language') . '\/('.implode('|', $languages).')\/#';
+			$pattern = '#' . ($this->options['rewrite'] ? '' : '\/language') . '\/('.implode('|', $languages).')(\/|$)#';
 			$url = preg_replace($pattern, $wp_rewrite->root . '/', $url);
 		}
 		return $url;
@@ -99,7 +99,7 @@ class PLL_Links_Directory {
 	 */
 	public function get_language_from_url() {
 		$root = $this->options['rewrite'] ? '' : 'language/';
-		$pattern = '#\/'.$root.'('.implode('|', $this->model->get_languages_list(array('fields' => 'slug'))).')\/#';
+		$pattern = '#\/'.$root.'('.implode('|', $this->model->get_languages_list(array('fields' => 'slug'))).')(\/|$)#';
 		return preg_match($pattern, trailingslashit($_SERVER['REQUEST_URI']), $matches) ? $matches[1] : ''; // $matches[1] is the slug of the requested language
 	}
 

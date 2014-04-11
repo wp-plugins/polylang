@@ -78,7 +78,8 @@ class PLL_Plugins_Compat {
 	public function wpseo_translate_options() {
 		if (defined('WPSEO_VERSION') && !PLL_ADMIN && did_action('wp_loaded')) {
 			global $wpseo_front;
-			foreach ( get_wpseo_options_arr() as $opt )
+			$options = version_compare(WPSEO_VERSION, '1.5', '<') ? get_wpseo_options_arr() : WPSEO_Options::get_option_names();
+			foreach ( $options as $opt )
 				$wpseo_front->options = array_merge( $wpseo_front->options, (array) get_option( $opt ) );
 		}
 	}

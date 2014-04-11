@@ -73,6 +73,9 @@ class PLL_Admin_Filters extends PLL_Filters {
 	public function widget_update_callback($instance, $new_instance, $old_instance, $widget) {
 		if (!empty($_POST[$widget->id.'_lang_choice']))
 			$instance['pll_lang'] = $_POST[$widget->id.'_lang_choice'];
+		else
+			unset($instance['pll_lang']);
+
 		return $instance;
 	}
 
