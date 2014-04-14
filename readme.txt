@@ -73,7 +73,8 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 
 * Fix: Notice when combined with WPSEO 1.5+
 * Fix: Impossible to disable a widget language filter once set (introduced in 1.4.4)
-* Fix: Unexpected redirection of the homepage with language code when permalink structure has no trailing slash (introduced in 1.4.4)
+* Fix: Unexpected redirection of the homepage with language code when permalink structure has no trailing slash
+* Fix: Some installs lead to wrong redirection when using domains
 
 = 1.4.4 (2014-04-09) =
 

@@ -36,8 +36,8 @@ class PLL_Links_Domain {
 	 * @return string modified url
 	 */
 	public function add_language_to_link($url, $lang) {
-		if (!empty($lang))
-			$url = $this->options['default_lang'] == $lang->slug ? $url : str_replace($this->home, $this->options['domains'][$lang->slug], $url);
+		if (!empty($lang) && !empty($this->options['domains'][$lang->slug]))
+			$url = str_replace($this->home, $this->options['domains'][$lang->slug], $url);
 		return $url;
 	}
 
@@ -95,11 +95,6 @@ class PLL_Links_Domain {
 	 * @return string
 	 */
 	function home_url($lang) {
-		if ($lang->slug == $this->options['default_lang'])
-			return $this->home;
-
-		if (!empty($this->options['domains'][$lang->slug]))
-			return $this->options['domains'][$lang->slug];
-
+		return empty($this->options['domains'][$lang->slug]) ? $this->home : $this->options['domains'][$lang->slug];
 	}
 }

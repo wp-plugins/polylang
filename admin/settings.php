@@ -238,9 +238,10 @@ class PLL_Settings {
 					$this->options[$key] = isset($_POST[$key]) ? (int) $_POST[$key] : 0;
 
 				// FIXME : TODO error message if not a valid url
-				if (isset($_POST['domains']) && is_array($_POST['domains'])) {
+				if (3 == $this->options['force_lang'] && isset($_POST['domains']) && is_array($_POST['domains'])) {
 					foreach ($_POST['domains'] as $key => $domain) {
-						$this->options['domains'][$key] = esc_url_raw(trim($domain));
+						if (!empty($domain)) // don't store empty values. see http://wordpress.org/support/topic/url-trouble-since-144
+							$this->options['domains'][$key] = esc_url_raw(trim($domain));
 					}
 				}
 
