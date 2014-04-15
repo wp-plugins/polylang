@@ -240,9 +240,9 @@ class PLL_Settings {
 				// FIXME : TODO error message if not a valid url
 				if (3 == $this->options['force_lang'] && isset($_POST['domains']) && is_array($_POST['domains'])) {
 					foreach ($_POST['domains'] as $key => $domain) {
-						if (!empty($domain)) // don't store empty values. see http://wordpress.org/support/topic/url-trouble-since-144
-							$this->options['domains'][$key] = esc_url_raw(trim($domain));
+						$this->options['domains'][$key] = esc_url_raw(trim($domain));
 					}
+					$this->options['domains'][$this->options['default_lang']] = get_option('home');
 				}
 
 				foreach (array('browser', 'hide_default', 'redirect_lang', 'media_support') as $key)
