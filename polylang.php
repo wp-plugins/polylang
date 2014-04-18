@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://polylang.wordpress.com/
-Version: 1.4.4.4
+Version: 1.4.4.5
 Author: Frédéric Demarle
 Description: Adds multilingual capability to WordPress
 Text Domain: polylang
@@ -29,7 +29,7 @@ Domain Path: /languages
  *
  */
 
-define('POLYLANG_VERSION', '1.4.4.4');
+define('POLYLANG_VERSION', '1.4.4.5');
 define('PLL_MIN_WP_VERSION', '3.5');
 
 define('POLYLANG_BASENAME', plugin_basename(__FILE__)); // plugin name as known by WP
@@ -85,8 +85,9 @@ class Polylang {
 			return;
 
 		// avoid loading polylang admin for frontend ajax requests
+		// special test for plupload which does not use jquery ajax and thus does not pass our ajax prefilter
 		if (!defined('PLL_AJAX_ON_FRONT'))
-			define('PLL_AJAX_ON_FRONT', defined('DOING_AJAX') && DOING_AJAX && empty($_REQUEST['pll_ajax_backend']));
+			define('PLL_AJAX_ON_FRONT', defined('DOING_AJAX') && DOING_AJAX && empty($_REQUEST['pll_ajax_backend']) && !(isset( $_REQUEST['action'] ) && 'upload-attachment' === $_REQUEST['action']));
 
 		if (!defined('PLL_ADMIN'))
 			define('PLL_ADMIN', defined('DOING_CRON') || (is_admin() && !PLL_AJAX_ON_FRONT));

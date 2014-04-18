@@ -145,7 +145,7 @@ class PLL_Admin_Filters extends PLL_Filters {
 	public function upgrade_languages($version) {
 		apply_filters('update_feedback', __('Upgrading language files&#8230;', 'polylang'));
 		foreach ($this->model->get_languages_list() as $language)
-			if ($language->locale != $_POST['locale']) // do not (re)update the language files of a localized WordPress
+			if (!empty($_POST['locale']) && $language->locale != $_POST['locale']) // do not (re)update the language files of a localized WordPress
 				PLL_Admin::download_mo($language->locale, $version);
 	}
 }
