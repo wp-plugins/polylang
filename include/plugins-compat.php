@@ -180,8 +180,8 @@ class PLL_Plugins_Compat {
 	 */
 	public function twenty_fourteen_widgets_init() {
 		// overwrites the Twenty Fourteen Ephemera widget to allow translating strings when setting the language by content
-		// FIXME should be removed when WP >= 3.9 See http://core.trac.wordpress.org/ticket/27069
-		if (class_exists('Twenty_Fourteen_Ephemera_Widget')) {
+		// removed when WP >= 3.9 See http://core.trac.wordpress.org/ticket/27069 & https://core.trac.wordpress.org/ticket/27843
+		if (class_exists('Twenty_Fourteen_Ephemera_Widget') && !current_theme_supports( 'html5', 'gallery' )) {
 			unregister_widget('Twenty_Fourteen_Ephemera_Widget');
 			register_widget('PLL_Widget_Twenty_Fourteen_Ephemera');
 		}
