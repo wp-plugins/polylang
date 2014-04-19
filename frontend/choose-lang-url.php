@@ -2,6 +2,8 @@
 
 /*
  * Choose the language when the language code is added to all urls
+ * The language is set in plugins_loaded with priority 1 as done by WPML
+ * Some actions have to be delayed to wait for $wp_rewrite availibility
  *
  * @since 1.2
  */
@@ -34,8 +36,10 @@ class PLL_Choose_Lang_Url extends PLL_Choose_lang {
 		// http://wordpress.org/support/topic/plugin-polylang-language-homepage-redirection-problem-and-solution-but-incomplete?replies=4#post-2729566
 		if (str_replace('www.', '', home_url('/')) == trailingslashit((is_ssl() ? 'https://' : 'http://').str_replace('www.', '', $_SERVER['HTTP_HOST']).str_replace(array($this->index, '?'.$_SERVER['QUERY_STRING']), array('', ''), $_SERVER['REQUEST_URI']))) {
 			// take care to post & page preview http://wordpress.org/support/topic/static-frontpage-url-parameter-url-language-information
-			if (isset($_GET['preview']) && ( (isset($_GET['p']) && $id = $_GET['p']) || (isset($_GET['page_id']) && $id = $_GET['page_id']) ))
-				$curlang = ($lg = $this->model->get_post_language($id)) ? $lg : $this->model->get_language($this->options['default_lang']);
+			if (isset($_GET['preview']) && ( (isset($_GET['p']) && $id = $_GET['p']) || (isset($_GET['page_id']) && $id = $_GET['page_id']) )) {
+				$this->set_language(($lg = $this->model->get_post_language($id)) ? $lg : $this->model->get_language($this->options['default_lang']));
+				return; // don't check the language code in url
+			}
 
 			// take care to (unattached) attachments
 			elseif (isset($_GET['attachment_id']) && $id = $_GET['attachment_id'])
@@ -61,33 +65,38 @@ class PLL_Choose_Lang_Url extends PLL_Choose_lang {
 	}
 
 	/*
-	 * if the language code is not in agreement with the language od the content
-	 * redirects incoming links to the proper URL
+	 * if the language code is not in agreement with the language of the content
+	 * redirects incoming links to the proper URL to avoid duplicate content
 	 *
 	 * @since 0.9.6
 	 */
 	public function check_language_code_in_url() {
+		global $wp_query, $post;
+
 		if (is_single() || is_page()) {
-			global $post;
-			if (isset($post->ID) && in_array($post->post_type, $this->model->post_types))
+			if (isset($post->ID) && $this->model->is_translated_post_type($post->post_type))
 				$language = $this->model->get_post_language((int)$post->ID);
 		}
 		elseif (is_category() || is_tag() || is_tax()) {
-			$obj = $GLOBALS['wp_query']->get_queried_object();
-			if (in_array($obj->taxonomy, $this->model->taxonomies))
+			$obj = $wp_query->get_queried_object();
+			if ($this->model->is_translated_taxonomy($obj->taxonomy))
 				$language = $this->model->get_term_language((int)$obj->term_id);
+		}
+		elseif ($wp_query->is_posts_page) {
+			$obj = $wp_query->get_queried_object();
+			$language = $this->model->get_post_language((int)$obj->ID);
 		}
 
 		// the language is not correctly set so let's redirect to the correct url for this object
-		if (isset($language) && (empty($this->curlang) || $language->slug != $this->curlang->slug)) {
-			$root = $this->options['rewrite'] ? '/' : '/language/';
-			foreach ($this->model->get_languages_list() as $lang)
-				$languages[] = $root . $lang->slug;
+		if (!empty($language)) {
+			$requested_url  = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+			$redirect_url = $this->links_model->remove_language_from_link($requested_url);
+			$redirect_url = $this->links_model->add_language_to_link($redirect_url, $language);
 
-			$requested_url  = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . str_replace($languages, '', $_SERVER['REQUEST_URI']);
-			$redirect_url = $this->links_model->add_language_to_link($requested_url, $language);
-			wp_redirect($redirect_url, 301);
-			exit;
+			if ($requested_url != $redirect_url) {
+				wp_redirect($redirect_url, 301);
+				exit;
+			}
 		}
 	}
 }

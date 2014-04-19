@@ -23,9 +23,6 @@ class PLL_Links_Domain {
 		$this->options = &$model->options;
 
 		$this->home = get_option('home');
-
-		// returns the correct language link
-		add_filter('term_link', array(&$this, 'term_link'), 10, 3);
 	}
 
 	/*
@@ -39,8 +36,8 @@ class PLL_Links_Domain {
 	 * @return string modified url
 	 */
 	public function add_language_to_link($url, $lang) {
-		if (!empty($lang))
-			$url = $this->options['default_lang'] == $lang->slug ? $url : str_replace($this->home, $this->options['domains'][$lang->slug], $url);
+		if (!empty($lang) && !empty($this->options['domains'][$lang->slug]))
+			$url = str_replace($this->home, $this->options['domains'][$lang->slug], $url);
 		return $url;
 	}
 
@@ -84,19 +81,20 @@ class PLL_Links_Domain {
 		foreach ($this->options['domains'] as $key => $domain)
 			if ($domain == (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'])
 				return $key;
+
+		return $this->options['default_lang'];
 	}
 
 	/*
-	 * returns the correct language link
+	 * returns the home url
+	 * links_model interface
 	 *
-	 * @since 1.2
+	 * @since 1.3.1
 	 *
-	 * @param string $link term link
-	 * @param object $term term
-	 * @param string $tax taxonomy name
-	 * @return string language home link or unmodified term link
+	 * @param object $lang PLL_Language object
+	 * @return string
 	 */
-	function term_link($link, $term, $tax) {
-		return 'language' == $tax ? $this->options['domains'][$term->slug] : $link;
+	function home_url($lang) {
+		return empty($this->options['domains'][$lang->slug]) ? $this->home : $this->options['domains'][$lang->slug];
 	}
 }

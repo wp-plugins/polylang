@@ -26,7 +26,7 @@ class PLL_Switcher {
 		);
 
 		if ($type != 'menu')
-			$options['dropdown'] = array('string' => __('Displays as dropdown', 'polylang'), 'default' => 0);
+			$options = array('dropdown' => array('string' => __('Displays as dropdown', 'polylang'), 'default' => 0)) + $options;
 
 		return array_map(create_function('$v', "return \$v['$key'];"), $options);
 	}
