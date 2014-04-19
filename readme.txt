@@ -65,7 +65,7 @@ See http://polylang.wordpress.com/documentation/contribute/
 == Upgrade Notice ==
 
 = 1.4.5 =
-Polylang 1.2 introduced major internal changes. More than ever, make a database backup before upgrading from 1.1.6 or older! If you are using a version older than 0.8, please ugrade to 0.9.8 before ugrading to 1.4.2
+Polylang 1.2 introduced major internal changes. More than ever, make a database backup before upgrading from 1.1.6 or older! If you are using a version older than 0.8, please ugrade to 0.9.8 before ugrading to 1.4.5
 
 == Changelog ==
 
