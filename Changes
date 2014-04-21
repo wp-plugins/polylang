@@ -1,0 +1,9 @@
+
+* Refresh translation metaboxes (again): now translated posts are chosen from an autocomplete input field
+* Categories an post tags translations are also chosen in an automplete input field
+* Better error management on languages pages
+* Support for object cache plugins
+* The language switcher now supports pages with modified query (ex: when multiple post types on the same page)
+* Add new API functions: pll_languages_list, pll_set_post_language, pll_set_term_language, pll_save_post_translations, pll_save_term_translations, pll_count_posts
+* Support ICL_LANGUAGE_CODE == 'all' on admin side
+
