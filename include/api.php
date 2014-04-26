@@ -180,7 +180,7 @@ function pll_is_translated_taxonomy($tax) {
  * @param array $args list of parameters
  * @return array
  */
-function pll_languages_list($args) {
+function pll_languages_list($args = array()) {
 	global $polylang;
 	$args = wp_parse_args($args, array('fields' => 'slug'));
 	return isset($polylang) ? $polylang->model->get_languages_list($args) : false;

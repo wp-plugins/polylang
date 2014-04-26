@@ -46,7 +46,7 @@ class PLL_Admin_Model extends PLL_Model {
 		$r = wp_insert_term($args['name'], 'language', array('slug' => $args['slug'], 'description' => $description));
 		if (is_wp_error($r)) {
 			// avoid an ugly fatal error if something went wrong (reported once in the forum)
-			add_settings_error('general', 'pll_add_language', __('Impossible to create the language', 'polylang'));
+			add_settings_error('general', 'pll_add_language', __('Impossible to add the language.', 'polylang'));
 			return false;
 		}
 		wp_update_term((int) $r['term_id'], 'language', array('term_group' => $args['term_group'])); // can't set the term group directly in wp_insert_term
@@ -70,7 +70,7 @@ class PLL_Admin_Model extends PLL_Model {
 
 		flush_rewrite_rules(); // refresh rewrite rules
 
-		add_settings_error('general', 'pll_languages_created', __('The language has been successfully created.'), 'updated');
+		add_settings_error('general', 'pll_languages_created', __('Language added.', 'polylang'), 'updated');
 		return true;
 	}
 
@@ -184,7 +184,7 @@ class PLL_Admin_Model extends PLL_Model {
 
 		update_option('polylang', $this->options);
 		flush_rewrite_rules(); // refresh rewrite rules
-		add_settings_error('general', 'pll_languages_deleted', __('The language has been successfully deleted.'), 'updated');
+		add_settings_error('general', 'pll_languages_deleted', __('Language deleted.', 'polylang'), 'updated');
 	}
 
 	/*
@@ -265,7 +265,7 @@ class PLL_Admin_Model extends PLL_Model {
 
 		$this->clean_languages_cache();
 		flush_rewrite_rules(); // refresh rewrite rules
-		add_settings_error('general', 'pll_languages_updated', __('The language has been successfully updated.'), 'updated');
+		add_settings_error('general', 'pll_languages_updated', __('Language updated.', 'polylang'), 'updated');
 		return true;
 	}
 

@@ -200,7 +200,7 @@ class PLL_Settings {
 
 						isset($new_mo) ? $new_mo->export_to_db($language) : $mo->export_to_db($language);
 					}
-					add_settings_error('general', 'pll_strings_translations_updated', __('Translations have been sucessfully updated.', 'polylang'), 'updated');
+					add_settings_error('general', 'pll_strings_translations_updated', __('Translations updated.', 'polylang'), 'updated');
 				}
 
 				do_action('pll_save_strings_translations');

@@ -37,8 +37,6 @@ class PLL_Plugins_Compat {
 
 		if (!PLL_ADMIN)
 			add_filter('option_featured-content', array(&$this, 'twenty_fourteen_option_featured_content'));
-
-		add_action('widgets_init', array(&$this, 'twenty_fourteen_widgets_init'), 20);
 	}
 
 	/*
@@ -171,19 +169,5 @@ class PLL_Plugins_Compat {
 			$settings['tag-id'] = $tr;
 
 		return $settings;
-	}
-
-	/*
-	 * overwrites the Twenty Fourteen Ephemera widget to allow translating strings when setting the language by content
-	 *
-	 * @since 1.4.1
-	 */
-	public function twenty_fourteen_widgets_init() {
-		// overwrites the Twenty Fourteen Ephemera widget to allow translating strings when setting the language by content
-		// removed when WP >= 3.9 See http://core.trac.wordpress.org/ticket/27069 & https://core.trac.wordpress.org/ticket/27843
-		if (class_exists('Twenty_Fourteen_Ephemera_Widget') && !current_theme_supports( 'html5', 'gallery' )) {
-			unregister_widget('Twenty_Fourteen_Ephemera_Widget');
-			register_widget('PLL_Widget_Twenty_Fourteen_Ephemera');
-		}
 	}
 }
