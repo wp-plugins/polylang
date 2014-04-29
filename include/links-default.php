@@ -59,6 +59,21 @@ class PLL_Links_Default extends PLL_Links_Model {
 		return remove_query_arg('paged', $url);
 	}
 
+
+	/*
+	 * returns the link to the paged page when using pretty permalinks
+	 *
+	 * @since 1.5
+	 *
+	 * @param string $url url to modify
+	 * @param int $page
+	 * @return string modified url
+	 */
+	public function add_paged_to_link($url, $page) {
+		return add_query_arg(array('paged' => $page), $url);
+	}
+
+
 	/*
 	 * gets the language slug from the url if present
 	 * links_model interface

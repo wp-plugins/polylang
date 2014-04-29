@@ -4,7 +4,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Павел <pavelsof@gmail.com>\n"
+"Last-Translator: Pavel Sofroniev <pavelsof@gmail.com>\n"
 "Language-Team: Павел <pavelsof@gmail.com>\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
@@ -14,24 +14,41 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _e;__;_x\n"
 "X-Poedit-Basepath: .\n"
-"X-Generator: Poedit 1.6.1\n"
+"X-Generator: Poedit 1.5.4\n"
 "X-Poedit-SearchPath-0: ..\n"
 "X-Poedit-SearchPath-1: ../include\n"
 
 #: admin/view-about.php:3
 #, php-format
-msgid "Polylang is provided with an extensive %sdocumentation%s (in English only). It includes information on how to set up your multilingual site and use it on a daily basis, a FAQ, as well as a documentation for programmers to adapt their plugins and themes."
-msgstr "Polylang има подробна %sдокументация на английски%s, съдържаща информация за първоначалното настройване и поддръжка на многоезични уебсайтове, отговори на често задавани въпроси, както и документация за разработчици за интегриране на Polylang с техните разширения и теми. "
+msgid ""
+"Polylang is provided with an extensive %sdocumentation%s (in English only). "
+"It includes information on how to set up your multilingual site and use it "
+"on a daily basis, a FAQ, as well as a documentation for programmers to adapt "
+"their plugins and themes."
+msgstr ""
+"Polylang има подробна %sдокументация на английски%s, съдържаща информация за "
+"първоначалното настройване и поддръжка на многоезични уебсайтове, отговори "
+"на често задавани въпроси, както и документация за разработчици за "
+"интегриране на Polylang с техните разширения и теми. "
 
 #: admin/view-about.php:9
 #, php-format
-msgid "You will also find useful information in the %ssupport forum%s. However don't forget to make a search before posting a new topic."
-msgstr "Освен това можете да намерите полезна информация във %sфорума за поддръжка%s; но не забравяйте да потърсите дали някой вече не е задал Вашия въпрос преди да изпратите запитване. "
+msgid ""
+"You will also find useful information in the %ssupport forum%s. However "
+"don't forget to make a search before posting a new topic."
+msgstr ""
+"Освен това можете да намерите полезна информация във %sфорума за поддръжка"
+"%s; но не забравяйте да потърсите дали някой вече не е задал Вашия въпрос "
+"преди да изпратите запитване. "
 
 #: admin/view-about.php:16
 #, php-format
-msgid "Polylang is free of charge and is released under the same license as WordPress, the %sGPL%s."
-msgstr "Polylang е безплатно разширение, публикувано под същия лиценз като WordPress, %sGPL%s."
+msgid ""
+"Polylang is free of charge and is released under the same license as "
+"WordPress, the %sGPL%s."
+msgstr ""
+"Polylang е безплатно разширение, публикувано под същия лиценз като "
+"WordPress, %sGPL%s."
 
 #: admin/view-about.php:22
 #, php-format
@@ -39,14 +56,15 @@ msgid "If you wonder how you can help the project, just %sread this%s."
 msgstr "Ако се питате как можете и Вие да помогнете, %sпрочетете това%s. "
 
 #: admin/view-about.php:27
-msgid "Finally if you like this plugin or if it helps your business, donations to the author are greatly appreciated."
-msgstr "Не на последно място, ако наистина харесвате това разширение и/или то помага на Вашия бизнес, авторът му високо оценява всяко едно дарение."
+msgid ""
+"Finally if you like this plugin or if it helps your business, donations to "
+"the author are greatly appreciated."
+msgstr ""
+"Не на последно място, ако наистина харесвате това разширение и/или то помага "
+"на Вашия бизнес, авторът му високо оценява всяко едно дарение."
 
-#: admin/admin-filters-post.php:83
-#: admin/admin.php:73
-#: admin/settings.php:53
-#: admin/settings.php:80
-#: include/model.php:506
+#: admin/admin-filters-post.php:83 admin/admin.php:73 admin/settings.php:53
+#: admin/settings.php:80 include/model.php:506
 msgid "Languages"
 msgstr "Езици"
 
@@ -78,30 +96,23 @@ msgstr "Филтриране на съдържанието по език"
 msgid "Show all languages"
 msgstr "Показване на всички езици"
 
-#: admin/admin-filters-columns.php:132
-#: admin/admin-filters-columns.php:228
+#: admin/admin-filters-columns.php:132 admin/admin-filters-columns.php:228
 msgid "Add new translation"
 msgstr "Добавяне на нов превод"
 
-#: admin/admin-filters-columns.php:169
-#: admin/admin-filters-media.php:58
-#: admin/admin-filters-post.php:107
-#: admin/admin-filters-term.php:75
-#: admin/admin-filters-term.php:112
-#: include/model.php:507
+#: admin/admin-filters-columns.php:169 admin/admin-filters-media.php:58
+#: admin/admin-filters-post.php:107 admin/admin-filters-term.php:75
+#: admin/admin-filters-term.php:112 include/model.php:507
 msgid "Language"
 msgstr "Език"
 
-#: admin/table-string.php:111
-#: admin/view-translations-media.php:5
-#: admin/view-translations-post.php:5
-#: admin/view-translations-term.php:6
+#: admin/table-string.php:111 admin/view-translations-media.php:5
+#: admin/view-translations-post.php:5 admin/view-translations-term.php:6
 #: admin/view-translations-term.php:11
 msgid "Translations"
 msgstr "Преводи"
 
-#: admin/admin-filters-term.php:77
-#: admin/admin-filters-term.php:114
+#: admin/admin-filters-term.php:77 admin/admin-filters-term.php:114
 msgid "Sets the language"
 msgstr "Избор на език"
 
@@ -109,8 +120,7 @@ msgstr "Избор на език"
 msgid "The widget is displayed for:"
 msgstr "Джаджата се показва за:"
 
-#: admin/admin-filters.php:49
-#: include/model.php:508
+#: admin/admin-filters.php:49 include/model.php:508
 msgid "All languages"
 msgstr "Всички езици"
 
@@ -122,8 +132,7 @@ msgstr "Езика на администраторския панел"
 msgid "Wordpress default"
 msgstr "Езика по подразбиране"
 
-#: admin/admin.php:154
-#: admin/settings.php:85
+#: admin/admin.php:154 admin/settings.php:85
 msgid "Settings"
 msgstr "Настройки"
 
@@ -156,8 +165,12 @@ msgid "The language must have a name"
 msgstr "Кодът на езика трябва да има наименование"
 
 #: admin/admin.php:353
-msgid "The language was created, but the WordPress language file was not downloaded. Please install it manually."
-msgstr "Езикът беше добавен, но езиковият файл не може да бъде зареден. Моля инсталирайте го ръчно. "
+msgid ""
+"The language was created, but the WordPress language file was not "
+"downloaded. Please install it manually."
+msgstr ""
+"Езикът беше добавен, но езиковият файл не може да бъде зареден. Моля "
+"инсталирайте го ръчно. "
 
 #: admin/settings.php:328
 msgid "Widget title"
@@ -220,8 +233,7 @@ msgstr "Картинка на публикацията"
 msgid "Edit language"
 msgstr "Редактиране на езика"
 
-#: admin/view-languages.php:38
-#: admin/view-languages.php:113
+#: admin/view-languages.php:38 admin/view-languages.php:113
 msgid "Add new language"
 msgstr "Добавяне на нов език"
 
@@ -231,25 +243,30 @@ msgstr "Изберете език"
 
 #: admin/view-languages.php:68
 msgid "You can choose a language in the list or directly edit it below."
-msgstr "Можете да изберете език от падащото меню или да създадете нов използвайки полетата по-долу. "
+msgstr ""
+"Можете да изберете език от падащото меню или да създадете нов използвайки "
+"полетата по-долу. "
 
-#: admin/table-languages.php:74
-#: admin/view-languages.php:72
+#: admin/table-languages.php:74 admin/view-languages.php:72
 msgid "Full name"
 msgstr "Наименование"
 
 #: admin/view-languages.php:74
 msgid "The name is how it is displayed on your site (for example: English)."
-msgstr "Наименованието както ще се показва в уебсайта (например: български, English)"
+msgstr ""
+"Наименованието както ще се показва в уебсайта (например: български, English)"
 
-#: admin/table-languages.php:75
-#: admin/view-languages.php:78
+#: admin/table-languages.php:75 admin/view-languages.php:78
 msgid "Locale"
 msgstr "Местоположение"
 
 #: admin/view-languages.php:83
-msgid "Wordpress Locale for the language (for example: en_US). You will need to install the .mo file for this language."
-msgstr "Местоположение според WordPress (например: bg_BG, en_GB). Ще трябва да инсталирате съответния езиков файл (.mo). "
+msgid ""
+"Wordpress Locale for the language (for example: en_US). You will need to "
+"install the .mo file for this language."
+msgstr ""
+"Местоположение според WordPress (например: bg_BG, en_GB). Ще трябва да "
+"инсталирате съответния езиков файл (.mo). "
 
 #: admin/view-languages.php:87
 msgid "Language code"
@@ -275,8 +292,7 @@ msgstr "отдясно наляво"
 msgid "Choose the text direction for the language"
 msgstr "Изберете посоката на писане"
 
-#: admin/table-languages.php:77
-#: admin/view-languages.php:108
+#: admin/table-languages.php:77 admin/view-languages.php:108
 msgid "Order"
 msgstr "Подредба"
 
@@ -284,12 +300,9 @@ msgstr "Подредба"
 msgid "Position of the language in the language switcher"
 msgstr "Кой подред ще се показва езикът в джаджата за смяна на езици"
 
-#: admin/admin-nav-menu.php:52
-#: admin/admin-nav-menu.php:90
-#: admin/admin-nav-menu.php:93
-#: admin/admin-nav-menu.php:124
-#: admin/admin-nav-menu.php:181
-#: include/upgrade.php:301
+#: admin/admin-nav-menu.php:52 admin/admin-nav-menu.php:90
+#: admin/admin-nav-menu.php:93 admin/admin-nav-menu.php:124
+#: admin/admin-nav-menu.php:181 include/upgrade.php:301
 msgid "Language switcher"
 msgstr "Джаджа за смяна на езика"
 
@@ -306,16 +319,24 @@ msgid "Default language"
 msgstr "Език по подразбиране"
 
 #: admin/view-languages.php:176
-msgid "There are posts, pages, categories or tags without language set. Do you want to set them all to default language ?"
-msgstr "Намерени са публикации, страници, категории и етикети, за които не е посочен език. Искате ли да бъдат прехвърлени към езика по подразбиране?"
+msgid ""
+"There are posts, pages, categories or tags without language set. Do you want "
+"to set them all to default language ?"
+msgstr ""
+"Намерени са публикации, страници, категории и етикети, за които не е посочен "
+"език. Искате ли да бъдат прехвърлени към езика по подразбиране?"
 
 #: admin/view-languages.php:297
 msgid "Detect browser language"
 msgstr "Засичане на езика на браузъра"
 
 #: admin/view-languages.php:303
-msgid "When the front page is visited, set the language according to the browser preference"
-msgstr "Когато потребителят посети началната страница, езикът му да се настройва според предпочитанията на браузъра. "
+msgid ""
+"When the front page is visited, set the language according to the browser "
+"preference"
+msgstr ""
+"Когато потребителят посети началната страница, езикът му да се настройва "
+"според предпочитанията на браузъра. "
 
 #: admin/view-languages.php:184
 msgid "URL modifications"
@@ -359,15 +380,12 @@ msgstr "Потребителски таксономии"
 msgid "Activate languages and translations for custom taxonomies."
 msgstr "Включване на многоезичност за потребителските таксономии"
 
-#: admin/admin-filters-post.php:351
-#: admin/admin-filters-term.php:502
-#: admin/table-languages.php:54
-#: admin/view-translations-media.php:21
+#: admin/admin-filters-post.php:351 admin/admin-filters-term.php:502
+#: admin/table-languages.php:54 admin/view-translations-media.php:21
 msgid "Edit"
 msgstr "Редактиране"
 
-#: admin/table-languages.php:60
-#: admin/table-string.php:167
+#: admin/table-languages.php:60 admin/table-string.php:167
 msgid "Delete"
 msgstr "Изтриване"
 
@@ -391,8 +409,7 @@ msgstr "Наименование"
 msgid "String"
 msgstr "Низ"
 
-#: admin/admin-filters-post.php:375
-#: admin/admin-filters-term.php:528
+#: admin/admin-filters-post.php:375 admin/admin-filters-term.php:528
 #: admin/view-translations-media.php:30
 msgid "Add new"
 msgstr "Добави нов"
@@ -418,11 +435,14 @@ msgstr "Добавя многоезична функционалност към 
 #: polylang.php:160
 #, php-format
 msgid "You are using WordPress %s. Polylang requires at least WordPress %s."
-msgstr "Вие използвате WordPress %s. Минималните изисквания за Polylang включват WordPress %s."
+msgstr ""
+"Вие използвате WordPress %s. Минималните изисквания за Polylang включват "
+"WordPress %s."
 
 # @ polylang
 #: include/upgrade.php:76
-msgid "Polylang has been deactivated because you upgraded from a too old version."
+msgid ""
+"Polylang has been deactivated because you upgraded from a too old version."
 msgstr "Polylang бе изключен, защото обновихте от твърде стара версия."
 
 # @ polylang
@@ -448,13 +468,23 @@ msgstr "Вие сте на път да изтриете необратимо т�
 
 # @ polylang
 #: admin/view-languages.php:143
-msgid "Use this to remove unused strings from database, for example after a plugin has been uninstalled."
-msgstr "Използвайте, за да премахнете неупотребявани низове от базата данни, например след изключване на разширение (плъгин)."
+msgid ""
+"Use this to remove unused strings from database, for example after a plugin "
+"has been uninstalled."
+msgstr ""
+"Използвайте, за да премахнете неупотребявани низове от базата данни, "
+"например след изключване на разширение (плъгин)."
 
 # @ polylang
 #: admin/view-languages.php:374
-msgid "The synchronization options allow to maintain exact same values (or translations in the case of taxonomies and page parent) of meta content between the translations of a post or page."
-msgstr "Чрез синхронизацията мета съдържанието (и преводите за таксономии и родителски страници) е едно и също за различните преводи на публикации и страници."
+msgid ""
+"The synchronization options allow to maintain exact same values (or "
+"translations in the case of taxonomies and page parent) of meta content "
+"between the translations of a post or page."
+msgstr ""
+"Чрез синхронизацията мета съдържанието (и преводите за таксономии и "
+"родителски страници) е едно и също за различните преводи на публикации и "
+"страници."
 
 #: admin/admin-model.php:289
 msgid "The language code contains invalid characters"
@@ -467,17 +497,16 @@ msgstr "Езикът се определя от съдържанието"
 
 #: admin/view-languages.php:193
 msgid "Posts, pages, categories and tags urls are not modified."
-msgstr "URL-тата на публикациите, страниците, категориите и етикетите не се променят"
+msgstr ""
+"URL-тата на публикациите, страниците, категориите и етикетите не се променят"
 
 #: admin/view-languages.php:199
 msgid "The language is set from the directory name in pretty permalinks"
 msgstr "Езикът се определя от името на директорията в URL-то"
 
 # @ polylang
-#: admin/view-languages.php:202
-#: admin/view-languages.php:211
-#: admin/view-languages.php:258
-#: admin/view-languages.php:267
+#: admin/view-languages.php:202 admin/view-languages.php:211
+#: admin/view-languages.php:258 admin/view-languages.php:267
 msgid "Example:"
 msgstr "Пример:"
 
@@ -500,8 +529,11 @@ msgstr "Добавяне на /language/ в URL-то"
 
 # @ polylang
 #: admin/view-languages.php:279
-msgid "The front page url contains the language code instead of the page name or page id"
-msgstr "Началната страница съдържа кода на езика вместо името или ID-то на страницата"
+msgid ""
+"The front page url contains the language code instead of the page name or "
+"page id"
+msgstr ""
+"Началната страница съдържа кода на езика вместо името или ID-то на страницата"
 
 # @ polylang
 #: admin/admin-filters-term.php:143
@@ -517,31 +549,31 @@ msgstr "Пример: %s вместо %s"
 
 #: admin/admin-model.php:49
 msgid "Impossible to add the language."
-msgstr ""
+msgstr "Езикът не може да бъде добавен."
 
 # @ polylang
 #: admin/admin-model.php:73
 msgid "Language added."
-msgstr ""
+msgstr "Езикът бе добавен."
 
 # @ polylang
 #: admin/admin-model.php:187
 msgid "Language deleted."
-msgstr ""
+msgstr "Езикът бе изтрит."
 
 # @ polylang
 #: admin/admin-model.php:268
 msgid "Language updated."
-msgstr ""
+msgstr "Езикът бе обновен."
 
 # @ polylang
 #: admin/settings.php:203
 msgid "Translations updated."
-msgstr ""
+msgstr "Преводите бяха обновени."
 
 #: admin/view-languages.php:89
 msgid "Language code - preferably 2-letters ISO 639-1  (for example: en)"
-msgstr ""
+msgstr "Код на езика - за предпочитане двубуквен по ISO 639-1 (например: bg)"
 
 #~ msgid "Translation"
 #~ msgstr "Превод"

@@ -32,8 +32,22 @@ abstract class PLL_Links_Model {
 	 * @return string modified url
 	 */
 	public function remove_paged_from_link($url) {
-		return preg_replace('#\/page\/[0-9]+\/#', '/', $url);
+		return preg_replace('#\/page\/[0-9]+\/#', '/', $url); // FIXME trailing slash ?
 	}
+
+	/*
+	 * returns the link to the paged page when using pretty permalinks
+	 *
+	 * @since 1.5
+	 *
+	 * @param string $url url to modify
+	 * @param int $page
+	 * @return string modified url
+	 */
+	public function add_paged_to_link($url, $page) {
+		return trailingslashit($url) . 'page/' . $page; // FIXME trailing slash ?
+	}
+
 
 	/*
 	 * changes the language code in url
