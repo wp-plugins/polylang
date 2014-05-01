@@ -1,10 +1,10 @@
-# Theodotos Andreou <theo@ubuntucy.org>, 2012, 2013.
+# Theodotos Andreou <theo@ubuntucy.org>, 2012, 2013, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: polylang\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2014-04-26 09:56+0100\n"
+"PO-Revision-Date: 2014-04-30 10:58+0300\n"
 "Last-Translator: Theodotos Andreou <theo@ubuntucy.org>\n"
 "Language-Team: Ubuntucy\n"
 "Language: el\n"
@@ -24,13 +24,21 @@ msgstr ""
 #: admin/view-about.php:3
 #, php-format
 msgid "Polylang is provided with an extensive %sdocumentation%s (in English only). It includes information on how to set up your multilingual site and use it on a daily basis, a FAQ, as well as a documentation for programmers to adapt their plugins and themes."
-msgstr "Το Polylang παρέχει εκτενή %sτεκμηρίωση%s (μόνο στα Αγγλικά). Περιέχει πληροφορίες πως να ρυθμίσετε τον πολυγλωσσικό σας ιστοτόπο και να τον χρησιμοποιήσετε σε καθημερινή βάση, λίστα συχνών ερωτήσεων (FAQ), καθώς και τεκμηρίωση για προγραμματιστές για προσαρμογή των προσθέτων και θεμάτων τους."
+msgstr ""
+"Το Polylang παρέχει εκτενή %sτεκμηρίωση%s (μόνο στα Αγγλικά). Περιέχει "
+"πληροφορίες πως να ρυθμίσετε τον πολυγλωσσικό σας ιστοτόπο και να τον "
+"χρησιμοποιήσετε σε καθημερινή βάση, λίστα συχνών ερωτήσεων (FAQ), καθώς και "
+"τεκμηρίωση για προγραμματιστές για προσαρμογή των προσθέτων και θεμάτων "
+"τους."
 
 # @ polylang
 #: admin/view-about.php:9
 #, php-format
 msgid "You will also find useful information in the %ssupport forum%s. However don't forget to make a search before posting a new topic."
-msgstr "Θα βρείτε επίσης χρήσιμες πληροφορίες στο %sφόρουμ%s υποστήριξης. Μην παραλείψετε να ψάξετε πρώτα αν έχει απαντηθεί το ερώτημα σας πριν ανοίξετε καινούργιο θέμα."
+msgstr ""
+"Θα βρείτε επίσης χρήσιμες πληροφορίες στο %sφόρουμ%s υποστήριξης. Μην "
+"παραλείψετε να ψάξετε πρώτα αν έχει απαντηθεί το ερώτημα σας πριν ανοίξετε "
+"καινούργιο θέμα."
 
 # @ polylang
 #: admin/view-about.php:16
@@ -596,30 +604,30 @@ msgstr "Παράδειγμα: %s αντί %s"
 # @ polylang
 #: admin/admin-model.php:49
 msgid "Impossible to add the language."
-msgstr ""
+msgstr "Αδυναμία προσθήκης γλώσσας."
 
 # @ polylang
 #: admin/admin-model.php:73
 msgid "Language added."
-msgstr ""
+msgstr "Η γλώσσα προστέθηκε"
 
 # @ polylang
 #: admin/admin-model.php:187
 msgid "Language deleted."
-msgstr ""
+msgstr "Η γλώσσα διαγράφηκε."
 
 # @ polylang
 #: admin/admin-model.php:268
 msgid "Language updated."
-msgstr ""
+msgstr "Η γλώσσα ενημερώθηκε."
 
 # @ polylang
 #: admin/settings.php:203
 msgid "Translations updated."
-msgstr ""
+msgstr "Η μεταφράσεις ενημερώθηκαν."
 
 # @ polylang
 #: admin/view-languages.php:89
 msgid "Language code - preferably 2-letters ISO 639-1  (for example: en)"
 msgstr ""
-
+"Κώδικας γλώσσας - κατά προτίμηση 2 γράμματα ISO 631-1 (για παράδειγμα: el)"

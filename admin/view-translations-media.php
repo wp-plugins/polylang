@@ -26,7 +26,7 @@
 				else {
 					printf(
 						'<a href="%s" title="%s" class="pll_icon_add"></a>',
-						esc_url(admin_url(sprintf('admin.php?action=translate_media&from_media=%d&new_lang=%s', $post_id, $language->slug))),
+						esc_url($this->links->get_new_post_translation_link($post_id, $language)),
 						__('Add new','polylang')
 					);
 				}?>

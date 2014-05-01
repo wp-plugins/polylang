@@ -6,7 +6,7 @@
  * @since 1.2
  */
 class PLL_Admin_Filters_Term {
-	public $model, $options, $curlang, $pref_lang;
+	public $links, $model, $options, $curlang, $pref_lang;
 	protected $pre_term_name; // used to store the term name before creating a slug if needed
 
 	/*
@@ -15,8 +15,9 @@ class PLL_Admin_Filters_Term {
 	 * @param object $model instance of PLL_Model
 	 * @param object $pref_lang language chosen in admin filter or default language
 	 */
-	public function __construct(&$model, &$curlang, $pref_lang) {
-		$this->model = &$model;
+	public function __construct(&$links, &$curlang, $pref_lang) {
+		$this->links = &$links;
+		$this->model = &$links->links_model->model;
 		$this->options = &$model->options;
 		$this->curlang = $curlang;
 		$this->pref_lang = $pref_lang;
@@ -312,7 +313,7 @@ class PLL_Admin_Filters_Term {
 
 		// it is more efficient to use one common query for all languages as soon as there are more than 2
 		// pll_get_terms_not_translated arg to identify this query in terms_clauses filter
-		foreach (get_terms($_REQUEST['taxonomy'], 'hide_empty=0&pll_get_terms_not_translated=1') as $term) {
+		foreach (get_terms($_REQUEST['taxonomy'], 'hide_empty=0&pll_get_terms_not_translated=1&name__like=' . $_REQUEST['term']) as $term) {
 			$lang = $this->model->get_term_language($term->term_id);
 
 			if ($lang && $lang->slug == $_REQUEST['translation_language'] && !$this->model->get_translation('term', $term->term_id, $_REQUEST['term_language']))
@@ -500,32 +501,6 @@ class PLL_Admin_Filters_Term {
 			'<a href="%1$s" class="pll_icon_edit title="%2$s"></a></td>',
 			esc_url(get_edit_term_link($term_id, $taxonomy, $post_type)),
 			__('Edit','polylang')
-		);
-	}
-
-	/*
-	 * returns html markup to add a new translation
-	 *
-	 * @since 1.4
-	 *
-	 * @param int $term_id id of the term to translate
-	 * @param string $taxonomy
-	 * @param string $post_type
-	 * @param object $language language of the new translation
-	 * @return string
-	 */
-	public function add_new_translation_link($term_id, $taxonomy, $post_type, $language) {
- 		$args = array(
-			'taxonomy'  => $taxonomy,
-			'post_type' => $post_type,
-			'from_tag'  => $term_id,
-			'new_lang'  => $language->slug
-		);
-
-		return sprintf(
-			'<a href="%1$s" class="pll_icon_add" title="%2$s"></a>',
-			esc_url(add_query_arg($args, admin_url('edit-tags.php'))),
-			__('Add new','polylang')
 		);
 	}
 }

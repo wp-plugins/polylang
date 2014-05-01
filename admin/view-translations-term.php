@@ -24,7 +24,11 @@ else {
 
 
 		if (isset($term_id)) { // do not display the add new link in add term form ($term_id not set !!!) {
-			$link = $add_link = $this->add_new_translation_link($term_id, $taxonomy, $post_type, $language);
+			$link = $add_link = sprintf(
+				'<a href="%1$s" class="pll_icon_add" title="%2$s"></a>',
+				esc_url($this->links->get_new_term_translation_link($term_id, $taxonomy, $post_type, $language)),
+				__('Add new','polylang')
+			);
 		}
 
 		if ($translation) {

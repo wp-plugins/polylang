@@ -218,14 +218,14 @@ class PLL_Admin extends PLL_Base {
 	public function add_filters() {
 		// all these are separated just for convenience and maintainability
 		$this->filters = new PLL_Admin_Filters($this->links_model, $this->curlang);
-		$this->filters_columns = new PLL_Admin_Filters_Columns($this->model, $this->curlang);
-		$this->filters_post = new PLL_Admin_Filters_Post($this->model, $this->curlang, $this->pref_lang);
-		$this->filters_term = new PLL_Admin_Filters_Term($this->model, $this->curlang, $this->pref_lang);
+		$this->filters_columns = new PLL_Admin_Filters_Columns($this->links, $this->curlang);
+		$this->filters_post = new PLL_Admin_Filters_Post($this->links, $this->curlang, $this->pref_lang);
+		$this->filters_term = new PLL_Admin_Filters_Term($this->links, $this->curlang, $this->pref_lang);
 		$this->nav_menu = new PLL_Admin_Nav_Menu($this->model);
 		$this->sync = new PLL_Admin_Sync($this->model);
 
 		if ($this->options['media_support'])
-			$this->filters_media = new PLL_Admin_Filters_Media($this->model, $this->pref_lang);
+			$this->filters_media = new PLL_Admin_Filters_Media($this->links, $this->pref_lang);
 	}
 
 	/*

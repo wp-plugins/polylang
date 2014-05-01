@@ -98,5 +98,59 @@ class PLL_Links {
 		$language = is_object($language) ? $language : $this->model->get_language($language);
 		return $is_search ? $language->search_url : $language->home_url;
 	}
+
+	/*
+	 * get the link to create a new post translation
+	 *
+	 * @since 1.5
+	 *
+	 * @param int $post_id
+	 * @param object $language
+	 * @return string
+	 */
+	public function get_new_post_translation_link($post_id, $language) {
+		$post_type = get_post_type($post_id);
+
+		if ('attachment' == $post_type) {
+			$args = array(
+				'action' => 'translate_media',
+				'from_media' => $post_id,
+				'new_lang'  => $language->slug
+			);
+
+			return add_query_arg($args, admin_url('admin.php'));
+		}
+		else {
+			$args = array(
+				'post_type' => $post_type,
+				'from_post' => $post_id,
+				'new_lang'  => $language->slug
+			);
+
+			return add_query_arg($args, admin_url('post-new.php'));
+		}
+	}
+
+	/*
+	 * get the link to create a new term translation
+	 *
+	 * @since 1.5
+	 *
+	 * @param int $term_id
+	 * @param string $taxonomy
+	 * @param string $post_type
+	 * @param object $language
+	 * @return string
+	 */
+	public function get_new_term_translation_link($term_id, $taxonomy, $post_type, $language) {
+ 		$args = array(
+			'taxonomy'  => $taxonomy,
+			'post_type' => $post_type,
+			'from_tag'  => $term_id,
+			'new_lang'  => $language->slug
+		);
+
+		return add_query_arg($args, admin_url('edit-tags.php'));
+	}
 }
 

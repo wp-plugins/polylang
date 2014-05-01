@@ -6,7 +6,7 @@
  * @since 1.2
  */
 class PLL_Admin_Filters_Media {
-	public $model, $pref_lang;
+	public $links, $model, $pref_lang;
 
 	/*
 	 * constructor: setups filters and actions
@@ -16,8 +16,9 @@ class PLL_Admin_Filters_Media {
 	 * @param object $model instance of PLL_Model
 	 * @param object $pref_lang language chosen in admin filter or default language
 	 */
-	public function __construct(&$model, $pref_lang) {
-		$this->model = &$model;
+	public function __construct(&$links, $pref_lang) {
+		$this->links = &$links;
+		$this->model = &$links->links_model->model;
 		$this->pref_lang = $pref_lang;
 
 		// adds the language field and translations tables in the 'Edit Media' panel

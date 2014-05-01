@@ -15,14 +15,15 @@
 		if (isset($_GET['from_post']))
 			$value = $this->model->get_post((int)$_GET['from_post'], $language);
 
-		$add_link = $this->add_new_translation_link($post_ID, $post_type, $language);
+		$link = $add_link = sprintf(
+			'<a href="%1$s" class="pll_icon_add" title="%2$s"></a>',
+			esc_url($this->links->get_new_post_translation_link($post_id, $language)),
+			__('Add new', 'polylang')
+		);
 
 		if ($value) {
 			$selected = get_post($value);
 			$link = $this->edit_translation_link($value);
-		}
-		else {
-			$link = $add_link;
 		} ?>
 
 		<tr>

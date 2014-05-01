@@ -6,7 +6,7 @@
  * @since 1.2
  */
 class PLL_Admin_Filters_Post {
-	public $model, $options, $curlang, $pref_lang;
+	public $links, $model, $options, $curlang, $pref_lang;
 
 	/*
 	 * constructor: setups filters and actions
@@ -16,9 +16,10 @@ class PLL_Admin_Filters_Post {
 	 * @param object $model instance of PLL_Model
 	 * @param object $pref_lang language chosen in admin filter or default language
 	 */
-	public function __construct(&$model, &$curlang, $pref_lang) {
-		$this->model = &$model;
-		$this->options = &$model->options;
+	public function __construct(&$links, &$curlang, $pref_lang) {
+		$this->links = &$links;
+		$this->model = &$links->links_model->model;
+		$this->options = &$this->model->options;
 		$this->curlang = &$curlang;
 		$this->pref_lang = $pref_lang;
 
@@ -349,30 +350,6 @@ class PLL_Admin_Filters_Post {
 			'<a href="%1$s" class="pll_icon_edit" title="%2$s"></a>',
 			esc_url(get_edit_post_link($post_id)),
 			__('Edit', 'polylang')
-		);
-	}
-
-	/*
-	 * returns html markup to add a new translation
-	 *
-	 * @since 1.4
-	 *
-	 * @param int $post_ID post id of the post to translate
-	 * @param string $post_type
-	 * @param object $language language of the new translation
-	 * @return string
-	 */
-	public function add_new_translation_link($post_ID, $post_type, $language) {
-		$args = array(
-			'post_type' => $post_type,
-			'from_post' => $post_ID,
-			'new_lang'  => $language->slug
-		);
-
-		return sprintf(
-			'<a href="%1$s" class="pll_icon_add" title="%2$s"></a>',
-			esc_url(add_query_arg($args, admin_url('post-new.php'))),
-			__('Add new', 'polylang')
 		);
 	}
 }
