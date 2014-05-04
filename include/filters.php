@@ -13,14 +13,13 @@ class PLL_Filters {
 	 *
 	 * @since 1.4
 	 *
-	 * @param object $links_model
-	 * @param object $curlang
+	 * @param object $polylang
 	 */
-	public function __construct(&$links_model, &$curlang) {
-		$this->links_model = &$links_model;
-		$this->model = &$links_model->model;
-		$this->options = &$this->model->options;
-		$this->curlang = $curlang;
+	public function __construct(&$polylang) {
+		$this->links_model = &$polylang->links_model;
+		$this->model = &$polylang->model;
+		$this->options = &$polylang->options;
+		$this->curlang = &$polylang->curlang;
 
 		// filters the comments according to the current language
 		add_filter('comments_clauses', array(&$this, 'comments_clauses'), 10, 2);

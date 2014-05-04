@@ -8,16 +8,6 @@
  * @since 1.2
  */
 class PLL_Links_Default extends PLL_Links_Model {
-	/*
-	 * constructor
-	 *
-	 * @since 1.2
-	 *
-	 * @param object $model PLL_Model instance
-	 */
-	public function __construct(&$model) {
-		parent::__construct($model);
-	}
 
 	/*
 	 * adds language information to an url

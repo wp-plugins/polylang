@@ -15,10 +15,10 @@ class PLL_Choose_Lang_Url extends PLL_Choose_lang {
 	 *
 	 * @since 1.2
 	 *
-	 * @param object $links instance of PLL_Frontend_Links
+	 * @param object $polylang
 	 */
-	public function __construct(&$links) {
-		parent::__construct($links);
+	public function __construct(&$polylang) {
+		parent::__construct($polylang);
 
 		if (!did_action('pll_language_defined'))
 			$this->set_language_from_url();

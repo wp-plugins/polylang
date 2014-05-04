@@ -13,10 +13,10 @@ class PLL_Frontend_Links extends PLL_Links {
 	 *
 	 * @since 1.2
 	 *
-	 * @param object $links_model
+	 * @param object $polylang
 	 */
-	public function __construct(&$links_model) {
-		parent::__construct($links_model);
+	public function __construct(&$polylang) {
+		parent::__construct($polylang);
 
 		$this->using_permalinks = (bool) get_option('permalink_structure'); // are we using permalinks?
 
@@ -92,10 +92,10 @@ class PLL_Frontend_Links extends PLL_Links {
 	 * @return string modified link
 	 */
 	public function term_link($link, $term, $tax) {
-		if (isset($this->links[$link]))
-			return $this->links[$link];
+		if (isset($this->_links[$link]))
+			return $this->_links[$link];
 
-		return $this->links[$link] = $tax == 'post_format' ? $this->links_model->add_language_to_link($link, $this->curlang) :
+		return $this->_links[$link] = $tax == 'post_format' ? $this->links_model->add_language_to_link($link, $this->curlang) :
 			($this->options['force_lang'] ? parent::term_link($link, $term, $tax) : $link);
 	}
 

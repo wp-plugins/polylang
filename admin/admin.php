@@ -2,6 +2,23 @@
 
 /*
  * admin side controller
+ * accessible in $polylang global object
+ *
+ * properties:
+ * options          => inherited, reference to Polylang options array
+ * model            => inherited, reference to PLL_Model object
+ * links_model      => inherited, reference to PLL_Links_Model object
+ * settings_page    => optional, reference ot PLL_Settings object
+ * links            => reference to PLL_Links object
+ * curlang          => optional, current language used to filter admin content
+ * pref_lang        => preferred language used as default when saving posts or terms
+ * filters          => reference to PLL_Filters object
+ * filters_columns  => reference to PLL_Admin_Filters_Columns object
+ * filters_post     => reference to PLL_Admin_Filters_Post object
+ * filters_term     => reference to PLL_Admin_filters_Term object
+ * nav_menu         => reference to PLL_Admin_Nav_Menu object
+ * sync             => reference to PLL_Admin_Sync object
+ * filters_media    => optional, reference to PLL_Admin_Filters_Media object
  *
  * @since 1.2
  */
@@ -45,12 +62,12 @@ class PLL_Admin extends PLL_Base {
 	 */
 	public function init() {
 		if (PLL_SETTINGS)
-			$this->settings_page = new PLL_Settings($this->links_model);
+			$this->settings_page = new PLL_Settings($this);
 
 		if (!$this->model->get_languages_list())
 			return;
 
-		$this->links = new PLL_Links($this->links_model);
+		$this->links = new PLL_Links($this);
 
 		// filter admin language for users
 		// we must not call user info before WordPress defines user roles in wp-settings.php
@@ -217,15 +234,15 @@ class PLL_Admin extends PLL_Base {
 	 */
 	public function add_filters() {
 		// all these are separated just for convenience and maintainability
-		$this->filters = new PLL_Admin_Filters($this->links_model, $this->curlang);
-		$this->filters_columns = new PLL_Admin_Filters_Columns($this->links, $this->curlang);
-		$this->filters_post = new PLL_Admin_Filters_Post($this->links, $this->curlang, $this->pref_lang);
-		$this->filters_term = new PLL_Admin_Filters_Term($this->links, $this->curlang, $this->pref_lang);
-		$this->nav_menu = new PLL_Admin_Nav_Menu($this->model);
-		$this->sync = new PLL_Admin_Sync($this->model);
+		$this->filters = new PLL_Admin_Filters($this);
+		$this->filters_columns = new PLL_Admin_Filters_Columns($this);
+		$this->filters_post = new PLL_Admin_Filters_Post($this);
+		$this->filters_term = new PLL_Admin_Filters_Term($this);
+		$this->nav_menu = new PLL_Admin_Nav_Menu($this);
+		$this->sync = new PLL_Admin_Sync($this);
 
 		if ($this->options['media_support'])
-			$this->filters_media = new PLL_Admin_Filters_Media($this->links, $this->pref_lang);
+			$this->filters_media = new PLL_Admin_Filters_Media($this);
 	}
 
 	/*

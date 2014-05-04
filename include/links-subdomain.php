@@ -10,17 +10,6 @@
 class PLL_Links_Subdomain extends PLL_Links_Model {
 
 	/*
-	 * constructor
-	 *
-	 * @since 1.2
-	 *
-	 * @param object $model PLL_Model instance
-	 */
-	public function __construct(&$model) {
-		parent::__construct($model);
-	}
-
-	/*
 	 * adds the language code in url
 	 * links_model interface
 	 *

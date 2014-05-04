@@ -86,7 +86,7 @@ if (!function_exists('icl_get_languages')) {
 		$arr = array();
 
 		foreach ($polylang->model->get_languages_list(array('hide_empty' => true, 'orderby' => $orderby, 'order' => $order)) as $lang) {
-			$url = $polylang->get_translation_url($lang);
+			$url = $polylang->links->get_translation_url($lang);
 
 			if (empty($url) && !empty($skip_missing))
 				continue;

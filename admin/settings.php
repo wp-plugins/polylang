@@ -14,12 +14,12 @@ class PLL_Settings {
 	 *
 	 * @since 1.2
 	 *
-	 * @param object $model instance of PLL_Model
+	 * @param object $polylang
 	 */
-	public function __construct(&$links_model) {
-		$this->links_model = &$links_model;
-		$this->model = &$links_model->model;
-		$this->options = &$this->model->options;
+	public function __construct(&$polylang) {
+		$this->links_model = &$polylang->links_model;
+		$this->model = &$polylang->model;
+		$this->options = &$polylang->options;
 
 		$this->active_tab = !empty($_GET['tab']) ? $_GET['tab'] : 'lang';
 

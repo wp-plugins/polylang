@@ -103,8 +103,8 @@ class PLL_Language {
 
 		// add a trailing slash as done by WP on homepage (otherwise could break the search form when the permalink structure does not include one)
 		// only for pretty permalinks
-		if (get_option('using_permalinks'))
-			$this->search_url = trailingslashit($link);
+		if (get_option('permalink_structure'))
+			$this->search_url = trailingslashit($this->search_url);
 
 		$options = get_option('polylang');
 

@@ -12,11 +12,11 @@ class PLL_Admin_Nav_Menu {
 	 *
 	 * @since 1.2
 	 *
-	 * @param object $model instance of PLL_Model
+	 * @param object $polylang
 	 */
-	public function __construct(&$model) {
-		$this->model = &$model;
-		$this->options = &$model->options;
+	public function __construct(&$polylang) {
+		$this->model = &$polylang->model;
+		$this->options = &$polylang->options;
 		$this->theme = get_option( 'stylesheet' );
 
 		// integration in the WP menu interface

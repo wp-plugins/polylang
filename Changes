@@ -2,11 +2,14 @@
 * Refresh translation metaboxes (again): now translated posts are chosen from an autocomplete input field
 * Categories an post tags translations are also chosen in an automplete input field
 * Better error management on languages pages
-* Support for object cache plugins
-* The language switcher now supports pages with modified query (ex: when multiple post types queried on the same page)
+* Add support for object cache plugins for recent posts and recent comments widgets
+* Add support for pages with modified query in the language switcher (ex: when multiple post types queried on the same page)
 * Add new API functions: pll_languages_list, pll_set_post_language, pll_set_term_language, pll_save_post_translations, pll_save_term_translations, pll_count_posts
-* Support ICL_LANGUAGE_CODE == 'all' on admin side
+* Add support for ICL_LANGUAGE_CODE == 'all' on admin side
 * Drop compatibility with Twenty Fourteen ephemera widget shipped with WP 3.8 (ok with version shipped with WP 3.9)
 * Fix: Galician flag
 * Fix: static page on front pagination is broken
+* Fix: search url may be broken
+* Fix: PHP notice in icl_get_languages
+* Fix: more robust way of detecting language in url when using directory 
 

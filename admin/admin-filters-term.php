@@ -12,15 +12,14 @@ class PLL_Admin_Filters_Term {
 	/*
 	 * constructor: setups filters and actions
 	 *
-	 * @param object $model instance of PLL_Model
-	 * @param object $pref_lang language chosen in admin filter or default language
+	 * @param object $polylang
 	 */
-	public function __construct(&$links, &$curlang, $pref_lang) {
-		$this->links = &$links;
-		$this->model = &$links->links_model->model;
-		$this->options = &$model->options;
-		$this->curlang = $curlang;
-		$this->pref_lang = $pref_lang;
+	public function __construct(&$polylang) {
+		$this->links = &$polylang->links;
+		$this->model = &$polylang->model;
+		$this->options = &$polylang->options;
+		$this->curlang = &$polylang->curlang;
+		$this->pref_lang = &$polylang->pref_lang;
 
 		foreach ($this->model->get_translated_taxonomies() as $tax) {
 			// adds the language field in the 'Categories' and 'Post Tags' panels

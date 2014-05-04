@@ -13,13 +13,12 @@ class PLL_Admin_Filters_Media {
 	 *
 	 * @since 1.2
 	 *
-	 * @param object $model instance of PLL_Model
-	 * @param object $pref_lang language chosen in admin filter or default language
+	 * @param object $polylang
 	 */
-	public function __construct(&$links, $pref_lang) {
-		$this->links = &$links;
-		$this->model = &$links->links_model->model;
-		$this->pref_lang = $pref_lang;
+	public function __construct(&$polylang) {
+		$this->links = &$polylang->links;
+		$this->model = &$polylang->model;
+		$this->pref_lang = &$polylang->pref_lang;
 
 		// adds the language field and translations tables in the 'Edit Media' panel
 		add_filter('attachment_fields_to_edit', array(&$this, 'attachment_fields_to_edit'), 10, 2);

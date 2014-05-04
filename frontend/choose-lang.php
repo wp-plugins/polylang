@@ -14,13 +14,13 @@ abstract class PLL_Choose_Lang {
 	 *
 	 * @since 1.2
 	 *
-	 * @param object $links instance of PLL_Frontend_Links
+	 * @param object $polylang
 	 */
-	public function __construct(&$links) {
-		$this->links = &$links;
-		$this->links_model = &$links->links_model;
-		$this->model = &$links->model;
-		$this->options = &$links->options;
+	public function __construct(&$polylang) {
+		$this->links = &$polylang->links;
+		$this->links_model = &$polylang->links_model;
+		$this->model = &$polylang->model;
+		$this->options = &$polylang->options;
 
 		$this->page_on_front = get_option('page_on_front');
 		$this->page_for_posts = get_option('page_for_posts');

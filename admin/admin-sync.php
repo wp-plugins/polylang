@@ -11,10 +11,12 @@ class PLL_Admin_Sync {
 	 * constructor
 	 *
 	 * @since 1.2
+   *
+	 * @param object $polylang
 	 */
-	public function __construct(&$model) {
-		$this->model = &$model;
-		$this->options = &$model->options;
+	public function __construct(&$polylang) {
+		$this->model = &$polylang->model;
+		$this->options = &$polylang->options;
 
 		add_filter('wp_insert_post_parent', array(&$this, 'wp_insert_post_parent'));
 		add_action('add_meta_boxes', array(&$this, 'add_meta_boxes'), 10, 2);

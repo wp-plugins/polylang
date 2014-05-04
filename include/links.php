@@ -7,19 +7,19 @@
  */
 class PLL_Links {
 	public $links_model, $model, $options;
-	public $links;
+	protected $_links;
 
 	/*
 	 * constructor
 	 *
 	 * @since 1.2
 	 *
-	 * @param object $links_model
+	 * @param object $polylang
 	 */
-	public function __construct(&$links_model) {
-		$this->links_model = &$links_model;
-		$this->model = &$links_model->model;
-		$this->options = &$this->model->options;
+	public function __construct(&$polylang) {
+		$this->links_model = &$polylang->links_model;
+		$this->model = &$polylang->model;
+		$this->options = &$polylang->options;
 
 		// adds our domains or subdomains to allowed hosts for safe redirection
 		add_filter('allowed_redirect_hosts', array(&$this, 'allowed_redirect_hosts'));
@@ -55,17 +55,17 @@ class PLL_Links {
 	 * @return string modified post link
 	 */
 	public function post_link($link, $post) {
-		if (isset($this->links[$link]))
-			return $this->links[$link];
+		if (isset($this->_links[$link]))
+			return $this->_links[$link];
 
 		if ('post_type_link' == current_filter() && !$this->model->is_translated_post_type($post->post_type))
-			return $this->links[$link] = $link;
+			return $this->_links[$link] = $link;
 
 		if ('_get_page_link' == current_filter()) // this filter uses the ID instead of the post object
 			$post = get_post($post);
 
 		// /!\ when post_status is not "publish", WP does not use pretty permalinks
-		return $this->links[$link] = $post->post_status != 'publish' ? $link : $this->links_model->add_language_to_link($link, $this->model->get_post_language($post->ID));
+		return $this->_links[$link] = $post->post_status != 'publish' ? $link : $this->links_model->add_language_to_link($link, $this->model->get_post_language($post->ID));
 	}
 
 	/*
@@ -79,10 +79,10 @@ class PLL_Links {
 	 * @return string modified term link
 	 */
 	public function term_link($link, $term, $tax) {
-		if (isset($this->links[$link]))
-			return $this->links[$link];
+		if (isset($this->_links[$link]))
+			return $this->_links[$link];
 
-		return $this->links[$link] = $this->model->is_translated_taxonomy($tax) ?
+		return $this->_links[$link] = $this->model->is_translated_taxonomy($tax) ?
 			$this->links_model->add_language_to_link($link, $this->model->get_term_language($term->term_id)) : $link;
 	}
 

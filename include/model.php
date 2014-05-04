@@ -258,6 +258,7 @@ class PLL_Model {
 				$terms = wp_get_object_terms($translations, $type . '_translations');
 				$term = array_pop($terms);
 
+				// FIXME overwrite other data stored (if there are)
 				// create a new term if necessary
 				empty($term) ?
 					wp_insert_term($group = uniqid('pll_'), $type . '_translations', array('description' => serialize($translations))) :
@@ -285,10 +286,12 @@ class PLL_Model {
 			$translations = unserialize($term->description);
 
 			if (is_array($translations)) {
-				$slug = array_search($id, $translations);
+				$slug = array_search($id, $translations); // FIXME may not be robust enough if other data are stored
 				unset($translations[$slug]);
 
-				empty($translations) || 1 == count($translations) ?
+				// don't keep $type . '_translations' term if it is empty
+				// FIXME I should keep some info for terms but that would mean creating another group
+				empty($translations) ?
 					wp_delete_term((int) $term->term_id, $type . '_translations') :
 					wp_update_term((int) $term->term_id, $type . '_translations', array('description' => serialize($translations)));
 
@@ -327,7 +330,10 @@ class PLL_Model {
 	 */
 	public function get_translations($type, $id) {
 		$type = ($type == 'post' || $this->is_translated_post_type($type)) ? 'post' : (($type == 'term' || $this->is_translated_taxonomy($type)) ? 'term' : false);
-		return $type && ($term = $this->get_object_term($id, $type . '_translations')) && !empty($term) ? unserialize($term->description) : array();
+		$translations = $type && ($term = $this->get_object_term($id, $type . '_translations')) && !empty($term) ? unserialize($term->description) : array();
+
+		// make sure we return only translations (thus we allow plugins to store other informations in the array)
+		return array_intersect_key($translations, array_flip($this->get_languages_list(array('fields' => 'slug'))));
 	}
 
 	/*

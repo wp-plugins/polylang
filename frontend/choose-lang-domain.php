@@ -8,17 +8,6 @@
 class PLL_Choose_Lang_Domain extends PLL_Choose_Lang_Url {
 
 	/*
-	 * constructor
-	 *
-	 * @since 1.5
-	 *
-	 * @param object $links instance of PLL_Frontend_Links
-	 */
-	public function __construct(&$links) {
-		parent::__construct($links);
-	}
-
-	/*
 	 * don't set any language cookie
 	 *
 	 * @since 1.5

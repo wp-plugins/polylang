@@ -11,11 +11,10 @@ class PLL_Frontend_Filters extends PLL_Filters{
 	 *
 	 * @since 1.2
 	 *
-	 * @param object $links_model
-	 * @param object $curlang
+	 * @param object $polylang
 	 */
-	public function __construct(&$links_model, &$curlang) {
-		parent::__construct($links_model, $curlang);
+	public function __construct(&$polylang) {
+		parent::__construct($polylang);
 
 		// filters the WordPress locale
 		add_filter('locale', array(&$this, 'get_locale'));

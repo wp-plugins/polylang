@@ -8,17 +8,6 @@
 class PLL_Admin_Model extends PLL_Model {
 
 	/*
-	 * constructor
-	 *
-	 * @since 1.2
-	 *
-	 * @param array $options Polylang options
-	 */
-	public function __construct(&$options) {
-		parent::__construct($options);
-	}
-
-	/*
 	 * adds a new language
 	 * creates a default category for this language
 	 *

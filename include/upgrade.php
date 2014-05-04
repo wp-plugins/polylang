@@ -439,7 +439,7 @@ class PLL_Upgrade {
 
 	/*
 	 * upgrades if the previous version is < 1.5
-	 * deletes language cache (due to host property added)
+	 * deletes language cache (due to host property added and bug on search url)
 	 *
 	 * @since 1.5
 	 */

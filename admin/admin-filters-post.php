@@ -13,15 +13,14 @@ class PLL_Admin_Filters_Post {
 	 *
 	 * @since 1.2
 	 *
-	 * @param object $model instance of PLL_Model
-	 * @param object $pref_lang language chosen in admin filter or default language
+	 * @param object $polylang
 	 */
-	public function __construct(&$links, &$curlang, $pref_lang) {
-		$this->links = &$links;
-		$this->model = &$links->links_model->model;
-		$this->options = &$this->model->options;
-		$this->curlang = &$curlang;
-		$this->pref_lang = $pref_lang;
+	public function __construct(&$polylang) {
+		$this->links = &$polylang->links;
+		$this->model = &$polylang->model;
+		$this->options = &$polylang->options;
+		$this->curlang = &$polylang->curlang;
+		$this->pref_lang = &$polylang->pref_lang;
 
 		// filters posts, pages and media by language
 		add_filter('parse_query',array(&$this,'parse_query'));

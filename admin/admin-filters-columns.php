@@ -14,12 +14,12 @@ class PLL_Admin_Filters_Columns {
 	 *
 	 * @since 1.2
 	 *
-	 * @param object $model instance of PLL_Model
+	 * @param object $polylang
 	 */
-	public function __construct(&$links, &$curlang) {
-		$this->links = &$links;
-		$this->model = &$links->links_model->model;
-		$this->curlang = &$curlang;
+	public function __construct(&$polylang) {
+		$this->links = &$polylang->links;
+		$this->model = &$polylang->model;
+		$this->curlang = &$polylang->curlang;
 
 		// add the language and translations columns in 'All Posts', 'All Pages' and 'Media library' panels
 		foreach ($this->model->get_translated_post_types() as $type) {
