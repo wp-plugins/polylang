@@ -17,7 +17,7 @@
 
 		$link = $add_link = sprintf(
 			'<a href="%1$s" class="pll_icon_add" title="%2$s"></a>',
-			esc_url($this->links->get_new_post_translation_link($post_id, $language)),
+			esc_url($this->links->get_new_post_translation_link($post_ID, $language)),
 			__('Add new', 'polylang')
 		);
 
