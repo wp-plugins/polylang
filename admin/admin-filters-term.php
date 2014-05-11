@@ -6,20 +6,20 @@
  * @since 1.2
  */
 class PLL_Admin_Filters_Term {
-	public $model, $options, $curlang, $pref_lang;
+	public $links, $model, $options, $curlang, $pref_lang;
 	protected $pre_term_name; // used to store the term name before creating a slug if needed
 
 	/*
 	 * constructor: setups filters and actions
 	 *
-	 * @param object $model instance of PLL_Model
-	 * @param object $pref_lang language chosen in admin filter or default language
+	 * @param object $polylang
 	 */
-	public function __construct(&$model, &$curlang, $pref_lang) {
-		$this->model = &$model;
-		$this->options = &$model->options;
-		$this->curlang = $curlang;
-		$this->pref_lang = $pref_lang;
+	public function __construct(&$polylang) {
+		$this->links = &$polylang->links;
+		$this->model = &$polylang->model;
+		$this->options = &$polylang->options;
+		$this->curlang = &$polylang->curlang;
+		$this->pref_lang = &$polylang->pref_lang;
 
 		foreach ($this->model->get_translated_taxonomies() as $tax) {
 			// adds the language field in the 'Categories' and 'Post Tags' panels
@@ -42,8 +42,7 @@ class PLL_Admin_Filters_Term {
 
 		// ajax response for edit term form
 		add_action('wp_ajax_term_lang_choice', array(&$this,'term_lang_choice'));
-
-		add_action('wp_ajax_term_translation_choice', array(&$this,'term_translation_choice'));
+		add_action('wp_ajax_pll_terms_not_translated', array(&$this,'ajax_terms_not_translated'));
 
 		// filters categories and post tags by language
 		add_filter('terms_clauses', array(&$this, 'terms_clauses'), 10, 3);
@@ -254,28 +253,6 @@ class PLL_Admin_Filters_Term {
 	}
 
 	/*
-	 * returns all terms in the $taxonomy in the $term_language which have no translation in the $translation_language
-	 *
-	 * @since 0.1
-	 *
-	 * @param string $taxonomy
-	 * @param object $term_language the language of the term we want to translate
-	 * @param object $translation_language the language in which we are looking untranslated terms
-	 * @return array
-	 */
-	protected function get_terms_not_translated($taxonomy, $term_language, $translation_language) {
-		$new_terms = array();
-		// it is more efficient to use one common query for all languages as soon as there are more than 2
-		// pll_get_terms_not_translated arg to identify this query in terms_clauses filter
-		foreach (get_terms($taxonomy, 'hide_empty=0&pll_get_terms_not_translated=1') as $term) {
-			$lang = $this->model->get_term_language($term->term_id);
-			if ($lang && $lang->name == $term_language->name && !$this->model->get_translation('term', $term->term_id, $translation_language))
-				$new_terms[] = $term;
-		}
-		return $new_terms;
-	}
-
-	/*
 	 * ajax response for edit term form
 	 *
 	 * @since 0.2
@@ -326,17 +303,38 @@ class PLL_Admin_Filters_Term {
 	}
 
 	/*
-	 * ajax response for changing a translation
+	 * ajax response for input in translation autocomplete input box
 	 *
-	 * @since 1.4
+	 * @since 1.5
 	 */
-	public function term_translation_choice() {
-		$link = $_POST['value'] ?
-			$this->edit_translation_link($_POST['value'], $_POST['taxonomy'], $_POST['post_type']) :
-			$this->add_new_translation_link($_POST['term_id'], $_POST['taxonomy'], $_POST['post_type'], $this->model->get_language($_POST['lang']));
+	public function ajax_terms_not_translated() {
+		$return = array();
 
-		$x = new WP_Ajax_Response(array('what' => 'link', 'data' => $link));
-		$x->send();
+		// it is more efficient to use one common query for all languages as soon as there are more than 2
+		// pll_get_terms_not_translated arg to identify this query in terms_clauses filter
+		foreach (get_terms($_REQUEST['taxonomy'], 'hide_empty=0&pll_get_terms_not_translated=1&name__like=' . $_REQUEST['term']) as $term) {
+			$lang = $this->model->get_term_language($term->term_id);
+
+			if ($lang && $lang->slug == $_REQUEST['translation_language'] && !$this->model->get_translation('term', $term->term_id, $_REQUEST['term_language']))
+				$return[] = array(
+					'id' => $term->term_id,
+					'value' => $term->name,
+					'link' => $this->edit_translation_link($term->term_id, $_REQUEST['taxonomy'], $_REQUEST['post_type'])
+				);
+		}
+
+		// add current translation in list
+		// not in add term for as term_id is not set
+		if ('undefined' !== $_REQUEST['term_id'] && $term_id = $this->model->get_translation('term', $_REQUEST['term_id'], $_REQUEST['translation_language'])) {
+			$term = get_term($term_id, $_REQUEST['taxonomy']);
+			array_unshift($return, array(
+				'id' => $term_id,
+				'value' => $term->name,
+				'link' => $this->edit_translation_link($term->term_id, $_REQUEST['taxonomy'], $_REQUEST['post_type'])
+			));
+		}
+
+		wp_die(json_encode($return));
 	}
 
 	/*
@@ -499,35 +497,9 @@ class PLL_Admin_Filters_Term {
 	 */
 	public function edit_translation_link($term_id, $taxonomy, $post_type) {
 		return sprintf(
-			'<div class="spinner"></div><a href="%1$s" class="pll_icon_edit title="%2$s"></a></td>',
+			'<a href="%1$s" class="pll_icon_edit title="%2$s"></a></td>',
 			esc_url(get_edit_term_link($term_id, $taxonomy, $post_type)),
 			__('Edit','polylang')
-		);
-	}
-
-	/*
-	 * returns html markup to add a new translation
-	 *
-	 * @since 1.4
-	 *
-	 * @param int $term_id id of the term to translate
-	 * @param string $taxonomy
-	 * @param string $post_type
-	 * @param object $language language of the new translation
-	 * @return string
-	 */
-	public function add_new_translation_link($term_id, $taxonomy, $post_type, $language) {
- 		$args = array(
-			'taxonomy'  => $taxonomy,
-			'post_type' => $post_type,
-			'from_tag'  => $term_id,
-			'new_lang'  => $language->slug
-		);
-
-		return sprintf(
-			'<div class="spinner"></div><a href="%1$s" class="pll_icon_add" title="%2$s"></a>',
-			esc_url(add_query_arg($args, admin_url('edit-tags.php'))),
-			__('Add new','polylang')
 		);
 	}
 }

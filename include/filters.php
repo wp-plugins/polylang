@@ -13,20 +13,22 @@ class PLL_Filters {
 	 *
 	 * @since 1.4
 	 *
-	 * @param object $links_model
-	 * @param object $curlang
+	 * @param object $polylang
 	 */
-	public function __construct(&$links_model, &$curlang) {
-		$this->links_model = &$links_model;
-		$this->model = &$links_model->model;
-		$this->options = &$this->model->options;
-		$this->curlang = $curlang;
+	public function __construct(&$polylang) {
+		$this->links_model = &$polylang->links_model;
+		$this->model = &$polylang->model;
+		$this->options = &$polylang->options;
+		$this->curlang = &$polylang->curlang;
 
 		// filters the comments according to the current language
 		add_filter('comments_clauses', array(&$this, 'comments_clauses'), 10, 2);
 
 		// filters the get_pages function according to the current language
 		add_filter('get_pages', array(&$this, 'get_pages'), 10, 2);
+
+		// adds cache domain when querying terms
+		add_filter('get_terms_args', array(&$this, 'get_terms_args'));
 	}
 
 	/*
@@ -111,5 +113,25 @@ class PLL_Filters {
 
 		$once = false; // in case get_pages is called another time
 		return $pages;
+	}
+
+	/*
+	 * adds language dependent cache domain when querying terms
+	 * useful as the 'lang' parameter is not included in cache key by WordPress
+	 *
+	 * @since 1.3
+	 */
+	public function get_terms_args($args) {
+		if (!empty($args['lang']))
+			$lang = $args['lang'];
+		elseif (!empty($this->curlang))
+			$lang = $this->curlang->slug;
+
+		if (isset($lang)) {
+			$key = '_' . (is_array($lang) ? implode(',', $lang) : $lang);
+			$args['cache_domain'] = empty($args['cache_domain']) ? 'pll' . $key : $args['cache_domain'] . $key;
+		}
+
+		return $args;
 	}
 }

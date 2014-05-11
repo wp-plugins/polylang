@@ -12,9 +12,9 @@ class PLL_Frontend_Nav_Menu {
 	 *
 	 * @since 1.2
 	 */
-	public function __construct($options, $curlang) {
-		$this->options = &$options;
-		$this->curlang = &$curlang;
+	public function __construct(&$polylang) {
+		$this->options = &$polylang->options;
+		$this->curlang = &$polylang->curlang;
 
 		// split the language switcher menu item in several language menu items
 		add_filter('wp_get_nav_menu_items', array(&$this, 'wp_get_nav_menu_items'));

@@ -39,6 +39,20 @@ abstract class PLL_Base {
 			unregister_widget('WP_Widget_Calendar');
 			register_widget('PLL_Widget_Calendar');
 		}
+
+		// overwrites the recent posts and recent comments widget to use a language dependant cache key
+		// useful only if using a cache plugin
+		if (defined('WP_CACHE') && WP_CACHE) {
+			if (!defined('PLL_WIDGET_RECENT_POSTS') || PLL_WIDGET_RECENT_POSTS) {
+				unregister_widget('WP_Widget_Recent_Posts');
+				register_widget('PLL_Widget_Recent_Posts');
+			}
+
+			if (!defined('PLL_WIDGET_RECENT_COMMENTS') || PLL_WIDGET_RECENT_COMMENTS) {
+				unregister_widget('WP_Widget_Recent_Comments');
+				register_widget('PLL_Widget_Recent_Comments');
+			}
+		}
 	}
 
 	/*

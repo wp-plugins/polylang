@@ -6,19 +6,19 @@
  * @since 1.2
  */
 class PLL_Admin_Filters_Media {
-	public $model, $pref_lang;
+	public $links, $model, $pref_lang;
 
 	/*
 	 * constructor: setups filters and actions
 	 *
 	 * @since 1.2
 	 *
-	 * @param object $model instance of PLL_Model
-	 * @param object $pref_lang language chosen in admin filter or default language
+	 * @param object $polylang
 	 */
-	public function __construct(&$model, $pref_lang) {
-		$this->model = &$model;
-		$this->pref_lang = $pref_lang;
+	public function __construct(&$polylang) {
+		$this->links = &$polylang->links;
+		$this->model = &$polylang->model;
+		$this->pref_lang = &$polylang->pref_lang;
 
 		// adds the language field and translations tables in the 'Edit Media' panel
 		add_filter('attachment_fields_to_edit', array(&$this, 'attachment_fields_to_edit'), 10, 2);
@@ -95,6 +95,11 @@ class PLL_Admin_Filters_Media {
 	 * @since 0.9
 	 */
 	public function translate_media() {
+		$post_type_object = get_post_type_object( 'attachment' );
+
+		if ( ! current_user_can( $post_type_object->cap->edit_posts ) || ! current_user_can( $post_type_object->cap->create_posts ) )
+			wp_die( __( 'Cheatin&#8217; uh?' ) );
+
 		$post = get_post($_GET['from_media']);
 		$post_id = $post->ID;
 

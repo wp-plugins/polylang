@@ -2,6 +2,23 @@
 
 /*
  * admin side controller
+ * accessible in $polylang global object
+ *
+ * properties:
+ * options          => inherited, reference to Polylang options array
+ * model            => inherited, reference to PLL_Model object
+ * links_model      => inherited, reference to PLL_Links_Model object
+ * settings_page    => optional, reference ot PLL_Settings object
+ * links            => reference to PLL_Links object
+ * curlang          => optional, current language used to filter admin content
+ * pref_lang        => preferred language used as default when saving posts or terms
+ * filters          => reference to PLL_Filters object
+ * filters_columns  => reference to PLL_Admin_Filters_Columns object
+ * filters_post     => reference to PLL_Admin_Filters_Post object
+ * filters_term     => reference to PLL_Admin_filters_Term object
+ * nav_menu         => reference to PLL_Admin_Nav_Menu object
+ * sync             => reference to PLL_Admin_Sync object
+ * filters_media    => optional, reference to PLL_Admin_Filters_Media object
  *
  * @since 1.2
  */
@@ -45,12 +62,12 @@ class PLL_Admin extends PLL_Base {
 	 */
 	public function init() {
 		if (PLL_SETTINGS)
-			$this->settings_page = new PLL_Settings($this->links_model);
+			$this->settings_page = new PLL_Settings($this);
 
 		if (!$this->model->get_languages_list())
 			return;
 
-		$this->links = new PLL_Links($this->links_model);
+		$this->links = new PLL_Links($this);
 
 		// filter admin language for users
 		// we must not call user info before WordPress defines user roles in wp-settings.php
@@ -91,8 +108,8 @@ class PLL_Admin extends PLL_Base {
 		// FIXME: check if I can load more scripts in footer
 		$scripts = array(
 			'admin' => array( array('settings_page_mlang'), array('jquery', 'wp-ajax-response', 'postbox'), 1 , 0),
-			'post'  => array( array('post', 'media', 'async-upload', 'edit'),  array('jquery', 'wp-ajax-response', 'inline-edit-post'), 0 , 0),
-			'term'  => array( array('edit-tags'), array('jquery', 'wp-ajax-response'), 0, 1),
+			'post'  => array( array('post', 'media', 'async-upload', 'edit'),  array('jquery', 'wp-ajax-response', 'inline-edit-post', 'post', 'jquery-ui-autocomplete'), 0 , 0),
+			'term'  => array( array('edit-tags'), array('jquery', 'wp-ajax-response', 'jquery-ui-autocomplete'), 0, 1),
 			'user'  => array( array('profile', 'user-edit'), array('jquery'), 0 , 0),
 		);
 
@@ -115,15 +132,15 @@ class PLL_Admin extends PLL_Base {
 	 */
 	public function admin_print_footer_scripts() {
 		global $post_ID;
-		$str = 'pll_ajax_backend=1&';
-		$arr = 'pll_ajax_backend: true';
+		$params = array('pll_ajax_backend' => 1);
+		if (!empty($post_ID))
+			$params = array_merge($params, array('pll_post_id' => $post_ID));
 
-		// FIXME Can I directly send the language from post.js rather than pll_post_id from here?
-		if (!empty($post_ID)) {
-			$str .= 'pll_post_id=' . (int) $post_ID . '&';
-			$arr .= ', pll_post_id: ' . (int) $post_ID;
+		$str = $arr = '';
+		foreach ($params as $k => $v) {
+			$str .= $k . '=' . $v . '&';
+			$arr .= (empty($arr) ? '' : ', ') . $k . ': ' . $v;
 		}
-
 ?>
 <script type="text/javascript">
 	if (typeof jQuery != 'undefined') {
@@ -217,15 +234,15 @@ class PLL_Admin extends PLL_Base {
 	 */
 	public function add_filters() {
 		// all these are separated just for convenience and maintainability
-		$this->filters = new PLL_Admin_Filters($this->links_model, $this->curlang);
-		$this->filters_columns = new PLL_Admin_Filters_Columns($this->model, $this->curlang);
-		$this->filters_post = new PLL_Admin_Filters_Post($this->model, $this->curlang, $this->pref_lang);
-		$this->filters_term = new PLL_Admin_Filters_Term($this->model, $this->curlang, $this->pref_lang);
-		$this->nav_menu = new PLL_Admin_Nav_Menu($this->model);
-		$this->sync = new PLL_Admin_Sync($this->model);
+		$this->filters = new PLL_Admin_Filters($this);
+		$this->filters_columns = new PLL_Admin_Filters_Columns($this);
+		$this->filters_post = new PLL_Admin_Filters_Post($this);
+		$this->filters_term = new PLL_Admin_Filters_Term($this);
+		$this->nav_menu = new PLL_Admin_Nav_Menu($this);
+		$this->sync = new PLL_Admin_Sync($this);
 
 		if ($this->options['media_support'])
-			$this->filters_media = new PLL_Admin_Filters_Media($this->model, $this->pref_lang);
+			$this->filters_media = new PLL_Admin_Filters_Media($this);
 	}
 
 	/*
@@ -266,7 +283,6 @@ class PLL_Admin extends PLL_Base {
 			));
 		}
 	}
-
 	/*
 	 * downloads mofiles from http://svn.automattic.com/wordpress-i18n/
 	 * FIXME is it the best class for this?
@@ -349,8 +365,9 @@ class PLL_Admin extends PLL_Base {
 				return true;
 			}
 		}
+
 		// we did not succeeded to download a file :(
+		add_settings_error('general', 'pll_download_mo', __('The language was created, but the WordPress language file was not downloaded. Please install it manually.', 'polylang'));
 		return false;
 	}
-
 }

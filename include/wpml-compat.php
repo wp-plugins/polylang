@@ -21,6 +21,14 @@ function pll_define_wpml_constants() {
 		if(!defined('ICL_LANGUAGE_NAME'))
 			define('ICL_LANGUAGE_NAME', $polylang->curlang->name);
 	}
+
+	elseif (PLL_ADMIN) {
+		if(!defined('ICL_LANGUAGE_CODE'))
+			define('ICL_LANGUAGE_CODE', 'all');
+
+		if(!defined('ICL_LANGUAGE_NAME'))
+			define('ICL_LANGUAGE_NAME', '');
+	}
 }
 
 add_action('pll_language_defined', 'pll_define_wpml_constants');
@@ -78,7 +86,7 @@ if (!function_exists('icl_get_languages')) {
 		$arr = array();
 
 		foreach ($polylang->model->get_languages_list(array('hide_empty' => true, 'orderby' => $orderby, 'order' => $order)) as $lang) {
-			$url = $polylang->get_translation_url($lang);
+			$url = $polylang->links->get_translation_url($lang);
 
 			if (empty($url) && !empty($skip_missing))
 				continue;

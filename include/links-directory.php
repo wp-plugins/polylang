@@ -7,9 +7,10 @@
  *
  * @since 1.2
  */
-class PLL_Links_Directory {
-	public $model, $options;
-	protected $home, $rewrite_rules = array();
+class PLL_Links_Directory extends PLL_Links_Model {
+	protected $index = 'index.php'; // need this before $wp_rewrite is created, also harcoded in wp-includes/rewrite.php
+	protected $root;
+	protected $rewrite_rules = array();
 	protected $always_rewrite = array('date', 'root', 'comments', 'search', 'author', 'post_format', 'language');
 
 	/*
@@ -19,10 +20,11 @@ class PLL_Links_Directory {
 	 *
 	 * @param object $model PLL_Model instance
 	 */
-	public function __construct($model) {
-		$this->model = &$model;
-		$this->options = &$model->options;
-		$this->home = get_option('home');
+	public function __construct(&$model) {
+		parent::__construct($model);
+
+		// inspired by wp-includes/rewrite.php
+		$this->root = preg_match('#^/*' . $this->index . '#', get_option('permalink_structure')) ? $this->index . '/' : '';
 
 		add_action ('setup_theme', array(&$this, 'add_permastruct'));
 
@@ -45,11 +47,9 @@ class PLL_Links_Directory {
 	 */
 	public function add_language_to_link($url, $lang) {
 		if (!empty($lang)) {
-			global $wp_rewrite;
-
 			$base = $this->options['rewrite'] ? '' : 'language/';
-			$slug = $this->options['default_lang'] == $lang->slug && $this->options['hide_default'] ? '' : $base.$lang->slug.'/';
-			return str_replace($this->home.'/'.$wp_rewrite->root, $this->home.'/'.$wp_rewrite->root.$slug, $url);
+			$slug = $this->options['default_lang'] == $lang->slug && $this->options['hide_default'] ? '' : $base . $lang->slug . '/';
+			return str_replace($this->home . '/' . $this->root, $this->home . '/' . $this->root . $slug, $url);
 		}
 		return $url;
 	}
@@ -69,24 +69,11 @@ class PLL_Links_Directory {
 				$languages[] = $language->slug;
 
 		if (!empty($languages)) {
-			global $wp_rewrite;
-			$pattern = '#' . ($this->options['rewrite'] ? '' : '\/language') . '\/('.implode('|', $languages).')(\/|$)#';
-			$url = preg_replace($pattern, $wp_rewrite->root . '/', $url);
+			$pattern = str_replace('/', '\/', $this->home . '/' . $this->root);
+			$pattern = '#' . $pattern . ($this->options['rewrite'] ? '' : 'language') . '('.implode('|', $languages).')(\/|$)#';
+			$url = preg_replace($pattern,  $this->home . '/' . $this->root, $url);
 		}
 		return $url;
-	}
-
-	/*
-	 * returns the link to the first page
-	 * links_model interface
-	 *
-	 * @since 1.2
-	 *
-	 * @param string $url url to modify
-	 * @return string modified url
-	 */
-	function remove_paged_from_link($url) {
-		return preg_replace('#\/page\/[0-9]+\/#', '/', $url);
 	}
 
 	/*
@@ -98,9 +85,10 @@ class PLL_Links_Directory {
 	 * @return string language slug
 	 */
 	public function get_language_from_url() {
-		$root = $this->options['rewrite'] ? '' : 'language/';
-		$pattern = '#\/'.$root.'('.implode('|', $this->model->get_languages_list(array('fields' => 'slug'))).')(\/|$)#';
-		return preg_match($pattern, trailingslashit($_SERVER['REQUEST_URI']), $matches) ? $matches[1] : ''; // $matches[1] is the slug of the requested language
+		$requested_url  = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+		$pattern = str_replace('/', '\/', $this->home . '/' . $this->root . ($this->options['rewrite'] ? '' : 'language/'));
+		$pattern = '#' . $pattern . '('. implode('|', $this->model->get_languages_list(array('fields' => 'slug'))) . ')(\/|$)#';
+		return preg_match($pattern, trailingslashit($requested_url), $matches) ? $matches[1] : ''; // $matches[1] is the slug of the requested language
 	}
 
 	/*

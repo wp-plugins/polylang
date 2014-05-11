@@ -22,48 +22,44 @@ if ('undefined' != typeof(inlineEditTax)) {
 }
 
 jQuery(document).ready(function($) {
-	// ajax for changing a translation in edit-tags.php
-	function change_translations() {
-		var td = $(this).parent().siblings('.pll-edit-column');
-		if (!td)
-			return;
+	// translations autocomplete input box
+	function init_translations() {
+		$('.tr_lang').each(function(){
+			var tr_lang = $(this).attr('id').substring(8);
+			var td = $(this).parent().siblings('.pll-edit-column');
 
-		td.children('a').hide();
-		td.children('.spinner').show();
+			$(this).autocomplete({
+				minLength: 0,
 
-		var data = {
-			action: 'term_translation_choice',
-			lang: $('#term_lang_choice').attr('value'),
-			term_id: $("input[name='tag_ID']").attr('value'),
-			taxonomy: $("input[name='taxonomy']").attr('value'),
-			post_type: typenow,
-			value: $(this).attr('value')
-		}
+				source: ajaxurl + '?action=pll_terms_not_translated&term_language=' + $('#term_lang_choice').val() +
+					'&term_id=' + $("input[name='tag_ID']").val() + '&taxonomy=' + $("input[name='taxonomy']").val() +
+					'&translation_language=' + tr_lang + '&post_type=' + typenow,
 
-		$.post(ajaxurl, data , function(response) {
-			var res = wpAjax.parseAjaxResponse(response, 'ajax-response');
-			$.each(res.responses, function() {
-				switch (this.what) {
-					case 'link':
-						td.children('.spinner').hide();
-						td.html(this.data);
-						break;
-					default:
-						break;
+				select: function(event, ui) {
+					$('#htr_lang_'+tr_lang).val(ui.item.id);
+					td.html(ui.item.link);
+				},
+			});
+
+			// when the input box is emptied
+			$(this).blur(function() {
+				if (!$(this).val()) {
+					$('#htr_lang_'+tr_lang).val(0);
+					td.html(td.siblings('.hidden').children().clone());
 				}
 			});
 		});
 	}
 
-	$("select[name*='term_tr_lang']").change(change_translations);
+	init_translations();
 
 	// ajax for changing the term's language
 	$('#term_lang_choice').change(function() {
 		var data = {
 			action: 'term_lang_choice',
-			lang: $(this).attr('value'),
-			term_id: $("input[name='tag_ID']").attr('value'),
-			taxonomy: $("input[name='taxonomy']").attr('value'),
+			lang: $(this).val(),
+			term_id: $("input[name='tag_ID']").val(),
+			taxonomy: $("input[name='taxonomy']").val(),
 			post_type: typenow
 		}
 
@@ -73,7 +69,7 @@ jQuery(document).ready(function($) {
 				switch (this.what) {
 					case 'translations': // translations fields
 						$("#term-translations").html(this.data);
-						$("select[name*='term_tr_lang']").change(change_translations);
+						init_translations();
 						break;
 					case 'parent': // parent dropdown list for hierarchical taxonomies
 						$('#parent').replaceWith(this.data);
@@ -87,5 +83,4 @@ jQuery(document).ready(function($) {
 			});
 		});
 	});
-
 });

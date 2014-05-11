@@ -6,6 +6,7 @@ if(!class_exists('WP_Widget_Calendar')){
 
 /*
  * obliged to rewrite the whole functionnality as there is no filter on sql queries and only a filter on final output
+ * code base last checked with WP 3.9.1
  * a request for making a filter on sql queries exists: http://core.trac.wordpress.org/ticket/15202
  * method used in 0.4.x: use of the get_calendar filter and overwrite the output of get_calendar function -> not very efficient (add 4 to 5 sql queries)
  * method used since 0.5: remove the WP widget and replace it by our own -> our language filter will not work if get_calendar is called directly by a theme
@@ -55,10 +56,12 @@ class PLL_Widget_Calendar extends WP_Widget_Calendar {
 		if ( $cache = wp_cache_get( 'get_calendar', 'calendar' ) ) {
 			if ( is_array($cache) && isset( $cache[ $key ] ) ) {
 				if ( $echo ) {
-					echo apply_filters( 'get_calendar',  $cache[$key] );
+					/** This filter is documented in wp-includes/general-template.php */
+					echo apply_filters( 'get_calendar', $cache[$key] );
 					return;
 				} else {
-					return apply_filters( 'get_calendar',  $cache[$key] );
+					/** This filter is documented in wp-includes/general-template.php */
+					return apply_filters( 'get_calendar', $cache[$key] );
 				}
 			}
 		}
@@ -241,9 +244,18 @@ class PLL_Widget_Calendar extends WP_Widget_Calendar {
 		$cache[ $key ] = $calendar_output;
 		wp_cache_set( 'get_calendar', $cache, 'calendar' );
 
-		if ( $echo )
-			echo apply_filters( 'get_calendar',  $calendar_output );
-		else
-			return apply_filters( 'get_calendar',  $calendar_output );
+		if ( $echo ) {
+			/**
+			 * Filter the HTML calendar output.
+			 *
+			 * @since 3.0.0
+			 *
+			 * @param string $calendar_output HTML output of the calendar.
+			 */
+			echo apply_filters( 'get_calendar', $calendar_output );
+		} else {
+			/** This filter is documented in wp-includes/general-template.php */
+			return apply_filters( 'get_calendar', $calendar_output );
+		}
 	}
 }

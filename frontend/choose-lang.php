@@ -7,24 +7,25 @@
  */
 abstract class PLL_Choose_Lang {
 	public $links, $links_model, $model, $options;
-	public $domain, $page_on_front, $page_for_posts, $curlang;
+	public $page_on_front = 0, $page_for_posts = 0, $curlang;
 
 	/*
 	 * constructor
 	 *
 	 * @since 1.2
 	 *
-	 * @param object $links instance of PLL_Frontend_Links
+	 * @param object $polylang
 	 */
-	public function __construct(&$links) {
-		$this->links = &$links;
-		$this->links_model = &$links->links_model;
-		$this->model = &$links->model;
-		$this->options = &$links->options;
+	public function __construct(&$polylang) {
+		$this->links = &$polylang->links;
+		$this->links_model = &$polylang->links_model;
+		$this->model = &$polylang->model;
+		$this->options = &$polylang->options;
 
-		$this->domain = substr(get_option('home'), is_ssl() ? 8 : 7);
-		$this->page_on_front = get_option('page_on_front');
-		$this->page_for_posts = get_option('page_for_posts');
+		if ('page' == get_option('show_on_front')) {
+			$this->page_on_front = get_option('page_on_front');
+			$this->page_for_posts = get_option('page_for_posts');
+		}
 
 		if (PLL_AJAX_ON_FRONT || false === stripos($_SERVER['SCRIPT_FILENAME'], 'index.php'))
 			$this->set_language(empty($_REQUEST['lang']) ? $this->get_preferred_language() : $this->model->get_language($_REQUEST['lang']));
@@ -48,17 +49,22 @@ abstract class PLL_Choose_Lang {
 			return;
 
 		$this->curlang = $curlang;
-
-		// set a cookie to remember the language. check headers have not been sent to avoid ugly error
-		// possibility to set PLL_COOKIE to false will disable cookie although it will break some functionalities
-		// don't set cookie when using multiple domains
-		if ($this->options['force_lang'] < 3 && !headers_sent() && PLL_COOKIE !== false && (!isset($_COOKIE[PLL_COOKIE]) || $_COOKIE[PLL_COOKIE] != $curlang->slug)) {
-			$cookie_domain = 2 == $this->options['force_lang'] ? $this->domain : COOKIE_DOMAIN;
-			setcookie(PLL_COOKIE, $curlang->slug, time() + 31536000 /* 1 year */, COOKIEPATH, $cookie_domain);
-		}
+		$this->maybe_setcookie();
 
 		$GLOBALS['text_direction'] = $curlang->is_rtl ? 'rtl' : 'ltr';
 		do_action('pll_language_defined', $curlang->slug, $curlang);
+	}
+
+	/*
+	 * set a cookie to remember the language.
+	 * possibility to set PLL_COOKIE to false will disable cookie although it will break some functionalities
+	 *
+	 * @since 1.5
+	 */
+	protected function maybe_setcookie() {
+		// check headers have not been sent to avoid ugly error
+		if (!headers_sent() && PLL_COOKIE !== false && (!isset($_COOKIE[PLL_COOKIE]) || $_COOKIE[PLL_COOKIE] != $this->curlang->slug))
+			setcookie(PLL_COOKIE, $this->curlang->slug, time() + 31536000 /* 1 year */, COOKIEPATH, parse_url(get_option('home'), PHP_URL_HOST));
 	}
 
 	/*
@@ -69,10 +75,6 @@ abstract class PLL_Choose_Lang {
 	 * @return object browser preferred language or default language
 	 */
 	public function get_preferred_language() {
-		// multiple domains
-		if (3 == $this->options['force_lang'])
-			return $this->model->get_language($this->links_model->get_language_from_url());
-
 		// check first if the user was already browsing this site
 		if (isset($_COOKIE[PLL_COOKIE]))
 			return $this->model->get_language($_COOKIE[PLL_COOKIE]);
@@ -137,9 +139,8 @@ abstract class PLL_Choose_Lang {
 	protected function home_language() {
 		// test referer in case PLL_COOKIE is set to false
 		// thanks to Ov3rfly http://wordpress.org/support/topic/enhance-feature-when-front-page-is-visited-set-language-according-to-browser
-		$is_self_referer = isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $this->domain) !== false;
 		$this->set_language(
-			$this->options['hide_default'] && ($is_self_referer || !$this->options['browser']) ?
+			$this->options['hide_default'] && ((isset($_SERVER['HTTP_REFERER']) && in_array(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST), $this->links_model->get_hosts())) || !$this->options['browser']) ?
 				$this->model->get_language($this->options['default_lang']) :
 				$this->get_preferred_language() // sets the language according to browser preference or default language
 		);
@@ -154,11 +155,8 @@ abstract class PLL_Choose_Lang {
 	 */
 	public function home_requested() {
 		// we are already on the right page
-		if (3 == $this->options['force_lang'] || ($this->options['default_lang'] == $this->curlang->slug && $this->options['hide_default'])) {
-			if ($this->page_on_front && $page_id = $this->model->get_post($this->page_on_front, $this->curlang))
-				set_query_var('page_id', $page_id);
-			else
-				$this->set_lang_query_var($GLOBALS['wp_query'], $this->curlang);
+		if ($this->options['default_lang'] == $this->curlang->slug && $this->options['hide_default']) {
+			$this->set_home_query_var();
 		}
 		// redirect to the home page in the right language
 		// test to avoid crash if get_home_url returns something wrong
@@ -173,6 +171,18 @@ abstract class PLL_Choose_Lang {
 			}
 		}
 
+	}
+
+	/*
+	 * Adds query vars to query for home page
+	 *
+	 * @since 1.5
+	 */
+	protected function set_home_query_var() {
+		if ($this->page_on_front && $page_id = $this->model->get_post($this->page_on_front, $this->curlang))
+			set_query_var('page_id', $page_id);
+		else
+			$this->set_lang_query_var($GLOBALS['wp_query'], $this->curlang);
 	}
 
 	/*
@@ -208,10 +218,20 @@ abstract class PLL_Choose_Lang {
 				$query->is_singular = $query->is_page = true;
 				$query->is_archive = $query->is_tax = false;
 				unset($query->query_vars['lang'], $query->queried_object); // reset queried object
-				return;
 			}
 			// else : the static front page is not translated
 			// let's things as is and the list of posts in the current language will be displayed
+		}
+
+		// takes care of paged front page
+		if ($this->page_on_front) {
+			$page_id = $this->get_page_id($query);
+
+			// correct <!--nextpage--> for page_on_front
+			if (!empty($page_id) && $this->model->get_post($page_id, $this->model->get_post_language($this->page_on_front)) == $this->page_on_front && !empty($qv['paged'])) {
+				$query->set('page', $qv['paged']);
+				unset($query->query_vars['paged']);
+			}
 		}
 
 		// sets is_home on translated home page when it displays posts
@@ -225,13 +245,7 @@ abstract class PLL_Choose_Lang {
 
 		// sets the language for posts page in case the front page displays a static page
 		if ($this->page_for_posts) {
-			// If permalinks are used, WordPress does set and use $query->queried_object_id and sets $query->query_vars['page_id'] to 0
-			// and does set and use $query->query_vars['page_id'] if permalinks are not used :(
-			if (!empty($qv['pagename']) && isset($query->queried_object_id))
-				$page_id = $query->queried_object_id;
-
-			elseif (isset($qv['page_id']))
-				$page_id = $qv['page_id'];
+			$page_id = $this->get_page_id($query);
 
 			if (!empty($page_id) && $this->model->get_post($page_id, $this->model->get_post_language($this->page_for_posts)) == $this->page_for_posts) {
 				$this->set_language($this->model->get_post_language($page_id));
@@ -256,5 +270,25 @@ abstract class PLL_Choose_Lang {
 			'terms'    => $lang->term_taxonomy_id,
 			'operator' => 'IN'
 		);
+	}
+
+	/*
+	 * get queried page_id (if exists)
+	 * If permalinks are used, WordPress does set and use $query->queried_object_id and sets $query->query_vars['page_id'] to 0
+	 * and does set and use $query->query_vars['page_id'] if permalinks are not used :(
+	 *
+	 * @since 1.5
+	 *
+	 * @param object $query instance of WP_Query
+	 * @return int page_id
+	 */
+	protected function get_page_id($query) {
+		if (!empty($query->query_vars['pagename']) && isset($query->queried_object_id))
+			return $query->queried_object_id;
+
+		if (isset($query->query_vars['page_id']))
+			return $query->query_vars['page_id'];
+
+		return 0; // no page queried
 	}
 }

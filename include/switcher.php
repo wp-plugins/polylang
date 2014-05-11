@@ -121,6 +121,7 @@ class PLL_Switcher {
 			'raw'                    => 0, // set this to true to build your own custom language switcher
 		);
 		$args = wp_parse_args($args, $defaults);
+		$args = apply_filters('pll_the_languages_args', $args);
 		$elements = $this->get_elements($links, $args);
 
 		if ($args['raw'])

@@ -2,6 +2,19 @@
 
 /*
  * frontend controller
+ * accessible as $polylang global object
+ *
+ * properties:
+ * options          => inherited, reference to Polylang options array
+ * model            => inherited, reference to PLL_Model object
+ * links_model      => inherited, reference to PLL_Links_Model object
+ * links            => reference to PLL_Links object
+ * choose_lang      => reference to PLL_Choose_lang object
+ * curlang          => current language
+ * filters          => reference to PLL_Filters object
+ * filters_search   => reference to PLL_Frontend_Filters_Search object
+ * nav_menu         => reference to PLL_Frontend_Nav_Menu object
+ * auto_translate   => optional, reference to PLL_Auto_Translate object
  *
  * @since 1.2
  */
@@ -38,11 +51,11 @@ class PLL_Frontend extends PLL_Base{
 	 * @param object $links_model
 	 */
 	public function init() {
-		$this->links = new PLL_Frontend_Links($this->links_model);
+		$this->links = new PLL_Frontend_Links($this);
 
-		$this->choose_lang = $this->options['force_lang'] && get_option('permalink_structure') ?
-			new PLL_Choose_Lang_Url($this->links) :
-			new PLL_Choose_Lang_Content($this->links);
+		$c = array('Content', 'Url', 'Url', 'Domain');
+		$class = 'PLL_Choose_Lang_' . $c[$this->options['force_lang'] * (get_option('permalink_structure') ? 1 : 0 )];
+		$this->choose_lang = new $class($this);
 	}
 
 	/*
@@ -57,11 +70,11 @@ class PLL_Frontend extends PLL_Base{
 		$this->curlang = $curlang;
 
 		// filters
-		$this->filters = new PLL_Frontend_Filters($this->links_model, $curlang);
-		$this->filters_search = new PLL_Frontend_Filters_Search($this->links);
+		$this->filters = new PLL_Frontend_Filters($this);
+		$this->filters_search = new PLL_Frontend_Filters_Search($this);
 
 		// nav menu
-		$this->nav_menu = new PLL_Frontend_Nav_Menu($this->options, $curlang);
+		$this->nav_menu = new PLL_Frontend_Nav_Menu($this);
 	}
 
 	/*
@@ -116,7 +129,7 @@ class PLL_Frontend extends PLL_Base{
 	 * @since 1.2
 	 */
 	public function auto_translate() {
-		$this->auto_translate = new PLL_Frontend_Auto_Translate($this->model);
+		$this->auto_translate = new PLL_Frontend_Auto_Translate($this);
 	}
 }
 

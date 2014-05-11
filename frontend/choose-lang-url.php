@@ -15,10 +15,10 @@ class PLL_Choose_Lang_Url extends PLL_Choose_lang {
 	 *
 	 * @since 1.2
 	 *
-	 * @param object $links instance of PLL_Frontend_Links
+	 * @param object $polylang
 	 */
-	public function __construct(&$links) {
-		parent::__construct($links);
+	public function __construct(&$polylang) {
+		parent::__construct($polylang);
 
 		if (!did_action('pll_language_defined'))
 			$this->set_language_from_url();
@@ -90,8 +90,7 @@ class PLL_Choose_Lang_Url extends PLL_Choose_lang {
 		// the language is not correctly set so let's redirect to the correct url for this object
 		if (!empty($language)) {
 			$requested_url  = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-			$redirect_url = $this->links_model->remove_language_from_link($requested_url);
-			$redirect_url = $this->links_model->add_language_to_link($redirect_url, $language);
+			$redirect_url = $this->links_model->switch_language_in_link($requested_url, $language);
 
 			if ($requested_url != $redirect_url) {
 				wp_redirect($redirect_url, 301);

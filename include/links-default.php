@@ -7,23 +7,7 @@
  *
  * @since 1.2
  */
-class PLL_Links_Default {
-	public $model, $options;
-	protected $home;
-
-	/*
-	 * constructor
-	 *
-	 * @since 1.2
-	 *
-	 * @param object $model PLL_Model instance
-	 */
-	public function __construct(&$model) {
-		$this->model = &$model;
-		$this->options = &$model->options;
-
-		$this->home = get_option('home');
-	}
+class PLL_Links_Default extends PLL_Links_Model {
 
 	/*
 	 * adds language information to an url
@@ -64,6 +48,21 @@ class PLL_Links_Default {
 	function remove_paged_from_link($url) {
 		return remove_query_arg('paged', $url);
 	}
+
+
+	/*
+	 * returns the link to the paged page when using pretty permalinks
+	 *
+	 * @since 1.5
+	 *
+	 * @param string $url url to modify
+	 * @param int $page
+	 * @return string modified url
+	 */
+	public function add_paged_to_link($url, $page) {
+		return add_query_arg(array('paged' => $page), $url);
+	}
+
 
 	/*
 	 * gets the language slug from the url if present

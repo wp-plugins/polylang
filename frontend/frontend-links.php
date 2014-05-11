@@ -6,30 +6,28 @@
  * @since 1.2
  */
 class PLL_Frontend_Links extends PLL_Links {
-	public $curlang, $home, $using_permalinks, $page_on_front, $page_for_posts;
+	public $curlang, $home, $using_permalinks, $page_on_front = 0, $page_for_posts = 0;
 
 	/*
 	 * constructor
 	 *
 	 * @since 1.2
 	 *
-	 * @param object $links_model
+	 * @param object $polylang
 	 */
-	public function __construct(&$links_model) {
-		parent::__construct($links_model);
+	public function __construct(&$polylang) {
+		parent::__construct($polylang);
 
 		$this->using_permalinks = (bool) get_option('permalink_structure'); // are we using permalinks?
 
 		$this->home = get_option('home');
-		$this->page_on_front = get_option('page_on_front');
-		$this->page_for_posts = get_option('page_for_posts');
+
+		if ('page' == get_option('show_on_front')) {
+			$this->page_on_front = get_option('page_on_front');
+			$this->page_for_posts = get_option('page_for_posts');
+		}
 
 		add_action('pll_language_defined', array(&$this, 'pll_language_defined'), 10, 2);
-
-		// adds the domain of the current language to allowed hosts for safe redirection
-		// only when using domains or subdomains
-		if ($this->options['force_lang'] > 1)
-			add_filter('allowed_redirect_hosts', array(&$this, 'allowed_redirect_hosts'));
 	}
 
 	/*
@@ -51,10 +49,6 @@ class PLL_Frontend_Links extends PLL_Links {
 		// rewrites post format links
 		add_filter('term_link', array(&$this, 'term_link'), 20, 3);
 
-		// rewrites next and previous post links when not automatically done by WordPress
-		if ($this->options['force_lang'] > 1)
-			add_filter('get_pagenum_link', array(&$this, 'archive_link'), 20);
-
 		// modifies the page link in case the front page is not in the default language
 		add_filter('page_link', array(&$this, 'page_link'), 20, 2);
 
@@ -67,19 +61,15 @@ class PLL_Frontend_Links extends PLL_Links {
 		// modifies the home url
 		if (!defined('PLL_FILTER_HOME_URL') || PLL_FILTER_HOME_URL)
 			add_filter('home_url', array(&$this, 'home_url'), 10, 2);
-	}
 
-	/*
-	 * adds the domain of the current language to allowed hosts for safe redirection
-	 *
-	 * @since 1.4.3
-	 *
-	 * @param array $hosts allowed hosts
-	 * @return array
-	 */
-	public function allowed_redirect_hosts($hosts) {
-		$hosts[] = preg_replace('#https?://#', '', $this->get_home_url());
-		return $hosts;
+		if ($this->options['force_lang'] > 1) {
+			// rewrites next and previous post links when not automatically done by WordPress
+			add_filter('get_pagenum_link', array(&$this, 'archive_link'), 20);
+
+			// rewrites ajax url
+			add_filter('admin_url', array(&$this, 'admin_url'), 10, 2);
+		}
+
 	}
 
 	/*
@@ -105,10 +95,10 @@ class PLL_Frontend_Links extends PLL_Links {
 	 * @return string modified link
 	 */
 	public function term_link($link, $term, $tax) {
-		if (isset($this->links[$link]))
-			return $this->links[$link];
+		if (isset($this->_links[$link]))
+			return $this->_links[$link];
 
-		return $this->links[$link] = $tax == 'post_format' ? $this->links_model->add_language_to_link($link, $this->curlang) :
+		return $this->_links[$link] = $tax == 'post_format' ? $this->links_model->add_language_to_link($link, $this->curlang) :
 			($this->options['force_lang'] ? parent::term_link($link, $term, $tax) : $link);
 	}
 
@@ -159,7 +149,7 @@ class PLL_Frontend_Links extends PLL_Links {
 	public function redirect_canonical($redirect_url, $requested_url) {
 		global $wp_query;
 		if (is_page() && !is_feed() && isset($wp_query->queried_object) && 'page' == get_option('show_on_front') && $wp_query->queried_object->ID == get_option('page_on_front')) {
-			return $this->get_home_url();
+			return is_paged() ? $this->links_model->add_paged_to_link($this->get_home_url(), $wp_query->query_vars['page']) : $this->get_home_url();
 		}
 		return $redirect_url;
 	}
@@ -228,7 +218,7 @@ class PLL_Frontend_Links extends PLL_Links {
 			return $translation_url[$language->slug];
 
 		global $wp_query;
-		$qv = $wp_query->query;
+		$qv = $wp_query->query_vars;
 		$hide = $this->options['default_lang'] == $language->slug && $this->options['hide_default'];
 
 		// post and attachment
@@ -284,8 +274,7 @@ class PLL_Frontend_Links extends PLL_Links {
 	 */
 	public function get_archive_url($language) {
 		$url = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-		$url = $this->links_model->remove_language_from_link($url);
-		$url = $this->links_model->add_language_to_link($url, $language);
+		$url = $this->links_model->switch_language_in_link($url, $language);
 		return $this->links_model->remove_paged_from_link($url);
 	}
 
@@ -302,5 +291,18 @@ class PLL_Frontend_Links extends PLL_Links {
 			$language = $this->curlang;
 
 		return parent::get_home_url($language, $is_search);
+	}
+
+	/*
+	 * rewrites ajax url when using domains or subdomains
+	 *
+	 * @since 1.5
+	 *
+	 * @param string $url admin url with path evaluated by WordPress
+	 * @param string $path admin path
+	 * @return string
+	 */
+	public function admin_url($url, $path) {
+		return 'admin-ajax.php' === $path ? $this->links_model->switch_language_in_link($url, $this->curlang) : $url;
 	}
 }

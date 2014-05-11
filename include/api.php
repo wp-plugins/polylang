@@ -166,3 +166,90 @@ function pll_is_translated_taxonomy($tax) {
 	global $polylang;
 	return isset($polylang) && $polylang->model->is_translated_taxonomy($tax);
 }
+
+/*
+ * returns the list of available languages
+ *
+ * list of parameters accepted in $args:
+ *
+ * hide_empty => hides languages with no posts if set to true (defaults to false)
+ * fields     => return only that field if set (see PLL_Language for a list of fields)
+ *
+ * @since 1.5
+ *
+ * @param array $args list of parameters
+ * @return array
+ */
+function pll_languages_list($args = array()) {
+	global $polylang;
+	$args = wp_parse_args($args, array('fields' => 'slug'));
+	return isset($polylang) ? $polylang->model->get_languages_list($args) : false;
+}
+
+/*
+ * set the post language
+ *
+ * @since 1.5
+ *
+ * @param int $post_id post id
+ * @param string $lang language code
+ */
+function pll_set_post_language($id, $lang) {
+	global $polylang;
+	if (isset($polylang))
+		$polylang->model->set_post_language($id, $lang);
+}
+
+/*
+ * set the term language
+ *
+ * @since 1.5
+ *
+ * @param int $id term id
+ * @param string $lang language code
+ */
+function pll_set_term_language($id, $lang) {
+	global $polylang;
+	if (isset($polylang))
+		$polylang->model->set_term_language($id, $lang);
+}
+
+/*
+ * save posts translations
+ *
+ * @since 1.5
+ *
+ * @param array $arr an associative array of translations with language code as key and post id as value
+ */
+function pll_save_post_translations($arr) {
+	global $polylang;
+	if (isset($polylang))
+		$polylang->model->save_translations('post', reset($arr), $arr);
+}
+
+/*
+ * save terms translations
+ *
+ * @since 1.5
+ *
+ * @param array $arr an associative array of translations with language code as key and term id as value
+ */
+function pll_save_term_translations($arr) {
+	global $polylang;
+	if (isset($polylang))
+		$polylang->model->save_translations('term', reset($arr), $arr);
+}
+
+/*
+ * count posts in a language
+ *
+ * @since 1.5
+ *
+ * @param string $lang language code
+ * @param array $args (accepted keys: post_type, m, year, monthnum, day, author, author_name, post_format)
+ * @return int posts count
+ */
+function pll_count_posts($lang, $args) {
+	global $polylang;
+	return isset($polylang) ? $polylang->model->count_posts($polylang->model->get_language($lang)) : false;
+}

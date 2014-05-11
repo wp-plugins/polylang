@@ -7,23 +7,7 @@
  *
  * @since 1.2
  */
-class PLL_Links_Subdomain {
-	public $model, $options;
-	protected $home;
-
-	/*
-	 * constructor
-	 *
-	 * @since 1.2
-	 *
-	 * @param object $model PLL_Model instance
-	 */
-	public function __construct($model) {
-		$this->model = &$model;
-		$this->options = &$model->options;
-
-		$this->home = get_option('home');
-	}
+class PLL_Links_Subdomain extends PLL_Links_Model {
 
 	/*
 	 * adds the language code in url
@@ -62,19 +46,6 @@ class PLL_Links_Subdomain {
 	}
 
 	/*
-	 * returns the link to the first page
-	 * links_model interface
-	 *
-	 * @since 1.2
-	 *
-	 * @param string $url url to modify
-	 * @return string modified url
-	 */
-	function remove_paged_from_link($url) {
-		return preg_replace('#\/page\/[0-9]+\/#', '/', $url);
-	}
-
-	/*
 	 * returns the language based on language code in url
 	 * links_model interface
 	 *
@@ -98,5 +69,18 @@ class PLL_Links_Subdomain {
 	 */
 	public function home_url($lang) {
 		return $this->add_language_to_link($this->home, $lang);
+	}
+
+	/*
+	 * get hosts managed on the website
+	 *
+	 * @since 1.5
+	 *
+	 * @return array list of hosts
+	 */
+	public function get_hosts() {
+		foreach ($this->model->get_languages_list() as $lang)
+			$hosts[] = parse_url($this->home_url($lang), PHP_URL_HOST);
+		return $hosts;
 	}
 }

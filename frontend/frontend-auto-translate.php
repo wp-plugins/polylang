@@ -14,10 +14,10 @@ class PLL_Frontend_Auto_Translate {
 	 *
 	 * @since 1.1
 	 *
-	 * @param object $model PLL_Model instance
+	 * @param object $polylang
 	 */
-	public function __construct(&$model) {
-		$this->model = &$model;
+	public function __construct(&$polylang) {
+		$this->model = &$polylang->model;
 
 		add_action('pre_get_posts', array(&$this, 'pre_get_posts')); // after main Polylang filter
 		add_filter('get_terms_args', array(&$this, 'get_terms_args'), 10, 2);

@@ -88,7 +88,7 @@ class PLL_Upgrade {
 	 * @since 1.2
 	 */
 	public function _upgrade() {
-		foreach (array('0.9', '1.0', '1.1', '1.2', '1.2.1', '1.2.3', '1.3', '1.4', '1.4.1', '1.4.4') as $version)
+		foreach (array('0.9', '1.0', '1.1', '1.2', '1.2.1', '1.2.3', '1.3', '1.4', '1.4.1', '1.4.4', '1.5') as $version)
 			if (version_compare($this->options['version'], $version, '<'))
 				call_user_func(array(&$this, 'upgrade_' . str_replace('.', '_', $version)));
 
@@ -376,6 +376,37 @@ class PLL_Upgrade {
 	}
 
 	/*
+	 * old data were not deleted in 1.2, just in case...
+	 * delete them at first upgrade at least 60 days after upgrade to 1.4
+	 *
+	 * @since 1.4
+	 */
+	protected function delete_pre_1_2_data() {
+		// suppress data of the old model < 1.2
+		global $wpdb;
+		$wpdb->termmeta = $wpdb->prefix . 'termmeta'; // registers the termmeta table in wpdb
+
+		// do nothing if the termmeta table does not exists
+		if (count($wpdb->get_results("SHOW TABLES LIKE '$wpdb->termmeta'"))) {
+			$wpdb->query("DELETE FROM $wpdb->postmeta WHERE meta_key = '_translations'");
+			$wpdb->query("DELETE FROM $wpdb->termmeta WHERE meta_key = '_language'");
+			$wpdb->query("DELETE FROM $wpdb->termmeta WHERE meta_key = '_rtl'");
+			$wpdb->query("DELETE FROM $wpdb->termmeta WHERE meta_key = '_translations'");
+
+			// delete the termmeta table only if it is empty as other plugins may use it
+			if (!$wpdb->get_var("SELECT COUNT(*) FROM $wpdb->termmeta;"))
+				$wpdb->query("DROP TABLE $wpdb->termmeta;");
+		}
+
+		// delete the strings translations
+		$languages = get_terms('language', array('hide_empty'=>false));
+		foreach ($languages as $lang)
+			delete_option('polylang_mo'.$lang->term_id);
+
+		delete_transient('pll_upgrade_1_4');
+	}
+
+	/*
 	 * upgrades if the previous version is < 1.4.1
 	 * disables the browser detection when using multiple domains
 	 *
@@ -407,33 +438,13 @@ class PLL_Upgrade {
 	}
 
 	/*
-	 * old data were not deleted in 1.2, just in case...
-	 * delete them at first upgrade at least 60 days after upgrade to 1.4
+	 * upgrades if the previous version is < 1.5
+	 * deletes language cache (due to host property added and bug on search url)
 	 *
-	 * @since 1.4
+	 * @since 1.5
 	 */
-	protected function delete_pre_1_2_data() {
-		// suppress data of the old model < 1.2
-		global $wpdb;
-		$wpdb->termmeta = $wpdb->prefix . 'termmeta'; // registers the termmeta table in wpdb
-
-		// do nothing if the termmeta table does not exists
-		if (count($wpdb->get_results("SHOW TABLES LIKE '$wpdb->termmeta'"))) {
-			$wpdb->query("DELETE FROM $wpdb->postmeta WHERE meta_key = '_translations'");
-			$wpdb->query("DELETE FROM $wpdb->termmeta WHERE meta_key = '_language'");
-			$wpdb->query("DELETE FROM $wpdb->termmeta WHERE meta_key = '_rtl'");
-			$wpdb->query("DELETE FROM $wpdb->termmeta WHERE meta_key = '_translations'");
-
-			// delete the termmeta table only if it is empty as other plugins may use it
-			if (!$wpdb->get_var("SELECT COUNT(*) FROM $wpdb->termmeta;"))
-				$wpdb->query("DROP TABLE $wpdb->termmeta;");
-		}
-
-		// delete the strings translations
-		$languages = get_terms('language', array('hide_empty'=>false));
-		foreach ($languages as $lang)
-			delete_option('polylang_mo'.$lang->term_id);
-
-		delete_transient('pll_upgrade_1_4');
+	protected function upgrade_1_5() {
+		delete_transient('pll_languages_list');
 	}
+
 }

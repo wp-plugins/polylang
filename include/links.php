@@ -7,19 +7,22 @@
  */
 class PLL_Links {
 	public $links_model, $model, $options;
-	public $links;
+	protected $_links;
 
 	/*
 	 * constructor
 	 *
 	 * @since 1.2
 	 *
-	 * @param object $links_model
+	 * @param object $polylang
 	 */
-	public function __construct(&$links_model) {
-		$this->links_model = &$links_model;
-		$this->model = &$links_model->model;
-		$this->options = &$this->model->options;
+	public function __construct(&$polylang) {
+		$this->links_model = &$polylang->links_model;
+		$this->model = &$polylang->model;
+		$this->options = &$polylang->options;
+
+		// adds our domains or subdomains to allowed hosts for safe redirection
+		add_filter('allowed_redirect_hosts', array(&$this, 'allowed_redirect_hosts'));
 
 		// low priority on links filters to come after any other modifications
 		if ($this->options['force_lang']) {
@@ -28,6 +31,18 @@ class PLL_Links {
 
 			add_filter('term_link', array(&$this, 'term_link'), 20, 3);
 		}
+	}
+
+	/*
+	 * adds our domains or subdomains to allowed hosts for safe redirection
+	 *
+	 * @since 1.4.3
+	 *
+	 * @param array $hosts allowed hosts
+	 * @return array
+	 */
+	public function allowed_redirect_hosts($hosts) {
+		return array_unique(array_merge($hosts, $this->links_model->get_hosts()));
 	}
 
 	/*
@@ -40,17 +55,17 @@ class PLL_Links {
 	 * @return string modified post link
 	 */
 	public function post_link($link, $post) {
-		if (isset($this->links[$link]))
-			return $this->links[$link];
+		if (isset($this->_links[$link]))
+			return $this->_links[$link];
 
 		if ('post_type_link' == current_filter() && !$this->model->is_translated_post_type($post->post_type))
-			return $this->links[$link] = $link;
+			return $this->_links[$link] = $link;
 
 		if ('_get_page_link' == current_filter()) // this filter uses the ID instead of the post object
 			$post = get_post($post);
 
-		// /!\ when post_status in not "publish", WP does not use pretty permalinks
-		return $this->links[$link] = $post->post_status != 'publish' ? $link : $this->links_model->add_language_to_link($link, $this->model->get_post_language($post->ID));
+		// /!\ when post_status is not "publish", WP does not use pretty permalinks
+		return $this->_links[$link] = $post->post_status != 'publish' ? $link : $this->links_model->add_language_to_link($link, $this->model->get_post_language($post->ID));
 	}
 
 	/*
@@ -64,10 +79,10 @@ class PLL_Links {
 	 * @return string modified term link
 	 */
 	public function term_link($link, $term, $tax) {
-		if (isset($this->links[$link]))
-			return $this->links[$link];
+		if (isset($this->_links[$link]))
+			return $this->_links[$link];
 
-		return $this->links[$link] = $this->model->is_translated_taxonomy($tax) ?
+		return $this->_links[$link] = $this->model->is_translated_taxonomy($tax) ?
 			$this->links_model->add_language_to_link($link, $this->model->get_term_language($term->term_id)) : $link;
 	}
 
@@ -82,6 +97,60 @@ class PLL_Links {
 	public function get_home_url($language, $is_search = false) {
 		$language = is_object($language) ? $language : $this->model->get_language($language);
 		return $is_search ? $language->search_url : $language->home_url;
+	}
+
+	/*
+	 * get the link to create a new post translation
+	 *
+	 * @since 1.5
+	 *
+	 * @param int $post_id
+	 * @param object $language
+	 * @return string
+	 */
+	public function get_new_post_translation_link($post_id, $language) {
+		$post_type = get_post_type($post_id);
+
+		if ('attachment' == $post_type) {
+			$args = array(
+				'action' => 'translate_media',
+				'from_media' => $post_id,
+				'new_lang'  => $language->slug
+			);
+
+			return add_query_arg($args, admin_url('admin.php'));
+		}
+		else {
+			$args = array(
+				'post_type' => $post_type,
+				'from_post' => $post_id,
+				'new_lang'  => $language->slug
+			);
+
+			return add_query_arg($args, admin_url('post-new.php'));
+		}
+	}
+
+	/*
+	 * get the link to create a new term translation
+	 *
+	 * @since 1.5
+	 *
+	 * @param int $term_id
+	 * @param string $taxonomy
+	 * @param string $post_type
+	 * @param object $language
+	 * @return string
+	 */
+	public function get_new_term_translation_link($term_id, $taxonomy, $post_type, $language) {
+ 		$args = array(
+			'taxonomy'  => $taxonomy,
+			'post_type' => $post_type,
+			'from_tag'  => $term_id,
+			'new_lang'  => $language->slug
+		);
+
+		return add_query_arg($args, admin_url('edit-tags.php'));
 	}
 }
 

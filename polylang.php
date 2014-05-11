@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://polylang.wordpress.com/
-Version: 1.4.5
+Version: 1.5dev31
 Author: Frédéric Demarle
 Description: Adds multilingual capability to WordPress
 Text Domain: polylang
@@ -29,7 +29,11 @@ Domain Path: /languages
  *
  */
 
-define('POLYLANG_VERSION', '1.4.5');
+// don't access directly
+if (!function_exists('add_action'))
+	exit();
+
+define('POLYLANG_VERSION', '1.5dev31');
 define('PLL_MIN_WP_VERSION', '3.5');
 
 define('POLYLANG_BASENAME', plugin_basename(__FILE__)); // plugin name as known by WP
@@ -302,15 +306,9 @@ class Polylang {
 	 * @return object implementing "links_model interface"
 	 */
 	protected function get_links_model(&$model) {
-		if (get_option('permalink_structure')) {
-			if (2 == $model->options['force_lang'])
-				return new PLL_Links_Subdomain($model);
-			elseif (3 == $model->options['force_lang'])
-				return new PLL_Links_Domain($model);
-			else
-				return new PLL_Links_Directory($model);
-		}
-		return new PLL_Links_Default($model);
+		$c = array('Directory', 'Directory', 'Subdomain', 'Domain');
+		$class = get_option('permalink_structure') ? 'PLL_Links_' .$c[$model->options['force_lang']] : 'PLL_Links_Default';
+		return new $class($model);
 	}
 }
 

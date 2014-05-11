@@ -9,19 +9,15 @@ foreach ($tabs as $key => $name)
 	printf(
 		'<a href="options-general.php?page=mlang&amp;tab=%s" class="nav-tab %s">%s</a>',
 		$key,
-		$key == $active_tab ? 'nav-tab-active' : '',
+		$key == $this->active_tab ? 'nav-tab-active' : '',
 		$name
 	);?>
 </h2><?php
 
-switch($active_tab) {
+switch($this->active_tab) {
 
 // Languages tab
-case 'lang':
-
-if (isset($_GET['error'])) {?>
-<div id="message" class="error fade"><p><?php echo $errors[$_GET['error']]; ?></p></div><?php
-}?>
+case 'lang': ?>
 
 <div id="col-container">
 	<div id="col-right">
@@ -90,7 +86,7 @@ if (isset($_GET['error'])) {?>
 				<div class="form-field">
 					<label for="lang_slug"><?php _e('Language code', 'polylang');?></label>
 					<input name="slug" id="lang_slug" type="text" value="<?php if ($action=='edit') echo esc_attr($edit_lang->slug);?>" size="40"/>
-					<p><?php _e('2-letters ISO 639-1 language code (for example: en)', 'polylang');?></p>
+					<p><?php _e('Language code - preferably 2-letters ISO 639-1  (for example: en)', 'polylang');?></p>
 				</div>
 
 				<div class="form-field"><fieldset>
@@ -153,7 +149,7 @@ break;
 // settings tab
 case 'settings': ?><?php
 	$content_with_no_languages = $this->model->get_objects_with_no_lang() && $this->options['default_lang'];
-	$page_on_front = get_option('page_on_front'); ?>
+	$page_on_front = 'page' == get_option('show_on_front') ? get_option('page_on_front') : 0; ?>
 
 	<form id="options-lang" method="post" action="admin.php?page=mlang&amp;tab=settings&amp;noheader=true" class="validate">
 	<?php wp_nonce_field('options-lang', '_wpnonce_options-lang');?>

@@ -107,7 +107,8 @@ class PLL_OLT_Manager {
 	 * @return string unmodified $translation
 	 */
 	public function gettext($translation, $text, $domain) {
-		$this->labels[$text] = array('domain' => $domain);
+		if (is_string($text)) // avoid a warning with some buggy plugins which pass an array
+			$this->labels[$text] = array('domain' => $domain);
 		return $translation;
 	}
 

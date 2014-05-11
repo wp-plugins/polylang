@@ -10,7 +10,7 @@ jQuery(document).ready(function($) {
 		lang = $(this).attr('name').split('-');
 		desc = d.clone();
 		desc.attr('name', 'description_'+lang[0]);
-		desc.html($(this).attr('value'));
+		desc.html($(this).val());
 		td.append('<div>'+lang[1]+'</div');
 		td.append(desc);
 	});

@@ -103,7 +103,7 @@ th[class*='column-language_'] {
 
 /* language and translations in edit-tags.php */
 #term-translations table {
-	width: 97%;
+	width: 95%;
 }
 
 #term-translations .pll-language-column {
@@ -116,6 +116,7 @@ th[class*='column-language_'] {
 }
 
 /* icon fonts */
+/* backward compatibility WP < 3.8 */
 /* use same policy as WP for dashicons for font order and file vs embedded */
 @font-face {
 	font-family: 'polylang';
@@ -155,8 +156,9 @@ th[class*='column-language_'] {
 	top: 4px;
 }
 
+/* backward compatibility WP < 3.8 */
 #wpadminbar #wp-admin-bar-languages .ab-icon:before {
-	font: 20px/1 'polylang'; /* backward compatibility WP < 3.8 */
+	font: 20px/1 'polylang';
 	content: "\e603";
 	top: 1px;
 }

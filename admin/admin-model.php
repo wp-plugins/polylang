@@ -8,17 +8,6 @@
 class PLL_Admin_Model extends PLL_Model {
 
 	/*
-	 * constructor
-	 *
-	 * @since 1.2
-	 *
-	 * @param array $options Polylang options
-	 */
-	public function __construct(&$options) {
-		parent::__construct($options);
-	}
-
-	/*
 	 * adds a new language
 	 * creates a default category for this language
 	 *
@@ -35,15 +24,20 @@ class PLL_Admin_Model extends PLL_Model {
 	 * @since 1.2
 	 *
 	 * @param array $args
-	 * @return int error code
+	 * @return bool true if success / false if failed
 	 */
 	public function add_language($args) {
-		if ($error = $this->validate_lang($args))
-			return $error;
+		if (!$this->validate_lang($args))
+			return false;
 
 		// first the language taxonomy
 		$description = serialize(array('locale' => $args['locale'], 'rtl' => $args['rtl']));
 		$r = wp_insert_term($args['name'], 'language', array('slug' => $args['slug'], 'description' => $description));
+		if (is_wp_error($r)) {
+			// avoid an ugly fatal error if something went wrong (reported once in the forum)
+			add_settings_error('general', 'pll_add_language', __('Impossible to add the language.', 'polylang'));
+			return false;
+		}
 		wp_update_term((int) $r['term_id'], 'language', array('term_group' => $args['term_group'])); // can't set the term group directly in wp_insert_term
 
 		// the term_language taxonomy
@@ -64,7 +58,9 @@ class PLL_Admin_Model extends PLL_Model {
 			$this->create_default_category($args['slug']);
 
 		flush_rewrite_rules(); // refresh rewrite rules
-		return $error;
+
+		add_settings_error('general', 'pll_languages_created', __('Language added.', 'polylang'), 'updated');
+		return true;
 	}
 
 	/*
@@ -130,6 +126,7 @@ class PLL_Admin_Model extends PLL_Model {
 			}
 		}
 
+
 		// delete menus locations
 		if (!empty($this->options['nav_menus'])) {
 			foreach ($this->options['nav_menus'] as $theme => $locations) {
@@ -176,6 +173,7 @@ class PLL_Admin_Model extends PLL_Model {
 
 		update_option('polylang', $this->options);
 		flush_rewrite_rules(); // refresh rewrite rules
+		add_settings_error('general', 'pll_languages_deleted', __('Language deleted.', 'polylang'), 'updated');
 	}
 
 	/*
@@ -192,12 +190,12 @@ class PLL_Admin_Model extends PLL_Model {
 	 * @since 1.2
 	 *
 	 * @param array $args
-	 * @return int error code
+	 * @return bool true if success / false if failed
 	 */
 	public function update_language($args) {
 		$lang = $this->get_language((int) $args['lang_id']);
-		if ($error = $this->validate_lang($args, $lang))
-			return $error;
+		if (!$this->validate_lang($args, $lang))
+			return false;
 
 		// Update links to this language in posts and terms in case the slug has been modified
 		$slug = $args['slug'];
@@ -256,7 +254,8 @@ class PLL_Admin_Model extends PLL_Model {
 
 		$this->clean_languages_cache();
 		flush_rewrite_rules(); // refresh rewrite rules
-		return $error;
+		add_settings_error('general', 'pll_languages_updated', __('Language updated.', 'polylang'), 'updated');
+		return true;
 	}
 
 	/*
@@ -266,27 +265,27 @@ class PLL_Admin_Model extends PLL_Model {
 	 *
 	 * @param array $args
 	 * @param object $lang optional the language currently updated, the language is created if not set
-	 * @return int error code
+	 * @return bool true if success / false if failed
 	 * @see PLL_Admin_Model::add_language
 	 */
 	protected function validate_lang($args, $lang = null) {
 		// validate locale
 		if ( !preg_match('#^[A-Za-z_]+$#', $args['locale']))
-			$error = 1;
+			add_settings_error('general', 'pll_invalid_locale', __('Enter a valid WordPress locale', 'polylang'));
 
 		// validate slug characters
 		if (!preg_match('#^[a-z_-]+$#', $args['slug']))
-			$error = 2;
+			add_settings_error('general', 'pll_invalid_slug', __('The language code contains invalid characters', 'polylang'));
 
 		// validate slug is unique
 		if ($this->get_language($args['slug']) && ($lang === null || (isset($lang) && $lang->slug != $args['slug'])))
-			$error = 3;
+			add_settings_error('general', 'pll_non_unique_slug', __('The language code must be unique', 'polylang'));
 
 		// validate name
 		if ($args['name'] == '')
-			$error = 4;
+			add_settings_error('general', 'pll_invalid_name',  __('The language must have a name', 'polylang'));
 
-		return isset($error) ? $error : 0;
+		return get_settings_errors() ? false : true;
 	}
 
 	/*

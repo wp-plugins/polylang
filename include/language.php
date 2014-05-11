@@ -23,6 +23,7 @@
  * flag                => html img of the flag
  * home_url            => home url in this language
  * search_url          => home url to use in search forms
+ * host                => host of this language
  * mo_id               => id of the post storing strings translations
  *
  * @since 1.2
@@ -102,13 +103,13 @@ class PLL_Language {
 
 		// add a trailing slash as done by WP on homepage (otherwise could break the search form when the permalink structure does not include one)
 		// only for pretty permalinks
-		if (get_option('using_permalinks'))
-			$this->search_url = trailingslashit($link);
+		if (get_option('permalink_structure'))
+			$this->search_url = trailingslashit($this->search_url);
 
 		$options = get_option('polylang');
 
 		// a static page is used as front page
-		if (!$options['redirect_lang'] && ($page_on_front = get_option('page_on_front')) && $id = pll_get_post($page_on_front, $this))
+		if (!$options['redirect_lang'] && 'page' == get_option('show_on_front') && ($page_on_front = get_option('page_on_front')) && $id = pll_get_post($page_on_front, $this))
 			$this->home_url = _get_page_link($id); // /!\ don't use get_page_link to avoid infinite loop
 
 		else

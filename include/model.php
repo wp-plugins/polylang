@@ -46,9 +46,6 @@ class PLL_Model {
 
 		// just in case someone would like to display the language description ;-)
 		add_filter('language_description', create_function('$v', "return '';"));
-
-		// adds cache domain when querying terms
-		add_filter('get_terms_args', array(&$this, 'get_terms_args'));
 	}
 
 	/*
@@ -165,12 +162,11 @@ class PLL_Model {
 		}
 
 		$args = wp_parse_args($args, array('hide_empty' => false));
-		extract($args);
 
 		// remove empty languages if requested
-		$languages = array_filter($this->languages, create_function('$v', sprintf('return $v->count || !%d;', $hide_empty)));
+		$languages = array_filter($this->languages, create_function('$v', sprintf('return $v->count || !%d;', $args['hide_empty'])));
 
-		return empty($fields) ? $languages : wp_list_pluck($languages, $fields);
+		return empty($args['fields']) ? $languages : wp_list_pluck($languages, $args['fields']);
 	}
 
 	/*
@@ -238,6 +234,20 @@ class PLL_Model {
 	}
 
 	/*
+	 * removes unused translations terms in database
+	 *
+	 * @since 1.5
+	 *
+	 * @param string $type either 'post' or 'term'
+	 */
+	protected function clean_translations_terms($type) {
+		global $wpdb;
+		$ids = $wpdb->get_col("SELECT term_id FROM $wpdb->term_taxonomy WHERE taxonomy IN ('{$type}_translations') AND count = 0");
+		foreach ($ids as $id)
+			wp_delete_term((int) $id, $type . '_translations');
+	}
+
+	/*
 	 * saves translations for posts or terms
 	 *
 	 * @since 0.5
@@ -248,27 +258,39 @@ class PLL_Model {
 	 */
 	public function save_translations($type, $id, $translations) {
 		if (($lang = call_user_func(array(&$this, 'get_'.$type.'_language'), $id)) && isset($translations) && is_array($translations)) {
-			// first unlink this object
-			foreach ($this->get_translations($type, $id) as $object_id)
-				$this->delete_translation($type, $object_id);
 
-			$translations = array_merge(array($lang->slug => $id), $translations); // make sure this object is in tranlations
+			$translations = array_merge(array($lang->slug => $id), $translations); // make sure this object is in translations
 			$translations = array_diff($translations, array(0)); // don't keep non translated languages
+
+			// unlink removed translations
+			$old_translations = $this->get_translations($type, $id);
+			foreach (array_diff_assoc($old_translations, $translations) as $object_id)
+				$this->delete_translation($type, $object_id);
 
 			// don't create a translation group for untranslated posts as it is useless
 			// but we need one for terms to allow relationships remap when importing from a WXR file
 			if ('term' == $type || count($translations) > 1) {
 				$terms = wp_get_object_terms($translations, $type . '_translations');
-				$term = array_pop($terms);
+				$term = reset($terms);
 
 				// create a new term if necessary
-				empty($term) ?
-					wp_insert_term($group = uniqid('pll_'), $type . '_translations', array('description' => serialize($translations))) :
-					wp_update_term($group = (int) $term->term_id, $type . '_translations', array('description' => serialize($translations)));
+				if (empty($term)) {
+					wp_insert_term($group = uniqid('pll_'), $type . '_translations', array('description' => serialize($translations)));
+				}
+				else {
+					// take care not to overwrite extra data stored in description field, if any
+					$d = unserialize($term->description);
+					$d = is_array($d) ? array_diff_key($d, $old_translations) : array(); // remove old translations
+					$d = array_merge($d, $translations); // add new one
+					wp_update_term($group = (int) $term->term_id, $type . '_translations', array('description' => serialize($d)));
+				}
 
 				// link all translations to the new term
 				foreach($translations as $p)
 					wp_set_object_terms($p, $group, $type . '_translations');
+
+				// clean unused terms to avoid orphans in db
+				$this->clean_translations_terms($type);
 			}
 		}
 	}
@@ -285,18 +307,23 @@ class PLL_Model {
 		$term = $this->get_object_term($id, $type . '_translations');
 
 		if (!empty($term)) {
-			$translations = unserialize($term->description);
+			$d = unserialize($term->description);
+			$slug = array_search($id, $this->get_translations($type, $id)); // in case some plugin stores the same value with different key
+			unset($d[$slug]);
 
-			if (is_array($translations)) {
-				$slug = array_search($id, $translations);
-				unset($translations[$slug]);
+			wp_update_term((int) $term->term_id, $type . '_translations', array('description' => serialize($d)));
 
-				empty($translations) || 1 == count($translations) ?
-					wp_delete_term((int) $term->term_id, $type . '_translations') :
-					wp_update_term((int) $term->term_id, $type . '_translations', array('description' => serialize($translations)));
-
+			if ('post' == $type)
 				wp_set_object_terms($id, null, $type . '_translations');
+			else {
+				// always keep a group for terms to allow relationships remap when importing from a WXR file
+				$translations[$slug] = $id;
+				wp_insert_term($group = uniqid('pll_'), $type . '_translations', array('description' => serialize($translations)));
+				wp_set_object_terms($id, $group, $type . '_translations');
 			}
+
+			// clean unused terms to avoid orphans in db
+			$this->clean_translations_terms($type);
 		}
 	}
 
@@ -330,7 +357,10 @@ class PLL_Model {
 	 */
 	public function get_translations($type, $id) {
 		$type = ($type == 'post' || $this->is_translated_post_type($type)) ? 'post' : (($type == 'term' || $this->is_translated_taxonomy($type)) ? 'term' : false);
-		return $type && ($term = $this->get_object_term($id, $type . '_translations')) && !empty($term) ? unserialize($term->description) : array();
+		$translations = $type && ($term = $this->get_object_term($id, $type . '_translations')) && !empty($term) ? unserialize($term->description) : array();
+
+		// make sure we return only translations (thus we allow plugins to store other informations in the array)
+		return array_intersect_key($translations, array_flip($this->get_languages_list(array('fields' => 'slug'))));
 	}
 
 	/*
@@ -639,7 +669,7 @@ class PLL_Model {
 	 * @since 1.2
 	 *
 	 * @param object lang
-	 * @param array $args WP_Query arguments (accepted: post_type, m, year, monthnum, day, author, author_name)
+	 * @param array $args WP_Query arguments (accepted: post_type, m, year, monthnum, day, author, author_name, post_format)
 	 * @return int
 	 */
 	public function count_posts($lang, $args = array()) {
@@ -702,21 +732,6 @@ class PLL_Model {
 		}
 
 		return empty($counts[$lang->term_taxonomy_id]) ? 0 : $counts[$lang->term_taxonomy_id];
-	}
-
-	/*
-	 * adds language dependent cache domain when explicitely querying terms per language
-	 * useful as the 'lang' parameter is not included in cache key by WordPress
-	 *
-	 * @since 1.3
-	 */
-	public function get_terms_args($args) {
-		if (isset($args['lang'])) {
-			$key = '_' . (is_array($args['lang']) ? implode(',', $args['lang']) : $args['lang']);
-			$args['cache_domain'] = empty($args['cache_domain']) ? 'pll' . $key : $args['cache_domain'] . $key;
-		}
-
-		return $args;
 	}
 
 	/*
