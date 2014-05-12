@@ -75,6 +75,7 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 * Categories and post tags translations are also chosen in an automplete input field
 * Better error management on languages pages
 * Use Dashicons instead of Icomoon icons for WP 3.8+
+* Check if translated post is readable by the current user before displaying the language switcher
 * Minimum Twenty Fourteen version is now 1.1
 * Code cleaning
 * Add support for object cache plugins for recent posts and recent comments widgets

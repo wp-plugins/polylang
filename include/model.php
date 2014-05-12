@@ -21,13 +21,12 @@ class PLL_Model {
 
 		// register our taxonomies as soon as possible
 		// this is early registration, not ready for rewrite rules as wp_rewrite will be setup later
-		// FIXME should I supply an 'update_count_callback' for taxonomies other than 'language' (currently not needed by PLL)?
-		foreach (array('language', 'term_language', 'post_translations', 'term_translations') as $tax) {
-			register_taxonomy($tax,
-				false !== strpos($tax, 'term_') ? 'term' : null ,
-				array('label' => false, 'public' => false, 'query_var' => false, 'rewrite' => false, '_pll' => true)
-			);
-		}
+		$args = array('label' => false, 'public' => false, 'query_var' => false, 'rewrite' => false, '_pll' => true);
+		register_taxonomy('language', null, $args);
+		register_taxonomy('term_language', 'term', $args);
+		register_taxonomy('term_translations', 'term', $args);
+		$args['update_count_callback'] = '_update_generic_term_count'; // count *all* posts to avoid deleting in clean_translations_terms
+		register_taxonomy('post_translations', null, $args);
 
 		add_filter('get_terms', array(&$this, '_prime_terms_cache'), 10, 2);
 		add_filter('wp_get_object_terms', array(&$this, 'wp_get_object_terms'), 10, 3);

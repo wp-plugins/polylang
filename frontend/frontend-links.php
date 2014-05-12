@@ -204,6 +204,25 @@ class PLL_Frontend_Links extends PLL_Links {
 	}
 
 	/*
+	 * checks if the current user can read the post
+	 *
+	 * @since 1.5
+	 *
+	 * @param int $post_id
+	 * @return bool
+	 */
+	public function current_user_can_read($post_id) {
+		$post = get_post($post_id);
+		if (in_array($post->post_status, get_post_stati(array('public' => true))))
+			return true;
+
+		$post_type_object = get_post_type_object($post->post_type);
+		$user = wp_get_current_user();
+		return is_user_logged_in() && (current_user_can($post_type_object->cap->read_private_posts) || $user->ID == $post->post_author);
+	}
+
+
+	/*
 	 * returns the url of the translation (if exists) of the current page
 	 *
 	 * @since 0.1
@@ -222,7 +241,7 @@ class PLL_Frontend_Links extends PLL_Links {
 		$hide = $this->options['default_lang'] == $language->slug && $this->options['hide_default'];
 
 		// post and attachment
-		if (is_single() && ($this->options['media_support'] || !is_attachment()) && $id = $this->model->get_post($wp_query->queried_object_id, $language))
+		if (is_single() && ($this->options['media_support'] || !is_attachment()) && ($id = $this->model->get_post($wp_query->queried_object_id, $language)) && $this->current_user_can_read($id))
 			$url = get_permalink($id);
 
 		// page for posts
@@ -230,7 +249,7 @@ class PLL_Frontend_Links extends PLL_Links {
 		elseif ($wp_query->is_posts_page && !empty($wp_query->queried_object_id) && ($id = $this->model->get_post($wp_query->queried_object_id, $language)) && $id == $this->model->get_post($this->page_for_posts, $language))
 			$url = get_permalink($id);
 
-		elseif (is_page() && $id = $this->model->get_post($wp_query->queried_object_id, $language))
+		elseif (is_page() && ($id = $this->model->get_post($wp_query->queried_object_id, $language)) && $this->current_user_can_read($id))
 			$url = $hide && $id == $this->model->get_post($this->page_on_front, $language) ? $this->home : get_page_link($id);
 
 		elseif (!is_tax('post_format') && !is_tax('language') && (is_category() || is_tag() || is_tax()) ) {
