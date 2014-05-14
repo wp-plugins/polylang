@@ -127,7 +127,7 @@ if (!function_exists('icl_link_to_element')) {
 		if ($type == 'tag')
 			$type = 'post_tag';
 
-		if (isset($polylang) && ($lang = pll_current_language()) && $tr_id = $polylang->model->get_translation($type, $id, $lang))
+		if (isset($polylang) && ($lang = pll_current_language()) && ($tr_id = $polylang->model->get_translation($type, $id, $lang)) && $polylang->links->current_user_can_read($tr_id))
 			$id = $tr_id;
 
 		if (post_type_exists($type)) {

@@ -58,7 +58,7 @@ class PLL_Switcher {
 					$classes[] = 'current-lang';
 			}
 
-			$url = $post_id !== null && ($tr_id = $links->model->get_post($post_id, $language)) ? get_permalink($tr_id) :
+			$url = $post_id !== null && ($tr_id = $links->model->get_post($post_id, $language)) && $links->current_user_can_read($tr_id) ? get_permalink($tr_id) :
 				($post_id === null && !$force_home ? $links->get_translation_url($language) : null);
 
 			if ($no_translation = empty($url))

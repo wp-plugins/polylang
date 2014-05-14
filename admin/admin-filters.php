@@ -91,7 +91,8 @@ class PLL_Admin_Filters extends PLL_Filters {
 		// biography translations
 		foreach ($this->model->get_languages_list() as $lang) {
 			$meta = $lang->slug == $this->options['default_lang'] ? 'description' : 'description_'.$lang->slug;
-			update_user_meta($user_id, $meta, $_POST['description_'.$lang->slug]);
+			if (!empty($_POST['description_'.$lang->slug]))
+				update_user_meta($user_id, $meta, $_POST['description_'.$lang->slug]);
 		}
 	}
 
