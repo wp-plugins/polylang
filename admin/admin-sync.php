@@ -84,10 +84,11 @@ class PLL_Admin_Sync {
 
 				// for some reasons, the user may have untranslated terms in the translation. don't forget them.
 				if ($sync) {
+					$lang_choice = empty($_POST['post_lang_choice']) ?  $_POST['inline_lang_choice'] :  $_POST['post_lang_choice'];
 					$tr_terms = get_the_terms($to, $tax);
 					if (is_array($tr_terms)) {
 						foreach ($tr_terms as $term) {
-							if (!$this->model->get_translation('term', $term->term_id, $_POST['post_lang_choice']))
+							if (!$this->model->get_translation('term', $term->term_id, $lang_choice))
 								$newterms[] = (int) $term->term_id;
 						}
 					}

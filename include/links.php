@@ -118,7 +118,8 @@ class PLL_Links {
 				'new_lang'  => $language->slug
 			);
 
-			return add_query_arg($args, admin_url('admin.php'));
+			// add nonce for media as we will directly publish a new attachment from a clic on this link
+			return wp_nonce_url(add_query_arg($args, admin_url('admin.php')), 'translate_media');
 		}
 		else {
 			$args = array(

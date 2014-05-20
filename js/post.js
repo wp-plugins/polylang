@@ -147,7 +147,8 @@ jQuery(document).ready(function($) {
 			action: 'post_lang_choice',
 			lang: $(this).val(),
 			taxonomies: taxonomies,
-			post_id: $('#post_ID').val()
+			post_id: $('#post_ID').val(),
+			_pll_nonce: $('#_pll_nonce').val()
 		}
 
 		$.post(ajaxurl, data , function(response) {
@@ -189,7 +190,8 @@ jQuery(document).ready(function($) {
 		var data = {
 			action: 'media_lang_choice',
 			lang: $(this).val(),
-			post_id: $(this).attr('name')
+			post_id: $(this).attr('name'),
+			_pll_nonce: $('#_pll_nonce').val()
 		}
 
 		$.post(ajaxurl, data , function(response) {
@@ -217,7 +219,8 @@ jQuery(document).ready(function($) {
 				minLength: 0,
 
 				source: ajaxurl + '?action=pll_posts_not_translated&post_language=' + $('#post_lang_choice').val() +
-					'&translation_language=' + tr_lang + '&post_type=' + $('#post_type').val(),
+					'&translation_language=' + tr_lang + '&post_type=' + $('#post_type').val() +
+					'&_pll_nonce=' + $('#_pll_nonce').val(),
 
 				select: function(event, ui) {
 					$('#htr_lang_'+tr_lang).val(ui.item.id);

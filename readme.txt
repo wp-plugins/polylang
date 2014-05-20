@@ -78,6 +78,7 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 * Check if translated post is readable by the current user before displaying the language switcher
 * Minimum Twenty Fourteen version is now 1.1
 * Code cleaning
+* Add support for Quick draft introduced in WP 3.8
 * Add support for object cache plugins for recent posts and recent comments widgets
 * Add support for pages with modified query in the language switcher (ex: when multiple post types queried on the same page)
 * Add new API functions: pll_languages_list, pll_set_post_language, pll_set_term_language, pll_save_post_translations, pll_save_term_translations, pll_count_posts
@@ -90,5 +91,8 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 * Fix: more robust way of detecting language in url when using directory
 * Fix: delete translations terms orphans in database
 * Fix: inconsistent behavior when setting page on front from customizer
+* Fix: deleting a category assigns posts to wrong default category
+* Fix: quick edit breaks synchronization
+
 
 See changelog.txt for older changelog

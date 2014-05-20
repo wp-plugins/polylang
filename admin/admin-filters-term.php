@@ -66,6 +66,8 @@ class PLL_Admin_Filters_Term {
 		$lang = isset($_GET['new_lang']) ? $this->model->get_language($_GET['new_lang']) : $this->pref_lang;
 		$dropdown = new PLL_Walker_Dropdown();
 
+		wp_nonce_field('pll_language', '_pll_nonce');
+
 		printf('
 			<div class="form-field">
 				<label for="term_lang_choice">%s</label>
@@ -98,6 +100,8 @@ class PLL_Admin_Filters_Term {
 		$taxonomy = $tag->taxonomy;
 		$post_type = isset($GLOBALS['post_type']) ? $GLOBALS['post_type'] : $_REQUEST['post_type'];
 		$dropdown = new PLL_Walker_Dropdown();
+
+		wp_nonce_field('pll_language', '_pll_nonce');
 
 		printf('
 			<tr class="form-field">
@@ -162,18 +166,28 @@ class PLL_Admin_Filters_Term {
 		if (!$this->model->is_translated_taxonomy($taxonomy))
 			return;
 
+		$tax = get_taxonomy($taxonomy);
+		if (!current_user_can($tax->cap->edit_terms))
+			return;
+
 		// save language
-		if (isset($_POST['term_lang_choice']))
+		if (isset($_POST['term_lang_choice'])) {
+			check_admin_referer('pll_language', '_pll_nonce');
 			$this->model->set_term_language($term_id, $_POST['term_lang_choice']);
+		}
 
 		elseif (isset($_POST['inline_lang_choice'])) {
+			check_ajax_referer('taxinlineeditnonce', '_inline_edit');
+
 			if (isset($_POST['inline-save-tax']) && $this->model->get_term_language($term_id)->slug != $_POST['inline_lang_choice'])
 				$this->model->delete_translation('term', $term_id);
 			$this->model->set_term_language($term_id, $_POST['inline_lang_choice']);
 		}
 
-		elseif (isset($_POST['post_lang_choice'])) // FIXME should be useless now
+		elseif (isset($_POST['post_lang_choice'])) {// FIXME should be useless now
+			check_admin_referer('pll_language', '_pll_nonce');
 			$this->model->set_term_language($term_id, $_POST['post_lang_choice']);
+		}
 
 		elseif ($this->model->get_term_language($term_id))
 			{} // avoids breaking the language if the term is updated outside the edit post or edit tag pages
@@ -187,6 +201,8 @@ class PLL_Admin_Filters_Term {
 
 		if (!isset($_POST['term_tr_lang']))
 			return;
+
+		check_admin_referer('pll_language', '_pll_nonce'); // again
 
 		// save translations after checking the translated term is in the right language (as well as cast id to int)
 		foreach ($_POST['term_tr_lang'] as $lang=>$tr_id) {
@@ -258,6 +274,8 @@ class PLL_Admin_Filters_Term {
 	 * @since 0.2
 	 */
 	public function term_lang_choice() {
+		check_ajax_referer('pll_language', '_pll_nonce');
+
 		$lang = $this->model->get_language($_POST['lang']);
 		$term_id = isset($_POST['term_id']) ? $_POST['term_id'] : null;
 		$taxonomy = $_POST['taxonomy'];
@@ -308,6 +326,8 @@ class PLL_Admin_Filters_Term {
 	 * @since 1.5
 	 */
 	public function ajax_terms_not_translated() {
+		check_ajax_referer('pll_language', '_pll_nonce');
+
 		$return = array();
 
 		// it is more efficient to use one common query for all languages as soon as there are more than 2
@@ -472,6 +492,7 @@ class PLL_Admin_Filters_Term {
 
 	/*
 	 * hack to avoid displaying delete link for the default category in all languages
+	 * also returns the default category in the right language when called from wp_delete_term
 	 *
 	 * @since 1.2
 	 *
@@ -481,8 +502,14 @@ class PLL_Admin_Filters_Term {
 	public function option_default_category($value) {
 		$traces = debug_backtrace();
 
-		return isset($traces[4]) && in_array($traces[4]['function'], array('column_cb', 'column_name')) && in_array($traces[4]['args'][0]->term_id, $this->model->get_translations('term', $value)) ?
-			$traces[4]['args'][0]->term_id : $value;
+		if (isset($traces[4])) {
+			if (in_array($traces[4]['function'], array('column_cb', 'column_name')) && in_array($traces[4]['args'][0]->term_id, $this->model->get_translations('term', $value)))
+				return $traces[4]['args'][0]->term_id;
+
+			if ('wp_delete_term' == $traces[4]['function'])
+				return $this->model->get_term($value, $this->model->get_term_language($traces[4]['args'][0]));
+		}
+		return $value;
 	}
 
 	/*

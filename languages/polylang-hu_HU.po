@@ -6,7 +6,7 @@ msgstr ""
 "PO-Revision-Date: \n"
 "Last-Translator: Erdei Csaba <erdei.csaba@webanim.hu>\n"
 "Language-Team: Csaba Erdei <erdei.csaba@webanim.hu>\n"
-"Language: Hungarian\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,39 +14,57 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _e;__;_x\n"
 "X-Poedit-Basepath: .\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.6.5\n"
 "X-Poedit-SearchPath-0: ..\n"
 "X-Poedit-SearchPath-1: ../include\n"
 
 #: admin/view-about.php:3
 #, php-format
-msgid "Polylang is provided with an extensive %sdocumentation%s (in English only). It includes information on how to set up your multilingual site and use it on a daily basis, a FAQ, as well as a documentation for programmers to adapt their plugins and themes."
-msgstr "A bővítményhez részletes %sdokumentáció%s áll rendelkezésre (angol nyelven), amely tartalmazza a telepítéshez és a mindennapos használathoz szükséges leírásokat, és a fejlesztők számára szükséges információkat is."
+msgid ""
+"Polylang is provided with an extensive %sdocumentation%s (in English only). "
+"It includes information on how to set up your multilingual site and use it "
+"on a daily basis, a FAQ, as well as a documentation for programmers to adapt "
+"their plugins and themes."
+msgstr ""
+"A bővítményhez részletes %sdokumentáció%s áll rendelkezésre (angol nyelven), "
+"amely tartalmazza a telepítéshez és a mindennapos használathoz szükséges "
+"leírásokat, és a fejlesztők számára szükséges információkat is."
 
 #: admin/view-about.php:9
 #, php-format
-msgid "You will also find useful information in the %ssupport forum%s. However don't forget to make a search before posting a new topic."
-msgstr "Továbbá a %stámogató fórumban%s is találhatók hasznos információk, de új téma indítása előtt érdemes a keresést is használni."
+msgid ""
+"You will also find useful information in the %ssupport forum%s. However "
+"don't forget to make a search before posting a new topic."
+msgstr ""
+"Továbbá a %stámogató fórumban%s is találhatók hasznos információk, de új "
+"téma indítása előtt érdemes a keresést is használni."
 
 #: admin/view-about.php:16
 #, php-format
-msgid "Polylang is free of charge and is released under the same license as WordPress, the %sGPL%s."
-msgstr "Polylang bővítmény ingyen használható és a WordPress-el azonos, %sGPL%s licensz alatt lett kiadva."
+msgid ""
+"Polylang is free of charge and is released under the same license as "
+"WordPress, the %sGPL%s."
+msgstr ""
+"Polylang bővítmény ingyen használható és a WordPress-el azonos, %sGPL%s "
+"licensz alatt lett kiadva."
 
 #: admin/view-about.php:22
 #, php-format
 msgid "If you wonder how you can help the project, just %sread this%s."
-msgstr "Ha hasznosnak bizonyult a bővítmény, akkor %sfejlesztéssel, teszteléssel vagy fórum válaszokkal%s is lehet segíteni folyamatos fejlődését."
+msgstr ""
+"Ha hasznosnak bizonyult a bővítmény, akkor %sfejlesztéssel, teszteléssel "
+"vagy fórum válaszokkal%s is lehet segíteni folyamatos fejlődését."
 
 #: admin/view-about.php:27
-msgid "Finally if you like this plugin or if it helps your business, donations to the author are greatly appreciated."
-msgstr "Vagy a lentebbi gombra kattintva adományozással is hozzá lehet járulni a fejlesztéséhez, amit ez úton is köszönünk!"
+msgid ""
+"Finally if you like this plugin or if it helps your business, donations to "
+"the author are greatly appreciated."
+msgstr ""
+"Vagy a lentebbi gombra kattintva adományozással is hozzá lehet járulni a "
+"fejlesztéséhez, amit ez úton is köszönünk!"
 
-#: admin/admin-filters-post.php:83
-#: admin/admin.php:73
-#: admin/settings.php:53
-#: admin/settings.php:80
-#: include/model.php:506
+#: admin/admin-filters-post.php:83 admin/admin.php:73 admin/settings.php:53
+#: admin/settings.php:80 include/model.php:506
 msgid "Languages"
 msgstr "Nyelvek"
 
@@ -78,30 +96,23 @@ msgstr "Tartalom szűrése nyelv szerint"
 msgid "Show all languages"
 msgstr "Minden nyelv"
 
-#: admin/admin-filters-columns.php:132
-#: admin/admin-filters-columns.php:228
+#: admin/admin-filters-columns.php:132 admin/admin-filters-columns.php:228
 msgid "Add new translation"
 msgstr "Új fordítás hozzáadása"
 
-#: admin/admin-filters-columns.php:169
-#: admin/admin-filters-media.php:58
-#: admin/admin-filters-post.php:107
-#: admin/admin-filters-term.php:75
-#: admin/admin-filters-term.php:112
-#: include/model.php:507
+#: admin/admin-filters-columns.php:169 admin/admin-filters-media.php:58
+#: admin/admin-filters-post.php:107 admin/admin-filters-term.php:75
+#: admin/admin-filters-term.php:112 include/model.php:507
 msgid "Language"
 msgstr "Nyelv"
 
-#: admin/table-string.php:111
-#: admin/view-translations-media.php:5
-#: admin/view-translations-post.php:5
-#: admin/view-translations-term.php:6
+#: admin/table-string.php:111 admin/view-translations-media.php:5
+#: admin/view-translations-post.php:5 admin/view-translations-term.php:6
 #: admin/view-translations-term.php:11
 msgid "Translations"
 msgstr "Fordítások"
 
-#: admin/admin-filters-term.php:77
-#: admin/admin-filters-term.php:114
+#: admin/admin-filters-term.php:77 admin/admin-filters-term.php:114
 msgid "Sets the language"
 msgstr "Nyelvek beállítása"
 
@@ -109,8 +120,7 @@ msgstr "Nyelvek beállítása"
 msgid "The widget is displayed for:"
 msgstr "Widget megjelenítése ennél a nyelvnél:"
 
-#: admin/admin-filters.php:49
-#: include/model.php:508
+#: admin/admin-filters.php:49 include/model.php:508
 msgid "All languages"
 msgstr "Minden nyelv"
 
@@ -122,8 +132,7 @@ msgstr "Adminisztrációs felület nyelve"
 msgid "Wordpress default"
 msgstr "WordPress alapértelmezett"
 
-#: admin/admin.php:154
-#: admin/settings.php:85
+#: admin/admin.php:154 admin/settings.php:85
 msgid "Settings"
 msgstr "Beállítások"
 
@@ -156,8 +165,12 @@ msgid "The language must have a name"
 msgstr "Nevet is kell adni a nyelvnek"
 
 #: admin/admin.php:353
-msgid "The language was created, but the WordPress language file was not downloaded. Please install it manually."
-msgstr "A nyelv hozzá lett adva, de a WordPress fordítások (.mo fájlok) ehhez a nyelvhez nem lettek letöltve, ezt kézzel kell megtenni."
+msgid ""
+"The language was created, but the WordPress language file was not "
+"downloaded. Please install it manually."
+msgstr ""
+"A nyelv hozzá lett adva, de a WordPress fordítások (.mo fájlok) ehhez a "
+"nyelvhez nem lettek letöltve, ezt kézzel kell megtenni."
 
 #: admin/settings.php:328
 msgid "Widget title"
@@ -219,8 +232,7 @@ msgstr "Kiemelt kép"
 msgid "Edit language"
 msgstr "Nyelv szerkesztése"
 
-#: admin/view-languages.php:38
-#: admin/view-languages.php:113
+#: admin/view-languages.php:38 admin/view-languages.php:113
 msgid "Add new language"
 msgstr "Új nyelv hozzáadása"
 
@@ -232,8 +244,7 @@ msgstr "Nyelv kiválasztása"
 msgid "You can choose a language in the list or directly edit it below."
 msgstr "Kiválasztható egy nyelv, vagy lentebb megadhatók a részletei:"
 
-#: admin/table-languages.php:74
-#: admin/view-languages.php:72
+#: admin/table-languages.php:74 admin/view-languages.php:72
 msgid "Full name"
 msgstr "Nyelv teljes neve"
 
@@ -241,14 +252,17 @@ msgstr "Nyelv teljes neve"
 msgid "The name is how it is displayed on your site (for example: English)."
 msgstr "A nyelv teljes neve, ahogy majd a honlapon is megjelenik (pl. Magyar)"
 
-#: admin/table-languages.php:75
-#: admin/view-languages.php:78
+#: admin/table-languages.php:75 admin/view-languages.php:78
 msgid "Locale"
 msgstr "WP nyelvkód"
 
 #: admin/view-languages.php:83
-msgid "Wordpress Locale for the language (for example: en_US). You will need to install the .mo file for this language."
-msgstr "WordPress nyelvkód (pl. hu_HU). A nyelvhez tartozó .mo fordítás fájlt kézzel kell telepíteni."
+msgid ""
+"Wordpress Locale for the language (for example: en_US). You will need to "
+"install the .mo file for this language."
+msgstr ""
+"WordPress nyelvkód (pl. hu_HU). A nyelvhez tartozó .mo fordítás fájlt kézzel "
+"kell telepíteni."
 
 #: admin/view-languages.php:87
 msgid "Language code"
@@ -274,8 +288,7 @@ msgstr "jobbról balra"
 msgid "Choose the text direction for the language"
 msgstr "Nyelv írásmódjának kiválasztása"
 
-#: admin/table-languages.php:77
-#: admin/view-languages.php:108
+#: admin/table-languages.php:77 admin/view-languages.php:108
 msgid "Order"
 msgstr "Sorrend"
 
@@ -283,12 +296,9 @@ msgstr "Sorrend"
 msgid "Position of the language in the language switcher"
 msgstr "Hányadikként jelenjen meg a nyelv"
 
-#: admin/admin-nav-menu.php:52
-#: admin/admin-nav-menu.php:90
-#: admin/admin-nav-menu.php:93
-#: admin/admin-nav-menu.php:124
-#: admin/admin-nav-menu.php:181
-#: include/upgrade.php:301
+#: admin/admin-nav-menu.php:52 admin/admin-nav-menu.php:90
+#: admin/admin-nav-menu.php:93 admin/admin-nav-menu.php:124
+#: admin/admin-nav-menu.php:181 include/upgrade.php:301
 msgid "Language switcher"
 msgstr "Nyelv választó"
 
@@ -305,16 +315,24 @@ msgid "Default language"
 msgstr "Alapértelmezett nyelv"
 
 #: admin/view-languages.php:176
-msgid "There are posts, pages, categories or tags without language set. Do you want to set them all to default language ?"
-msgstr "Vannak bejegyzések, oldalak, kategóriák és címkék, amelyekhez még nincs nyelv megadva. Ezek használják az alapértelmezett nyelvet."
+msgid ""
+"There are posts, pages, categories or tags without language set. Do you want "
+"to set them all to default language ?"
+msgstr ""
+"Vannak bejegyzések, oldalak, kategóriák és címkék, amelyekhez még nincs "
+"nyelv megadva. Ezek használják az alapértelmezett nyelvet."
 
 #: admin/view-languages.php:297
 msgid "Detect browser language"
 msgstr "Böngésző nyelvének használata"
 
 #: admin/view-languages.php:303
-msgid "When the front page is visited, set the language according to the browser preference"
-msgstr "Amikor meglátogatják a honlapot, akkor a látogató böngészőjének nyelvét vegyük alapul."
+msgid ""
+"When the front page is visited, set the language according to the browser "
+"preference"
+msgstr ""
+"Amikor meglátogatják a honlapot, akkor a látogató böngészőjének nyelvét "
+"vegyük alapul."
 
 #: admin/view-languages.php:184
 msgid "URL modifications"
@@ -358,15 +376,12 @@ msgstr "Egyedi taxonómiák (kategóriák, címkék)"
 msgid "Activate languages and translations for custom taxonomies."
 msgstr "Egyedi taxonómiák (kategóriák, címkék) fordításának bekapcsolása."
 
-#: admin/admin-filters-post.php:351
-#: admin/admin-filters-term.php:502
-#: admin/table-languages.php:54
-#: admin/view-translations-media.php:21
+#: admin/admin-filters-post.php:351 admin/admin-filters-term.php:502
+#: admin/table-languages.php:54 admin/view-translations-media.php:21
 msgid "Edit"
 msgstr "Szerkesztés"
 
-#: admin/table-languages.php:60
-#: admin/table-string.php:167
+#: admin/table-languages.php:60 admin/table-string.php:167
 msgid "Delete"
 msgstr "Törlés"
 
@@ -390,8 +405,7 @@ msgstr "Név"
 msgid "String"
 msgstr "Szöveg"
 
-#: admin/admin-filters-post.php:375
-#: admin/admin-filters-term.php:528
+#: admin/admin-filters-post.php:375 admin/admin-filters-term.php:528
 #: admin/view-translations-media.php:30
 msgid "Add new"
 msgstr "Új hozzáadása"
@@ -417,129 +431,146 @@ msgstr "Többnyelvű tartalom, fordítások kezelése."
 #: polylang.php:160
 #, php-format
 msgid "You are using WordPress %s. Polylang requires at least WordPress %s."
-msgstr "Jelenleg a WordPress %s verziója van használva. Polylang bővítmény használatához legalább WordPress %s verzió szükséges."
+msgstr ""
+"Jelenleg a WordPress %s verziója van használva. Polylang bővítmény "
+"használatához legalább WordPress %s verzió szükséges."
 
 # @ polylang
 #: include/upgrade.php:76
-msgid "Polylang has been deactivated because you upgraded from a too old version."
-msgstr "Polylang bővítmény ki lett kapcsolva, mert túl régi verzióról lett frissítve."
+msgid ""
+"Polylang has been deactivated because you upgraded from a too old version."
+msgstr ""
+"Polylang bővítmény ki lett kapcsolva, mert túl régi verzióról lett frissítve."
 
 # @ polylang
 #: include/upgrade.php:78
 #, php-format
 msgid "Please upgrade first to %s before ugrading to %s."
-msgstr "Először a(z) %s verzióra kell elvégezni a frissítést, majd csak utána lehet a(z) %s verzióra is."
+msgstr ""
+"Először a(z) %s verzióra kell elvégezni a frissítést, majd csak utána lehet "
+"a(z) %s verzióra is."
 
 # @ polylang
 #: admin/table-string.php:108
 msgid "Group"
-msgstr ""
+msgstr "Csoport"
 
 # @ polylang
 #: admin/table-string.php:186
 msgid "View all groups"
-msgstr ""
+msgstr "Összes csoport"
 
 # @ polylang
 #: admin/table-languages.php:59
 msgid "You are about to permanently delete this language. Are you sure?"
-msgstr ""
+msgstr "Valóban töröljük véglegesen ezt a nyelvet?"
 
 # @ polylang
 #: admin/view-languages.php:143
-msgid "Use this to remove unused strings from database, for example after a plugin has been uninstalled."
+msgid ""
+"Use this to remove unused strings from database, for example after a plugin "
+"has been uninstalled."
 msgstr ""
+"Már nem használt szöveg fordítások törlése adatbázisból, pl. eltávolított "
+"bővítményhez tartozó szövegek fordításai."
 
 # @ polylang
 #: admin/view-languages.php:374
-msgid "The synchronization options allow to maintain exact same values (or translations in the case of taxonomies and page parent) of meta content between the translations of a post or page."
+msgid ""
+"The synchronization options allow to maintain exact same values (or "
+"translations in the case of taxonomies and page parent) of meta content "
+"between the translations of a post or page."
 msgstr ""
+"A szinkronizálás segítségével az oldalakhoz vagy bejegyzésekhez tartozó "
+"metadatok a fordítások esetén is ugyanazokat az értékeket veszik fel."
 
 #: admin/admin-model.php:289
 msgid "The language code contains invalid characters"
-msgstr ""
+msgstr "Nyelvkód hibás karaktert tartalmaz."
 
 #: admin/view-languages.php:190
 msgid "The language is set from content"
-msgstr ""
+msgstr "A nyelvet a tartalom nyelve határozza meg."
 
 #: admin/view-languages.php:193
 msgid "Posts, pages, categories and tags urls are not modified."
-msgstr ""
+msgstr "Bejegyzés, oldal, kategória és címke linkek nem módosulnak."
 
 #: admin/view-languages.php:199
 msgid "The language is set from the directory name in pretty permalinks"
-msgstr ""
+msgstr "A nyelvet a linkben található mappanév határozza meg."
 
 # @ polylang
-#: admin/view-languages.php:202
-#: admin/view-languages.php:211
-#: admin/view-languages.php:258
-#: admin/view-languages.php:267
+#: admin/view-languages.php:202 admin/view-languages.php:211
+#: admin/view-languages.php:258 admin/view-languages.php:267
 msgid "Example:"
-msgstr ""
+msgstr "Példa:"
 
 #: admin/view-languages.php:208
 msgid "The language is set from the subdomain name in pretty permalinks"
-msgstr ""
+msgstr "A nyelvet a linkben található aldomén határozza meg."
 
 # @ polylang
 #: admin/view-languages.php:217
 msgid "The language is set from different domains"
-msgstr ""
+msgstr "A nyelvet a linkben található domén határozza meg."
 
 #: admin/view-languages.php:255
 msgid "Remove /language/ in pretty permalinks"
-msgstr ""
+msgstr "/language/ eltávolítása a linkekből."
 
 #: admin/view-languages.php:264
 msgid "Keep /language/ in pretty permalinks"
-msgstr ""
+msgstr "/language/ megtartása a linkekben."
 
 # @ polylang
 #: admin/view-languages.php:279
-msgid "The front page url contains the language code instead of the page name or page id"
+msgid ""
+"The front page url contains the language code instead of the page name or "
+"page id"
 msgstr ""
+"A főoldal linkje a nyelv kódját tartalmazza az oldal neve vagy azonosítója "
+"helyett."
 
 # @ polylang
 #: admin/admin-filters-term.php:143
 #, php-format
 msgid "A translation does already exist for %s"
-msgstr ""
+msgstr "Már létezik fordítás a következőhöz: %s"
 
 # @ polylang
 #: admin/view-languages.php:287
 #, php-format
 msgid "Example: %s instead of %s"
-msgstr ""
+msgstr "Például: %s (%s helyett)"
 
 #: admin/admin-model.php:49
 msgid "Impossible to add the language."
-msgstr ""
+msgstr "Nem lehetséges a nyelv hozzáadása."
 
 # @ polylang
 #: admin/admin-model.php:73
 msgid "Language added."
-msgstr ""
+msgstr "Nyelv hozzáadva."
 
 # @ polylang
 #: admin/admin-model.php:187
 msgid "Language deleted."
-msgstr ""
+msgstr "Nyelv törölve."
 
 # @ polylang
 #: admin/admin-model.php:268
 msgid "Language updated."
-msgstr ""
+msgstr "Nyelv frissítve."
 
 # @ polylang
 #: admin/settings.php:203
 msgid "Translations updated."
-msgstr ""
+msgstr "Fordítások frissítve."
 
 #: admin/view-languages.php:89
 msgid "Language code - preferably 2-letters ISO 639-1  (for example: en)"
-msgstr ""
+msgstr "Nyelvkód - 2 karakteres ISO 639-1 nyelvkód (pl. hu)"
 
 #~ msgid "Translation"
 #~ msgstr "Fordítás"

@@ -33,7 +33,7 @@ jQuery(document).ready(function($) {
 
 				source: ajaxurl + '?action=pll_terms_not_translated&term_language=' + $('#term_lang_choice').val() +
 					'&term_id=' + $("input[name='tag_ID']").val() + '&taxonomy=' + $("input[name='taxonomy']").val() +
-					'&translation_language=' + tr_lang + '&post_type=' + typenow,
+					'&translation_language=' + tr_lang + '&post_type=' + typenow + '&_pll_nonce=' + $('#_pll_nonce').val(),
 
 				select: function(event, ui) {
 					$('#htr_lang_'+tr_lang).val(ui.item.id);
@@ -60,7 +60,8 @@ jQuery(document).ready(function($) {
 			lang: $(this).val(),
 			term_id: $("input[name='tag_ID']").val(),
 			taxonomy: $("input[name='taxonomy']").val(),
-			post_type: typenow
+			post_type: typenow,
+			_pll_nonce: $('#_pll_nonce').val()
 		}
 
 		$.post(ajaxurl, data, function(response) {
