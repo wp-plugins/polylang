@@ -182,6 +182,7 @@ class PLL_Frontend_Filters extends PLL_Filters{
 	/*
 	 * called when a post (or page) is saved, published or updated
 	 * does nothing except on post types which are filterable
+	 * sets the language but does not allow to modify it
 	 *
 	 * @since 1.1
 	 *
@@ -190,23 +191,27 @@ class PLL_Frontend_Filters extends PLL_Filters{
 	 */
 	public function save_post($post_id, $post) {
 		if ($this->model->is_translated_post_type($post->post_type)) {
-			if (isset($_REQUEST['lang']))
-				$this->model->set_post_language($post_id, $_REQUEST['lang']);
+			$post_type_object = get_post_type_object($post->post_type);
+			if (!current_user_can($post_type_object->cap->edit_posts) || !current_user_can($post_type_object->cap->create_posts))
+				wp_die( __( 'Cheatin&#8217; uh?' ) );
 
-			elseif ($this->model->get_post_language($post_id))
-				{}
+			if (!$this->model->get_post_language($post_id)) {
+				if (isset($_REQUEST['lang']))
+					$this->model->set_post_language($post_id, $_REQUEST['lang']);
 
-			elseif (($parent_id = wp_get_post_parent_id($post_id)) && $parent_lang = $this->model->get_post_language($parent_id))
-				$this->model->set_post_language($post_id, $parent_lang);
+				elseif (($parent_id = wp_get_post_parent_id($post_id)) && $parent_lang = $this->model->get_post_language($parent_id))
+					$this->model->set_post_language($post_id, $parent_lang);
 
-			else
-				$this->model->set_post_language($post_id, $this->curlang);
+				else
+					$this->model->set_post_language($post_id, $this->curlang);
+			}
 		}
 	}
 
 	/*
 	 * called when a category or post tag is created or edited
 	 * does nothing except on taxonomies which are filterable
+	 * sets the language but does not allow to modify it
 	 *
 	 * @since 1.1
 	 *
@@ -216,17 +221,20 @@ class PLL_Frontend_Filters extends PLL_Filters{
 	 */
 	public function save_term($term_id, $tt_id, $taxonomy) {
 		if ($this->model->is_translated_taxonomy($taxonomy)) {
-			if (isset($_REQUEST['lang']))
-				$this->model->set_term_language($term_id, $_REQUEST['lang']);
+			$tax = get_taxonomy($taxonomy);
+			if (!current_user_can($tax->cap->edit_terms))
+				wp_die( __( 'Cheatin&#8217; uh?' ) );
 
-			elseif ($this->model->get_term_language($term_id))
-				{}
+			if (!$this->model->get_term_language($term_id)) {
+				if (isset($_REQUEST['lang']))
+					$this->model->set_term_language($term_id, $_REQUEST['lang']);
 
-			elseif (($term = get_term($term_id, $taxonomy)) && !empty($term->parent) && $parent_lang = $this->model->get_term_language($term->parent))
-				$this->model->set_term_language($term_id, $parent_lang);
+				elseif (($term = get_term($term_id, $taxonomy)) && !empty($term->parent) && $parent_lang = $this->model->get_term_language($term->parent))
+					$this->model->set_term_language($term_id, $parent_lang);
 
-			else
-				$this->model->set_term_language($term_id, $this->curlang);
+				else
+					$this->model->set_term_language($term_id, $this->curlang);
+			}
 		}
 	}
 }

@@ -140,6 +140,9 @@ class PLL_Admin_Filters_Term {
 		return $output;
 	}
 
+	/*
+	 * FIXME missing documentation
+	 */
 	public function pre_insert_term($term, $taxonomy) {
 		if (isset($_POST['action'], $_POST['from_tag'], $_POST['term_lang_choice']) && 'add-tag' == $_POST['action'] && $this->model->get_translation('term', $_POST['from_tag'], $_POST['term_lang_choice'])) {
 			$from_term = get_term($_POST['from_tag'], $taxonomy);
@@ -149,6 +152,74 @@ class PLL_Admin_Filters_Term {
 			));
 		}
 		return $term;
+	}
+
+	/*
+	 * saves language
+	 *
+	 * @since 1.5
+	 *
+	 * @param int $term_id
+	 * @param string $taxonomy
+	 */
+	protected function save_language($term_id, $taxonomy) {
+		// security checks are necessary to accept language modifications
+		// as 'wp_update_term' can be called from outside WP admin
+
+		// edit tags
+		if (isset($_POST['term_lang_choice'])) {
+			check_admin_referer('pll_language', '_pll_nonce');
+			$this->model->set_term_language($term_id, $_POST['term_lang_choice']);
+		}
+
+		// quick edit
+		elseif (isset($_POST['inline_lang_choice'])) {
+			check_ajax_referer('taxinlineeditnonce', '_inline_edit');
+
+			if (isset($_POST['inline-save-tax']) && $this->model->get_term_language($term_id)->slug != $_POST['inline_lang_choice'])
+				$this->model->delete_translation('term', $term_id);
+			$this->model->set_term_language($term_id, $_POST['inline_lang_choice']);
+		}
+
+		// edit post
+		elseif (isset($_POST['post_lang_choice'])) {// FIXME should be useless now
+			check_admin_referer('pll_language', '_pll_nonce');
+			$this->model->set_term_language($term_id, $_POST['post_lang_choice']);
+		}
+
+		elseif ($this->model->get_term_language($term_id))
+			{} // avoids breaking the language if the term is updated outside the edit post or edit tag pages
+
+		// sets language from term parent if exists thanks to Scott Kingsley Clark
+		elseif (($term = get_term($term_id, $taxonomy)) && !empty($term->parent) && $parent_lang = $this->model->get_term_language($term->parent))
+			$this->model->set_term_language($term_id, $parent_lang);
+
+		else
+			$this->model->set_term_language($term_id, $this->pref_lang);
+	}
+
+	/*
+	 * save translations from our form
+	 *
+	 * @since 1.5
+	 *
+	 * @param int $term_id
+	 * @return array
+	 */
+	protected function save_translations($term_id) {
+		// security check
+		// as 'wp_update_term' can be called from outside WP admin
+		check_admin_referer('pll_language', '_pll_nonce');
+
+		// save translations after checking the translated term is in the right language (as well as cast id to int)
+		foreach ($_POST['term_tr_lang'] as $lang => $tr_id) {
+			$tr_lang = $this->model->get_term_language((int) $tr_id);
+			$translations[$lang] = $tr_lang && $tr_lang->slug == $lang ? (int) $tr_id : 0;
+		}
+
+		$this->model->save_translations('term', $term_id, $translations);
+
+		return $translations;
 	}
 
 	/*
@@ -166,52 +237,18 @@ class PLL_Admin_Filters_Term {
 		if (!$this->model->is_translated_taxonomy($taxonomy))
 			return;
 
+		// security check
+		// as 'wp_update_term' can be called from outside WP admin
 		$tax = get_taxonomy($taxonomy);
 		if (!current_user_can($tax->cap->edit_terms))
-			return;
+			wp_die( __( 'Cheatin&#8217; uh?' ) );
 
-		// save language
-		if (isset($_POST['term_lang_choice'])) {
-			check_admin_referer('pll_language', '_pll_nonce');
-			$this->model->set_term_language($term_id, $_POST['term_lang_choice']);
-		}
+		$this->save_language($term_id, $taxonomy);
 
-		elseif (isset($_POST['inline_lang_choice'])) {
-			check_ajax_referer('taxinlineeditnonce', '_inline_edit');
+		if (isset($_POST['term_tr_lang']))
+			$translations = $this->save_translations($term_id);
 
-			if (isset($_POST['inline-save-tax']) && $this->model->get_term_language($term_id)->slug != $_POST['inline_lang_choice'])
-				$this->model->delete_translation('term', $term_id);
-			$this->model->set_term_language($term_id, $_POST['inline_lang_choice']);
-		}
-
-		elseif (isset($_POST['post_lang_choice'])) {// FIXME should be useless now
-			check_admin_referer('pll_language', '_pll_nonce');
-			$this->model->set_term_language($term_id, $_POST['post_lang_choice']);
-		}
-
-		elseif ($this->model->get_term_language($term_id))
-			{} // avoids breaking the language if the term is updated outside the edit post or edit tag pages
-
-		// sets language from term parent if exists thanks to Scott Kingsley Clark
-		elseif (($term = get_term($term_id, $taxonomy)) && !empty($term->parent) && $parent_lang = $this->model->get_term_language($term->parent))
-			$this->model->set_term_language($term_id, $parent_lang);
-
-		else
-			$this->model->set_term_language($term_id, $this->pref_lang);
-
-		if (!isset($_POST['term_tr_lang']))
-			return;
-
-		check_admin_referer('pll_language', '_pll_nonce'); // again
-
-		// save translations after checking the translated term is in the right language (as well as cast id to int)
-		foreach ($_POST['term_tr_lang'] as $lang=>$tr_id) {
-			$tr_lang = $this->model->get_term_language((int) $tr_id);
-			$translations[$lang] = $tr_lang && $tr_lang->slug == $lang ? (int) $tr_id : 0;
-		}
-
-		$this->model->save_translations('term', $term_id, $translations);
-		do_action('pll_save_term', $term_id, $taxonomy, $translations);
+		do_action('pll_save_term', $term_id, $taxonomy, empty($translations) ? $this->model->get_translations('term', $term_id) : $translations);
 	}
 
 	/*

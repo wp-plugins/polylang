@@ -5,8 +5,8 @@
  *
  * @since 1.2
  */
-class PLL_Admin_Filters_Post {
-	public $links, $model, $options, $curlang, $pref_lang;
+class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
+	public $options, $curlang;
 
 	/*
 	 * constructor: setups filters and actions
@@ -16,11 +16,9 @@ class PLL_Admin_Filters_Post {
 	 * @param object $polylang
 	 */
 	public function __construct(&$polylang) {
-		$this->links = &$polylang->links;
-		$this->model = &$polylang->model;
+		parent::__construct($polylang);
 		$this->options = &$polylang->options;
 		$this->curlang = &$polylang->curlang;
-		$this->pref_lang = &$polylang->pref_lang;
 
 		// filters posts, pages and media by language
 		add_filter('parse_query',array(&$this,'parse_query'));
@@ -231,53 +229,25 @@ class PLL_Admin_Filters_Post {
 	}
 
 	/*
-	 * allows to set a language by default for posts
+	 * saves language
+	 * checks the terms saved are in the right language
 	 *
 	 * @since 1.5
 	 *
 	 * @param int $post_id
+	 * @param array $post
 	 */
-	public function set_default_language($post_id) {
-		if (!$this->model->get_post_language($post_id)) {
-			if (isset($_GET['new_lang']))
-				$this->model->set_post_language($post_id, $_GET['new_lang']);
+	protected function save_language($post_id, $post) {
+		// security checks are necessary to accept language modifications
+		// as 'wp_insert_post' can be called from outside WP admin
 
-			elseif (($parent_id = wp_get_post_parent_id($post_id)) && $parent_lang = $this->model->get_post_language($parent_id))
-				$this->model->set_post_language($post_id, $parent_lang);
-
-			else
-				$this->model->set_post_language($post_id, $this->pref_lang);
-		}
-	}
-
-	/*
-	 * called when a post (or page) is saved, published or updated
-	 * saves languages and translations
-	 * checks the terms saved are in the right language
-	 *
-	 * @since 0.1
-	 *
-	 * @param int $post_id
-	 * @param object $post
-	 */
-	public function save_post($post_id, $post) {
-		// does nothing except on post types which are filterable
-		if (!$this->model->is_translated_post_type($post->post_type))
-			return;
-
-		$post_type_object = get_post_type_object($post->post_type);
-		if (!current_user_can($post_type_object->cap->edit_posts) || !current_user_can($post_type_object->cap->create_posts))
-			return;
-
-		if ($id = wp_is_post_revision($post_id))
-			$post_id = $id;
-
-		// save language
+		// edit post
 		if (isset($_REQUEST['post_lang_choice'])) {
 			check_admin_referer('pll_language', '_pll_nonce');
 			$this->model->set_post_language($post_id, $lang = $_REQUEST['post_lang_choice']);
 		}
 
+		// quick edit and bulk edit
 		elseif (isset($_REQUEST['inline_lang_choice'])) {
 			// bulk edit does not modify the language
 			if (isset($_REQUEST['bulk_edit']) && $_REQUEST['inline_lang_choice'] == -1)
@@ -290,6 +260,7 @@ class PLL_Admin_Filters_Post {
 			$this->model->set_post_language($post_id, $lang = $_REQUEST['inline_lang_choice']);
 		}
 
+		// quick press
 		// 'post-quickpress-save', 'post-quickpress-publish' = backward compatibility WP < 3.8
 		elseif (isset($_REQUEST['action']) && in_array($_REQUEST['action'], array('post-quickpress-save', 'post-quickpress-publish', 'post-quickdraft-save'))) {
 			check_admin_referer('add-' . $post->post_type);
@@ -301,7 +272,7 @@ class PLL_Admin_Filters_Post {
 
 		// make sure we get save terms in the right language (especially tags with same name in different languages)
 		if (!empty($lang)) {
-			// FIXME quite a lot of query in foreach
+			// FIXME quite a lot of queries in foreach
 			foreach ($this->model->get_translated_taxonomies() as $tax) {
 				$terms = get_the_terms($post_id, $tax);
 
@@ -319,20 +290,35 @@ class PLL_Admin_Filters_Post {
 				}
 			}
 		}
+	}
 
-		if (isset($_POST['post_tr_lang'])) {
-			check_admin_referer('pll_language', '_pll_nonce'); // again
+	/*
+	 * called when a post (or page) is saved, published or updated
+	 * saves languages and translations
+	 *
+	 * @since 0.1
+	 *
+	 * @param int $post_id
+	 * @param object $post
+	 */
+	public function save_post($post_id, $post) {
+		// does nothing except on post types which are filterable
+		if (!$this->model->is_translated_post_type($post->post_type))
+			return;
 
-			// save translations after checking the translated post is in the right language
-			foreach ($_POST['post_tr_lang'] as $lang => $tr_id)
-				$translations[$lang] = ($tr_id && $this->model->get_post_language((int) $tr_id)->slug == $lang) ? (int) $tr_id : 0;
+		// security check
+		// as 'wp_insert_post' can be called from outside WP admin
+		$post_type_object = get_post_type_object($post->post_type);
+		if (!current_user_can($post_type_object->cap->edit_posts) || !current_user_can($post_type_object->cap->create_posts))
+			wp_die( __( 'Cheatin&#8217; uh?' ) );
 
-			$this->model->save_translations('post', $post_id, $translations);
+		if ($id = wp_is_post_revision($post_id))
+			$post_id = $id;
 
-			// refresh language cache when a static front page has been translated
-			if (($pof = get_option('page_on_front')) && in_array($pof, $translations))
-				$this->model->clean_languages_cache();
-		}
+		$this->save_language($post_id, $post);
+
+		if (isset($_POST['post_tr_lang']))
+			$translations = $this->save_translations($post_id, $_POST['post_tr_lang']);
 
 		do_action('pll_save_post', $post_id, $post, empty($translations) ? $this->model->get_translations('post', $post_id) : $translations);
 	}

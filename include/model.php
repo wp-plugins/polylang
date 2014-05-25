@@ -250,7 +250,7 @@ class PLL_Model {
 	 * saves translations for posts or terms
 	 *
 	 * @since 0.5
-
+	 *
 	 * @param string $type either 'post' or 'term'
 	 * @param int $id post id or term id
 	 * @param array $translations: an associative array of translations with language code as key and translation id as value

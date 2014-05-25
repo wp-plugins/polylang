@@ -11,7 +11,7 @@ class PLL_Admin_Sync {
 	 * constructor
 	 *
 	 * @since 1.2
-   *
+	 *
 	 * @param object $polylang
 	 */
 	public function __construct(&$polylang) {
@@ -46,7 +46,11 @@ class PLL_Admin_Sync {
 	 * @param object $post current post object
 	 */
 	function add_meta_boxes($post_type, $post) {
-		if (isset($_GET['from_post'], $_GET['new_lang'])) {
+		if ('post-new.php' == $GLOBALS['pagenow'] && isset($_GET['from_post'], $_GET['new_lang'])) {
+			if (!$this->model->is_translated_post_type($post->post_type))
+			return;
+
+			// capability check already done in post-new.php
 			$this->copy_post_metas($_GET['from_post'], $post->ID, $_GET['new_lang']);
 
 			$from_post = get_post($_GET['from_post']);
@@ -84,11 +88,10 @@ class PLL_Admin_Sync {
 
 				// for some reasons, the user may have untranslated terms in the translation. don't forget them.
 				if ($sync) {
-					$lang_choice = empty($_POST['post_lang_choice']) ?  $_POST['inline_lang_choice'] :  $_POST['post_lang_choice'];
 					$tr_terms = get_the_terms($to, $tax);
 					if (is_array($tr_terms)) {
 						foreach ($tr_terms as $term) {
-							if (!$this->model->get_translation('term', $term->term_id, $lang_choice))
+							if (!$this->model->get_translation('term', $term->term_id, $this->model->get_post_language($from)))
 								$newterms[] = (int) $term->term_id;
 						}
 					}
@@ -222,17 +225,24 @@ class PLL_Admin_Sync {
 		// but clean_term_cache can be called (efficiently) only one time due to static array which prevents to update the option more than once
 		// this is the reason to use the edit_term filter and not edited_term
 		// take care that $_POST contains the only valid values for the current term
-		foreach ($_POST['term_tr_lang'] as $lang => $tr_id) {
-			if (!$tr_id)
-				continue;
+		// FIXME can I synchronize parent without using $_POST instead?
+		if (isset($_POST['term_tr_lang'])) {
+			// security check
+			// as 'wp_update_term' can be called from outside WP admin
+			check_admin_referer('pll_language', '_pll_nonce');
 
-			if (isset($_POST['parent']) && $_POST['parent'] != -1) // since WP 3.1
-				$term_parent = $this->model->get_translation('term', $_POST['parent'], $lang);
+			foreach ($_POST['term_tr_lang'] as $lang => $tr_id) {
+				if (!$tr_id)
+					continue;
 
-			global $wpdb;
-			$wpdb->update($wpdb->term_taxonomy,
-				array('parent'=> isset($term_parent) ? $term_parent : 0),
-				array('term_taxonomy_id' => get_term($tr_id, $taxonomy)->term_taxonomy_id));
+				if (isset($_POST['parent']) && $_POST['parent'] != -1) // since WP 3.1
+					$term_parent = $this->model->get_translation('term', $_POST['parent'], $lang);
+
+				global $wpdb;
+				$wpdb->update($wpdb->term_taxonomy,
+					array('parent'=> isset($term_parent) ? $term_parent : 0),
+					array('term_taxonomy_id' => get_term($tr_id, $taxonomy)->term_taxonomy_id));
+			}
 		}
 	}
 }

@@ -196,8 +196,8 @@ class PLL_Admin extends PLL_Base {
 
 		// language for admin language filter: may be empty
 		// $_GET['lang'] is numeric when editing a language, not when selecting a new language in the filter
-		if (!defined('DOING_AJAX') && !empty($_GET['lang']) && !is_numeric($_GET['lang']))
-			update_user_meta(get_current_user_id(), 'pll_filter_content', ($lang = $this->model->get_language($_GET['lang'])) ? $lang->slug : '');
+		if (!defined('DOING_AJAX') && !empty($_GET['lang']) && !is_numeric($_GET['lang']) && current_user_can('edit_user', $user_id = get_current_user_id()))
+			update_user_meta($user_id, 'pll_filter_content', ($lang = $this->model->get_language($_GET['lang'])) ? $lang->slug : '');
 
 		$this->curlang = $this->model->get_language(get_user_meta(get_current_user_id(), 'pll_filter_content', true));
 
@@ -234,15 +234,17 @@ class PLL_Admin extends PLL_Base {
 	 */
 	public function add_filters() {
 		// all these are separated just for convenience and maintainability
-		$this->filters = new PLL_Admin_Filters($this);
-		$this->filters_columns = new PLL_Admin_Filters_Columns($this);
-		$this->filters_post = new PLL_Admin_Filters_Post($this);
-		$this->filters_term = new PLL_Admin_Filters_Term($this);
-		$this->nav_menu = new PLL_Admin_Nav_Menu($this);
-		$this->sync = new PLL_Admin_Sync($this);
+		$classes = array('Filters', 'Filters_Columns', 'Filters_Post', 'Filters_Term', 'Nav_Menu', 'Sync');
 
-		if ($this->options['media_support'])
-			$this->filters_media = new PLL_Admin_Filters_Media($this);
+		// don't load media filters if option is disabled or if user has no right
+		if ($this->options['media_support'] && ($obj = get_post_type_object('attachment')) && current_user_can($obj->cap->edit_posts) && current_user_can($obj->cap->create_posts))
+			$classes[] = 'Filters_Media';
+
+		foreach ($classes as $class) {
+			$obj = strtolower($class);
+			$class = apply_filters('pll_' . $obj, 'PLL_Admin_' . $class);
+			$this->$obj = new $class($this);
+		}
 	}
 
 	/*

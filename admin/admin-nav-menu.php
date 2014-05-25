@@ -153,6 +153,13 @@ class PLL_Admin_Nav_Menu {
 		if (empty($_POST['menu-item-url'][$menu_item_db_id]) || $_POST['menu-item-url'][$menu_item_db_id] != '#pll_switcher')
 			return;
 
+		// security check
+		// as 'wp_update_nav_menu_item' can be called from outside WP admin
+		if ( ! current_user_can('edit_theme_options') )
+			wp_die( __( 'Cheatin&#8217; uh?' ) );
+
+		check_admin_referer( 'update-nav_menu', 'update-nav-menu-nonce' );
+
 		$options = array('hide_current' => 0,'force_home' => 0 ,'show_flags' => 0 ,'show_names' => 1); // default values
 		// our jQuery form has not been displayed
 		if (empty($_POST['menu-item-pll-detect'][$menu_item_db_id])) {
@@ -192,6 +199,20 @@ class PLL_Admin_Nav_Menu {
 	 */
 	public function update_nav_menu_locations($mods) {
 		if (isset($mods['nav_menu_locations'])) {
+
+			// security check
+			if ( ! current_user_can('edit_theme_options') )
+				wp_die( __( 'Cheatin&#8217; uh?' ) );
+
+			if (isset($_REQUEST['action']) && 'locations' == $_REQUEST['action'])
+				check_admin_referer( 'save-menu-locations' );
+
+			elseif (isset($_REQUEST['action']) && 'update' == $_REQUEST['action'])
+				check_admin_referer( 'update-nav_menu', 'update-nav-menu-nonce' );
+
+			else
+				return; // not called from WP Admin
+
 			$default = pll_default_language();
 			$arr = array();
 
