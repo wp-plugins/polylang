@@ -227,10 +227,6 @@ class PLL_Admin_Sync {
 		// take care that $_POST contains the only valid values for the current term
 		// FIXME can I synchronize parent without using $_POST instead?
 		if (isset($_POST['term_tr_lang'])) {
-			// security check
-			// as 'wp_update_term' can be called from outside WP admin
-			check_admin_referer('pll_language', '_pll_nonce');
-
 			foreach ($_POST['term_tr_lang'] as $lang => $tr_id) {
 				if (!$tr_id)
 					continue;
