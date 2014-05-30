@@ -69,7 +69,11 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 
 == Changelog ==
 
-= 1.5 =
+= 1.5.1 =
+
+* Fix: Bad redirection if /language/ is added to urls (introduced in 1.5)
+
+= 1.5 (2014-05-29) =
 
 * Add Ukrainian translation contributed by [http://getvoip.com/](http://getvoip.com/)
 * Refresh translation metaboxes (again): now translated posts are chosen from an autocomplete input field
