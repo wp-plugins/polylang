@@ -204,13 +204,19 @@ class PLL_Admin_Nav_Menu {
 			if ( ! current_user_can('edit_theme_options') )
 				wp_die( __( 'Cheatin&#8217; uh?' ) );
 
-			if (isset($_REQUEST['action']) && 'locations' == $_REQUEST['action'])
+			if (isset($_REQUEST['action']) && 'locations' == $_REQUEST['action']) {
 				check_admin_referer( 'save-menu-locations' );
+				$this->options['nav_menus'][$this->theme] = array();
+			}
 
-			elseif (isset($_REQUEST['action']) && 'update' == $_REQUEST['action'])
+			elseif (isset($_REQUEST['action']) && 'update' == $_REQUEST['action']) {
 				check_admin_referer( 'update-nav_menu', 'update-nav-menu-nonce' );
+				$this->options['nav_menus'][$this->theme] = array();
+			}
 
 			// customizer
+			// don't reset locations in this case.
+			// see http://wordpress.org/support/topic/menus-doesnt-show-and-not-saved-in-theme-settings-multilingual-site
 			elseif (isset($_REQUEST['action']) && 'customize_save' == $_REQUEST['action']) {
 				check_ajax_referer( 'save-customize_' . $GLOBALS['wp_customize']->get_stylesheet(), 'nonce' );
 			}
@@ -219,7 +225,6 @@ class PLL_Admin_Nav_Menu {
 				return; // not called from WP
 
 			$default = pll_default_language();
-			$this->options['nav_menus'][$this->theme] = array();
 
 			// extract language and menu from locations
 			foreach ($mods['nav_menu_locations'] as $loc => $menu) {
