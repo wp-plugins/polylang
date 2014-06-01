@@ -219,7 +219,7 @@ class PLL_Admin_Nav_Menu {
 				return; // not called from WP
 
 			$default = pll_default_language();
-			$arr = array();
+			$this->options['nav_menus'][$this->theme] = array();
 
 			// extract language and menu from locations
 			foreach ($mods['nav_menu_locations'] as $loc => $menu) {

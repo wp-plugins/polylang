@@ -73,6 +73,7 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 
 * Fix: Bad redirection if /language/ is added to urls (introduced in 1.5)
 * Fix: Nav menu locations are not saved in customizer (introduced in 1.4)
+* Fix: Unable to unset nav menu locations
 
 = 1.5 (2014-05-29) =
 
