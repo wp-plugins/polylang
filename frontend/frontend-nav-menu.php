@@ -161,10 +161,8 @@ class PLL_Frontend_Nav_Menu {
 			else {
 				$theme = get_option('stylesheet');
 
-				foreach ($menus as $loc => $menu) {
-					if (!empty($this->options['nav_menus'][$theme][$loc][$this->curlang->slug]))
-						$menus[$loc] = $this->options['nav_menus'][$theme][$loc][$this->curlang->slug];
-				}
+				foreach ($menus as $loc => $menu)
+					$menus[$loc] = empty($this->options['nav_menus'][$theme][$loc][$this->curlang->slug]) ? 0 : $this->options['nav_menus'][$theme][$loc][$this->curlang->slug];
 			}
 		}
 		return $menus;
