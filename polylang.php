@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://polylang.wordpress.com/
-Version: 1.5.0.1
+Version: 1.5.0.2
 Author: Frédéric Demarle
 Description: Adds multilingual capability to WordPress
 Text Domain: polylang
@@ -33,7 +33,7 @@ Domain Path: /languages
 if (!function_exists('add_action'))
 	exit();
 
-define('POLYLANG_VERSION', '1.5.0.1');
+define('POLYLANG_VERSION', '1.5.0.2');
 define('PLL_MIN_WP_VERSION', '3.5');
 
 define('POLYLANG_BASENAME', plugin_basename(__FILE__)); // plugin name as known by WP
@@ -90,8 +90,11 @@ class Polylang {
 
 		// avoid loading polylang admin for frontend ajax requests
 		// special test for plupload which does not use jquery ajax and thus does not pass our ajax prefilter
-		if (!defined('PLL_AJAX_ON_FRONT'))
-			define('PLL_AJAX_ON_FRONT', defined('DOING_AJAX') && DOING_AJAX && empty($_REQUEST['pll_ajax_backend']) && !(isset( $_REQUEST['action'] ) && 'upload-attachment' === $_REQUEST['action']));
+		// special test for customize_save done in frontend but for which we want to load the admin
+		if (!defined('PLL_AJAX_ON_FRONT')) {
+			$in = isset($_REQUEST['action']) && in_array($_REQUEST['action'], array('upload-attachment', 'customize_save'));
+			define('PLL_AJAX_ON_FRONT', defined('DOING_AJAX') && DOING_AJAX && empty($_REQUEST['pll_ajax_backend']) && !$in);
+		}
 
 		if (!defined('PLL_ADMIN'))
 			define('PLL_ADMIN', defined('DOING_CRON') || (is_admin() && !PLL_AJAX_ON_FRONT));

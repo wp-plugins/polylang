@@ -210,8 +210,13 @@ class PLL_Admin_Nav_Menu {
 			elseif (isset($_REQUEST['action']) && 'update' == $_REQUEST['action'])
 				check_admin_referer( 'update-nav_menu', 'update-nav-menu-nonce' );
 
+			// customizer
+			elseif (isset($_REQUEST['action']) && 'customize_save' == $_REQUEST['action']) {
+				check_ajax_referer( 'save-customize_' . $GLOBALS['wp_customize']->get_stylesheet(), 'nonce' );
+			}
+
 			else
-				return; // not called from WP Admin
+				return; // not called from WP
 
 			$default = pll_default_language();
 			$arr = array();
