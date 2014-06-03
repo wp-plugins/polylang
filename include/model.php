@@ -668,13 +668,15 @@ class PLL_Model {
 	 * @since 1.2
 	 *
 	 * @param object lang
-	 * @param array $args WP_Query arguments (accepted: post_type, m, year, monthnum, day, author, author_name, post_format)
+	 * @param array $q WP_Query arguments (accepted: post_type, m, year, monthnum, day, author, author_name, post_format)
 	 * @return int
 	 */
-	public function count_posts($lang, $args = array()) {
+	public function count_posts($lang, $q = array()) {
 		global $wpdb;
 
-		$q = wp_parse_args($args, array('post_type' => 'post'));
+		if (empty($q['post_type']))
+			$q['post_type'] = array('post'); // we *need* a post type
+
 		if (!is_array($q['post_type']))
 			$q['post_type'] = array($q['post_type']);
 
