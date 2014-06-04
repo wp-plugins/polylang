@@ -75,6 +75,7 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 * Fix: Nav menu locations are not saved in customizer (introduced in 1.4)
 * Fix: Unable to unset nav menu locations
 * Fix: Incorrect link for date archives in language switcher (introduced in 1.5)
+* Fix: Fatal error when using featured content in Twenty Fourteen
 
 = 1.5 (2014-05-29) =
 

@@ -138,7 +138,7 @@ class PLL_Plugins_Compat {
 			$_ids = get_posts(array(
 				'lang'        => 0, // avoid language filters
 				'fields'      => 'ids',
-				'numberposts' => self::$max_posts,
+				'numberposts' => Featured_Content::$max_posts,
 				'tax_query'   => array(array(
 					'taxonomy' => 'post_tag',
 					'terms'    => (int) $tag,
