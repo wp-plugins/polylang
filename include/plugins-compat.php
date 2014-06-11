@@ -128,7 +128,7 @@ class PLL_Plugins_Compat {
 		if (!$term = get_term_by( 'name', $settings['tag-name'], 'post_tag' ))
 			return $featured_ids;
 
-		// get fearured tag translations
+		// get featured tag translations
 		$tags = $GLOBALS['polylang']->model->get_translations('term' ,$term->term_id);
 		$ids = array();
 

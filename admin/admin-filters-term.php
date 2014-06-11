@@ -190,6 +190,7 @@ class PLL_Admin_Filters_Term {
 
 			if (isset($_POST['inline-save-tax']) && $this->model->get_term_language($term_id)->slug != $_POST['inline_lang_choice'])
 				$this->model->delete_translation('term', $term_id);
+
 			$this->model->set_term_language($term_id, $_POST['inline_lang_choice']);
 		}
 

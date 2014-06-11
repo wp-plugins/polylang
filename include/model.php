@@ -96,7 +96,7 @@ class PLL_Model {
 	 * @param string $taxonomy Polylang taxonomy depending if we are looking for a post (or term) language (or translation)
 	 * @return bool|object the term associated to the object in the requested taxonomy if exists, false otherwise
 	 */
-	protected function get_object_term($object_id, $taxonomy) {
+	public function get_object_term($object_id, $taxonomy) {
 		$term = get_object_term_cache($object_id, $taxonomy);
 
 		if ( false === $term ) {

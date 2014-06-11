@@ -3,8 +3,8 @@ msgstr ""
 "Project-Id-Version: polylang\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2014-04-26 09:49+0100\n"
-"Last-Translator: Kobus Joubert <kobus@lewendewoord.co.za>\n"
+"PO-Revision-Date: 2014-06-10 19:56+0200\n"
+"Last-Translator: Kobus Joubert <kobus@translate3d.com>\n"
 "Language-Team: \n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -443,33 +443,33 @@ msgstr "Sien alle groepe"
 # @ polylang
 #: admin/table-languages.php:59
 msgid "You are about to permanently delete this language. Are you sure?"
-msgstr ""
+msgstr "Jy is op die punt om hierdie taal permanent te verwyder. Is jy seker?"
 
 # @ polylang
 #: admin/view-languages.php:143
 msgid "Use this to remove unused strings from database, for example after a plugin has been uninstalled."
-msgstr ""
+msgstr "Gebruik hierdie om ongebruikte strings te verwyder uit die databasis uit, byvoorbeeld na verwydering van 'n module."
 
 # @ polylang
 #: admin/view-languages.php:374
 msgid "The synchronization options allow to maintain exact same values (or translations in the case of taxonomies and page parent) of meta content between the translations of a post or page."
-msgstr ""
+msgstr "Die sinkronisasie opsies voorsien om presies dieselfde waardes in stand te hou (of vertalings in die geval van taksonomie en bladsy ouer) van meta-inhoud tussen die vertalings van 'n post of bladsy."
 
 #: admin/admin-model.php:289
 msgid "The language code contains invalid characters"
-msgstr ""
+msgstr "Die taal kode bevat ongeldige karakters"
 
 #: admin/view-languages.php:190
 msgid "The language is set from content"
-msgstr ""
+msgstr "Die taal word ingestel van inhoud"
 
 #: admin/view-languages.php:193
 msgid "Posts, pages, categories and tags urls are not modified."
-msgstr ""
+msgstr "Posts, bladsye, kategorieë en etikette urls is nie verander nie."
 
 #: admin/view-languages.php:199
 msgid "The language is set from the directory name in pretty permalinks"
-msgstr ""
+msgstr "Die taal is ingestel van die gids se naam in pretty permalinks"
 
 # @ polylang
 #: admin/view-languages.php:202
@@ -477,69 +477,69 @@ msgstr ""
 #: admin/view-languages.php:258
 #: admin/view-languages.php:267
 msgid "Example:"
-msgstr ""
+msgstr "Voorbeeld:"
 
 #: admin/view-languages.php:208
 msgid "The language is set from the subdomain name in pretty permalinks"
-msgstr ""
+msgstr "Die taal word gestel uit die subdomein naam in pretty permalinks"
 
 # @ polylang
 #: admin/view-languages.php:217
 msgid "The language is set from different domains"
-msgstr ""
+msgstr "Die taal word gestel vanuit verskillende domians"
 
 #: admin/view-languages.php:255
 msgid "Remove /language/ in pretty permalinks"
-msgstr ""
+msgstr "Verwyder / taal / in pretty permalinks"
 
 #: admin/view-languages.php:264
 msgid "Keep /language/ in pretty permalinks"
-msgstr ""
+msgstr "Hou / taal / in pretty permalinks"
 
 # @ polylang
 #: admin/view-languages.php:279
 msgid "The front page url contains the language code instead of the page name or page id"
-msgstr ""
+msgstr "Die voorblad url bevat die taal kode in plaas van die bladsy se naam of bladsy id"
 
 # @ polylang
 #: admin/admin-filters-term.php:143
 #, php-format
 msgid "A translation does already exist for %s"
-msgstr ""
+msgstr "'n Vertaling bestaan nog nie vir % s ​​nie"
 
 # @ polylang
 #: admin/view-languages.php:287
 #, php-format
 msgid "Example: %s instead of %s"
-msgstr ""
+msgstr "Voorbeeld: %s in plaas van %s"
 
 #: admin/admin-model.php:49
 msgid "Impossible to add the language."
-msgstr ""
+msgstr "Onmoontlik om die taal by te voeg."
 
 # @ polylang
 #: admin/admin-model.php:73
 msgid "Language added."
-msgstr ""
+msgstr "Taal bygevoeg."
 
 # @ polylang
 #: admin/admin-model.php:187
 msgid "Language deleted."
-msgstr ""
+msgstr "Taal verwyder."
 
 # @ polylang
 #: admin/admin-model.php:268
 msgid "Language updated."
-msgstr ""
+msgstr "Taal opgedateer."
 
 # @ polylang
 #: admin/settings.php:203
 msgid "Translations updated."
-msgstr ""
+msgstr "Vertalings opgedateer."
 
 #: admin/view-languages.php:89
 msgid "Language code - preferably 2-letters ISO 639-1  (for example: en)"
-msgstr ""
+msgstr "Taal-kode - verkieslik 2-letters ISO 639-1 (byvoorbeeld: af)"
 
 #~ msgid "Translation"
 #~ msgstr "Vertaling"
