@@ -8,6 +8,7 @@
 class PLL_Model {
 	public $options;
 	public $languages; // used to cache the list of languages
+	public $blog_id; // used to get one cache array per site
 
 	/*
 	 * constructor: registers custom taxonomies and setups filters and actions
@@ -18,6 +19,7 @@ class PLL_Model {
 	 */
 	public function __construct(&$options) {
 		$this->options = &$options;
+		$this->blog_id = get_current_blog_id();
 
 		// register our taxonomies as soon as possible
 		// this is early registration, not ready for rewrite rules as wp_rewrite will be setup later
@@ -134,7 +136,7 @@ class PLL_Model {
 	 * @return array|string|int list of PLL_Language objects or PLL_Language object properties
 	 */
 	public function get_languages_list($args = array()) {
-		if (empty($this->languages)) {
+		if (empty($this->languages[$this->blog_id])) {
 			if (false === ($languages = get_transient('pll_languages_list'))) {
 				$languages = get_terms('language', array('hide_empty' => false, 'orderby'=> 'term_group'));
 				$languages = empty($languages) || is_wp_error($languages) ? array() : $languages;
@@ -154,7 +156,7 @@ class PLL_Model {
 				}
 			}
 
-			$this->languages = $languages;
+			$this->languages[$this->blog_id] = $languages;
 
 			// need to wait for $wp_rewrite availibility to set homepage urls
 			did_action('setup_theme') ? $this->_languages_list() : add_action('setup_theme', array(&$this, '_languages_list'));
@@ -163,7 +165,7 @@ class PLL_Model {
 		$args = wp_parse_args($args, array('hide_empty' => false));
 
 		// remove empty languages if requested
-		$languages = array_filter($this->languages, create_function('$v', sprintf('return $v->count || !%d;', $args['hide_empty'])));
+		$languages = array_filter($this->languages[$this->blog_id], create_function('$v', sprintf('return $v->count || !%d;', $args['hide_empty'])));
 
 		return empty($args['fields']) ? $languages : wp_list_pluck($languages, $args['fields']);
 	}
@@ -178,13 +180,13 @@ class PLL_Model {
 	public function _languages_list() {
 		if (false === get_transient('pll_languages_list')) {
 			if (!defined('PLL_CACHE_HOME_URL') || PLL_CACHE_HOME_URL) {
-				foreach ($this->languages as $language)
+				foreach ($this->languages[$this->blog_id] as $language)
 					$language->set_home_url();
 			}
-			set_transient('pll_languages_list', $this->languages);
+			set_transient('pll_languages_list', $this->languages[$this->blog_id]);
 		}
 
-		foreach ($this->languages as $language) {
+		foreach ($this->languages[$this->blog_id] as $language) {
 			if (defined('PLL_CACHE_HOME_URL') && !PLL_CACHE_HOME_URL)
 				$language->set_home_url();
 
@@ -206,7 +208,7 @@ class PLL_Model {
 	public function clean_languages_cache($term = 0, $taxonomy = null) {
 		if (empty($taxonomy->name) || 'language' == $taxonomy->name) {
 			delete_transient('pll_languages_list');
-			$this->languages = array();
+			$this->languages[$this->blog_id] = array();
 		}
 	}
 
@@ -224,12 +226,15 @@ class PLL_Model {
 		if (is_object($value))
 			return $this->get_language($value->term_id); // will force cast to PLL_Language
 
-		if (empty($language[$value])) {
+		if (empty($language[$this->blog_id][$value])) {
 			foreach ($this->get_languages_list() as $lang)
-				$language[$lang->term_id] = $language[$lang->tl_term_id] = $language[$lang->slug] = $language[$lang->locale] = $lang;
+				$language[$this->blog_id][$lang->term_id]
+					= $language[$this->blog_id][$lang->tl_term_id]
+					= $language[$this->blog_id][$lang->slug]
+					= $language[$this->blog_id][$lang->locale] = $lang;
 		}
 
-		return empty($language[$value]) ? false : $language[$value];
+		return empty($language[$this->blog_id][$value]) ? false : $language[$this->blog_id][$value];
 	}
 
 	/*
@@ -751,5 +756,18 @@ class PLL_Model {
 			SELECT object_id FROM $wpdb->term_relationships WHERE term_taxonomy_id = %d",
 			'term' == $type ? $lang->tl_term_taxonomy_id : $lang->term_taxonomy_id
 		));
+	}
+
+	/*
+	 * setup the links model based on options
+	 *
+	 * @since 1.2
+	 *
+	 * @return object implementing "links_model interface"
+	 */
+	public function get_links_model() {
+		$c = array('Directory', 'Directory', 'Subdomain', 'Domain');
+		$class = get_option('permalink_structure') ? 'PLL_Links_' .$c[$this->options['force_lang']] : 'PLL_Links_Default';
+		return new $class($this);
 	}
 }

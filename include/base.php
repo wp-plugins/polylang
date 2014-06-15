@@ -76,9 +76,9 @@ abstract class PLL_Base {
 	 */
 	public function switch_blog($new_blog, $old_blog) {
 		if ($new_blog != $old_blog) {
+			$this->model->blog_id = $new_blog;
 			$this->options = get_option('polylang'); // needed for menus
-			$this->links_model->home = get_option('home'); // FIXME the links model may be different in old and new blog !
-			unset($this->model->languages); // resets the language list
+			$this->links_model = $this->model->get_links_model();
 		}
 	}
 
