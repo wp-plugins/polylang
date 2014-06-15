@@ -140,6 +140,7 @@ class PLL_Frontend extends PLL_Base {
 	public function switch_blog($new_blog, $old_blog) {
 		parent::switch_blog($new_blog, $old_blog);
 
+		// FIXME need some simplification as there are too many variables storing the same value
 		if ($new_blog != $old_blog && did_action('pll_language_defined')) {
 			static $restore_curlang;
 			if (empty($restore_curlang))
@@ -147,12 +148,18 @@ class PLL_Frontend extends PLL_Base {
 
 			$lang = $this->model->get_language($restore_curlang);
 			$this->curlang = $lang ? $lang : $this->model->get_language($this->options['default_lang']);
+			$this->choose_lang->curlang = $this->links->curlang = $this->curlang;
 
-			$links->home = get_option('home');
+			$this->links->home = $this->links_model->home; // set in parent class
 
 			if ('page' == get_option('show_on_front')) {
-				$choose_lang->page_on_front = $links-> page_on_front = get_option('page_on_front');
+				$choose_lang->page_on_front = $links->page_on_front = get_option('page_on_front');
 				$choose_lang->page_for_posts = $links->page_for_posts = get_option('page_for_posts');
+			}
+
+			else {
+				$choose_lang->page_on_front = $links->page_on_front = 0;
+				$choose_lang->page_for_posts = $links->page_for_posts = 0;
 			}
 		}
 	}
