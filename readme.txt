@@ -71,12 +71,15 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 
 = 1.5.1 =
 
+* Add: filter 'pll_settings_tabs' and action 'pll_settings_active_tab_{$tab}'
+* Add: possibility to add a path when using multiple domains (same path for all languages)
 * Fix: Bad redirection if /language/ is added to urls (introduced in 1.5)
 * Fix: Nav menu locations are not saved in customizer (introduced in 1.4)
 * Fix: Unable to unset nav menu locations
 * Fix: Incorrect link for date archives in language switcher (introduced in 1.5)
 * Fix: Fatal error when using featured content in Twenty Fourteen
 * Fix: Posts bulk edit broken (introduced in 1.5)
+* Fix: Polylang does not play nice with switch_to_blog
 
 = 1.5 (2014-05-29) =
 

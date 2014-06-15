@@ -45,6 +45,9 @@ class PLL_Model {
 
 		// just in case someone would like to display the language description ;-)
 		add_filter('language_description', create_function('$v', "return '';"));
+
+		// resets the languages list when switching blog
+		add_action('switch_blog', array(&$this, 'switch_blog'));
 	}
 
 	/*
@@ -751,5 +754,14 @@ class PLL_Model {
 			SELECT object_id FROM $wpdb->term_relationships WHERE term_taxonomy_id = %d",
 			'term' == $type ? $lang->tl_term_taxonomy_id : $lang->term_taxonomy_id
 		));
+	}
+
+	/*
+	 * resets the languages list when switching blog
+	 *
+	 * @ since 1.5.1
+	 */
+	public function switch_blog() {
+		unset($this->languages);
 	}
 }
