@@ -18,7 +18,7 @@
  *
  * @since 1.2
  */
-class PLL_Frontend extends PLL_Base{
+class PLL_Frontend extends PLL_Base {
 	public $curlang;
 	public $links, $choose_lang, $filters, $filters_search, $auto_translate;
 
@@ -130,6 +130,31 @@ class PLL_Frontend extends PLL_Base{
 	 */
 	public function auto_translate() {
 		$this->auto_translate = new PLL_Frontend_Auto_Translate($this);
+	}
+
+	/*
+	 * resets some variables when switching blog
+	 *
+	 * @since 1.5.1
+	 */
+	public function switch_blog($new_blog, $old_blog) {
+		parent::switch_blog($new_blog, $old_blog);
+
+		if ($new_blog != $old_blog && did_action('pll_language_defined')) {
+			static $restore_curlang;
+			if (empty($restore_curlang))
+				$restore_curlang = $this->curlang->slug; // to always remember the current language through blogs
+
+			$lang = $this->model->get_language($restore_curlang);
+			$this->curlang = $lang ? $lang : $this->model->get_language($this->options['default_lang']);
+
+			$links->home = get_option('home');
+
+			if ('page' == get_option('show_on_front')) {
+				$choose_lang->page_on_front = $links-> page_on_front = get_option('page_on_front');
+				$choose_lang->page_for_posts = $links->page_for_posts = get_option('page_for_posts');
+			}
+		}
 	}
 }
 

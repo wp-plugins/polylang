@@ -24,6 +24,9 @@ abstract class PLL_Base {
 
 		// user defined strings translations
 		add_action('pll_language_defined', array(&$this, 'load_strings_translations'), 5);
+
+		// switch_to_blog
+		add_action('switch_blog', array(&$this, 'switch_blog'), 10, 2);
 	}
 
 	/*
@@ -64,6 +67,19 @@ abstract class PLL_Base {
 		$mo = new PLL_MO();
 		$mo->import_from_db($this->model->get_language(get_locale()));
 		$GLOBALS['l10n']['pll_string'] = &$mo;
+	}
+
+	/*
+	 * resets some variables when switching blog
+	 *
+	 * @since 1.5.1
+	 */
+	public function switch_blog($new_blog, $old_blog) {
+		if ($new_blog != $old_blog) {
+			$this->options = get_option('polylang'); // needed for menus
+			$this->links_model->home = get_option('home');
+			unset($this->model->languages); // resets the language list
+		}
 	}
 
 	/*
