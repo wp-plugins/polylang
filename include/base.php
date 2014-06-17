@@ -71,15 +71,23 @@ abstract class PLL_Base {
 
 	/*
 	 * resets some variables when switching blog
+	 * applies only if Polylang is active on the new blog
 	 *
 	 * @since 1.5.1
+	 *
+	 * @return bool not used by WP but by child class
 	 */
 	public function switch_blog($new_blog, $old_blog) {
-		if ($new_blog != $old_blog) {
+		$plugins = ($sitewide_plugins = get_site_option('active_sitewide_plugins')) && is_array($sitewide_plugins) ? array_keys($sitewide_plugins) : array();
+		$plugins = array_merge($plugins, get_option('active_plugins'));
+
+		if ($new_blog != $old_blog && in_array(POLYLANG_BASENAME, $plugins)) {
 			$this->model->blog_id = $new_blog;
 			$this->options = get_option('polylang'); // needed for menus
 			$this->links_model = $this->model->get_links_model();
+			return true;
 		}
+		return false;
 	}
 
 	/*
