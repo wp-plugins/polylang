@@ -85,7 +85,7 @@ class PLL_Table_String extends WP_List_Table {
 		foreach($item['translations'] as $key => $translation) {
 			$input_type = $item['multiline'] ?
 				'<textarea name="translation[%1$s][%2$s]" id="%1$s-%2$s">%4$s</textarea>' :
-				'<input name="translation[%1$s][%2$s]" id="%1$s-%2$s" value="%4$s" />';
+				'<input type="text" name="translation[%1$s][%2$s]" id="%1$s-%2$s" value="%4$s" />';
 			$out .= sprintf('<div class="translation"><label for="%1$s-%2$s">%3$s</label>'.$input_type.'</div>'."\n",
 				esc_attr($key),
 				esc_attr($item['row']),

@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://polylang.wordpress.com/
-Version: 1.5dev40
+Version: 1.5.1
 Author: Frédéric Demarle
 Description: Adds multilingual capability to WordPress
 Text Domain: polylang
@@ -33,7 +33,7 @@ Domain Path: /languages
 if (!function_exists('add_action'))
 	exit();
 
-define('POLYLANG_VERSION', '1.5dev40');
+define('POLYLANG_VERSION', '1.5.1');
 define('PLL_MIN_WP_VERSION', '3.5');
 
 define('POLYLANG_BASENAME', plugin_basename(__FILE__)); // plugin name as known by WP
@@ -90,8 +90,11 @@ class Polylang {
 
 		// avoid loading polylang admin for frontend ajax requests
 		// special test for plupload which does not use jquery ajax and thus does not pass our ajax prefilter
-		if (!defined('PLL_AJAX_ON_FRONT'))
-			define('PLL_AJAX_ON_FRONT', defined('DOING_AJAX') && DOING_AJAX && empty($_REQUEST['pll_ajax_backend']) && !(isset( $_REQUEST['action'] ) && 'upload-attachment' === $_REQUEST['action']));
+		// special test for customize_save done in frontend but for which we want to load the admin
+		if (!defined('PLL_AJAX_ON_FRONT')) {
+			$in = isset($_REQUEST['action']) && in_array($_REQUEST['action'], array('upload-attachment', 'customize_save'));
+			define('PLL_AJAX_ON_FRONT', defined('DOING_AJAX') && DOING_AJAX && empty($_REQUEST['pll_ajax_backend']) && !$in);
+		}
 
 		if (!defined('PLL_ADMIN'))
 			define('PLL_ADMIN', defined('DOING_CRON') || (is_admin() && !PLL_AJAX_ON_FRONT));
@@ -100,7 +103,7 @@ class Polylang {
 			define('PLL_SETTINGS', is_admin() && isset($_GET['page']) && $_GET['page'] == 'mlang');
 
 		// blog creation on multisite
-		add_action('wpmu_new_blog', array(&$this, 'wpmu_new_blog'));
+		add_action('wpmu_new_blog', array(&$this, 'wpmu_new_blog'), 5); // before WP attempts to send mails which can break on some PHP versions
 
 		// FIXME maybe not available on every installations but widely used by WP plugins
 		spl_autoload_register(array(&$this, 'autoload')); // autoload classes
@@ -208,7 +211,7 @@ class Polylang {
 		$polylang = new StdClass();
 		$polylang->options = &$options;
 		$polylang->model = new PLL_Admin_Model($options);
-		$polylang->links_model = $this->get_links_model($polylang->model, $options);
+		$polylang->links_model = $polylang->model->get_links_model();
 		flush_rewrite_rules();
 	}
 
@@ -280,7 +283,7 @@ class Polylang {
 
 		$class = apply_filters('pll_model', PLL_SETTINGS ? 'PLL_Admin_Model' : 'PLL_Model');
 		$model = new $class($options);
-		$links_model = $this->get_links_model($model);
+		$links_model = $model->get_links_model();
 
 		if (PLL_ADMIN) {
 			$polylang = new PLL_Admin($links_model);
@@ -297,20 +300,6 @@ class Polylang {
 		// load wpml-config.xml
 		if (!defined('PLL_WPML_COMPAT') || PLL_WPML_COMPAT)
 			new PLL_WPML_Config;
-	}
-
-	/*
-	 * setup the links model based on options
-	 *
-	 * @since 1.2
-	 *
-	 * @param object $model instance of PLL_Model
-	 * @return object implementing "links_model interface"
-	 */
-	protected function get_links_model(&$model) {
-		$c = array('Directory', 'Directory', 'Subdomain', 'Domain');
-		$class = get_option('permalink_structure') ? 'PLL_Links_' .$c[$model->options['force_lang']] : 'PLL_Links_Default';
-		return new $class($model);
 	}
 }
 
