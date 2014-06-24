@@ -245,10 +245,13 @@ class PLL_Model {
 	 * @param string $type either 'post' or 'term'
 	 */
 	protected function clean_translations_terms($type) {
+		// FIXME does nothing since 1.5.2 as count seems not to be reliable enough
+		/*
 		global $wpdb;
 		$ids = $wpdb->get_col("SELECT term_id FROM $wpdb->term_taxonomy WHERE taxonomy IN ('{$type}_translations') AND count = 0");
 		foreach ($ids as $id)
 			wp_delete_term((int) $id, $type . '_translations');
+		*/
 	}
 
 	/*

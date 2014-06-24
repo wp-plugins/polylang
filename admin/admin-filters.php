@@ -86,13 +86,16 @@ class PLL_Admin_Filters extends PLL_Filters {
 	 * @param int $user_id
 	 */
 	public function personal_options_update($user_id) {
-		update_user_meta($user_id, 'user_lang', $_POST['user_lang']); // admin language
+		// admin language
+		$user_lang = in_array($_POST['user_lang'], $this->model->get_languages_list(array('fields' => 'locale'))) ? $_POST['user_lang'] : 0;
+		update_user_meta($user_id, 'user_lang', $_POST['user_lang']);
 
 		// biography translations
 		foreach ($this->model->get_languages_list() as $lang) {
 			$meta = $lang->slug == $this->options['default_lang'] ? 'description' : 'description_'.$lang->slug;
-			if (!empty($_POST['description_'.$lang->slug]))
-				update_user_meta($user_id, $meta, $_POST['description_'.$lang->slug]);
+			$description = empty($_POST['description_'.$lang->slug]) ? '' : trim($_POST['description_'.$lang->slug]);
+			$description = apply_filters('pre_user_description', $description); // applies WP default filter wp_filter_kses
+			update_user_meta($user_id, $meta, $description);
 		}
 	}
 
@@ -127,10 +130,12 @@ class PLL_Admin_Filters extends PLL_Filters {
 		// hidden informations to modify the biography form with js
 		foreach ($this->model->get_languages_list() as $lang) {
 			$meta = $lang->slug == $this->options['default_lang'] ? 'description' : 'description_'.$lang->slug;
+			$description = apply_filters('user_description', get_user_meta($profileuser->ID, $meta, true)); // applies WP default filter wp_kses_data
+
 			printf('<input type="hidden" class="biography" name="%s-%s" value="%s" />',
 				esc_attr($lang->slug),
 				esc_attr($lang->name),
-				esc_attr(get_user_meta($profileuser->ID, $meta, true))
+				esc_attr($description)
 			);
 		}
 	}
