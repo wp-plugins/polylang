@@ -251,12 +251,13 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 		elseif (isset($_REQUEST['inline_lang_choice'])) {
 			// bulk edit does not modify the language
 			if (isset($_REQUEST['bulk_edit']) && $_REQUEST['inline_lang_choice'] == -1)
-				continue;
+				return;
 
 			isset($_REQUEST['bulk_edit']) ? check_admin_referer('bulk-posts') : check_admin_referer('inlineeditnonce', '_inline_edit');
 
 			if (($old_lang = $this->model->get_post_language($post_id)) && $old_lang->slug != $_REQUEST['inline_lang_choice'])
 				$this->model->delete_translation('post', $post_id);
+
 			$this->model->set_post_language($post_id, $lang = $_REQUEST['inline_lang_choice']);
 		}
 
@@ -306,7 +307,7 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 		if (!$this->model->is_translated_post_type($post->post_type))
 			return;
 
-		// security check
+		// capability check
 		// as 'wp_insert_post' can be called from outside WP admin
 		$post_type_object = get_post_type_object($post->post_type);
 		if (!current_user_can($post_type_object->cap->edit_posts) || !current_user_can($post_type_object->cap->create_posts))

@@ -140,7 +140,7 @@ class PLL_Frontend_Nav_Menu {
 	public function nav_menu_locations($menus) {
 		if (is_array($menus)) {
 			// support for theme customizer
-			// let's look for multilingual menu locations directly in $_POST as tehre are not in customizer object
+			// let's look for multilingual menu locations directly in $_POST as there are not in customizer object
 			if (isset($_POST['wp_customize'], $_POST['customized'])) {
 				$customized = json_decode(wp_unslash($_POST['customized']));
 
@@ -161,10 +161,8 @@ class PLL_Frontend_Nav_Menu {
 			else {
 				$theme = get_option('stylesheet');
 
-				foreach ($menus as $loc => $menu) {
-					if (!empty($this->options['nav_menus'][$theme][$loc][$this->curlang->slug]))
-						$menus[$loc] = $this->options['nav_menus'][$theme][$loc][$this->curlang->slug];
-				}
+				foreach ($menus as $loc => $menu)
+					$menus[$loc] = empty($this->options['nav_menus'][$theme][$loc][$this->curlang->slug]) ? 0 : $this->options['nav_menus'][$theme][$loc][$this->curlang->slug];
 			}
 		}
 		return $menus;

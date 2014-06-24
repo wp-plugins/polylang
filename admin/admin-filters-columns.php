@@ -78,7 +78,7 @@ class PLL_Admin_Filters_Columns {
 				$columns[] = 'language_'.$language->slug;
 		}
 
-		return reset($columns);
+		return empty($columns) ? '' : reset($columns);
 	}
 
 	/*

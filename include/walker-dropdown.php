@@ -20,7 +20,7 @@ class PLL_Walker_Dropdown extends Walker {
 		$output .= sprintf(
 			"\t".'<option value="%s"%s>%s</option>'."\n",
 			esc_attr($element->$value),
-			isset($args['selected']) && $args['selected'] == $element->$value ? ' selected="selected"' : '',
+			isset($args['selected']) && $args['selected'] === $element->$value ? ' selected="selected"' : '',
 			esc_html($element->name)
 		);
 	}

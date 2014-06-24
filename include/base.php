@@ -24,6 +24,9 @@ abstract class PLL_Base {
 
 		// user defined strings translations
 		add_action('pll_language_defined', array(&$this, 'load_strings_translations'), 5);
+
+		// switch_to_blog
+		add_action('switch_blog', array(&$this, 'switch_blog'), 10, 2);
 	}
 
 	/*
@@ -64,6 +67,27 @@ abstract class PLL_Base {
 		$mo = new PLL_MO();
 		$mo->import_from_db($this->model->get_language(get_locale()));
 		$GLOBALS['l10n']['pll_string'] = &$mo;
+	}
+
+	/*
+	 * resets some variables when switching blog
+	 * applies only if Polylang is active on the new blog
+	 *
+	 * @since 1.5.1
+	 *
+	 * @return bool not used by WP but by child class
+	 */
+	public function switch_blog($new_blog, $old_blog) {
+		$plugins = ($sitewide_plugins = get_site_option('active_sitewide_plugins')) && is_array($sitewide_plugins) ? array_keys($sitewide_plugins) : array();
+		$plugins = array_merge($plugins, get_option('active_plugins'));
+
+		if ($new_blog != $old_blog && in_array(POLYLANG_BASENAME, $plugins)) {
+			$this->model->blog_id = $new_blog;
+			$this->options = get_option('polylang'); // needed for menus
+			$this->links_model = $this->model->get_links_model();
+			return true;
+		}
+		return false;
 	}
 
 	/*

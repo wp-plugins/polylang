@@ -141,7 +141,14 @@ class PLL_Admin_Filters_Term {
 	}
 
 	/*
-	 * FIXME missing documentation
+	 * prevents duplicating a term translation
+	 *
+	 * @since 1.3
+	 *
+	 * @param string $term The term to add or update.
+	 * @param string $taxonomy The taxonomy to which to add the term
+	 *
+	 * @return object|string WP_Error object if the translation already exits, unmodified $term otherwise
 	 */
 	public function pre_insert_term($term, $taxonomy) {
 		if (isset($_POST['action'], $_POST['from_tag'], $_POST['term_lang_choice']) && 'add-tag' == $_POST['action'] && $this->model->get_translation('term', $_POST['from_tag'], $_POST['term_lang_choice'])) {
@@ -168,7 +175,12 @@ class PLL_Admin_Filters_Term {
 
 		// edit tags
 		if (isset($_POST['term_lang_choice'])) {
-			check_admin_referer('pll_language', '_pll_nonce');
+			if ('add-' . $taxonomy == $_POST['action'])
+				check_ajax_referer($_POST['action'], '_ajax_nonce-add-' . $taxonomy); // category metabox
+
+			else
+				check_admin_referer('pll_language', '_pll_nonce'); // edit tags or tags metabox
+
 			$this->model->set_term_language($term_id, $_POST['term_lang_choice']);
 		}
 
@@ -178,6 +190,7 @@ class PLL_Admin_Filters_Term {
 
 			if (isset($_POST['inline-save-tax']) && $this->model->get_term_language($term_id)->slug != $_POST['inline_lang_choice'])
 				$this->model->delete_translation('term', $term_id);
+
 			$this->model->set_term_language($term_id, $_POST['inline_lang_choice']);
 		}
 
@@ -237,7 +250,7 @@ class PLL_Admin_Filters_Term {
 		if (!$this->model->is_translated_taxonomy($taxonomy))
 			return;
 
-		// security check
+		// capability check
 		// as 'wp_update_term' can be called from outside WP admin
 		$tax = get_taxonomy($taxonomy);
 		if (!current_user_can($tax->cap->edit_terms))

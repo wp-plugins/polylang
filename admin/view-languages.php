@@ -383,6 +383,7 @@ case 'settings': ?><?php
 break;
 
 default:
+	do_action('pll_settings_active_tab_' . $this->active_tab);
 break;
 }?>
 
