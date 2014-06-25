@@ -69,6 +69,11 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 
 == Changelog ==
 
+= 1.5.3 =
+
+* Fix: Saving a header or a background in menu Appearance resets nav menus locations (introduced in 1.5)
+* Fix: sub-sub-options and deeper levels defined in wpml-config.xml are not translated
+
 = 1.5.2 (2014-06-24) =
 
 * Fix: Revert post translations terms cleaning introduced in 1.5 as it seems to cause problems

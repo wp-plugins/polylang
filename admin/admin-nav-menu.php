@@ -222,7 +222,7 @@ class PLL_Admin_Nav_Menu {
 			}
 
 			else
-				return; // not called from WP
+				return $mods; // no modification for nav menu locations
 
 			$default = pll_default_language();
 
