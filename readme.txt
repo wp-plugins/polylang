@@ -71,9 +71,11 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 
 = 1.5.3 =
 
+* Add: Capability check before creating links in post list table
 * Fix: Saving a header or a background in menu Appearance resets nav menus locations (introduced in 1.5)
 * Fix: sub-sub-options and deeper levels defined in wpml-config.xml are not translated
 * Fix: Fatal error when creating a new site when Polylang is network activated (introduced in v1.5.1)
+* Fix: Admin language forced to English when activating Polylang (before creating any new language)
 
 = 1.5.2 (2014-06-24) =
 
