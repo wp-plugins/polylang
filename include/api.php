@@ -249,7 +249,7 @@ function pll_save_term_translations($arr) {
  * @param array $args (accepted keys: post_type, m, year, monthnum, day, author, author_name, post_format)
  * @return int posts count
  */
-function pll_count_posts($lang, $args) {
+function pll_count_posts($lang, $args = array()) {
 	global $polylang;
-	return isset($polylang) ? $polylang->model->count_posts($polylang->model->get_language($lang)) : false;
+	return isset($polylang) ? $polylang->model->count_posts($polylang->model->get_language($lang), $args) : false;
 }

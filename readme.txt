@@ -76,6 +76,7 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 * Fix: sub-sub-options and deeper levels defined in wpml-config.xml are not translated
 * Fix: Fatal error when creating a new site when Polylang is network activated (introduced in v1.5.1)
 * Fix: Admin language forced to English when activating Polylang (before creating any new language)
+* Fix: 'pll_count_posts' second parameter not taken into account
 
 = 1.5.2 (2014-06-24) =
 
