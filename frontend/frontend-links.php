@@ -233,8 +233,8 @@ class PLL_Frontend_Links extends PLL_Links {
 	public function get_translation_url($language) {
 		static $translation_url = array(); // used to cache results
 
-		if (isset($translation_url[$language->slug]))
-			return $translation_url[$language->slug];
+		if (isset($translation_url[$this->model->blog_id][$language->slug]))
+			return $translation_url[$this->model->blog_id][$language->slug];
 
 		global $wp_query;
 		$qv = $wp_query->query_vars;
@@ -279,7 +279,7 @@ class PLL_Frontend_Links extends PLL_Links {
 		elseif (is_home() || is_tax('language') )
 			$url = $this->get_home_url($language);
 
-		return $translation_url[$language->slug] = apply_filters('pll_translation_url', (isset($url) && !is_wp_error($url) ? $url : null), $language->slug);
+		return $translation_url[$this->model->blog_id][$language->slug] = apply_filters('pll_translation_url', (isset($url) && !is_wp_error($url) ? $url : null), $language->slug);
 	}
 
 	/*

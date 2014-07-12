@@ -49,7 +49,7 @@ class PLL_Links_Domain extends PLL_Links_Model {
 	 * @return string language slug
 	 */
 	public function get_language_from_url() {
-		return ($lang = array_search( (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'], $this->options['domains'] ) ) ? $lang : $this->options['default_lang'];
+		return ($lang = array_search( (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . parse_url($this->home, PHP_URL_PATH), $this->options['domains'] ) ) ? $lang : $this->options['default_lang'];
 	}
 
 	/*

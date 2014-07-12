@@ -78,7 +78,7 @@ class PLL_Admin_Filters_Columns {
 				$columns[] = 'language_'.$language->slug;
 		}
 
-		return reset($columns);
+		return empty($columns) ? '' : reset($columns);
 	}
 
 	/*
@@ -116,18 +116,25 @@ class PLL_Admin_Filters_Columns {
 		if ($column == $this->get_first_language_column())
 			printf('<div class="hidden" id="lang_%d">%s</div>', esc_attr($post_id), esc_html($lang->slug));
 
+		$post_type_object = get_post_type_object(get_post_type($post_id));
 
 		// link to edit post (or a translation)
 		// use $_POST['old_lang'] to detect if the language has been modified in quick edit
+		// check capabilities before creating links thanks to Solinx. See http://wordpress.org/support/topic/feature-request-incl-code-check-for-capabilities-in-admin-screens
 		if ($id = ($inline && $lang->slug != $_POST['old_lang']) ? ($language->slug == $lang->slug ? $post_id : 0) : $this->model->get_post($post_id, $language)) {
-			printf('<a class="%1$s" title="%2$s" href="%3$s"></a>',
-				$id == $post_id ? 'pll_icon_tick' : 'pll_icon_edit',
-				esc_attr(get_post($id)->post_title),
-				esc_url(get_edit_post_link($id))
-			);
+			if (current_user_can($post_type_object->cap->edit_post, $post_id)) {
+				printf('<a class="%1$s" title="%2$s" href="%3$s"></a>',
+					$id == $post_id ? 'pll_icon_tick' : 'pll_icon_edit',
+					esc_attr(get_post($id)->post_title),
+					esc_url(get_edit_post_link($id))
+				);
+			}
+			elseif ($id == $post_id) {
+				echo '<span class="pll_icon_tick"></span>';
+			}
 		}
 		// link to add a new translation
-		else {
+		elseif (current_user_can($post_type_object->cap->create_posts)) {
 			printf('<a class="pll_icon_add" title="%1$s" href="%2$s"></a>',
 				__('Add new translation', 'polylang'),
 				esc_url($this->links->get_new_post_translation_link($post_id, $language))

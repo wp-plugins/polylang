@@ -669,7 +669,7 @@ class PLL_WPML_Config {
 				if (is_string($value) && $strings[$name] == 1)
 					$values[$name] = pll__($value);
 				elseif (is_array($value) && is_array($strings[$name]))
-					$value = $this->translate_strings_recursive($strings[$name], $value);
+					$values[$name] = $this->translate_strings_recursive($strings[$name], $value);
 			}
 		}
 		return $values;

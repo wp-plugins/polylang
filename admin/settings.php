@@ -85,6 +85,8 @@ class PLL_Settings {
 			$tabs['settings'] = __('Settings', 'polylang');
 		}
 
+		$tabs = apply_filters('pll_settings_tabs', $tabs);
+
 		switch($this->active_tab) {
 			case 'lang':
 				// prepare the list table of languages

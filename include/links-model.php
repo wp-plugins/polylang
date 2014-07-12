@@ -7,7 +7,7 @@
  */
 abstract class PLL_Links_Model {
 	public $model, $options;
-	protected $home;
+	public $home; // used to avoid several calls to get_option('home')
 
 	/*
 	 * constructor

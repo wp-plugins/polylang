@@ -45,7 +45,7 @@ class PLL_Frontend_Filters extends PLL_Filters{
 		add_filter('get_user_metadata', array(&$this,'get_user_metadata'), 10, 3);
 
 		// set posts and terms language when created from frontend (ex with P2 theme)
-		add_action('save_post', array(&$this, 'save_post'), 200, 2);
+		add_action('save_post', array(&$this, 'save_post'), 200, 3);
 		add_action('create_term', array(&$this, 'save_term'), 10, 3);
 		add_action('edit_term', array(&$this, 'save_term'), 10, 3);
 
@@ -84,7 +84,7 @@ class PLL_Frontend_Filters extends PLL_Filters{
 		static $posts = array(); // the fonction may be often called so let's store the result
 
 		// returns the current page if there is no translation to avoid ugly notices
-		return isset($this->curlang) && $v && (isset($posts[$v]) || $posts[$v] = $this->model->get_post($v, $this->curlang)) ? $posts[$v] : $v;
+		return isset($this->curlang) && $v && (isset($posts[$this->model->blog_id][$v]) || $posts[$this->model->blog_id][$v] = $this->model->get_post($v, $this->curlang)) ? $posts[$this->model->blog_id][$v] : $v;
 	}
 
 	/*
@@ -188,11 +188,12 @@ class PLL_Frontend_Filters extends PLL_Filters{
 	 *
 	 * @param int $post_id
 	 * @param object $post
+	 * @param bool $update whether it is an update or not
 	 */
-	public function save_post($post_id, $post) {
+	public function save_post($post_id, $post, $update) {
 		if ($this->model->is_translated_post_type($post->post_type)) {
 			$post_type_object = get_post_type_object($post->post_type);
-			if (!current_user_can($post_type_object->cap->edit_posts) || !current_user_can($post_type_object->cap->create_posts))
+			if (($update && !current_user_can($post_type_object->cap->edit_post, $post_id)) || (!$update && !current_user_can($post_type_object->cap->create_posts)))
 				wp_die( __( 'Cheatin&#8217; uh?' ) );
 
 			if (!$this->model->get_post_language($post_id)) {

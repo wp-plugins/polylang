@@ -23,16 +23,22 @@ class PLL_Links_Directory extends PLL_Links_Model {
 	public function __construct(&$model) {
 		parent::__construct($model);
 
+		static $done = false;
+		if ($done)
+			return;
+
+		$done = true; // avoid duplicating rewrite rules when switching blog thanks to @ScreenFeedFr
+
 		// inspired by wp-includes/rewrite.php
 		$this->root = preg_match('#^/*' . $this->index . '#', get_option('permalink_structure')) ? $this->index . '/' : '';
 
-		add_action ('setup_theme', array(&$this, 'add_permastruct'));
+		add_action('setup_theme', array(&$this, 'add_permastruct'));
 
 		// refresh rewrite rules if the 'page_on_front' option is modified
 		add_action('update_option_page_on_front', 'flush_rewrite_rules');
 
 		// make sure to prepare rewrite rules when flushing
-		add_action ('pre_option_rewrite_rules', array(&$this, 'prepare_rewrite_rules'));
+		add_action('pre_option_rewrite_rules', array(&$this, 'prepare_rewrite_rules'));
 	}
 
 	/*
@@ -70,7 +76,7 @@ class PLL_Links_Directory extends PLL_Links_Model {
 
 		if (!empty($languages)) {
 			$pattern = str_replace('/', '\/', $this->home . '/' . $this->root);
-			$pattern = '#' . $pattern . ($this->options['rewrite'] ? '' : 'language') . '('.implode('|', $languages).')(\/|$)#';
+			$pattern = '#' . $pattern . ($this->options['rewrite'] ? '' : 'language\/') . '('.implode('|', $languages).')(\/|$)#';
 			$url = preg_replace($pattern,  $this->home . '/' . $this->root, $url);
 		}
 		return $url;

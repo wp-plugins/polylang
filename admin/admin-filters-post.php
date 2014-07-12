@@ -31,7 +31,7 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 		add_action('wp_ajax_pll_posts_not_translated', array(&$this,'ajax_posts_not_translated'));
 
 		// adds actions and filters related to languages when creating, saving or deleting posts and pages
-		add_action('save_post', array(&$this, 'save_post'), 21, 2); // priority 21 to come after advanced custom fields (20) and before the event calendar which breaks everything after 25
+		add_action('save_post', array(&$this, 'save_post'), 21, 3); // priority 21 to come after advanced custom fields (20) and before the event calendar which breaks everything after 25
 		add_action('before_delete_post', array(&$this, 'delete_post'));
 		if ($this->options['media_support'])
 			add_action('delete_attachment', array(&$this, 'delete_post')); // action shared with media
@@ -251,12 +251,13 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 		elseif (isset($_REQUEST['inline_lang_choice'])) {
 			// bulk edit does not modify the language
 			if (isset($_REQUEST['bulk_edit']) && $_REQUEST['inline_lang_choice'] == -1)
-				continue;
+				return;
 
 			isset($_REQUEST['bulk_edit']) ? check_admin_referer('bulk-posts') : check_admin_referer('inlineeditnonce', '_inline_edit');
 
 			if (($old_lang = $this->model->get_post_language($post_id)) && $old_lang->slug != $_REQUEST['inline_lang_choice'])
 				$this->model->delete_translation('post', $post_id);
+
 			$this->model->set_post_language($post_id, $lang = $_REQUEST['inline_lang_choice']);
 		}
 
@@ -300,20 +301,22 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 	 *
 	 * @param int $post_id
 	 * @param object $post
+	 * @param bool $update whether it is an update or not
 	 */
-	public function save_post($post_id, $post) {
+	public function save_post($post_id, $post, $update) {
 		// does nothing except on post types which are filterable
 		if (!$this->model->is_translated_post_type($post->post_type))
 			return;
 
-		// security check
-		// as 'wp_insert_post' can be called from outside WP admin
-		$post_type_object = get_post_type_object($post->post_type);
-		if (!current_user_can($post_type_object->cap->edit_posts) || !current_user_can($post_type_object->cap->create_posts))
-			wp_die( __( 'Cheatin&#8217; uh?' ) );
-
 		if ($id = wp_is_post_revision($post_id))
 			$post_id = $id;
+
+		// capability check
+		// as 'wp_insert_post' can be called from outside WP admin
+		$post_type_object = get_post_type_object($post->post_type);
+		if (($update && !current_user_can($post_type_object->cap->edit_post, $post_id)) || (!$update && !current_user_can($post_type_object->cap->create_posts)))
+			wp_die( __( 'Cheatin&#8217; uh?' ) );
+
 
 		$this->save_language($post_id, $post);
 
