@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, international, localization
 Requires at least: 3.5
 Tested up to: 3.9.1
-Stable tag: 1.5.2
+Stable tag: 1.5.3
 License: GPLv2 or later
 
 Polylang adds multilingual content management support to WordPress.
@@ -64,19 +64,21 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 == Upgrade Notice ==
 
-= 1.5.2 =
-Polylang 1.2 introduced major internal changes. More than ever, make a database backup before upgrading from 1.1.6 or older! If you are using a version older than 0.8, please ugrade to 0.9.8 before ugrading to 1.5.2
+= 1.5.3 =
+Polylang 1.2 introduced major internal changes. More than ever, make a database backup before upgrading from 1.1.6 or older! If you are using a version older than 0.8, please ugrade to 0.9.8 before ugrading to 1.5.3
 
 == Changelog ==
 
-= 1.5.3 =
+= 1.5.3 (2014-07-12) =
 
 * Add: Capability check before creating links in post list table
+* Add: Possibility not to cache languages objects with option PLL_CACHE_LANGUAGES (for GoDaddy users)
 * Fix: Saving a header or a background in menu Appearance resets nav menus locations (introduced in 1.5)
 * Fix: sub-sub-options and deeper levels defined in wpml-config.xml are not translated
 * Fix: Fatal error when creating a new site when Polylang is network activated (introduced in v1.5.1)
 * Fix: Admin language forced to English when activating Polylang (before creating any new language)
 * Fix: 'pll_count_posts' second parameter not taken into account
+* Fix: 'edit-post' and 'create-posts' capabilities are not differentiated when saving a post
 
 = 1.5.2 (2014-06-24) =
 

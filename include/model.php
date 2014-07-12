@@ -122,7 +122,7 @@ class PLL_Model {
 
 	/*
 	 * returns the list of available languages
-	 * caches the list in a db transient (except flags)
+	 * caches the list in a db transient (except flags), unless PLL_CACHE_LANGUAGES is set to false
 	 * caches the list (with flags) in the private property $languages
 	 *
 	 * list of parameters accepted in $args:
@@ -137,7 +137,7 @@ class PLL_Model {
 	 */
 	public function get_languages_list($args = array()) {
 		if (empty($this->languages[$this->blog_id])) {
-			if (false === ($languages = get_transient('pll_languages_list'))) {
+			if ((defined('PLL_CACHE_LANGUAGES') && !PLL_CACHE_LANGUAGES) || false === ($languages = get_transient('pll_languages_list'))) {
 				$languages = get_terms('language', array('hide_empty' => false, 'orderby'=> 'term_group'));
 				$languages = empty($languages) || is_wp_error($languages) ? array() : $languages;
 
@@ -173,17 +173,20 @@ class PLL_Model {
 	/*
 	 * fills home urls and flags in language list and set transient in db
 	 * delayed to be sure we have access to $wp_rewrite for home urls
+	 * languages objects are not cached in db if PLL_CACHE_LANGUAGES is set to false
 	 * home urls are not cached in db if PLL_CACHE_HOME_URL is set to false
 	 *
 	 * @since 1.4
 	 */
 	public function _languages_list() {
-		if (false === get_transient('pll_languages_list')) {
+		if ((defined('PLL_CACHE_LANGUAGES') && !PLL_CACHE_LANGUAGES) || false === get_transient('pll_languages_list')) {
 			if (!defined('PLL_CACHE_HOME_URL') || PLL_CACHE_HOME_URL) {
 				foreach ($this->languages[$this->blog_id] as $language)
 					$language->set_home_url();
 			}
-			set_transient('pll_languages_list', $this->languages[$this->blog_id]);
+
+			if (!defined('PLL_CACHE_LANGUAGES') || PLL_CACHE_LANGUAGES)
+				set_transient('pll_languages_list', $this->languages[$this->blog_id]);
 		}
 
 		foreach ($this->languages[$this->blog_id] as $language) {
