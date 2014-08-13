@@ -142,6 +142,29 @@ function pll_e($string) {
 }
 
 /*
+ * translates a string (previously registered with pll_register_string)
+ *
+ * @since 1.5.4
+ *
+ * @param string $string the string to translate
+ * @param string $lang language code
+ * @return string the string translation in the requested language
+ */
+function pll_translate_string($string, $lang) {
+	if (pll_current_language() == $lang)
+		return pll__($string);
+		
+	static $mo = array();
+	
+	if (empty($mo[$lang])) {
+		$mo[$lang] = new PLL_MO();
+		$mo[$lang]->import_from_db($GLOBALS['polylang']->model->get_language($lang));	
+	}
+	
+	return $mo[$lang]->translate($string);
+}
+
+/*
  * returns true if Polylang manages languages and translations for this post type
  *
  * @since 1.0.1
@@ -238,6 +261,34 @@ function pll_save_term_translations($arr) {
 	global $polylang;
 	if (isset($polylang))
 		$polylang->model->save_translations('term', reset($arr), $arr);
+}
+
+/*
+ * returns the post language
+ *
+ * @since 1.5.4
+ *
+ * @param int $post_id
+ * @param string $field optional the language field to return 'name', 'locale', defaults to 'slug'
+ * @return bool|string the requested field for the post language, false if no language is associated to that post
+ */
+function pll_get_post_language($post_id, $field = 'slug') {
+	global $polylang;
+	return isset($polylang) && ($lang = $polylang->model->get_post_language($post_id)) ? $lang->$field : false;
+}
+
+/*
+ * returns the term language
+ *
+ * @since 1.5.4
+ *
+ * @param int $term_id
+ * @param string $field optional the language field to return 'name', 'locale', defaults to 'slug'
+ * @return bool|string the requested field for the term language, false if no language is associated to that term
+ */
+function pll_get_term_language($term_id, $field = 'slug') {
+	global $polylang;
+	return isset($polylang) && ($lang = $polylang->model->get_term_language($term_id)) ? $lang->$field : false;
 }
 
 /*

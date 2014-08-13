@@ -35,8 +35,8 @@ class PLL_Admin_Filters_Term {
 		// adds actions related to languages when creating or saving categories and post tags
 		add_filter('wp_dropdown_cats', array(&$this, 'wp_dropdown_cats'));
 		add_filter('pre_insert_term', array(&$this, 'pre_insert_term'), 10, 2);
-		add_action('create_term', array(&$this, 'save_term'), 10, 3);
-		add_action('edit_term', array(&$this, 'save_term'), 10, 3);
+		add_action('create_term', array(&$this, 'save_term'), 999, 3);
+		add_action('edit_term', array(&$this, 'save_term'), 999, 3); // late as it may conflict with other plugins, see http://wordpress.org/support/topic/polylang-and-wordpress-seo-by-yoast
 		add_filter('pre_term_name', array(&$this, 'pre_term_name'));
 		add_filter('pre_term_slug', array(&$this, 'pre_term_slug'), 10, 2);
 
@@ -162,6 +162,25 @@ class PLL_Admin_Filters_Term {
 	}
 
 	/*
+	 * allows to set a language by default for terms if it has no language yet
+	 *
+	 * @since 1.5.4
+	 *
+	 * @param int $term_id
+	 * @param string $taxonomy
+	 */
+	protected function set_default_language($term_id, $taxonomy) {
+		if (!$this->model->get_term_language($term_id)) {
+			// sets language from term parent if exists thanks to Scott Kingsley Clark
+			if (($term = get_term($term_id, $taxonomy)) && !empty($term->parent) && $parent_lang = $this->model->get_term_language($term->parent))
+				$this->model->set_term_language($term_id, $parent_lang);
+
+			else
+				$this->model->set_term_language($term_id, $this->pref_lang);
+		}
+	}
+
+	/*
 	 * saves language
 	 *
 	 * @since 1.5
@@ -200,15 +219,8 @@ class PLL_Admin_Filters_Term {
 			$this->model->set_term_language($term_id, $_POST['post_lang_choice']);
 		}
 
-		elseif ($this->model->get_term_language($term_id))
-			{} // avoids breaking the language if the term is updated outside the edit post or edit tag pages
-
-		// sets language from term parent if exists thanks to Scott Kingsley Clark
-		elseif (($term = get_term($term_id, $taxonomy)) && !empty($term->parent) && $parent_lang = $this->model->get_term_language($term->parent))
-			$this->model->set_term_language($term_id, $parent_lang);
-
 		else
-			$this->model->set_term_language($term_id, $this->pref_lang);
+			$this->set_default_language($term_id, $taxonomy);
 	}
 
 	/*
@@ -252,14 +264,18 @@ class PLL_Admin_Filters_Term {
 
 		// capability check
 		// as 'wp_update_term' can be called from outside WP admin
+		// 2nd test for creating tags when creating / editing a post
 		$tax = get_taxonomy($taxonomy);
-		if (!current_user_can($tax->cap->edit_terms))
-			wp_die( __( 'Cheatin&#8217; uh?' ) );
+		if (current_user_can($tax->cap->edit_terms) || (isset($_POST['tax_input'][$taxonomy]) && current_user_can($tax->cap->assign_terms))) {
+			$this->save_language($term_id, $taxonomy);
 
-		$this->save_language($term_id, $taxonomy);
-
-		if (isset($_POST['term_tr_lang']))
-			$translations = $this->save_translations($term_id);
+			if (isset($_POST['term_tr_lang']))
+				$translations = $this->save_translations($term_id);
+		}
+		
+		// attempts to set a default language even if no capability
+		else
+			$this->set_default_language($term_id, $taxonomy);
 
 		do_action('pll_save_term', $term_id, $taxonomy, empty($translations) ? $this->model->get_translations('term', $term_id) : $translations);
 	}

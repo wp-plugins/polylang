@@ -47,8 +47,6 @@ class PLL_Frontend extends PLL_Base {
 	 * setups the language chooser based on options
 	 *
 	 * @since 1.2
-	 *
-	 * @param object $links_model
 	 */
 	public function init() {
 		$this->links = new PLL_Frontend_Links($this);

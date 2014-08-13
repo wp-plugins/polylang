@@ -237,7 +237,7 @@ class PLL_Admin extends PLL_Base {
 		$classes = array('Filters', 'Filters_Columns', 'Filters_Post', 'Filters_Term', 'Nav_Menu', 'Sync');
 
 		// don't load media filters if option is disabled or if user has no right
-		if ($this->options['media_support'] && ($obj = get_post_type_object('attachment')) && current_user_can($obj->cap->edit_posts) && current_user_can($obj->cap->create_posts))
+		if ($this->options['media_support'] && ($obj = get_post_type_object('attachment')) && (current_user_can($obj->cap->edit_posts) || current_user_can($obj->cap->create_posts)))
 			$classes[] = 'Filters_Media';
 
 		foreach ($classes as $class) {

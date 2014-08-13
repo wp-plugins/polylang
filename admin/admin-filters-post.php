@@ -314,15 +314,17 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 		// capability check
 		// as 'wp_insert_post' can be called from outside WP admin
 		$post_type_object = get_post_type_object($post->post_type);
-		if (($update && !current_user_can($post_type_object->cap->edit_post, $post_id)) || (!$update && !current_user_can($post_type_object->cap->create_posts)))
-			wp_die( __( 'Cheatin&#8217; uh?' ) );
+		if (($update && current_user_can($post_type_object->cap->edit_post, $post_id)) || (!$update && current_user_can($post_type_object->cap->create_posts))) {
+			$this->save_language($post_id, $post);
 
-
-		$this->save_language($post_id, $post);
-
-		if (isset($_POST['post_tr_lang']))
-			$translations = $this->save_translations($post_id, $_POST['post_tr_lang']);
-
+			if (isset($_POST['post_tr_lang']))
+				$translations = $this->save_translations($post_id, $_POST['post_tr_lang']);
+		}
+		
+		// attempts to set a default language even if no capability
+		else
+			$this->set_default_language($post_id);
+			
 		do_action('pll_save_post', $post_id, $post, empty($translations) ? $this->model->get_translations('post', $post_id) : $translations);
 	}
 
