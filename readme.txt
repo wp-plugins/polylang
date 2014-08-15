@@ -68,6 +68,10 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 
 == Changelog ==
 
+= 1.5.5 =
+
+* Fix: missing argument 4 in icl_translate
+
 = 1.5.4 (2014-08-13) =
 
 * Add new API functions: pll_get_post_language, pll_get_term_language, pll_translate_string
