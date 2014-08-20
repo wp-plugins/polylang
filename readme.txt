@@ -71,6 +71,7 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 = 1.5.5 =
 
 * Fix: missing argument 4 in icl_translate
+* Fix: conflict with Vantage theme
 
 = 1.5.4 (2014-08-13) =
 
