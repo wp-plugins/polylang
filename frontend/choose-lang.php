@@ -63,8 +63,15 @@ abstract class PLL_Choose_Lang {
 	 */
 	protected function maybe_setcookie() {
 		// check headers have not been sent to avoid ugly error
+		// cookie domain must be set to false for localhost (default value for COOKIE_DOMAIN) thanks to Stephen Harris.
 		if (!headers_sent() && PLL_COOKIE !== false && (!isset($_COOKIE[PLL_COOKIE]) || $_COOKIE[PLL_COOKIE] != $this->curlang->slug))
-			setcookie(PLL_COOKIE, $this->curlang->slug, time() + 31536000 /* 1 year */, COOKIEPATH, parse_url(get_option('home'), PHP_URL_HOST));
+			setcookie(
+				PLL_COOKIE,
+				$this->curlang->slug,
+				time() + 31536000 /* 1 year */,
+				COOKIEPATH,
+				2 == $this->options['force_lang'] ? parse_url(get_option('home'), PHP_URL_HOST) : COOKIE_DOMAIN
+			);
 	}
 
 	/*
