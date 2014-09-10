@@ -36,10 +36,8 @@ class PLL_Choose_Lang_Url extends PLL_Choose_lang {
 		// http://wordpress.org/support/topic/plugin-polylang-language-homepage-redirection-problem-and-solution-but-incomplete?replies=4#post-2729566
 		if (str_replace('www.', '', home_url('/')) == trailingslashit((is_ssl() ? 'https://' : 'http://').str_replace('www.', '', $_SERVER['HTTP_HOST']).str_replace(array($this->index, '?'.$_SERVER['QUERY_STRING']), array('', ''), $_SERVER['REQUEST_URI']))) {
 			// take care to post & page preview http://wordpress.org/support/topic/static-frontpage-url-parameter-url-language-information
-			if (isset($_GET['preview']) && ( (isset($_GET['p']) && $id = $_GET['p']) || (isset($_GET['page_id']) && $id = $_GET['page_id']) )) {
-				$this->set_language(($lg = $this->model->get_post_language($id)) ? $lg : $this->model->get_language($this->options['default_lang']));
-				return; // don't check the language code in url
-			}
+			if (isset($_GET['preview']) && ( (isset($_GET['p']) && $id = $_GET['p']) || (isset($_GET['page_id']) && $id = $_GET['page_id']) ))
+				$curlang = ($lg = $this->model->get_post_language($id)) ? $lg : $this->model->get_language($this->options['default_lang']);
 
 			// take care to (unattached) attachments
 			elseif (isset($_GET['attachment_id']) && $id = $_GET['attachment_id'])
@@ -72,6 +70,10 @@ class PLL_Choose_Lang_Url extends PLL_Choose_lang {
 	 */
 	public function check_language_code_in_url() {
 		global $wp_query, $post;
+
+		// don't act for page and post previews as well as (unattached) attachments
+		if (isset($_GET['p']) || isset($_GET['page_id']) || isset($_GET['attachment_id']))
+			return;
 
 		if (is_single() || is_page()) {
 			if (isset($post->ID) && $this->model->is_translated_post_type($post->post_type))

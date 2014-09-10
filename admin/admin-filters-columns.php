@@ -104,7 +104,7 @@ class PLL_Admin_Filters_Columns {
 	 * @param int $post_id
 	 */
 	public function post_column($column, $post_id) {
-		$inline = defined('DOING_AJAX') && $_REQUEST['action'] == 'inline-save';
+		$inline = defined('DOING_AJAX') && $_REQUEST['action'] == 'inline-save' && isset($_POST['inline_lang_choice']);
 		$lang = $inline ? $this->model->get_language($_POST['inline_lang_choice']) : $this->model->get_post_language($post_id);
 
 		if (false === strpos($column, 'language_') || !$lang)
@@ -200,7 +200,7 @@ class PLL_Admin_Filters_Columns {
 	 * @param int term_id
 	 */
 	public function term_column($empty, $column, $term_id) {
-		$inline = defined('DOING_AJAX') && $_REQUEST['action'] == 'inline-save-tax' ? 1 : 0;
+		$inline = defined('DOING_AJAX') && $_REQUEST['action'] == 'inline-save-tax' && isset($_POST['inline_lang_choice']);
 		if (false === strpos($column, 'language_') || !($lang = $inline ? $this->model->get_language($_POST['inline_lang_choice']) : $this->model->get_term_language($term_id)))
 			return;
 
@@ -211,11 +211,12 @@ class PLL_Admin_Filters_Columns {
 		if ($column == $this->get_first_language_column())
 			printf('<div class="hidden" id="lang_%d">%s</div>', esc_attr($term_id), esc_html($lang->slug));
 
+		$id = ($inline && $lang->slug != $_POST['old_lang']) ? ($language->slug == $lang->slug ? $term_id : 0) : $this->model->get_term($term_id, $language);
 		// link to edit term (or a translation)
-		if ($id = ($inline && $lang->slug != $_POST['old_lang']) ? ($language->slug == $lang->slug ? $term_id : 0) : $this->model->get_term($term_id, $language)) {
+		if ($id && $term = get_term($id, $taxonomy)) {
 			printf('<a class="%1$s" title="%2$s" href="%3$s"></a>',
 				$id == $term_id ? 'pll_icon_tick' : 'pll_icon_edit',
-				esc_attr(get_term($id, $taxonomy)->name),
+				esc_attr($term->name),
 				esc_url(get_edit_term_link($id, $taxonomy, $post_type))
 			);
 		}

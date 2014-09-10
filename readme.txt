@@ -3,8 +3,8 @@ Contributors: Chouby
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CCWWYUUQV8F4E
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, international, localization
 Requires at least: 3.5
-Tested up to: 3.9.1
-Stable tag: 1.5.4
+Tested up to: 4.0
+Stable tag: 1.5.5
 License: GPLv2 or later
 
 Polylang adds multilingual content management support to WordPress.
@@ -63,16 +63,19 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 == Upgrade Notice ==
 
-= 1.5.4 =
-Polylang 1.2 introduced major internal changes. More than ever, make a database backup before upgrading from 1.1.6 or older! If you are using a version older than 0.8, please ugrade to 0.9.8 before ugrading to 1.5.4
+= 1.5.5 =
+Polylang 1.2 introduced major internal changes. More than ever, make a database backup before upgrading from 1.1.6 or older! If you are using a version older than 0.8, please ugrade to 0.9.8 before ugrading to 1.5.5
 
 == Changelog ==
 
-= 1.5.5 =
+= 1.5.5 (2014-09-10) =
 
 * Fix: missing argument 4 in icl_translate
 * Fix: conflict with Vantage theme
 * Fix: possible issue with cookie domain on 'localhost'
+* Fix: filtering string translations does not work when the group name contains a space
+* Fix: Possible 404 error for attachments
+* Fix: PHP notice when a shared term is not translated in all taxonomies
 
 = 1.5.4 (2014-08-13) =
 
