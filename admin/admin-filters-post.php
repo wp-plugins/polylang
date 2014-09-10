@@ -319,13 +319,13 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 
 			if (isset($_POST['post_tr_lang']))
 				$translations = $this->save_translations($post_id, $_POST['post_tr_lang']);
+			
+			do_action('pll_save_post', $post_id, $post, empty($translations) ? $this->model->get_translations('post', $post_id) : $translations);
 		}
 		
 		// attempts to set a default language even if no capability
 		else
 			$this->set_default_language($post_id);
-			
-		do_action('pll_save_post', $post_id, $post, empty($translations) ? $this->model->get_translations('post', $post_id) : $translations);
 	}
 
 	/*

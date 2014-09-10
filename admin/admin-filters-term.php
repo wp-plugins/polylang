@@ -271,13 +271,13 @@ class PLL_Admin_Filters_Term {
 
 			if (isset($_POST['term_tr_lang']))
 				$translations = $this->save_translations($term_id);
+
+			do_action('pll_save_term', $term_id, $taxonomy, empty($translations) ? $this->model->get_translations('term', $term_id) : $translations);
 		}
-		
+
 		// attempts to set a default language even if no capability
 		else
 			$this->set_default_language($term_id, $taxonomy);
-
-		do_action('pll_save_term', $term_id, $taxonomy, empty($translations) ? $this->model->get_translations('term', $term_id) : $translations);
 	}
 
 	/*

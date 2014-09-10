@@ -189,7 +189,7 @@ class PLL_Table_String extends WP_List_Table {
 		foreach ($this->groups as $group) {
 			printf(
 				'<option value="%s"%s>%s</option>' . "\n",
-				esc_attr($group),
+				esc_attr(urlencode($group)),
 				$this->group_selected == $group ? ' selected="selected"' : '',
 				esc_html($group)
 			);
