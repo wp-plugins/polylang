@@ -68,6 +68,10 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 
 == Changelog ==
 
+= 1.5.6 =
+
+* Fix: the admin language filter is not active for paginated taxonomy in nav menu admin panel
+
 = 1.5.5 (2014-09-10) =
 
 * Fix: missing argument 4 in icl_translate
