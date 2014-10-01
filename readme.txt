@@ -71,6 +71,7 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 = 1.5.6 =
 
 * Fix: the admin language filter is not active for paginated taxonomy in nav menu admin panel
+* Fix: wrong redirection if a domain is a substring of another domain (ex: mysite.com and mysite.co)
 
 = 1.5.5 (2014-09-10) =
 
