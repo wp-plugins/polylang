@@ -558,7 +558,9 @@ class PLL_WPML_Config {
 	protected function register_string_recursive($context, $strings, $options) {
 		foreach ($options as $name => $value) {
 			if (isset($strings[$name])) {
-				if (is_string($value) && $strings[$name] == 1)
+				// allow numeric values to be translated
+				// https://wordpress.org/support/topic/wpml-configxml-strings-skipped-when-numbers-ids
+				if ((is_numeric($value) || is_string($value)) && $strings[$name] == 1)
 					pll_register_string($name, $value, $context);
 				elseif (is_array($value) && is_array($strings[$name]))
 					$this->register_string_recursive($context, $strings[$name], $value);
@@ -665,7 +667,9 @@ class PLL_WPML_Config {
 	protected function translate_strings_recursive($strings, $values) {
 		foreach ($values as $name => $value) {
 			if (isset($strings[$name])) {
-				if (is_string($value) && $strings[$name] == 1)
+				// allow numeric values to be translated
+				// https://wordpress.org/support/topic/wpml-configxml-strings-skipped-when-numbers-ids
+				if ((is_numeric($value) || is_string($value)) && $strings[$name] == 1)
 					$values[$name] = pll__($value);
 				elseif (is_array($value) && is_array($strings[$name]))
 					$values[$name] = $this->translate_strings_recursive($strings[$name], $value);
