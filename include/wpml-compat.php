@@ -75,7 +75,7 @@ if (!function_exists('icl_get_home_url')) {
 if (!function_exists('icl_get_languages')) {
 	function icl_get_languages($args = '') {
 		global $polylang;
-		if (empty($polylang) || empty($polylang->curlang))
+		if (empty($polylang) || !($polylang instanceof PLL_Frontend) || empty($polylang->curlang))
 			return array();
 
 		$args = extract(wp_parse_args($args));

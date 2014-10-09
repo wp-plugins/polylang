@@ -73,6 +73,7 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 * Fix: the admin language filter is not active for paginated taxonomy in nav menu admin panel
 * Fix: wrong redirection if a domain is a substring of another domain (ex: mysite.com and mysite.co)
 * Fix: impossible to translate numeric values in options defined in wpml-config.xml
+* Fix: call to undefined method PLL_Links::get_translation_url() with Avada theme
 
 = 1.5.5 (2014-09-10) =
 
