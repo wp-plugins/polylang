@@ -10,7 +10,7 @@ $languages = array(
 	array('af', 'af', 'Afrikaans'),
 	array('ar', 'ar', 'العربية', 'rtl'),
 	array('az', 'az', 'Azərbaycan'),
-	array('be', 'be_BY', 'Беларуская мова'),
+	array('be', 'bel', 'Беларуская мова'),
 	array('bg', 'bg_BG', 'български'),
 	array('bs', 'bs_BA', 'Bosanski'),
 	array('ca', 'ca', 'Català'),

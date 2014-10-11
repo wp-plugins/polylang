@@ -10,29 +10,6 @@ abstract class PLL_Links_Permalinks extends PLL_Links_Model {
 	protected $always_rewrite = array('date', 'root', 'comments', 'search', 'author', 'post_format');
 
 	/*
-	 * constructor
-	 *
-	 * @since 1.6
-	 *
-	 * @param object $model PLL_Model instance
-	 */
-	public function __construct(&$model) {
-		parent::__construct($model);
-
-		add_action('pll_init', array(&$this, 'init'));
-	}
-
-	/*
-	 * called only at Polylang init to avoid duplicating filters when switching blog
-	 *
-	 * @since 1.6
-	 */
-	public function init() {
-		// make sure to prepare rewrite rules when flushing
-		add_filter('pre_option_rewrite_rules', array(&$this, 'prepare_rewrite_rules'));
-	}
-
-	/*
 	 * returns the link to the first page when using pretty permalinks
 	 *
 	 * @since 1.2

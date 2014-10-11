@@ -20,6 +20,8 @@ class PLL_Links_Directory extends PLL_Links_Permalinks {
 	 */
 	public function __construct(&$model) {
 		parent::__construct($model);
+
+		add_action('pll_init', array(&$this, 'init'));
 	}
 
 	/*
@@ -28,8 +30,6 @@ class PLL_Links_Directory extends PLL_Links_Permalinks {
 	 * @since 1.6
 	 */
 	public function init() {
-		parent::init();
-
 		// inspired by wp-includes/rewrite.php
 		$this->root = preg_match('#^/*' . $this->index . '#', get_option('permalink_structure')) ? $this->index . '/' : '';
 

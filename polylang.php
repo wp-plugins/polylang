@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://polylang.wordpress.com/
-Version: 1.6beta1
+Version: 1.6beta2
 Author: Frédéric Demarle
 Description: Adds multilingual capability to WordPress
 Text Domain: polylang
@@ -33,7 +33,7 @@ Domain Path: /languages
 if (!function_exists('add_action'))
 	exit();
 
-define('POLYLANG_VERSION', '1.6beta1');
+define('POLYLANG_VERSION', '1.6beta2');
 define('PLL_MIN_WP_VERSION', '3.5');
 
 define('POLYLANG_BASENAME', plugin_basename(__FILE__)); // plugin name as known by WP
@@ -71,6 +71,9 @@ class Polylang {
 	 * @since 0.1
 	 */
 	public function __construct() {
+		// FIXME maybe not available on every installations but widely used by WP plugins
+		spl_autoload_register(array(&$this, 'autoload')); // autoload classes
+
 		// manages plugin activation and deactivation
 		register_activation_hook( __FILE__, array(&$this, 'activate'));
 		register_deactivation_hook( __FILE__, array(&$this, 'deactivate'));
@@ -85,9 +88,6 @@ class Polylang {
 		// plugin initialization
 		// take no action before all plugins are loaded
 		add_action('plugins_loaded', array(&$this, 'init'), 1);
-
-		// FIXME maybe not available on every installations but widely used by WP plugins
-		spl_autoload_register(array(&$this, 'autoload')); // autoload classes
 
 		// override load text domain waiting for the language to be defined
 		// here for plugins which load text domain as soon as loaded :(
