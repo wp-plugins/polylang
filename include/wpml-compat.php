@@ -7,7 +7,6 @@
  * defines two WPML constants once the language has been defined
  * the compatibility with WPML is not perfect on admin side as the constants are defined
  * in 'setup_theme' by Polylang (based on user info) and 'plugins_loaded' by WPML (based on cookie)
- * moreover I believe that WPML can set ICL_LANGUAGE_CODE to 'all' which I dont want to do with Polylang
  *
  * @since 0.9.5
  */
@@ -76,7 +75,7 @@ if (!function_exists('icl_get_home_url')) {
 if (!function_exists('icl_get_languages')) {
 	function icl_get_languages($args = '') {
 		global $polylang;
-		if (empty($polylang) || empty($polylang->curlang))
+		if (empty($polylang) || !($polylang instanceof PLL_Frontend) || empty($polylang->curlang))
 			return array();
 
 		$args = extract(wp_parse_args($args));
@@ -221,18 +220,18 @@ if (!function_exists('icl_t')) {
 /*
  * undocumented function used by NextGen Gallery
  * seems to be used to both register and translate a string
- * FIXME: tested only with NextGen gallery
+ * used in PLL_Plugins_Compat for Jetpack with only 3 arguments
  *
  * @since 1.0.2
  *
  * @param string $context the group in which the string is registered, defaults to 'polylang'
  * @param string $name a unique name for the string
  * @param string $string the string to register
- * @param bool $bool not used by Polylang
+ * @param bool $bool optional, not used by Polylang
  * @return string the translated string in the current language
  */
 if (!function_exists('icl_translate')) {
-	function icl_translate($context, $name, $string, $bool) {
+	function icl_translate($context, $name, $string, $bool = false) {
 		$GLOBALS['pll_wpml_compat']->register_string($context, $name, $string);
 		return pll__($string);
 	}
@@ -559,7 +558,9 @@ class PLL_WPML_Config {
 	protected function register_string_recursive($context, $strings, $options) {
 		foreach ($options as $name => $value) {
 			if (isset($strings[$name])) {
-				if (is_string($value) && $strings[$name] == 1)
+				// allow numeric values to be translated
+				// https://wordpress.org/support/topic/wpml-configxml-strings-skipped-when-numbers-ids
+				if ((is_numeric($value) || is_string($value)) && $strings[$name] == 1)
 					pll_register_string($name, $value, $context);
 				elseif (is_array($value) && is_array($strings[$name]))
 					$this->register_string_recursive($context, $strings[$name], $value);
@@ -666,7 +667,9 @@ class PLL_WPML_Config {
 	protected function translate_strings_recursive($strings, $values) {
 		foreach ($values as $name => $value) {
 			if (isset($strings[$name])) {
-				if (is_string($value) && $strings[$name] == 1)
+				// allow numeric values to be translated
+				// https://wordpress.org/support/topic/wpml-configxml-strings-skipped-when-numbers-ids
+				if ((is_numeric($value) || is_string($value)) && $strings[$name] == 1)
 					$values[$name] = pll__($value);
 				elseif (is_array($value) && is_array($strings[$name]))
 					$values[$name] = $this->translate_strings_recursive($strings[$name], $value);

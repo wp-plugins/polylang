@@ -271,13 +271,13 @@ class PLL_Admin_Filters_Term {
 
 			if (isset($_POST['term_tr_lang']))
 				$translations = $this->save_translations($term_id);
+
+			do_action('pll_save_term', $term_id, $taxonomy, empty($translations) ? $this->model->get_translations('term', $term_id) : $translations);
 		}
-		
+
 		// attempts to set a default language even if no capability
 		else
 			$this->set_default_language($term_id, $taxonomy);
-
-		do_action('pll_save_term', $term_id, $taxonomy, empty($translations) ? $this->model->get_translations('term', $term_id) : $translations);
 	}
 
 	/*
@@ -457,6 +457,10 @@ class PLL_Admin_Filters_Term {
 		// do not filter 'get_terms_not_translated'
 		if (!empty($args['pll_get_terms_not_translated']))
 			return $clauses;
+
+		// admin language filter for ajax paginate_links in taxonomies metabox in nav menus panel
+		if (!empty($_POST['action']) && !empty($this->curlang) && 'menu-get-metabox' == $_POST['action'])
+			return $this->model->terms_clauses($clauses, $this->curlang);
 
 		// The only ajax response I want to deal with is when changing the language in post metabox
 		if (isset($_POST['action']) && !in_array($_POST['action'], array('post_lang_choice', 'term_lang_choice', 'get-tagcloud')))
