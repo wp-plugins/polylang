@@ -68,6 +68,10 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 
 == Changelog ==
 
+= 1.5.6.1 =
+
+* Fix: manage_{$this->screen->taxonomy}_custom_icolumn is a filter and not an action
+
 = 1.5.6 (2014-10-11) =
 
 * Fix: the admin language filter is not active for paginated taxonomy in nav menu admin panel
