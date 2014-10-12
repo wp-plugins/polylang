@@ -213,6 +213,16 @@ class PLL_Admin_Filters_Term {
 			$this->model->set_term_language($term_id, $_POST['term_lang_choice']);
 		}
 
+		// *post* bulk edit, in case a new term is created
+		elseif (isset($_GET['bulk_edit'], $_GET['inline_lang_choice'])) {
+			// bulk edit does not modify the language
+			if ($_GET['inline_lang_choice'] == -1)
+				return;
+
+			check_admin_referer('bulk-posts');
+			$this->model->set_term_language($term_id, $_GET['inline_lang_choice']);
+		}
+
 		// quick edit
 		elseif (isset($_POST['inline_lang_choice'])) {
 			check_ajax_referer('taxinlineeditnonce', '_inline_edit');
@@ -510,7 +520,7 @@ class PLL_Admin_Filters_Term {
 		elseif (!empty($this->curlang) && (isset($screen) && $screen->base != 'post' && !($screen->base == 'edit-tags' && isset($args['class'])))) // don't apply to post edit and the category parent dropdown list
 		 	$lang = $this->curlang;
 
-		elseif (isset($_GET['post']))
+		elseif (isset($_GET['post']) && is_numeric($_GET['post'])) // is numeric avoids array of posts in *post* bulk edit
 			$lang = $this->model->get_post_language($_GET['post']);
 
 		// for the parent dropdown list in edit term

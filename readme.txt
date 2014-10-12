@@ -68,6 +68,7 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 
 == Changelog ==
 
+<<<<<<< HEAD
 = 1.6 =
 
 * Add new languages to predefined languages list: Azerbaijani, English (Australia), English (UK), Basque
@@ -80,6 +81,7 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 * Fix: change Belarussian locale from be_BY to bel to in agreement with translate.wordpress.org
 * Fix home pages duplicate urls when using domains or subdomains
 * Fix rewrite rules with front
+* Fix:terms are always in default language when created from post bulk edit
 
 = 1.5.6 (2014-10-11) =
 
@@ -87,6 +89,7 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 * Fix: wrong redirection if a domain is a substring of another domain (ex: mysite.com and mysite.co)
 * Fix: impossible to translate numeric values in options defined in wpml-config.xml
 * Fix: call to undefined method PLL_Links::get_translation_url() with Avada theme
+* Fix: manage_{$this->screen->taxonomy}_custom_icolumn is a filter and not an action
 
 = 1.5.5 (2014-09-10) =
 
