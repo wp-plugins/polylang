@@ -68,7 +68,6 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 
 == Changelog ==
 
-<<<<<<< HEAD
 = 1.6 =
 
 * Add new languages to predefined languages list: Azerbaijani, English (Australia), English (UK), Basque
@@ -81,7 +80,7 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 * Fix: change Belarussian locale from be_BY to bel to in agreement with translate.wordpress.org
 * Fix home pages duplicate urls when using domains or subdomains
 * Fix rewrite rules with front
-* Fix:terms are always in default language when created from post bulk edit
+* Fix: terms are always in default language when created from post bulk edit
 
 = 1.5.6 (2014-10-11) =
 
