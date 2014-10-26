@@ -6,6 +6,7 @@
  * @since 1.2
  */
 class PLL_Frontend_Nav_Menu {
+	public $options, $curlang;
 
 	/*
 	 * constructor
@@ -40,17 +41,15 @@ class PLL_Frontend_Nav_Menu {
 
 		foreach ($items as $key => $item) {
 			if ($options = get_post_meta($item->ID, '_pll_menu_item', true)) {
-				extract($options);
 				$i = 0;
 
-				foreach (pll_the_languages(array_merge(array('raw' => 1), $options)) as $language) {
-					extract($language);
+				foreach (pll_the_languages(array_merge(array('raw' => 1), $options)) as $lang) {
 					$lang_item = clone $item;
-					$lang_item->ID = $lang_item->ID . '-' . $slug; // a unique ID
-					$lang_item->title = $show_flags && $show_names ? $flag.'&nbsp;'.esc_html($name) : ($show_flags ? $flag : esc_html($name));
-					$lang_item->url = $url;
-					$lang_item->lang = $slug; // save this for use in nav_menu_link_attributes
-					$lang_item->classes = $classes;
+					$lang_item->ID = $lang_item->ID . '-' . $lang['slug']; // a unique ID
+					$lang_item->title = $options['show_flags'] && $options['show_names'] ? $lang['flag'].'&nbsp;'.esc_html($lang['name']) : ($options['show_flags'] ? $lang['flag'] : esc_html($lang['name']));
+					$lang_item->url = $lang['url'];
+					$lang_item->lang = $lang['slug']; // save this for use in nav_menu_link_attributes
+					$lang_item->classes = $lang['classes'];
 					$lang_item->menu_order += $offset + $i++;
 					$new_items[] = $lang_item;
 				}

@@ -241,23 +241,6 @@ class PLL_Model {
 	}
 
 	/*
-	 * removes unused translations terms in database
-	 *
-	 * @since 1.5
-	 *
-	 * @param string $type either 'post' or 'term'
-	 */
-	protected function clean_translations_terms($type) {
-		// FIXME does nothing since 1.5.2 as count seems not to be reliable enough
-		/*
-		global $wpdb;
-		$ids = $wpdb->get_col("SELECT term_id FROM $wpdb->term_taxonomy WHERE taxonomy IN ('{$type}_translations') AND count = 0");
-		foreach ($ids as $id)
-			wp_delete_term((int) $id, $type . '_translations');
-		*/
-	}
-
-	/*
 	 * saves translations for posts or terms
 	 *
 	 * @since 0.5
@@ -298,9 +281,6 @@ class PLL_Model {
 				// link all translations to the new term
 				foreach($translations as $p)
 					wp_set_object_terms($p, $group, $type . '_translations');
-
-				// clean unused terms to avoid orphans in db
-				$this->clean_translations_terms($type);
 			}
 		}
 	}
@@ -331,9 +311,6 @@ class PLL_Model {
 				wp_insert_term($group = uniqid('pll_'), $type . '_translations', array('description' => serialize($translations)));
 				wp_set_object_terms($id, $group, $type . '_translations');
 			}
-
-			// clean unused terms to avoid orphans in db
-			$this->clean_translations_terms($type);
 		}
 	}
 
@@ -552,6 +529,7 @@ class PLL_Model {
 			),
 			'public' => false, // avoid displaying the 'like post tags text box' in the quick edit
 			'query_var' => 'lang',
+			'rewrite' => $this->options['force_lang'] < 2, // no rewrite for domains and sub-domains
 			'_pll' => true // polylang taxonomy
 		));
 	}
@@ -565,11 +543,11 @@ class PLL_Model {
 	 * @return array post type names for which Polylang manages languages and translations
 	 */
 	public function get_translated_post_types($filter = true) {
-		static $post_types = array();
+		static $post_types = null;
 
 		// the post types list is cached for better better performance
 		// wait for 'after_setup_theme' to apply the cache to allow themes adding the filter in functions.php
-		if (!$post_types || !did_action('after_setup_theme')) {
+		if (null === $post_types || !did_action('after_setup_theme')) {
 			$post_types = array('post' => 'post', 'page' => 'page');
 
 			if (!empty($this->options['media_support']))
@@ -619,9 +597,9 @@ class PLL_Model {
 	 * @return array array of registered taxonomy names for which Polylang manages languages and translations
 	 */
 	public function get_translated_taxonomies($filter = true) {
-		static $taxonomies = array();
+		static $taxonomies = null;
 
-		if (!$taxonomies || !did_action('after_setup_theme')) {
+		if (null === $taxonomies || !did_action('after_setup_theme')) {
 			$taxonomies = array('category' => 'category', 'post_tag' => 'post_tag');
 
 			if (is_array($this->options['taxonomies']))
@@ -685,11 +663,16 @@ class PLL_Model {
 	public function count_posts($lang, $q = array()) {
 		global $wpdb;
 
-		if (empty($q['post_type']))
-			$q['post_type'] = array('post'); // we *need* a post type
-
 		if (!is_array($q['post_type']))
 			$q['post_type'] = array($q['post_type']);
+
+		foreach ($q['post_type'] as $key => $type) {
+			if (!post_type_exists($type))
+				unset($q['post_type'][$key]);
+		}
+
+		if (empty($q['post_type']))
+			$q['post_type'] = array('post'); // we *need* a post type
 
 		$cache_key = md5(serialize($q));
 		$counts = wp_cache_get($cache_key, 'pll_count_posts');
@@ -698,7 +681,7 @@ class PLL_Model {
 			$select = "SELECT pll_tr.term_taxonomy_id, COUNT(*) AS num_posts FROM {$wpdb->posts} AS p";
 			$join = $this->join_clause('post');
 			$where = " WHERE post_status = 'publish'";
-			$where .= " AND p.post_type IN ('" . join("', '", $q['post_type'] ) . "')";
+			$where .= $wpdb->prepare(" AND p.post_type IN ('%s')", join("', '", $q['post_type']));
 			$where .= $this->where_clause($this->get_languages_list(), 'post');
 			$groupby = " GROUP BY pll_tr.term_taxonomy_id";
 

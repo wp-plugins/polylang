@@ -71,11 +71,16 @@ class PLL_Admin_Filters_Term {
 		printf('
 			<div class="form-field">
 				<label for="term_lang_choice">%s</label>
-				%s
+				<div id="select-add-term-language">%s</div>
 				<p>%s</p>
 			</div>',
 			__('Language', 'polylang'),
-			$dropdown->walk($this->model->get_languages_list(), array('name' => 'term_lang_choice', 'value' => 'term_id', 'selected' => $lang ? $lang->term_id : '')),
+			$dropdown->walk($this->model->get_languages_list(), array(
+				'name'     => 'term_lang_choice',
+				'value'    => 'term_id',
+				'selected' => $lang ? $lang->term_id : '',
+				'flag'     => true
+			)),
 			__('Sets the language', 'polylang')
 		);
 
@@ -108,13 +113,18 @@ class PLL_Admin_Filters_Term {
 				<th scope="row">
 					<label for="term_lang_choice">%s</label>
 				</th>
-				<td>
+				<td id="select-edit-term-language">
 					%s<br />
 					<span class="description">%s</span>
 				</td>
 			</tr>',
 			__('Language', 'polylang'),
-			$dropdown->walk($this->model->get_languages_list(), array('name' => 'term_lang_choice', 'value' => 'term_id', 'selected' => $lang ? $lang->term_id : '')),
+			$dropdown->walk($this->model->get_languages_list(), array(
+				'name'     => 'term_lang_choice',
+				'value'    => 'term_id',
+				'selected' => $lang ? $lang->term_id : '',
+				'flag'     => true
+			)),
 			__('Sets the language', 'polylang')
 		);
 
@@ -201,6 +211,16 @@ class PLL_Admin_Filters_Term {
 				check_admin_referer('pll_language', '_pll_nonce'); // edit tags or tags metabox
 
 			$this->model->set_term_language($term_id, $_POST['term_lang_choice']);
+		}
+
+		// *post* bulk edit, in case a new term is created
+		elseif (isset($_GET['bulk_edit'], $_GET['inline_lang_choice'])) {
+			// bulk edit does not modify the language
+			if ($_GET['inline_lang_choice'] == -1)
+				return;
+
+			check_admin_referer('bulk-posts');
+			$this->model->set_term_language($term_id, $_GET['inline_lang_choice']);
 		}
 
 		// quick edit
@@ -383,6 +403,9 @@ class PLL_Admin_Filters_Term {
 			}
 		}
 
+		// flag
+		$x->Add(array('what' => 'flag', 'data' => empty($lang->flag) ? esc_html($lang->slug) : $lang->flag));
+
 		$x->send();
 	}
 
@@ -497,7 +520,7 @@ class PLL_Admin_Filters_Term {
 		elseif (!empty($this->curlang) && (isset($screen) && $screen->base != 'post' && !($screen->base == 'edit-tags' && isset($args['class'])))) // don't apply to post edit and the category parent dropdown list
 		 	$lang = $this->curlang;
 
-		elseif (isset($_GET['post']))
+		elseif (isset($_GET['post']) && is_numeric($_GET['post'])) // is numeric avoids array of posts in *post* bulk edit
 			$lang = $this->model->get_post_language($_GET['post']);
 
 		// for the parent dropdown list in edit term

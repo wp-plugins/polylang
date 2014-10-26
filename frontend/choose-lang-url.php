@@ -55,49 +55,8 @@ class PLL_Choose_Lang_Url extends PLL_Choose_lang {
 		elseif ($this->options['hide_default'])
 			$curlang = $this->model->get_language($this->options['default_lang']);
 
-		add_action('wp', array(&$this, 'check_language_code_in_url')); // before Wordpress redirect_canonical
-
 		// if no language found, check_language_code_in_url will attempt to find one and redirect to the correct url
 		// otherwise 404 will be fired in the preferred language
 		$this->set_language(empty($curlang) ? $this->get_preferred_language() : $curlang);
-	}
-
-	/*
-	 * if the language code is not in agreement with the language of the content
-	 * redirects incoming links to the proper URL to avoid duplicate content
-	 *
-	 * @since 0.9.6
-	 */
-	public function check_language_code_in_url() {
-		global $wp_query, $post;
-
-		// don't act for page and post previews as well as (unattached) attachments
-		if (isset($_GET['p']) || isset($_GET['page_id']) || isset($_GET['attachment_id']))
-			return;
-
-		if (is_single() || is_page()) {
-			if (isset($post->ID) && $this->model->is_translated_post_type($post->post_type))
-				$language = $this->model->get_post_language((int)$post->ID);
-		}
-		elseif (is_category() || is_tag() || is_tax()) {
-			$obj = $wp_query->get_queried_object();
-			if ($this->model->is_translated_taxonomy($obj->taxonomy))
-				$language = $this->model->get_term_language((int)$obj->term_id);
-		}
-		elseif ($wp_query->is_posts_page) {
-			$obj = $wp_query->get_queried_object();
-			$language = $this->model->get_post_language((int)$obj->ID);
-		}
-
-		// the language is not correctly set so let's redirect to the correct url for this object
-		if (!empty($language)) {
-			$requested_url  = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-			$redirect_url = $this->links_model->switch_language_in_link($requested_url, $language);
-
-			if ($requested_url != $redirect_url) {
-				wp_redirect($redirect_url, 301);
-				exit;
-			}
-		}
 	}
 }

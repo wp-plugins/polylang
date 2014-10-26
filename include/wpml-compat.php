@@ -78,16 +78,15 @@ if (!function_exists('icl_get_languages')) {
 		if (empty($polylang) || !($polylang instanceof PLL_Frontend) || empty($polylang->curlang))
 			return array();
 
-		$args = extract(wp_parse_args($args));
-		$orderby = (isset($orderby) && $orderby == 'code') ? 'slug' : (isset($orderby) && $orderby == 'name' ? 'name' : 'id');
-		$order = (!empty($order) && $order == 'desc') ? 'DESC' : 'ASC';
+		$orderby = (isset($args['orderby']) && $args['orderby'] == 'code') ? 'slug' : (isset($args['orderby']) && $args['orderby'] == 'name' ? 'name' : 'id');
+		$order = (!empty($args['order']) && $args['order'] == 'desc') ? 'DESC' : 'ASC';
 
 		$arr = array();
 
 		foreach ($polylang->model->get_languages_list(array('hide_empty' => true, 'orderby' => $orderby, 'order' => $order)) as $lang) {
 			$url = $polylang->links->get_translation_url($lang);
 
-			if (empty($url) && !empty($skip_missing))
+			if (empty($url) && !empty($args['skip_missing']))
 				continue;
 
 			$arr[] = array(
@@ -99,8 +98,8 @@ if (!function_exists('icl_get_languages')) {
 				'language_code'    => $lang->slug,
 				'country_flag_url' => $lang->flag_url,
 				'url'              => $url ? $url :
-					(empty($link_empty_to) ? $polylang->links->get_home_url($lang) :
-					str_replace('{$lang}', $lang->slug, $link_empty_to))
+					(empty($args['link_empty_to']) ? $polylang->links->get_home_url($lang) :
+					str_replace('{$lang}', $lang->slug, $args['link_empty_to']))
 			);
 		}
 		return $arr;
@@ -486,7 +485,7 @@ class PLL_WPML_Config {
 		$plugins = array_merge($plugins, get_option('active_plugins'));
 
 		foreach ($plugins as $plugin) {
-			if (file_exists($file = dirname(POLYLANG_DIR).'/'.dirname($plugin).'/wpml-config.xml'))
+			if (file_exists($file = WP_PLUGIN_DIR.'/'.dirname($plugin).'/wpml-config.xml'))
 				$this->xml_parse(file_get_contents($file), dirname($plugin));
 		}
 

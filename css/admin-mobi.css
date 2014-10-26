@@ -11,8 +11,8 @@ FIXME rules for WP 3.8+ only -> can be merged to admin.css once support of WP 3.
 	content: "\f464";
 }
 
-[class^="pll_icon_"], #wpadminbar #wp-admin-bar-languages .ab-icon:before {
-	font: 16px/1 'dashicons';
+[class^="pll_icon_"] {
+	font: 20px/1 'dashicons';
 }
 
 /* admin bar */

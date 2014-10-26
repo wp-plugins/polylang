@@ -7,7 +7,7 @@
  *
  * @since 1.2
  */
-class PLL_Links_Subdomain extends PLL_Links_Model {
+class PLL_Links_Subdomain extends PLL_Links_Permalinks {
 
 	/*
 	 * adds the language code in url

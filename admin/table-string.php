@@ -11,7 +11,7 @@ if(!class_exists('WP_List_Table')){
  * @since 0.6
  */
 class PLL_Table_String extends WP_List_Table {
-	protected $groups;
+	protected $groups, $group_selected;
 
 	/*
 	 * constructor

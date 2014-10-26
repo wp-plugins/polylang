@@ -6,7 +6,7 @@
  * @since 1.2
  */
 abstract class PLL_Choose_Lang {
-	public $links, $links_model, $model, $options;
+	public $links_model, $model, $options;
 	public $page_on_front = 0, $page_for_posts = 0, $curlang;
 
 	/*
@@ -17,15 +17,13 @@ abstract class PLL_Choose_Lang {
 	 * @param object $polylang
 	 */
 	public function __construct(&$polylang) {
-		$this->links = &$polylang->links;
 		$this->links_model = &$polylang->links_model;
 		$this->model = &$polylang->model;
 		$this->options = &$polylang->options;
 
-		if ('page' == get_option('show_on_front')) {
-			$this->page_on_front = get_option('page_on_front');
-			$this->page_for_posts = get_option('page_for_posts');
-		}
+		$this->page_on_front = &$polylang->links->page_on_front;
+		$this->page_for_posts = &$polylang->links->page_for_posts;
+		$this->curlang = &$polylang->curlang;
 
 		if (PLL_AJAX_ON_FRONT || false === stripos($_SERVER['SCRIPT_FILENAME'], 'index.php'))
 			$this->set_language(empty($_REQUEST['lang']) ? $this->get_preferred_language() : $this->model->get_language($_REQUEST['lang']));
@@ -170,8 +168,8 @@ abstract class PLL_Choose_Lang {
 		// FIXME why this happens? http://wordpress.org/support/topic/polylang-crashes-1
 		// don't redirect if $_POST is not empty as it could break other plugins
 		// don't forget the query string which may be added by plugins
-		elseif (is_string($redirect = $this->links->get_home_url($this->curlang)) && empty($_POST)) {
-			$redirect = empty($_SERVER['QUERY_STRING']) ? $redirect : $redirect . (get_option('permalink_structure') ? '?' : '&') . $_SERVER['QUERY_STRING'];
+		elseif (is_string($redirect = $this->curlang->home_url) && empty($_POST)) {
+			$redirect = empty($_SERVER['QUERY_STRING']) ? $redirect : $redirect . ($this->links_model->using_permalinks ? '?' : '&') . $_SERVER['QUERY_STRING'];
 			if ($redirect = apply_filters('pll_redirect_home', $redirect)) {
 				wp_redirect($redirect);
 				exit;
