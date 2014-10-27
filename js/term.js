@@ -78,6 +78,9 @@ jQuery(document).ready(function($) {
 					case 'tag_cloud': // popular items
 						$('.tagcloud').replaceWith(this.data);
 						break;
+					case 'flag': // flag in front of the select dropdown
+						$('.pll-select-flag').html(this.data);
+						break;
 					default:
 						break;
 				}

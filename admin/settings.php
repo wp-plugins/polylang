@@ -7,7 +7,7 @@
  */
 class PLL_Settings {
 	public $links_model, $model, $options;
-	protected $active_tab, $strings = array(); // strings to translate
+	protected $active_tab;
 
 	/*
 	 * constructor
@@ -22,6 +22,8 @@ class PLL_Settings {
 		$this->options = &$polylang->options;
 
 		$this->active_tab = !empty($_GET['tab']) ? $_GET['tab'] : 'lang';
+
+		PLL_Admin_Strings::init();
 
 		// adds screen options and the about box in the languages admin panel
 		add_action('load-settings_page_mlang',  array(&$this, 'load_page'));
@@ -39,6 +41,21 @@ class PLL_Settings {
 		// test of $this->active_tab avoids displaying the automatically generated screen options on other tabs
 		switch ($this->active_tab) {
 			case 'lang':
+				ob_start();
+				include(PLL_ADMIN_INC.'/view-recommended.php');
+				$content = trim(ob_get_contents());
+				ob_end_clean();
+
+				if (strlen($content) > 0) {
+					add_meta_box(
+						'pll_recommended',
+						__('Recommended plugins', 'polylang'),
+						create_function('', "echo '$content';"),
+						'settings_page_mlang',
+						'normal'
+					);
+				}
+
 				if (!defined('PLL_DISPLAY_ABOUT') || PLL_DISPLAY_ABOUT) {
 					add_meta_box(
 						'pll_about_box',
@@ -96,7 +113,7 @@ class PLL_Settings {
 
 			case 'strings':
 				// get the strings to translate
-				$data = $this->get_strings();
+				$data = PLL_Admin_Strings::get_strings();
 
 				$selected = empty($_REQUEST['group']) ? -1 : $_REQUEST['group'];
 				foreach ($data as $key=>$row) {
@@ -141,17 +158,29 @@ class PLL_Settings {
 				break;
 		}
 
-		$using_permalinks = $GLOBALS['wp_rewrite']->using_permalinks();
-
 		$action = isset($_REQUEST['pll_action']) ? $_REQUEST['pll_action'] : '';
 
 		switch ($action) {
 			case 'add':
 				check_admin_referer( 'add-lang', '_wpnonce_add-lang' );
 
-				if ($this->model->add_language($_POST))
-					PLL_Admin::download_mo($_POST['locale']);
+				if ($this->model->add_language($_POST)) {
+					// backward compatibility WP < 4.0
+					if (version_compare($GLOBALS['wp_version'], '4.0', '<')) {
+						PLL_Admin::download_mo($_POST['locale']);
+					}
 
+					else {
+						// attempts to install the language pack
+						require_once(ABSPATH . 'wp-admin/includes/translation-install.php');
+						if (!wp_download_language_pack($_POST['locale']))
+							add_settings_error('general', 'pll_download_mo', __('The language was created, but the WordPress language file was not downloaded. Please install it manually.', 'polylang'));
+
+						// force checking for themes and plugins translations updates
+						wp_update_themes();
+						wp_update_plugins();
+					}
+				}
 				$this->redirect(); // to refresh the page (possible thanks to the $_GET['noheader']=true)
 				break;
 
@@ -180,7 +209,7 @@ class PLL_Settings {
 			case 'string-translation':
 				if (!empty($_REQUEST['submit'])) {
 					check_admin_referer( 'string-translation', '_wpnonce_string-translation' );
-					$strings = $this->get_strings();
+					$strings = PLL_Admin_Strings::get_strings();
 
 					foreach ($this->model->get_languages_list() as $language) {
 						if(empty($_POST['translation'][$language->name])) // in case the language filter is active (thanks to John P. Bloch)
@@ -189,8 +218,10 @@ class PLL_Settings {
 						$mo = new PLL_MO();
 						$mo->import_from_db($language);
 
-						foreach ($_POST['translation'][$language->name] as $key=>$translation)
-							$mo->add_entry($mo->make_entry($strings[$key]['string'], stripslashes($translation)));
+						foreach ($_POST['translation'][$language->name] as $key => $translation) {
+							$translation = apply_filters('pll_sanitize_string_translation', $translation, $strings[$key]['name'], $strings[$key]['context']);
+							$mo->add_entry($mo->make_entry($strings[$key]['string'], $translation));
+						}
 
 						// clean database (removes all strings which were registered some day but are no more)
 						if (!empty($_POST['clean'])) {
@@ -210,7 +241,7 @@ class PLL_Settings {
 				// unregisters strings registered through WPML API
 				if ($string_table->current_action() == 'delete' && !empty($_REQUEST['strings']) && function_exists('icl_unregister_string')) {
 					check_admin_referer( 'string-translation', '_wpnonce_string-translation' );
-					$strings = $this->get_strings();
+					$strings = PLL_Admin_Strings::get_strings();
 
 					foreach ($_REQUEST['strings'] as $key)
 						icl_unregister_string($strings[$key]['context'], $strings[$key]['name']);
@@ -228,7 +259,6 @@ class PLL_Settings {
 				foreach(array('force_lang', 'rewrite') as $key)
 					$this->options[$key] = isset($_POST[$key]) ? (int) $_POST[$key] : 0;
 
-				// FIXME : TODO error message if not a valid url
 				if (3 == $this->options['force_lang'] && isset($_POST['domains']) && is_array($_POST['domains'])) {
 					foreach ($_POST['domains'] as $key => $domain) {
 						$this->options['domains'][$key] = esc_url_raw(trim($domain));
@@ -272,68 +302,6 @@ class PLL_Settings {
 
 		// displays the page
 		include(PLL_ADMIN_INC.'/view-languages.php');
-	}
-
-	/*
-	 * register strings for translation making sure it is not duplicate or empty
-	 *
-	 * @since 0.6
-	 *
-	 * @param string $name a unique name for the string
-	 * @param string $string the string to register
-	 * @param string $context optional the group in which the string is registered, defaults to 'polylang'
-	 * @param bool $multiline optional wether the string table should display a multiline textarea or a single line input, defaults to single line
-	 */
-	public function register_string($name, $string, $context = 'polylang', $multiline = false) {
-		// backward compatibility with Polylang older than 1.1
-		if (is_bool($context)) {
-			$multiline = $context;
-			$context = 'polylang';
-		}
-
-		$to_register = compact('name', 'string', 'context', 'multiline');
-		if (!in_array($to_register, $this->strings) && $to_register['string'])
-			$this->strings[] = $to_register;
-	}
-
-	/*
-	 * get registered strings
-	 *
-	 * @since 0.6.1
-	 *
-	 * @return array list of all registered strings
-	 */
-	public function &get_strings() {
-		// WP strings
-		$this->register_string(__('Site Title'), get_option('blogname'), 'WordPress');
-		$this->register_string(__('Tagline'), get_option('blogdescription'), 'WordPress');
-		$this->register_string(__('Date Format'), get_option('date_format'), 'WordPress');
-		$this->register_string(__('Time Format'), get_option('time_format'), 'WordPress');
-
-		// widgets titles
-		global $wp_registered_widgets;
-		$sidebars = wp_get_sidebars_widgets();
-		foreach ($sidebars as $sidebar => $widgets) {
-			if ($sidebar == 'wp_inactive_widgets' || empty($widgets))
-				continue;
-
-			foreach ($widgets as $widget) {
-				// nothing can be done if the widget is created using pre WP2.8 API :(
-				// there is no object, so we can't access it to get the widget options
-				if (!isset($wp_registered_widgets[$widget]['callback'][0]) || !is_object($wp_registered_widgets[$widget]['callback'][0]) || !method_exists($wp_registered_widgets[$widget]['callback'][0], 'get_settings'))
-					continue;
-
-				$widget_settings = $wp_registered_widgets[$widget]['callback'][0]->get_settings();
-				$number = $wp_registered_widgets[$widget]['params'][0]['number'];
-				// don't enable widget title translation if the widget is visible in only one language or if there is no title
-				if (empty($widget_settings[$number]['pll_lang']) && isset($widget_settings[$number]['title']) && $title = $widget_settings[$number]['title'])
-					$this->register_string(__('Widget title', 'polylang'), $title, 'Widget');
-			}
-		}
-
-		// allow plugins to modify our list of strings, mainly for use by our PLL_WPML_Compat class
-		$this->strings = apply_filters('pll_get_strings', $this->strings);
-		return $this->strings;
 	}
 
 	/*

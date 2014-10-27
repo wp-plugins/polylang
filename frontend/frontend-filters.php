@@ -38,9 +38,9 @@ class PLL_Frontend_Filters extends PLL_Filters{
 		add_filter('widget_display_callback', array(&$this, 'widget_display_callback'), 10, 2);
 
 		// strings translation (must be applied before WordPress applies its default formatting filters)
-		foreach (array('widget_title', 'option_blogname', 'option_blogdescription', 'option_date_format', 'option_time_format') as $filter)
+		foreach (array('widget_text', 'widget_title', 'option_blogname', 'option_blogdescription', 'option_date_format', 'option_time_format') as $filter)
 			add_filter($filter, 'pll__', 1);
-
+	
 		// translates biography
 		add_filter('get_user_metadata', array(&$this,'get_user_metadata'), 10, 3);
 

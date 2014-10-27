@@ -9,7 +9,7 @@
 }
 
 /* about Polylang metabox */
-#pll_about_box p {
+#pll_about_box p, #pll_recommended p {
 	text-align: justify;
 }
 
@@ -63,8 +63,9 @@
 }
 
 /* language columns in edit.php and edit-tags.php */
-th[class*='column-language_'] {
+th[class*='column-language_'], td[class*='column-language_'] {
 	width: 2em;
+	text-align: center;
 }
 
 /* languages metabox in post.php */
@@ -78,7 +79,7 @@ th[class*='column-language_'] {
 }
 
 #post-translations .pll-language-column, #post-translations .pll-edit-column {
-	width: 10%;
+	width: 20px;
 }
 
 #post-translations td {
@@ -96,12 +97,36 @@ th[class*='column-language_'] {
 	text-align: center;
 }
 
-/* specific case for media */
-#post-translations .pll-media-language-column {
-	width: 60%;
+#select-post-language .pll-select-flag {
+	padding: 4px;
+	margin-right: 32px;
+}
+
+/* specific cases for media */
+#select-media-language .pll-select-flag {
+	padding: 4px;
+	margin-right: 10px;
+}
+
+.pll-media-edit-column {
+	float: right;
 }
 
 /* language and translations in edit-tags.php */
+.pll-translation-flag { /* also for media */
+	margin-right: 14px;
+}
+
+#select-add-term-language .pll-select-flag {
+	padding: 11px;
+	margin-right: 13px;
+}
+
+#select-edit-term-language .pll-select-flag {
+	padding: 11px;
+	margin-right: 4px;
+}
+
 #term-translations table {
 	width: 95%;
 }
@@ -111,8 +136,8 @@ th[class*='column-language_'] {
   width: 20%;
 }
 
-#term-translations .pll-edit-column {
-  width: 10%;
+#term-translations .pll-edit-column, #add-term-translations .pll-language-column {
+  width: 20px;
 }
 
 /* icon fonts */

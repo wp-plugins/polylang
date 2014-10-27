@@ -29,19 +29,16 @@ class PLL_Widget_Languages extends WP_Widget {
 		if (!(isset($polylang) && $polylang->model->get_languages_list() && $list = pll_the_languages(array_merge($instance, array('echo' => 0)))))
 			return;
 
-		extract($args);
-		extract($instance);
-
-		echo "$before_widget\n";
-		if ($title = apply_filters('widget_title', $title, $instance, $this->id_base))
-			echo $before_title . $title . $after_title;
-		echo $dropdown ? $list : "<ul>\n" . $list . "</ul>\n";
-		echo "$after_widget\n";
+		echo $args['before_widget'];
+		if ($title = apply_filters('widget_title', $instance['title'], $instance, $this->id_base))
+			echo $args['before_title'] . $title . $args['after_title'];
+		echo $instance['dropdown'] ? $list : "<ul>\n" . $list . "</ul>\n";
+		echo $args['after_widget'];
 
 		// javascript to switch the language when using a dropdown list
-		if ($dropdown) {
+		if ($instance['dropdown']) {
 			foreach ($polylang->model->get_languages_list() as $language) {
-				$url = $force_home || ($url = $polylang->links->get_translation_url($language)) == null ? $polylang->links->get_home_url($language) : $url;
+				$url = $instance['force_home'] || ($url = $polylang->links->get_translation_url($language)) == null ? $polylang->links->get_home_url($language) : $url;
 				$urls[] = '"'.esc_js($language->slug).'":"'.esc_url($url).'"';
 			}
 

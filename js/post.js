@@ -169,6 +169,9 @@ jQuery(document).ready(function($) {
 					case 'pages': // parent dropdown list for pages
 						$('#pageparentdiv > .inside').html(this.data);
 						break;
+					case 'flag': // flag in front of the select dropdown
+						$('.pll-select-flag').html(this.data);
+						break;
 					default:
 						break;
 				}
@@ -201,6 +204,9 @@ jQuery(document).ready(function($) {
 					case 'translations': // translations fields
 						$('.translations').html(this.data);
 						$('.compat-field-translations').html(this.data); // WP 3.5+
+						break;
+					case 'flag': // flag in front of the select dropdown
+						$('.pll-select-flag').html(this.data);
 						break;
 					default:
 						break;

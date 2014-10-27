@@ -10,7 +10,7 @@ else {
 	// add term form?>
 	<label><?php _e('Translations', 'polylang');?></label><?php
 }?>
-<table class="widefat term-translations">
+<table class="widefat term-translations"  id="<?php echo isset($term_id) ? 'edit' : 'add'; ?>-term-translations">
 	<?php foreach ($this->model->get_languages_list() as $language) {
 		if ($language->term_id == $lang->term_id)
 			continue;
@@ -37,7 +37,7 @@ else {
 
 		<tr><?php
 			if (isset($term_id)) { ?>
-				<td class = "pll-language-column"><?php echo $language->flag . '&nbsp;' . esc_html($language->name); ?></td>
+				<td class = "pll-language-column"><span class = "pll-translation-flag"><?php echo $language->flag?></span><?php echo esc_html($language->name); ?></td>
 				<td class = "hidden"><?php echo $add_link;?></td>
 				<td class = "pll-edit-column"><?php echo $link;?></td><?php
 			}

@@ -48,12 +48,26 @@ class PLL_Walker_Dropdown extends Walker {
 	 * @return string
 	 */
 	function walk($elements, $args = array()) {
-		return sprintf(
+		$output = '';
+		
+		if (!empty($args['flag'])) {
+			$value = isset($args['value']) && $args['value'] ? $args['value'] : 'slug';
+			$current = wp_list_filter($elements, array($value => $args['selected']));
+			$lang = reset($current);
+			$output = sprintf(
+				'<span class="pll-select-flag">%s</span>',
+				empty($lang->flag) ? esc_html($lang->slug) : $lang->flag
+			);
+		}
+		
+		$output .= sprintf(
 			'<select name="%1$s" %2$s%3$s>' . "\n" . '%4$s' . "\n" . '</select>'."\n",
 			($name = empty($args['name']) ? 'lang_choice' : esc_attr($args['name'])),
 			isset($args['id']) && !$args['id'] ? '' : ' id="' . (empty($args['id']) ? $name : esc_attr($args['id'])) . '"',
 			empty($args['class']) ? '' : ' class="' . esc_attr($args['class']) . '"',
 			parent::walk($elements, -1, $args)
 		);
+		
+		return $output;
 	}
 }

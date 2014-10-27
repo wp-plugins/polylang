@@ -26,9 +26,12 @@ class PLL_Links {
 
 		// low priority on links filters to come after any other modifications
 		if ($this->options['force_lang']) {
-			foreach (array('post_link', '_get_page_link', 'post_type_link') as $filter)
-				add_filter($filter, array(&$this, 'post_link'), 20, 2);
+			add_filter('post_link', array(&$this, 'post_link'), 20, 2);
+			add_filter('_get_page_link', array(&$this, 'post_link'), 20, 2);
+		}
 
+		if ($this->links_model->using_permalinks) {
+			add_filter('post_type_link', array(&$this, 'post_type_link'), 20, 2);
 			add_filter('term_link', array(&$this, 'term_link'), 20, 3);
 		}
 	}
@@ -58,14 +61,37 @@ class PLL_Links {
 		if (isset($this->_links[$link]))
 			return $this->_links[$link];
 
-		if ('post_type_link' == current_filter() && !$this->model->is_translated_post_type($post->post_type))
-			return $this->_links[$link] = $link;
-
 		if ('_get_page_link' == current_filter()) // this filter uses the ID instead of the post object
 			$post = get_post($post);
 
 		// /!\ when post_status is not "publish", WP does not use pretty permalinks
 		return $this->_links[$link] = $post->post_status != 'publish' ? $link : $this->links_model->add_language_to_link($link, $this->model->get_post_language($post->ID));
+	}
+
+	/*
+	 * modifies custom posts links
+	 *
+	 * @since 1.6
+	 *
+	 * @param string $link post link
+	 * @param object|int $post post object or post ID
+	 * @return string modified post link
+	 */
+	public function post_type_link($link, $post) {
+		if (isset($this->_links[$link]))
+			return $this->_links[$link];
+
+		// /!\ when post_status is not "publish", WP does not use pretty permalinks
+		if ('publish' == $post->post_status && $this->model->is_translated_post_type($post->post_type)) {
+			$lang = $this->model->get_post_language($post->ID);
+
+			if ($this->options['force_lang'])
+				$link = $this->links_model->add_language_to_link($link, $lang);
+
+			$link = apply_filters('pll_post_type_link', $link, $lang, $post);
+		}
+
+		return $this->_links[$link] = $link;
 	}
 
 	/*
@@ -82,9 +108,17 @@ class PLL_Links {
 		if (isset($this->_links[$link]))
 			return $this->_links[$link];
 
-		return $this->_links[$link] = $this->model->is_translated_taxonomy($tax) ?
-			$this->links_model->add_language_to_link($link, $this->model->get_term_language($term->term_id)) : $link;
-	}
+		if ($this->model->is_translated_taxonomy($tax)) {
+			$lang = $this->model->get_term_language($term->term_id);
+
+			if ($this->options['force_lang'])
+				$link = $this->links_model->add_language_to_link($link, $lang);
+
+			$link = apply_filters('pll_term_link', $link, $lang, $term);
+		}
+
+		return $this->_links[$link] = $link;
+ 	}
 
 	/*
 	 * returns the home url in the requested language
@@ -152,6 +186,24 @@ class PLL_Links {
 		);
 
 		return add_query_arg($args, admin_url('edit-tags.php'));
+	}
+
+	/*
+	 * checks if the current user can read the post
+	 *
+	 * @since 1.5
+	 *
+	 * @param int $post_id
+	 * @return bool
+	 */
+	public function current_user_can_read($post_id) {
+		$post = get_post($post_id);
+		if (in_array($post->post_status, get_post_stati(array('public' => true))))
+			return true;
+
+		$post_type_object = get_post_type_object($post->post_type);
+		$user = wp_get_current_user();
+		return is_user_logged_in() && (current_user_can($post_type_object->cap->read_private_posts) || $user->ID == $post->post_author);
 	}
 }
 
