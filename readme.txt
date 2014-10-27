@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, international, localization
 Requires at least: 3.5
 Tested up to: 4.0
-Stable tag: 1.5.6
+Stable tag: 1.6
 License: GPLv2 or later
 
 Polylang adds multilingual content management support to WordPress.
@@ -68,7 +68,7 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 
 == Changelog ==
 
-= 1.6 =
+= 1.6 (2014-10-27) =
 
 * Add Croatian translation contributed by Bajro
 * Add new languages to predefined languages list: Azerbaijani, English (Australia), English (UK), Basque
