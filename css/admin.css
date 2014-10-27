@@ -9,7 +9,7 @@
 }
 
 /* about Polylang metabox */
-#pll_about_box p {
+#pll_about_box p, #pll_recommended p {
 	text-align: justify;
 }
 

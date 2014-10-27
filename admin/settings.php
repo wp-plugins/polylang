@@ -41,6 +41,21 @@ class PLL_Settings {
 		// test of $this->active_tab avoids displaying the automatically generated screen options on other tabs
 		switch ($this->active_tab) {
 			case 'lang':
+				ob_start();
+				include(PLL_ADMIN_INC.'/view-recommended.php');
+				$content = trim(ob_get_contents());
+				ob_end_clean();
+
+				if (strlen($content) > 0) {
+					add_meta_box(
+						'pll_recommended',
+						__('Recommended plugins', 'polylang'),
+						create_function('', "echo '$content';"),
+						'settings_page_mlang',
+						'normal'
+					);
+				}
+
 				if (!defined('PLL_DISPLAY_ABOUT') || PLL_DISPLAY_ABOUT) {
 					add_meta_box(
 						'pll_about_box',
