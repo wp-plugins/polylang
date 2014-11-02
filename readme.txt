@@ -68,6 +68,10 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 
 == Changelog ==
 
+= 1.6.1 =
+
+* Fix: possibility to add a path when using multiple domains (same path for all languages) broken since v1.5.6
+
 = 1.6 (2014-10-27) =
 
 * Add Croatian translation contributed by Bajro

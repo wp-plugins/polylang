@@ -36,7 +36,7 @@ class PLL_Links_Domain extends PLL_Links_Permalinks {
 	 */
 	public function remove_language_from_link($url) {
 		if (!empty($this->options['domains']))
-			$url = str_replace((is_ssl() ? 'https://' : 'http://') . parse_url($url, PHP_URL_HOST), $this->home, $url);
+			$url = str_replace((is_ssl() ? 'https://' : 'http://') . parse_url($url, PHP_URL_HOST) . parse_url($this->home, PHP_URL_PATH), $this->home, $url);
 		return $url;
 	}
 
