@@ -34,6 +34,9 @@ class PLL_Links {
 			add_filter('post_type_link', array(&$this, 'post_type_link'), 20, 2);
 			add_filter('term_link', array(&$this, 'term_link'), 20, 3);
 		}
+
+		if (3 == $this->options['force_lang'])
+			add_filter('preview_post_link', array(&$this, 'preview_post_link'), 20);
 	}
 
 	/*
@@ -119,6 +122,18 @@ class PLL_Links {
 
 		return $this->_links[$link] = $link;
  	}
+
+	/*
+	 * FIXME: keeps the preview post link on default domain when using multiple domains
+	 *
+	 * @since 1.6.1
+	 *
+	 * @param string $url
+	 * @return string modified url
+	 */
+	public function preview_post_link($url) {
+		return $this->links_model->remove_language_from_link($url);
+	}
 
 	/*
 	 * returns the home url in the requested language

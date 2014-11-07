@@ -161,6 +161,7 @@ class PLL_Frontend_Links extends PLL_Links {
 		if (is_page() && !is_feed() && isset($wp_query->queried_object) && 'page' == get_option('show_on_front') && $wp_query->queried_object->ID == get_option('page_on_front')) {
 			return is_paged() ? $this->links_model->add_paged_to_link($this->get_home_url(), $wp_query->query_vars['page']) : $this->get_home_url();
 		}
+
 		return $redirect_url;
 	}
 
@@ -325,6 +326,10 @@ class PLL_Frontend_Links extends PLL_Links {
 	 */
 	public function check_canonical_url() {
 		global $wp_query, $post;
+
+		// FIXME need to keep the default domain for preview if using multiple domains
+		if (3 == $this->options['force_lang'] && is_preview())
+			return;
 
 		if (is_single() || is_page()) {
 			if (isset($post->ID) && $this->model->is_translated_post_type($post->post_type))
