@@ -194,10 +194,10 @@ class PLL_Admin_Filters extends PLL_Filters {
 	 * @return int
 	 */
 	public function update_page_on_front($page_id, $old_id) {
-		$translations = $this->model->get_translations('post', $page_id);
-		$languages = $this->model->get_languages_list();
+		$translations = count($this->model->get_translations('post', $page_id));
+		$languages = count($this->model->get_languages_list());
 
-		if ($page_id && count($translations) != count($languages)) {
+		if ($page_id && $languages > 1 && $translations != $languages) {
 			$page_id = $old_id;
 			add_settings_error('reading', 'pll_page_on_front_error', __('The chosen static front page must be translated in all languages.', 'polylang'));
 		}
