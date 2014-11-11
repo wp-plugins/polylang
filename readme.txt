@@ -74,6 +74,7 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 * Fix: possibility to add a path when using multiple domains (same path for all languages) broken since v1.5.6
 * Fix: preview link for non default language when using multiple domains
 * Fix: error displayed when setting the static front page and only one language has been defined
+* Fix: revert changes on rewrite rules with front introduced in 1.6
 
 = 1.6 (2014-10-27) =
 

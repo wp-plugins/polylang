@@ -168,12 +168,8 @@ class PLL_Links_Directory extends PLL_Links_Permalinks {
 		if ($this->options['hide_default'])
 			$languages = array_diff($languages, array($this->options['default_lang']));
 
-		if (!empty($languages)) {
-			$front = ltrim($wp_rewrite->front, '/');
-			$front = !empty($front) && 0 === strpos(key($rules), $front) ? $front : ''; // does this set of rules uses front?
-			$front = $wp_rewrite->root . $front;
-			$slug = $front . ($this->options['rewrite'] ? '' : 'language/') . '('.implode('|', $languages).')/';
-		}
+		if (!empty($languages))
+			$slug = $wp_rewrite->root . ($this->options['rewrite'] ? '' : 'language/') . '('.implode('|', $languages).')/';
 
 		// for custom post type archives
 		$cpts = array_intersect($this->model->get_translated_post_types(), get_post_types(array('_builtin' => false)));
@@ -184,7 +180,7 @@ class PLL_Links_Directory extends PLL_Links_Permalinks {
 			// moreover adding it would create issues for pages and taxonomies
 			if ($this->options['force_lang'] && in_array($filter, array_merge($this->model->get_translated_post_types(), $this->model->get_translated_taxonomies()))) {
 				if (isset($slug))
-					$newrules[$slug . str_replace($front, '', $key)] = str_replace(
+					$newrules[$slug.str_replace($wp_rewrite->root, '', $key)] = str_replace(
 						array('[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '[1]'),
 						array('[9]', '[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]'),
 						$rule
@@ -200,7 +196,7 @@ class PLL_Links_Directory extends PLL_Links_Permalinks {
 			// rewrite rules filtered by language
 			elseif (in_array($filter, $this->always_rewrite) || ($cpts && preg_match($cpts, $rule) && !strpos($rule, 'name=')) || ($filter != 'rewrite_rules_array' && $this->options['force_lang'])) {
 				if (isset($slug))
-					$newrules[$slug . str_replace($front, '', $key)] = str_replace(
+					$newrules[$slug.str_replace($wp_rewrite->root, '', $key)] = str_replace(
 						array('[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '[1]', '?'),
 						array('[9]', '[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '?lang=$matches[1]&'),
 						$rule
