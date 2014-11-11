@@ -19,7 +19,7 @@ class PLL_Admin_Sync {
 		$this->options = &$polylang->options;
 
 		add_filter('wp_insert_post_parent', array(&$this, 'wp_insert_post_parent'));
-		add_action('add_meta_boxes', array(&$this, 'add_meta_boxes'), 10, 2);
+		add_action('add_meta_boxes', array(&$this, 'add_meta_boxes'), 5, 2); // before Types which populates custom fields in same hook with priority 10
 
 		add_action('pll_save_post', array(&$this, 'pll_save_post'), 10, 3);
 
