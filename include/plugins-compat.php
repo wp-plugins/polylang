@@ -111,9 +111,11 @@ class PLL_Plugins_Compat {
 		global $polylang, $wpseo_og;
 
 		// WPSEO already deals with the locale
-		foreach ($polylang->model->get_languages_list() as $language) {
-			if ($language->slug != $polylang->curlang->slug && $polylang->links->get_translation_url($language) && $fb_locale = self::get_fb_locale($language)) {
-				$wpseo_og->og_tag('og:locale:alternate', $fb_locale);
+		if (isset($polylang)) {
+			foreach ($polylang->model->get_languages_list() as $language) {
+				if ($language->slug != $polylang->curlang->slug && $polylang->links->get_translation_url($language) && $fb_locale = self::get_fb_locale($language)) {
+					$wpseo_og->og_tag('og:locale:alternate', $fb_locale);
+				}
 			}
 		}
 	}
@@ -141,7 +143,9 @@ class PLL_Plugins_Compat {
 	 * @return array modified featured posts ids (include all languages)
 	 */
 	public function twenty_fourteen_featured_content_ids($featured_ids) {
-		if (false !== $featured_ids)
+		global $polylang;
+
+		if (empty($polylang) || false !== $featured_ids)
 			return $featured_ids;
 
 		$settings = Featured_Content::get_setting();
@@ -150,7 +154,7 @@ class PLL_Plugins_Compat {
 			return $featured_ids;
 
 		// get featured tag translations
-		$tags = $GLOBALS['polylang']->model->get_translations('term' ,$term->term_id);
+		$tags = $polylang->model->get_translations('term' ,$term->term_id);
 		$ids = array();
 
 		// Query for featured posts in all languages
@@ -233,13 +237,15 @@ class PLL_Plugins_Compat {
 	 */
 	public function jetpack_ogp($tags) {
 		global $polylang;
-		foreach ($polylang->model->get_languages_list() as $language) {
-			if ($language->slug != $polylang->curlang->slug && $polylang->links->get_translation_url($language) && $fb_locale = self::get_fb_locale($language))
-				$tags['og:locale:alternate'][] = $fb_locale;
-			if ($language->slug == $polylang->curlang->slug && $fb_locale = self::get_fb_locale($language))
-				$tags['og:locale'] = $fb_locale;
-		}
 
+		if (isset($polylang)) {
+			foreach ($polylang->model->get_languages_list() as $language) {
+				if ($language->slug != $polylang->curlang->slug && $polylang->links->get_translation_url($language) && $fb_locale = self::get_fb_locale($language))
+					$tags['og:locale:alternate'][] = $fb_locale;
+				if ($language->slug == $polylang->curlang->slug && $fb_locale = self::get_fb_locale($language))
+					$tags['og:locale'] = $fb_locale;
+			}
+		}
 		return $tags;
 	}
 

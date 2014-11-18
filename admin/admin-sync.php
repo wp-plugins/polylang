@@ -72,7 +72,7 @@ class PLL_Admin_Sync {
 	 * @param string $lang language slug
 	 * @param bool $sync true if it is synchronization, false if it is a copy, defaults to false
 	 */
-	protected function copy_post_metas($from, $to, $lang, $sync = false) {
+	public function copy_post_metas($from, $to, $lang, $sync = false) {
 		// copy or synchronize terms
 		if (!$sync || in_array('taxonomies', $this->options['sync'])) {
 			// FIXME quite a lot of query in foreach
