@@ -21,7 +21,7 @@ class PLL_Widget_Recent_Posts extends WP_Widget_Recent_Posts {
 	 * @param array $args Display arguments including before_title, after_title, before_widget, and after_widget.
 	 * @param array $instance The settings for the particular instance of the widget
 	 */
-	function widget($args, $instance) {
+	public function widget($args, $instance) {
 		$cache = array();
 		if ( ! $this->is_preview() ) {
 			$cache = wp_cache_get( 'widget_recent_posts', 'widget' );
@@ -42,7 +42,6 @@ class PLL_Widget_Recent_Posts extends WP_Widget_Recent_Posts {
 		}
 
 		ob_start();
-		extract($args);
 
 		$title = ( ! empty( $instance['title'] ) ) ? $instance['title'] : __( 'Recent Posts' );
 
@@ -72,8 +71,10 @@ class PLL_Widget_Recent_Posts extends WP_Widget_Recent_Posts {
 
 		if ($r->have_posts()) :
 ?>
-		<?php echo $before_widget; ?>
-		<?php if ( $title ) echo $before_title . $title . $after_title; ?>
+		<?php echo $args['before_widget']; ?>
+		<?php if ( $title ) {
+			echo $args['before_title'] . $title . $args['after_title'];
+		} ?>
 		<ul>
 		<?php while ( $r->have_posts() ) : $r->the_post(); ?>
 			<li>
@@ -84,7 +85,7 @@ class PLL_Widget_Recent_Posts extends WP_Widget_Recent_Posts {
 			</li>
 		<?php endwhile; ?>
 		</ul>
-		<?php echo $after_widget; ?>
+		<?php echo $args['after_widget']; ?>
 <?php
 		// Reset the global $the_post as this query will have stomped on it
 		wp_reset_postdata();

@@ -44,22 +44,20 @@ class PLL_Switcher {
 	 * @return array
 	 */
 	protected function get_elements($links, $args) {
-		extract($args);
-
-		foreach ($links->model->get_languages_list(array('hide_empty' => $hide_if_empty)) as $language) {
+		foreach ($links->model->get_languages_list(array('hide_empty' => $args['hide_if_empty'])) as $language) {
 			$id = (int) $language->term_id;
 			$slug = $language->slug;
 			$classes = array('lang-item', 'lang-item-' . esc_attr($id), 'lang-item-' . esc_attr($slug));
 
 			if ($current_lang = pll_current_language() == $slug) {
-				if ($hide_current && !$dropdown)
+				if ($args['hide_current'] && !$args['dropdown'])
 					continue; // hide current language except for dropdown
 				else
 					$classes[] = 'current-lang';
 			}
 
-			$url = $post_id !== null && ($tr_id = $links->model->get_post($post_id, $language)) && $links->current_user_can_read($tr_id) ? get_permalink($tr_id) :
-				($post_id === null && !$force_home ? $links->get_translation_url($language) : null);
+			$url = $args['post_id'] !== null && ($tr_id = $links->model->get_post($args['post_id'], $language)) && $links->current_user_can_read($tr_id) ? get_permalink($tr_id) :
+				($args['post_id'] === null && !$args['force_home'] ? $links->get_translation_url($language) : null);
 
 			if ($no_translation = empty($url))
 				$classes[] = 'no-translation';
@@ -67,13 +65,13 @@ class PLL_Switcher {
 			$url = apply_filters('pll_the_language_link', $url, $slug, $language->locale);
 
 			// hide if no translation exists
-			if (empty($url) && $hide_if_no_translation)
+			if (empty($url) && $args['hide_if_no_translation'])
 				continue;
 
 			$url = empty($url) ? $links->get_home_url($language) : $url ; // if the page is not translated, link to the home page
 
-			$name = $show_names || !$show_flags || $raw ? ($display_names_as == 'slug' ? $slug : $language->name) : '';
-			$flag = $raw && !$show_flags ? $language->flag_url : ($show_flags ? $language->flag : '');
+			$name = $args['show_names'] || !$args['show_flags'] || $args['raw'] ? ($args['display_names_as'] == 'slug' ? $slug : $language->name) : '';
+			$flag = $args['raw'] && !$args['show_flags'] ? $language->flag_url : ($args['show_flags'] ? $language->flag : '');
 
 			$out[] = compact('id', 'slug', 'name', 'url', 'flag', 'current_lang', 'no_translation', 'classes');
 		}

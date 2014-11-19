@@ -4,9 +4,9 @@ msgstr ""
 "Project-Id-Version: polylang\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2014-04-30 10:58+0300\n"
+"PO-Revision-Date: 2014-10-04 22:18+0300\n"
 "Last-Translator: Theodotos Andreou <theo@ubuntucy.org>\n"
-"Language-Team: Ubuntucy\n"
+"Language-Team: Cyprus Ubuntu Loco Team\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,10 +35,7 @@ msgstr ""
 #: admin/view-about.php:9
 #, php-format
 msgid "You will also find useful information in the %ssupport forum%s. However don't forget to make a search before posting a new topic."
-msgstr ""
-"Θα βρείτε επίσης χρήσιμες πληροφορίες στο %sφόρουμ%s υποστήριξης. Μην "
-"παραλείψετε να ψάξετε πρώτα αν έχει απαντηθεί το ερώτημα σας πριν ανοίξετε "
-"καινούργιο θέμα."
+msgstr "Θα βρείτε επίσης χρήσιμες πληροφορίες στο %sφόρουμ%s υποστήριξης. Μην παραλείψετε να ψάξετε πρώτα αν έχει απαντηθεί το ερώτημα σας πριν ανοίξετε καινούργιο θέμα."
 
 # @ polylang
 #: admin/view-about.php:16
@@ -58,11 +55,11 @@ msgid "Finally if you like this plugin or if it helps your business, donations t
 msgstr "Τέλος αν σας αρέσει αυτό το πρόσθετο ή αν σας βοηθά στην επιχείρηση σας, οι δωρεές στο δημιουργό θα εκτιμηθούν ιδιαίτερα. "
 
 # @ polylang
-#: admin/admin-filters-post.php:83
-#: admin/admin.php:73
-#: admin/settings.php:53
-#: admin/settings.php:80
-#: include/model.php:506
+#: admin/admin-filters-post.php:81
+#: admin/admin.php:90
+#: admin/settings.php:55
+#: admin/settings.php:82
+#: include/model.php:526
 msgid "Languages"
 msgstr "Γλώσσες"
 
@@ -92,28 +89,28 @@ msgid "Displays as dropdown"
 msgstr "Εμφάνιση σαν κυλιόμενο μενού"
 
 # @ polylang
-#: admin/admin.php:252
+#: admin/admin.php:271
 msgid "Filters content by language"
 msgstr "Φιλτράρισμα περιεχομένου βάση γλώσσας"
 
 # @ polylang
-#: admin/admin.php:243
+#: admin/admin.php:262
 msgid "Show all languages"
 msgstr "Εμφάνιση όλων των γλωσσών"
 
 # @ polylang
-#: admin/admin-filters-columns.php:132
-#: admin/admin-filters-columns.php:228
+#: admin/admin-filters-columns.php:139
+#: admin/admin-filters-columns.php:227
 msgid "Add new translation"
 msgstr "Προσθήκη νέας μετάφρασης"
 
 # @ polylang
-#: admin/admin-filters-columns.php:169
-#: admin/admin-filters-media.php:58
+#: admin/admin-filters-columns.php:173
+#: admin/admin-filters-media.php:55
 #: admin/admin-filters-post.php:107
-#: admin/admin-filters-term.php:75
-#: admin/admin-filters-term.php:112
-#: include/model.php:507
+#: admin/admin-filters-term.php:77
+#: admin/admin-filters-term.php:121
+#: include/model.php:527
 msgid "Language"
 msgstr "Γλώσσα"
 
@@ -127,135 +124,137 @@ msgid "Translations"
 msgstr "Μεταφράσεις"
 
 # @ polylang
-#: admin/admin-filters-term.php:77
-#: admin/admin-filters-term.php:114
+#: admin/admin-filters-term.php:84
+#: admin/admin-filters-term.php:128
 msgid "Sets the language"
 msgstr "Ορισμός γλώσσας"
 
 # @ polylang
-#: admin/admin-filters.php:46
+#: admin/admin-filters.php:52
 msgid "The widget is displayed for:"
 msgstr "Η μονάδα εμφανίζεται για:"
 
 # @ polylang
-#: admin/admin-filters.php:49
-#: include/model.php:508
+#: admin/admin-filters.php:55
+#: include/model.php:528
 msgid "All languages"
 msgstr "Όλες οι γλώσσες"
 
 # @ polylang
-#: admin/admin-filters.php:113
+#: admin/admin-filters.php:123
 msgid "Admin language"
 msgstr "Γλώσσα διαχείρισης"
 
-#: admin/admin-filters.php:116
+#: admin/admin-filters.php:126
 msgid "Wordpress default"
 msgstr "Προκαθορισμένο σε Wordpress"
 
 # @ default
 # @ polylang
-#: admin/admin.php:154
-#: admin/settings.php:85
+#: admin/admin.php:171
+#: admin/settings.php:87
 msgid "Settings"
 msgstr "Ρυθμίσεις"
 
 # @ polylang
-#: admin/admin-filters.php:146
+#: admin/admin-filters.php:160
+#: admin/admin-filters.php:169
 msgid "Upgrading language files&#8230;"
 msgstr "Αναβάθμιση αρχείων γλώσσας&#8230;"
 
 # @ polylang
-#: admin/settings.php:45
+#: admin/settings.php:47
 msgid "About Polylang"
 msgstr "Σχετικά με το Polylang"
 
 # @ polylang
-#: admin/settings.php:61
+#: admin/settings.php:63
 msgid "Strings translations"
 msgstr "Μετάφραση συμβολοσειρών"
 
 # @ polylang
-#: admin/settings.php:84
+#: admin/settings.php:86
 msgid "Strings translation"
 msgstr "Μετάφραση συμβολοσειρών"
 
 # @ polylang
-#: admin/admin-model.php:285
+#: admin/admin-model.php:274
 msgid "Enter a valid WordPress locale"
 msgstr "Εισάγετε μια έγκυρη τοπικοποίηση Wordpress"
 
 # @ polylang
-#: admin/admin-model.php:293
+#: admin/admin-model.php:282
 msgid "The language code must be unique"
 msgstr "Ο κώδικας γλώσσας θα πρέπει να είναι μοναδικός"
 
 # @ polylang
-#: admin/admin-model.php:297
+#: admin/admin-model.php:286
 msgid "The language must have a name"
 msgstr "Η γλώσσα πρέπει να έχει όνομα"
 
 # @ polylang
-#: admin/admin.php:353
+#: admin/admin.php:371
+#: admin/settings.php:162
 msgid "The language was created, but the WordPress language file was not downloaded. Please install it manually."
 msgstr "Η γλώσσα δημιουργήθηκε αλλά το αρχείο γλώσσας του Wordpress δεν έχει κατέβει. Παρακαλώ εγκαταστήστε το εσείς."
 
 # @ polylang
-#: admin/settings.php:328
+#: admin/admin-strings.php:59
 msgid "Widget title"
 msgstr "Τίτλος μονάδας"
 
 # @ polylang
-#: admin/settings.php:346
+#: admin/settings.php:301
 msgid "Taxonomies"
 msgstr "Ταξινομήσεις"
 
 # @ polylang
-#: admin/settings.php:347
+#: admin/settings.php:302
 msgid "Custom fields"
 msgstr "Προσαρμοσμένα πεδία"
 
 # @ polylang
-#: admin/settings.php:348
+#: admin/settings.php:303
 msgid "Comment status"
 msgstr "Κατάσταση σχολίου"
 
 # @ polylang
-#: admin/settings.php:349
+#: admin/settings.php:304
 msgid "Ping status"
 msgstr "Κατάσταση ping"
 
 # @ polylang
-#: admin/settings.php:350
+#: admin/settings.php:305
 msgid "Sticky posts"
 msgstr "Μόνιμα άρθρα"
 
 # @ polylang
-#: admin/settings.php:351
+#: admin/settings.php:306
 msgid "Published date"
 msgstr "Ημερομηνία δημοσίευσης"
 
 # @ polylang
-#: admin/settings.php:352
+#: admin/settings.php:307
 msgid "Post format"
 msgstr "Μορφή άρθρου"
 
 # @ default
-#: admin/settings.php:353
+#: admin/settings.php:308
 msgid "Page parent"
 msgstr "Μητρική σελίδα"
 
 # @ polylang
-#: admin/settings.php:354
+#: admin/settings.php:309
 msgid "Page template"
 msgstr "Πρότυπο σελίδας"
 
 # @ polylang
-#: admin/settings.php:355
+#: admin/settings.php:310
 msgid "Page order"
 msgstr "Διάταξη σελίδων"
 
 # @ polylang
-#: admin/settings.php:356
+#: admin/settings.php:311
 msgid "Featured image"
 msgstr "Επιλεγμένη εικόνα"
 
@@ -309,11 +308,6 @@ msgstr "Κώδικας γλώσσας"
 
 # @ polylang
 #: admin/view-languages.php:93
-msgid "2-letters ISO 639-1 language code (for example: en)"
-msgstr "ISO 639-1 κώδικας γλώσσας 2 χαρακτήρων (πχ: en)"
-
-# @ polylang
-#: admin/view-languages.php:93
 msgid "Text direction"
 msgstr "Κατεύθυνση κειμένου"
 
@@ -348,7 +342,7 @@ msgstr "Θέση της γλώσσας στον επιλογέα γλώσσας"
 #: admin/admin-nav-menu.php:90
 #: admin/admin-nav-menu.php:93
 #: admin/admin-nav-menu.php:124
-#: admin/admin-nav-menu.php:181
+#: admin/admin-nav-menu.php:186
 #: include/upgrade.php:301
 msgid "Language switcher"
 msgstr "Επιλογέας γλώσσας"
@@ -403,7 +397,7 @@ msgstr "Μέσα"
 msgid "Activate languages and translations for media"
 msgstr "Ενεργοποίηση γλωσσών και μεταφράσεων για μέσο"
 
-#: admin/view-languages.php:365
+#: admin/view-languages.php:363
 msgid "Synchronization"
 msgstr "Συγχρονισμός"
 
@@ -428,8 +422,8 @@ msgid "Activate languages and translations for custom taxonomies."
 msgstr "Ενεργοποίηση γλωσσών και μεταφράσεων για ειδικές ταξινομίσεις"
 
 # @ polylang
-#: admin/admin-filters-post.php:351
-#: admin/admin-filters-term.php:502
+#: admin/admin-filters-post.php:379
+#: admin/admin-filters-term.php:612
 #: admin/table-languages.php:54
 #: admin/view-translations-media.php:21
 msgid "Edit"
@@ -467,9 +461,9 @@ msgid "String"
 msgstr "Συμβολοσειρά"
 
 # @ polylang
-#: admin/admin-filters-post.php:375
-#: admin/admin-filters-term.php:528
 #: admin/view-translations-media.php:30
+#: admin/view-translations-post.php:21
+#: admin/view-translations-term.php:30
 msgid "Add new"
 msgstr "Προσθήκη νέου"
 
@@ -484,7 +478,7 @@ msgid "Displays a language switcher"
 msgstr "Εμφάνιση επιλογέα γλώσσας"
 
 # @ polylang
-#: include/widget-languages.php:100
+#: include/widget-languages.php:97
 msgid "Title:"
 msgstr "Τίτλος:"
 
@@ -495,7 +489,7 @@ msgid "Adds multilingual capability to WordPress"
 msgstr "Προσθέτει πολυγλωσσική δυνατότητα στο WordPress"
 
 # @ polylang
-#: polylang.php:160
+#: polylang.php:145
 #, php-format
 msgid "You are using WordPress %s. Polylang requires at least WordPress %s."
 msgstr "Χρησιμοποιείτε WordPress %s. Το Polylang χρειάζεται τουλάχιστον WordPress %s."
@@ -537,7 +531,7 @@ msgid "The synchronization options allow to maintain exact same values (or trans
 msgstr "Η επιλογές συγχρονισμού επιτρέπουν την διατήρηση των ίδιων ακριβώς τιμών (ή μεταφράσεων στην περίπτωση ταξονομιών και μητρικών σελίδων) μετα- περιεχομένου μεταξύ των μεταφράσεων ενός άρθρου ή μιας σελίδας. "
 
 # @ polylang
-#: admin/admin-model.php:289
+#: admin/admin-model.php:278
 msgid "The language code contains invalid characters"
 msgstr "Το όνομα του κώδικα γλώσσας περιέχει μη έγκυρους χαρακτήρες."
 
@@ -590,7 +584,7 @@ msgid "The front page url contains the language code instead of the page name or
 msgstr "Ο κώδικας γλώσσας να περιέχεται στη διεύθυνση της αρχικής σελίδας αντί στο όνομα τη ταυτότητα της σελίδας"
 
 # @ polylang
-#: admin/admin-filters-term.php:143
+#: admin/admin-filters-term.php:167
 #, php-format
 msgid "A translation does already exist for %s"
 msgstr "Δεν υπάρχει μετάφραση για %s"
@@ -602,32 +596,42 @@ msgid "Example: %s instead of %s"
 msgstr "Παράδειγμα: %s αντί %s"
 
 # @ polylang
-#: admin/admin-model.php:49
+#: admin/admin-model.php:38
 msgid "Impossible to add the language."
 msgstr "Αδυναμία προσθήκης γλώσσας."
 
 # @ polylang
-#: admin/admin-model.php:73
+#: admin/admin-model.php:62
 msgid "Language added."
 msgstr "Η γλώσσα προστέθηκε"
 
 # @ polylang
-#: admin/admin-model.php:187
+#: admin/admin-model.php:176
 msgid "Language deleted."
 msgstr "Η γλώσσα διαγράφηκε."
 
 # @ polylang
-#: admin/admin-model.php:268
+#: admin/admin-model.php:257
 msgid "Language updated."
 msgstr "Η γλώσσα ενημερώθηκε."
 
 # @ polylang
-#: admin/settings.php:203
+#: admin/settings.php:221
 msgid "Translations updated."
 msgstr "Η μεταφράσεις ενημερώθηκαν."
 
 # @ polylang
 #: admin/view-languages.php:89
 msgid "Language code - preferably 2-letters ISO 639-1  (for example: en)"
+msgstr "Κώδικας γλώσσας - κατά προτίμηση 2 γράμματα ISO 631-1 (για παράδειγμα: el)"
+
+# @ polylang
+#: admin/admin-filters.php:202
+msgid "The chosen static front page must be translated in all languages."
 msgstr ""
-"Κώδικας γλώσσας - κατά προτίμηση 2 γράμματα ISO 631-1 (για παράδειγμα: el)"
+"Η επιλεγμένη στατική πρώτη σελίδα πρέπει να μεταφραστεί σε όλες τις γλώσσες"
+
+# @ polylang
+#: admin/admin-strings.php:60
+msgid "Widget text"
+msgstr "Κείμενο μονάδας"

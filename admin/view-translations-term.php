@@ -10,8 +10,11 @@ else {
 	// add term form?>
 	<label><?php _e('Translations', 'polylang');?></label><?php
 }?>
-<table class="widefat term-translations">
-	<?php foreach ($this->model->get_languages_list() as $language) {
+<table class="widefat term-translations"  id="<?php echo isset($term_id) ? 'edit' : 'add'; ?>-term-translations"><?php
+	// disable the translation input field fro default category to prevent removal
+	$disabled = in_array(get_option('default_category'), $this->model->get_translations('term', $term_id));
+
+	foreach ($this->model->get_languages_list() as $language) {
 		if ($language->term_id == $lang->term_id)
 			continue;
 
@@ -37,7 +40,7 @@ else {
 
 		<tr><?php
 			if (isset($term_id)) { ?>
-				<td class = "pll-language-column"><?php echo $language->flag . '&nbsp;' . esc_html($language->name); ?></td>
+				<td class = "pll-language-column"><span class = "pll-translation-flag"><?php echo $language->flag?></span><?php echo esc_html($language->name); ?></td>
 				<td class = "hidden"><?php echo $add_link;?></td>
 				<td class = "pll-edit-column"><?php echo $link;?></td><?php
 			}
@@ -47,10 +50,11 @@ else {
 			<td class = "pll-translation-column"><?php
 				printf('
 					<input type="hidden" name="term_tr_lang[%1$s]" id="htr_lang_%1$s" value="%2$s"/>
-					<input type="text" class="tr_lang" id="tr_lang_%1$s" value="%3$s">',
+					<input type="text" class="tr_lang" id="tr_lang_%1$s" value="%3$s"%4$s>',
 					esc_attr($language->slug),
 					empty($translation) ? 0 : esc_attr($translation->term_id),
-					empty($translation) ? '' : esc_attr($translation->name)
+					empty($translation) ? '' : esc_attr($translation->name),
+					empty($disabled) ? '' : ' disabled="disabled"'
 				); ?>
 			</td>
 		</tr><?php

@@ -114,8 +114,8 @@ function pll_home_url($lang = '') {
  */
 function pll_register_string($name, $string, $context = 'polylang', $multiline = false) {
 	global $polylang;
-	if ($polylang instanceof PLL_Admin && !empty($polylang->settings_page))
-		$polylang->settings_page->register_string($name, $string, $context, $multiline);
+	if ($polylang instanceof PLL_Admin)
+		PLL_Admin_Strings::register_string($name, $string, $context, $multiline);
 }
 
 /*
@@ -153,14 +153,14 @@ function pll_e($string) {
 function pll_translate_string($string, $lang) {
 	if (pll_current_language() == $lang)
 		return pll__($string);
-		
+
 	static $mo = array();
-	
+
 	if (empty($mo[$lang])) {
 		$mo[$lang] = new PLL_MO();
-		$mo[$lang]->import_from_db($GLOBALS['polylang']->model->get_language($lang));	
+		$mo[$lang]->import_from_db($GLOBALS['polylang']->model->get_language($lang));
 	}
-	
+
 	return $mo[$lang]->translate($string);
 }
 

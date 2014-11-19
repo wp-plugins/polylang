@@ -4,7 +4,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Alexander Markevitch <alexander.markevitch@gmail.com>\n"
+"Last-Translator: Aljaksandr Markevitch <alexander.markevitch@gmail.com>\n"
 "Language-Team: \n"
 "Language: ru_RU\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2\n"
 "X-Poedit-Basepath: .\n"
 "X-Textdomain-Support: yes\n"
-"X-Generator: Poedit 1.6.4\n"
+"X-Generator: Poedit 1.5.4\n"
 "X-Poedit-SearchPath-0: ..\n"
 
 # @ polylang
@@ -68,8 +68,8 @@ msgstr ""
 "заўседы можаце ахвяраваць грошаў аўтару праекта."
 
 # @ polylang
-#: admin/admin-filters-post.php:83 admin/admin.php:73 admin/settings.php:53
-#: admin/settings.php:80 include/model.php:506
+#: admin/admin-filters-post.php:81 admin/admin.php:90 admin/settings.php:55
+#: admin/settings.php:82 include/model.php:526
 msgid "Languages"
 msgstr "Мовы"
 
@@ -99,24 +99,24 @@ msgid "Displays as dropdown"
 msgstr "Паказвае як выпадальны спіс"
 
 # @ polylang
-#: admin/admin.php:252
+#: admin/admin.php:271
 msgid "Filters content by language"
 msgstr "Адбіраць змесціва паводле мовы"
 
 # @ polylang
-#: admin/admin.php:243
+#: admin/admin.php:262
 msgid "Show all languages"
 msgstr "Паказаць усе мовы"
 
 # @ polylang
-#: admin/admin-filters-columns.php:132 admin/admin-filters-columns.php:228
+#: admin/admin-filters-columns.php:139 admin/admin-filters-columns.php:227
 msgid "Add new translation"
 msgstr "Дадаць новы пераклад"
 
 # @ polylang
-#: admin/admin-filters-columns.php:169 admin/admin-filters-media.php:58
-#: admin/admin-filters-post.php:107 admin/admin-filters-term.php:75
-#: admin/admin-filters-term.php:112 include/model.php:507
+#: admin/admin-filters-columns.php:173 admin/admin-filters-media.php:55
+#: admin/admin-filters-post.php:107 admin/admin-filters-term.php:77
+#: admin/admin-filters-term.php:121 include/model.php:527
 msgid "Language"
 msgstr "Мова"
 
@@ -128,72 +128,72 @@ msgid "Translations"
 msgstr "Пераклады"
 
 # @ polylang
-#: admin/admin-filters-term.php:77 admin/admin-filters-term.php:114
+#: admin/admin-filters-term.php:84 admin/admin-filters-term.php:128
 msgid "Sets the language"
 msgstr "Вызначае мову"
 
 # @ polylang
-#: admin/admin-filters.php:46
+#: admin/admin-filters.php:52
 msgid "The widget is displayed for:"
 msgstr "Паказваць віджэт для"
 
 # @ polylang
-#: admin/admin-filters.php:49 include/model.php:508
+#: admin/admin-filters.php:55 include/model.php:528
 msgid "All languages"
 msgstr "Усе мовы"
 
 # @ polylang
-#: admin/admin-filters.php:113
+#: admin/admin-filters.php:123
 msgid "Admin language"
 msgstr "Мова панэлі адміністратара"
 
-#: admin/admin-filters.php:116
+#: admin/admin-filters.php:126
 msgid "Wordpress default"
 msgstr "Па змаўчанню"
 
 # @ default
 # @ polylang
-#: admin/admin.php:154 admin/settings.php:85
+#: admin/admin.php:171 admin/settings.php:87
 msgid "Settings"
 msgstr "Наладкі"
 
 # @ polylang
-#: admin/admin-filters.php:146
+#: admin/admin-filters.php:160 admin/admin-filters.php:169
 msgid "Upgrading language files&#8230;"
 msgstr "Абнаўленне моўных файлаў&#8230;"
 
 # @ polylang
-#: admin/settings.php:45
+#: admin/settings.php:47
 msgid "About Polylang"
 msgstr "Аб Polylang"
 
 # @ polylang
-#: admin/settings.php:61
+#: admin/settings.php:63
 msgid "Strings translations"
 msgstr "Пераклады радкоў"
 
 # @ polylang
-#: admin/settings.php:84
+#: admin/settings.php:86
 msgid "Strings translation"
 msgstr "Пераклад радкоў"
 
 # @ polylang
-#: admin/admin-model.php:285
+#: admin/admin-model.php:274
 msgid "Enter a valid WordPress locale"
 msgstr "Вызначце карэктную WordPress лакаль"
 
 # @ polylang
-#: admin/admin-model.php:293
+#: admin/admin-model.php:282
 msgid "The language code must be unique"
 msgstr "Код мовы павінны быць унікальным"
 
 # @ polylang
-#: admin/admin-model.php:297
+#: admin/admin-model.php:286
 msgid "The language must have a name"
 msgstr "Мова павінна мець назву"
 
 # @ polylang
-#: admin/admin.php:353
+#: admin/admin.php:371 admin/settings.php:162
 msgid ""
 "The language was created, but the WordPress language file was not "
 "downloaded. Please install it manually."
@@ -202,62 +202,62 @@ msgstr ""
 "ласка, запампуйце ды устанавіце іх самастойна."
 
 # @ polylang
-#: admin/settings.php:328
+#: admin/admin-strings.php:59
 msgid "Widget title"
 msgstr "Назва віджэту"
 
 # @ polylang
-#: admin/settings.php:346
+#: admin/settings.php:301
 msgid "Taxonomies"
 msgstr "Таксаноміі"
 
 # @ polylang
-#: admin/settings.php:347
+#: admin/settings.php:302
 msgid "Custom fields"
 msgstr "Адвольныя палі"
 
 # @ polylang
-#: admin/settings.php:348
+#: admin/settings.php:303
 msgid "Comment status"
 msgstr "Стан каментара"
 
 # @ polylang
-#: admin/settings.php:349
+#: admin/settings.php:304
 msgid "Ping status"
 msgstr "Адказ на запыт"
 
 # @ polylang
-#: admin/settings.php:350
+#: admin/settings.php:305
 msgid "Sticky posts"
 msgstr "Заліпаючыя запісы"
 
 # @ polylang
-#: admin/settings.php:351
+#: admin/settings.php:306
 msgid "Published date"
 msgstr "Дата публікацыі"
 
 # @ polylang
-#: admin/settings.php:352
+#: admin/settings.php:307
 msgid "Post format"
 msgstr "Фармат запісу"
 
 # @ polylang
-#: admin/settings.php:353
+#: admin/settings.php:308
 msgid "Page parent"
 msgstr "Бацькоўская старонка"
 
 # @ polylang
-#: admin/settings.php:354
+#: admin/settings.php:309
 msgid "Page template"
 msgstr "Шаблон старонкі"
 
 # @ polylang
-#: admin/settings.php:355
+#: admin/settings.php:310
 msgid "Page order"
 msgstr "Парадак старонак"
 
 # @ polylang
-#: admin/settings.php:356
+#: admin/settings.php:311
 msgid "Featured image"
 msgstr "Выбраная выява"
 
@@ -312,11 +312,6 @@ msgstr "Код мовы"
 
 # @ polylang
 #: admin/view-languages.php:93
-msgid "2-letters ISO 639-1 language code (for example: en)"
-msgstr "Дзвюхлітарны код мовы ISO 639-1 (напрыклад: en)"
-
-# @ polylang
-#: admin/view-languages.php:93
 msgid "Text direction"
 msgstr "Напрамак тэксту"
 
@@ -348,7 +343,7 @@ msgstr "Месца мовы ў пераключальніку моў"
 # @ polylang
 #: admin/admin-nav-menu.php:52 admin/admin-nav-menu.php:90
 #: admin/admin-nav-menu.php:93 admin/admin-nav-menu.php:124
-#: admin/admin-nav-menu.php:181 include/upgrade.php:301
+#: admin/admin-nav-menu.php:186 include/upgrade.php:301
 msgid "Language switcher"
 msgstr "Выбар моў"
 
@@ -407,7 +402,7 @@ msgstr "Медыа"
 msgid "Activate languages and translations for media"
 msgstr "Актывіраваць мовы і пераклады для медыа-файлаў"
 
-#: admin/view-languages.php:365
+#: admin/view-languages.php:363
 msgid "Synchronization"
 msgstr "Сінхранізацыя"
 
@@ -432,7 +427,7 @@ msgid "Activate languages and translations for custom taxonomies."
 msgstr "Актывіраваць мовы і пераклады для адвольных таксанамій."
 
 # @ polylang
-#: admin/admin-filters-post.php:351 admin/admin-filters-term.php:502
+#: admin/admin-filters-post.php:379 admin/admin-filters-term.php:612
 #: admin/table-languages.php:54 admin/view-translations-media.php:21
 msgid "Edit"
 msgstr "Рэдагаваць"
@@ -468,8 +463,8 @@ msgid "String"
 msgstr "Радок"
 
 # @ polylang
-#: admin/admin-filters-post.php:375 admin/admin-filters-term.php:528
-#: admin/view-translations-media.php:30
+#: admin/view-translations-media.php:30 admin/view-translations-post.php:21
+#: admin/view-translations-term.php:30
 msgid "Add new"
 msgstr "Дадаць новую"
 
@@ -484,7 +479,7 @@ msgid "Displays a language switcher"
 msgstr "Паказвае пераключальнік моў"
 
 # @ polylang
-#: include/widget-languages.php:100
+#: include/widget-languages.php:97
 msgid "Title:"
 msgstr "Назва:"
 
@@ -495,7 +490,7 @@ msgid "Adds multilingual capability to WordPress"
 msgstr "Дадае магчымасць падтрымкі шматмоў'я ў Wordpress"
 
 # @ polylang
-#: polylang.php:160
+#: polylang.php:145
 #, php-format
 msgid "You are using WordPress %s. Polylang requires at least WordPress %s."
 msgstr ""
@@ -550,7 +545,7 @@ msgstr ""
 "перакладамі запісу альбо старонкі."
 
 # @ polylang
-#: admin/admin-model.php:289
+#: admin/admin-model.php:278
 msgid "The language code contains invalid characters"
 msgstr "Код мовы ўтрымлівае нядзейныя сімвалы"
 
@@ -602,7 +597,7 @@ msgstr ""
 "старонкі"
 
 # @ polylang
-#: admin/admin-filters-term.php:143
+#: admin/admin-filters-term.php:167
 #, php-format
 msgid "A translation does already exist for %s"
 msgstr "Пераклад для %s ужо існуе"
@@ -614,27 +609,27 @@ msgid "Example: %s instead of %s"
 msgstr "Прыклад: %s заместа %s"
 
 # @ polylang
-#: admin/admin-model.php:49
+#: admin/admin-model.php:38
 msgid "Impossible to add the language."
 msgstr "Немагчыма дадаць мову."
 
 # @ polylang
-#: admin/admin-model.php:73
+#: admin/admin-model.php:62
 msgid "Language added."
 msgstr "Мова дададзена."
 
 # @ polylang
-#: admin/admin-model.php:187
+#: admin/admin-model.php:176
 msgid "Language deleted."
 msgstr "Мова выдалена."
 
 # @ polylang
-#: admin/admin-model.php:268
+#: admin/admin-model.php:257
 msgid "Language updated."
 msgstr "Мова аднаўлена."
 
 # @ polylang
-#: admin/settings.php:203
+#: admin/settings.php:221
 msgid "Translations updated."
 msgstr "Пераклады аднаўлены."
 
@@ -644,6 +639,21 @@ msgid "Language code - preferably 2-letters ISO 639-1  (for example: en)"
 msgstr ""
 "Код мовы - пажадана дзвюхлітарны згодна са стандартам ISO 639-1  (напрыклад: "
 "en)"
+
+# @ polylang
+#: admin/admin-filters.php:202
+msgid "The chosen static front page must be translated in all languages."
+msgstr ""
+"Выбраная статычная галоўная старонка павінна быць перакладзена на ўсе мовы."
+
+# @ polylang
+#: admin/admin-strings.php:60
+msgid "Widget text"
+msgstr "Тэкст віджэта"
+
+# @ polylang
+#~ msgid "2-letters ISO 639-1 language code (for example: en)"
+#~ msgstr "Дзвюхлітарны код мовы ISO 639-1 (напрыклад: en)"
 
 # @ polylang
 #~ msgid "Translation"

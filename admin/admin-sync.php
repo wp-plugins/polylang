@@ -19,7 +19,7 @@ class PLL_Admin_Sync {
 		$this->options = &$polylang->options;
 
 		add_filter('wp_insert_post_parent', array(&$this, 'wp_insert_post_parent'));
-		add_action('add_meta_boxes', array(&$this, 'add_meta_boxes'), 10, 2);
+		add_action('add_meta_boxes', array(&$this, 'add_meta_boxes'), 5, 2); // before Types which populates custom fields in same hook with priority 10
 
 		add_action('pll_save_post', array(&$this, 'pll_save_post'), 10, 3);
 
@@ -72,7 +72,7 @@ class PLL_Admin_Sync {
 	 * @param string $lang language slug
 	 * @param bool $sync true if it is synchronization, false if it is a copy, defaults to false
 	 */
-	protected function copy_post_metas($from, $to, $lang, $sync = false) {
+	public function copy_post_metas($from, $to, $lang, $sync = false) {
 		// copy or synchronize terms
 		if (!$sync || in_array('taxonomies', $this->options['sync'])) {
 			// FIXME quite a lot of query in foreach

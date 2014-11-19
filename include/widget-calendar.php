@@ -25,15 +25,14 @@ class PLL_Widget_Calendar extends WP_Widget_Calendar {
 	 * @param array $instance The settings for the particular instance of the widget
 	 */
 	function widget( $args, $instance ) {
-		extract($args);
 		$title = apply_filters('widget_title', empty($instance['title']) ? '&nbsp;' : $instance['title'], $instance, $this->id_base);
-		echo $before_widget;
+		echo $args['before_widget'];
 		if ( $title )
-			echo $before_title . $title . $after_title;
+			echo $args['before_title'] . $title . $args['after_title'];
 		echo '<div id="calendar_wrap">';
 		empty($GLOBALS['polylang']->curlang) ? get_calendar() : self::get_calendar(); #modified#
 		echo '</div>';
-		echo $after_widget;
+		echo $args['after_widget'];
 	}
 
 	/*
