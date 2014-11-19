@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, international, localization
 Requires at least: 3.5
 Tested up to: 4.0
-Stable tag: 1.6
+Stable tag: 1.6.1
 License: GPLv2 or later
 
 Polylang adds multilingual content management support to WordPress.
@@ -61,14 +61,9 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 1. The Polylang languages admin panel in WordPress 3.8
 
-== Upgrade Notice ==
-
-= 1.6 =
-Polylang 1.2 introduced major internal changes. More than ever, make a database backup before upgrading from 1.1.6 or older! If you are using a version older than 0.8, please upgrade to 0.9.8 before ugrading to 1.6
-
 == Changelog ==
 
-= 1.6.1 =
+= 1.6.1 (2014-11-19) =
 
 * Add Brazilian Portuguese translation contributed by [Henrique Vianna](http://henriquevianna.com/)
 * Improve compatibility with Types: allow custom fields to be populated when creating a new translation
