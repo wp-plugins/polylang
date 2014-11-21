@@ -63,6 +63,10 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 == Changelog ==
 
+= 1.6.2 =
+
+* fix: https issue
+
 = 1.6.1 (2014-11-19) =
 
 * Add Brazilian Portuguese translation contributed by [Henrique Vianna](http://henriquevianna.com/)

@@ -68,7 +68,7 @@ abstract class PLL_Choose_Lang {
 				$this->curlang->slug,
 				time() + 31536000 /* 1 year */,
 				COOKIEPATH,
-				2 == $this->options['force_lang'] ? parse_url(get_option('home'), PHP_URL_HOST) : COOKIE_DOMAIN
+				2 == $this->options['force_lang'] ? parse_url($this->links_model->home, PHP_URL_HOST) : COOKIE_DOMAIN
 			);
 	}
 

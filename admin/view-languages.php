@@ -224,7 +224,7 @@ case 'settings': ?><?php
 							'<td><input name="domains[%1$s]" id="pll-domain[%1$s]" type="text" value="%3$s" size="40" aria-required="true" %4$s /></td></tr>',
 							esc_attr($lg->slug),
 							esc_attr($lg->name),
-							esc_url($lg->slug == $this->options['default_lang'] ? get_option('home') : (isset($this->options['domains'][$lg->slug]) ? $this->options['domains'][$lg->slug] : '')),
+							esc_url($lg->slug == $this->options['default_lang'] ? $this->links_model->home : (isset($this->options['domains'][$lg->slug]) ? $this->options['domains'][$lg->slug] : '')),
 							!$this->links_model->using_permalinks || $lg->slug == $this->options['default_lang'] ? 'disabled="disabled"' : ''
 						);
 					}?>

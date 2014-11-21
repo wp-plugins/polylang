@@ -11,8 +11,8 @@ else {
 	<label><?php _e('Translations', 'polylang');?></label><?php
 }?>
 <table class="widefat term-translations"  id="<?php echo isset($term_id) ? 'edit' : 'add'; ?>-term-translations"><?php
-	// disable the translation input field fro default category to prevent removal
-	$disabled = in_array(get_option('default_category'), $this->model->get_translations('term', $term_id));
+	// disable the translation input field for default category to prevent removal
+	$disabled = isset($term_id) && in_array(get_option('default_category'), $this->model->get_translations('term', $term_id));
 
 	foreach ($this->model->get_languages_list() as $language) {
 		if ($language->term_id == $lang->term_id)
