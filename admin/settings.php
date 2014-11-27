@@ -170,7 +170,7 @@ class PLL_Settings {
 						PLL_Admin::download_mo($_POST['locale']);
 					}
 
-					else {
+					elseif ('en_US' != $_POST['locale']) {
 						// attempts to install the language pack
 						require_once(ABSPATH . 'wp-admin/includes/translation-install.php');
 						if (!wp_download_language_pack($_POST['locale']))

@@ -331,6 +331,10 @@ class PLL_Frontend_Links extends PLL_Links {
 		if (3 == $this->options['force_lang'] && is_preview())
 			return;
 
+		// don't redirect mysite.com/?attachment_id= to mysite.com/en/?attachment_id=
+		if (1 == $this->options['force_lang'] && is_attachment() && isset($_GET['attachment_id']))
+			return;
+
 		if (is_single() || is_page()) {
 			if (isset($post->ID) && $this->model->is_translated_post_type($post->post_type))
 				$language = $this->model->get_post_language((int)$post->ID);

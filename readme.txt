@@ -66,6 +66,8 @@ See http://polylang.wordpress.com/documentation/contribute/
 = 1.6.2 =
 
 * fix: https issue
+* fix: stop displaying an error when adding en_US as new language (translation not downloaded)
+* fix: infinite redirect loop on (unattached) attachment links
 
 = 1.6.1 (2014-11-19) =
 

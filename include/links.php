@@ -35,6 +35,9 @@ class PLL_Links {
 			add_filter('term_link', array(&$this, 'term_link'), 20, 3);
 		}
 
+		if ($this->options['force_lang'] > 1)
+			add_filter('attachment_link', array(&$this, 'attachment_link'), 20, 2);
+
 		if (3 == $this->options['force_lang'])
 			add_filter('preview_post_link', array(&$this, 'preview_post_link'), 20);
 	}
@@ -69,6 +72,22 @@ class PLL_Links {
 
 		// /!\ when post_status is not "publish", WP does not use pretty permalinks
 		return $this->_links[$link] = $post->post_status != 'publish' ? $link : $this->links_model->add_language_to_link($link, $this->model->get_post_language($post->ID));
+	}
+
+	/*
+	 * modifies attachment links
+	 *
+	 * @since 1.6.2
+	 *
+	 * @param string $link attachment link
+	 * @param int $post_id attachment link
+	 * @return string modified attachment link
+	 */
+	public function attachment_link($link, $post_id) {
+		if (isset($this->_links[$link]))
+			return $this->_links[$link];
+
+		return $this->_links[$link] = $this->links_model->add_language_to_link($link, $this->model->get_post_language($post_id));
 	}
 
 	/*

@@ -53,6 +53,8 @@ class PLL_Admin_Filters_Term {
 			add_action('wp_ajax_polylang-ajax-tag-search', 'wp_ajax_ajax_tag_search'); // take profit of new filter, cache...
 
 		add_filter('option_default_category', array(&$this, 'option_default_category'));
+
+		//add_action('split_shared_term', array(&$this, 'split_shared_term'), 10, 4); // FIXME planned for WP 4.2
 	}
 
 	/*
@@ -603,6 +605,44 @@ class PLL_Admin_Filters_Term {
 				return $this->model->get_term($value, $this->model->get_term_language($traces[4]['args'][0]));
 		}
 		return $value;
+	}
+
+	/*
+	 * FIXME: splitting shared terms is not planned before WP 4.2. It is not clear if all terms will be splitted at once
+	 * when splitting a shared, splits translations if these are shared terms too
+	 *
+	 * @since 1.6.2
+	 *
+	 * @param int $term_id shared term_id
+	 * @param int $new_term_id
+	 * @param int $term_taxonomy_id
+	 * @param string $taxonomy
+	 */
+	public function split_shared_term($term_id, $new_term_id, $term_taxonomy_id, $taxonomy) {
+		// avoid recursion
+		static $avoid_recursion = false;
+		if ($avoid_recursion)
+			return;
+
+		$avoid_recursion = true;
+		$lang = $this->model->get_term_language($term_id);
+
+		foreach ($this->model->get_translations('term', $term_id) as $key => $tr_id) {
+			if ($lang->slug == $key) {
+				$translations[$key] = $new_term_id;
+			}
+			else {
+				$tr_term = get_term($tr_id, $taxonomy);
+				$translations[$key] = _split_shared_term($tr_id, $tr_term->term_taxonomy_id);
+
+				// hack translation ids sent by the form to avoid overwrite in PLL_Admin_Filters_Term::save_translations
+				if (isset($_POST['term_tr_lang'][$key]) && $_POST['term_tr_lang'][$key] == $tr_id)
+					$_POST['term_tr_lang'][$key] = $translations[$key];
+			}
+			$this->model->set_term_language($translations[$key], $key);
+		}
+
+		$this->model->save_translations('term', $new_term_id, $translations);
 	}
 
 	/*
