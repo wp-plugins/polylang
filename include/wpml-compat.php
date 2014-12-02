@@ -75,7 +75,7 @@ if (!function_exists('icl_get_home_url')) {
 if (!function_exists('icl_get_languages')) {
 	function icl_get_languages($args = '') {
 		global $polylang;
-		if (empty($polylang) || !($polylang instanceof PLL_Frontend) || empty($polylang->curlang))
+		if (empty($polylang))
 			return array();
 
 		$orderby = (isset($args['orderby']) && $args['orderby'] == 'code') ? 'slug' : (isset($args['orderby']) && $args['orderby'] == 'name' ? 'name' : 'id');
@@ -84,7 +84,9 @@ if (!function_exists('icl_get_languages')) {
 		$arr = array();
 
 		foreach ($polylang->model->get_languages_list(array('hide_empty' => true, 'orderby' => $orderby, 'order' => $order)) as $lang) {
-			$url = $polylang->links->get_translation_url($lang);
+			// we can find a translation only on frontend
+			if (method_exists($polylang->links, 'get_translation_url'))
+				$url = $polylang->links->get_translation_url($lang);
 
 			if (empty($url) && !empty($args['skip_missing']))
 				continue;
@@ -97,7 +99,7 @@ if (!function_exists('icl_get_languages')) {
 				'translated_name'  => '', // does not exist in Polylang
 				'language_code'    => $lang->slug,
 				'country_flag_url' => $lang->flag_url,
-				'url'              => $url ? $url :
+				'url'              => !empty($url) ? $url :
 					(empty($args['link_empty_to']) ? $polylang->links->get_home_url($lang) :
 					str_replace('{$lang}', $lang->slug, $args['link_empty_to']))
 			);

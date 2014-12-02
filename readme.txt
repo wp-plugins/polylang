@@ -65,6 +65,7 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 = 1.6.2 =
 
+* Add support for icl_get_languages on admin side (mainly for Avada compatibility)
 * fix: https issue
 * fix: stop displaying an error when adding en_US as new language (translation not downloaded)
 * fix: infinite redirect loop on (unattached) attachment links
