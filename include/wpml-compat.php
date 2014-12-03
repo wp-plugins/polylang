@@ -91,7 +91,7 @@ if (!function_exists('icl_get_languages')) {
 			if (empty($url) && !empty($args['skip_missing']))
 				continue;
 
-			$arr[] = array(
+			$arr[$lang->slug] = array(
 				'id'               => $lang->term_id,
 				'active'           => isset($polylang->curlang->slug) && $polylang->curlang->slug == $lang->slug ? 1 : 0,
 				'native_name'      => $lang->name,
