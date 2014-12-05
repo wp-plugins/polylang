@@ -227,7 +227,10 @@ class PLL_Admin_Filters_Term {
 
 		// quick edit
 		elseif (isset($_POST['inline_lang_choice'])) {
-			check_ajax_referer('taxinlineeditnonce', '_inline_edit');
+			check_ajax_referer(
+				isset($_POST['action']) && 'inline-save' == $_POST['action'] ? 'inlineeditnonce' : 'taxinlineeditnonce', // post quick edit or tag quick edit ?
+				'_inline_edit'
+			);
 
 			if (isset($_POST['inline-save-tax']) && $this->model->get_term_language($term_id)->slug != $_POST['inline_lang_choice'])
 				$this->model->delete_translation('term', $term_id);

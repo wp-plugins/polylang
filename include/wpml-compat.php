@@ -473,13 +473,13 @@ class PLL_WPML_Config {
 	public function init() {
 		$this->wpml_config = array();
 
-		// child theme
-		if (($template = get_template_directory()) != ($stylesheet = get_stylesheet_directory()) && file_exists($file = $stylesheet.'/wpml-config.xml'))
-			$this->xml_parse(file_get_contents($file), get_stylesheet()); // FIXME fopen + fread + fclose quicker ?
-
 		// theme
-		if (file_exists($file = $template.'/wpml-config.xml'))
- 			$this->xml_parse(file_get_contents($file), get_template());
+		if (file_exists($file = ($template = get_template_directory()) .'/wpml-config.xml'))
+ 			$this->xml_parse(file_get_contents($file), get_template()); // FIXME fopen + fread + fclose quicker ?
+
+		// child theme
+		if ($template != ($stylesheet = get_stylesheet_directory()) && file_exists($file = $stylesheet.'/wpml-config.xml'))
+			$this->xml_parse(file_get_contents($file), get_stylesheet());
 
 		// plugins
 		// don't forget sitewide active plugins thanks to Reactorshop http://wordpress.org/support/topic/polylang-and-yoast-seo-plugin/page/2?replies=38#post-4801829

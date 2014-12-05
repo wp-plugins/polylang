@@ -99,9 +99,12 @@ class PLL_Model {
 	 * @return bool|object the term associated to the object in the requested taxonomy if exists, false otherwise
 	 */
 	public function get_object_term($object_id, $taxonomy) {
+		if (empty($object_id))
+			return false;
+
 		$term = get_object_term_cache($object_id, $taxonomy);
 
-		if ( false === $term ) {
+		if (false === $term) {
 			// query language and translations at the same time
 			$taxonomies = (false !== strpos($taxonomy, 'term_')) ?
 				array('term_language', 'term_translations') :

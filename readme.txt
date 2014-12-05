@@ -69,6 +69,9 @@ See http://polylang.wordpress.com/documentation/contribute/
 * fix: https issue
 * fix: stop displaying an error when adding en_US as new language (translation not downloaded)
 * fix: infinite redirect loop on (unattached) attachment links
+* fix: impossible to add tags in post quick edit (introduced in 1.5)
+* fix: the customizer does not land to the right page when cumulating: static front page + page name in url + default language code not hidden
+* fix: read parent theme wpml-config.xml before child theme
 
 = 1.6.1 (2014-11-19) =
 
