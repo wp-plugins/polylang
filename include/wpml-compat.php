@@ -52,7 +52,7 @@ if (!function_exists('icl_get_home_url')) {
  * list of paramaters accepted in $args
  *
  * skip_missing  => wether to skip missing translation or not, 0 or 1, defaults to 0
- * orderby       => 'id', 'cod', 'name', defaults to 'id'
+ * orderby       => 'id', 'code', 'name', defaults to 'id'
  * order         => 'ASC' or 'DESC', defaults to 'ASC'
  * link_empty_to => link to use when the translation is missing {$lang} is replaced by the language code
  *
@@ -78,6 +78,7 @@ if (!function_exists('icl_get_languages')) {
 		if (empty($polylang))
 			return array();
 
+		$args = wp_parse_args($args, array('skip_missing' => 0, 'orderby' => 'id', 'order' => 'ASC'));
 		$orderby = (isset($args['orderby']) && $args['orderby'] == 'code') ? 'slug' : (isset($args['orderby']) && $args['orderby'] == 'name' ? 'name' : 'id');
 		$order = (!empty($args['order']) && $args['order'] == 'desc') ? 'DESC' : 'ASC';
 
@@ -88,7 +89,8 @@ if (!function_exists('icl_get_languages')) {
 			if (method_exists($polylang->links, 'get_translation_url'))
 				$url = $polylang->links->get_translation_url($lang);
 
-			if (empty($url) && !empty($args['skip_missing']))
+			// it seems that WPML does not bother of skip_missing parameter on admin side and before the $wp_query object has been filled
+			if (empty($url) && !empty($args['skip_missing']) && !is_admin() && did_action('parse_query'))
 				continue;
 
 			$arr[$lang->slug] = array(
