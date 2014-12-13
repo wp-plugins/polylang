@@ -72,6 +72,8 @@ See http://polylang.wordpress.com/documentation/contribute/
 * fix: impossible to add tags in post quick edit (introduced in 1.5)
 * fix: the customizer does not land to the right page when cumulating: static front page + page name in url + default language code not hidden
 * fix: read parent theme wpml-config.xml before child theme
+* fix: add protection to avoid empty language
+* fix: page preview link again
 
 = 1.6.1 (2014-11-19) =
 

@@ -46,11 +46,14 @@ abstract class PLL_Choose_Lang {
 		if (isset($this->curlang))
 			return;
 
-		$this->curlang = $curlang;
+		// final check in case $curlang has an unexpected value
+		// see https://wordpress.org/support/topic/detect-browser-language-sometimes-setting-null-language
+		$this->curlang = ($curlang instanceof PLL_Language) ? $curlang : $this->model->get_language($this->options['default_lang']);
+
 		$this->maybe_setcookie();
 
-		$GLOBALS['text_direction'] = $curlang->is_rtl ? 'rtl' : 'ltr';
-		do_action('pll_language_defined', $curlang->slug, $curlang);
+		$GLOBALS['text_direction'] = $this->curlang->is_rtl ? 'rtl' : 'ltr';
+		do_action('pll_language_defined', $this->curlang->slug, $this->curlang);
 	}
 
 	/*

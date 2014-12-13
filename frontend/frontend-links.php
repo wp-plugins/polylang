@@ -327,8 +327,8 @@ class PLL_Frontend_Links extends PLL_Links {
 	public function check_canonical_url() {
 		global $wp_query, $post;
 
-		// FIXME need to keep the default domain for preview if using multiple domains
-		if (3 == $this->options['force_lang'] && is_preview())
+		// don't redirect preview link
+		if (is_preview())
 			return;
 
 		// don't redirect mysite.com/?attachment_id= to mysite.com/en/?attachment_id=
