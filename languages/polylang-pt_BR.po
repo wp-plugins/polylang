@@ -1,0 +1,661 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Polylang v1.6beta1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2014-11-04 13:25-0300\n"
+"Last-Translator: Henrique Avila Vianna <contato@henriquevianna.com>\n"
+"Language-Team: Henrique Vianna <contato@henriquevianna.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
+"_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2\n"
+"X-Poedit-Basepath: ../\n"
+"X-Textdomain-Support: yes\n"
+"X-Generator: Poedit 1.5.5\n"
+"Language: Brazilian Portuguese\n"
+"X-Poedit-SearchPath-0: .\n"
+
+# @ polylang
+#: admin/view-about.php:3
+#, php-format
+msgid ""
+"Polylang is provided with an extensive %sdocumentation%s (in English only). "
+"It includes information on how to set up your multilingual site and use it "
+"on a daily basis, a FAQ, as well as a documentation for programmers to adapt "
+"their plugins and themes."
+msgstr ""
+"Polylang é fornecido com uma extensa %sdocumentação%s (somente em inglês). "
+"Estão incluídas informações para configurar seu site multilíngue e usá-lo "
+"diariamente, uma FAQ, bem como uma documentação para programadores adaptarem "
+"seus plugins e temas."
+
+# @ polylang
+#: admin/view-about.php:9
+#, php-format
+msgid ""
+"You will also find useful information in the %ssupport forum%s. However "
+"don't forget to make a search before posting a new topic."
+msgstr ""
+"Você também encontrará informações úteis no %sfórum de suporte%s. Entretanto "
+"não esqueça de fazer uma busca antes de postar um novo tópico."
+
+# @ polylang
+#: admin/view-about.php:16
+#, php-format
+msgid ""
+"Polylang is free of charge and is released under the same license as "
+"WordPress, the %sGPL%s."
+msgstr ""
+"Polylang é gratuito e distribuído sob a mesma licença que o WordPress, a "
+"%sGPL%s."
+
+# @ polylang
+#: admin/view-about.php:22
+#, php-format
+msgid "If you wonder how you can help the project, just %sread this%s."
+msgstr "Se você quer saber como pode ajudar o projeto, %sleia isto%s."
+
+# @ polylang
+#: admin/view-about.php:27
+msgid ""
+"Finally if you like this plugin or if it helps your business, donations to "
+"the author are greatly appreciated."
+msgstr ""
+"Finalmente, se você gosta deste plugin ou se ele ajuda seus negócios, "
+"doações para o autor são muito apreciadas."
+
+# @ polylang
+#: admin/admin-filters-post.php:81 admin/admin.php:90 admin/settings.php:55
+#: admin/settings.php:82 include/model.php:526
+msgid "Languages"
+msgstr "Idiomas"
+
+# @ polylang
+#: include/switcher.php:22
+msgid "Displays language names"
+msgstr "Exibir nomes de idiomas"
+
+# @ polylang
+#: include/switcher.php:23
+msgid "Displays flags"
+msgstr "Exibir bandeiras"
+
+# @ polylang
+#: include/switcher.php:24
+msgid "Forces link to front page"
+msgstr "Forçar link para a página inicial"
+
+# @ polylang
+#: include/switcher.php:25
+msgid "Hides the current language"
+msgstr "Ocultar o idioma atual"
+
+# @ polylang
+#: include/switcher.php:29
+msgid "Displays as dropdown"
+msgstr "Exibir como lista suspensa"
+
+# @ polylang
+#: admin/admin.php:271
+msgid "Filters content by language"
+msgstr "Filtra conteúdo por idioma"
+
+# @ polylang
+#: admin/admin.php:262
+msgid "Show all languages"
+msgstr "Exibir todos os idiomas"
+
+# @ polylang
+#: admin/admin-filters-columns.php:139 admin/admin-filters-columns.php:227
+msgid "Add new translation"
+msgstr "Adicionar nova tradução"
+
+# @ polylang
+#: admin/admin-filters-columns.php:173 admin/admin-filters-media.php:55
+#: admin/admin-filters-post.php:107 admin/admin-filters-term.php:77
+#: admin/admin-filters-term.php:121 include/model.php:527
+msgid "Language"
+msgstr "Idioma"
+
+# @ polylang
+#: admin/table-string.php:111 admin/view-translations-media.php:5
+#: admin/view-translations-post.php:5 admin/view-translations-term.php:6
+#: admin/view-translations-term.php:11
+msgid "Translations"
+msgstr "Traduções"
+
+# @ polylang
+#: admin/admin-filters-term.php:84 admin/admin-filters-term.php:128
+msgid "Sets the language"
+msgstr "Define o idioma"
+
+# @ polylang
+#: admin/admin-filters.php:52
+msgid "The widget is displayed for:"
+msgstr "O widget é exibido para:"
+
+# @ polylang
+#: admin/admin-filters.php:55 include/model.php:528
+msgid "All languages"
+msgstr "Todos os idiomas"
+
+# @ polylang
+#: admin/admin-filters.php:123
+msgid "Admin language"
+msgstr "Idioma do admin"
+
+# @ polylang
+#: admin/admin-filters.php:126
+msgid "Wordpress default"
+msgstr "Padrão do WordPress"
+
+# @ polylang
+#: admin/admin.php:171 admin/settings.php:87
+msgid "Settings"
+msgstr "Configurações"
+
+# @ polylang
+#: admin/admin-filters.php:160 admin/admin-filters.php:169
+msgid "Upgrading language files&#8230;"
+msgstr "Atualizando arquivos de idioma&#8230;"
+
+# @ polylang
+#: admin/settings.php:47
+msgid "About Polylang"
+msgstr "Sobre Polylang"
+
+# @ polylang
+#: admin/settings.php:63
+msgid "Strings translations"
+msgstr "Traduções de textos"
+
+# @ polylang
+#: admin/settings.php:86
+msgid "Strings translation"
+msgstr "Tradução de textos"
+
+# @ polylang
+#: admin/admin-model.php:274
+msgid "Enter a valid WordPress locale"
+msgstr "Informe um locale válido do WordPress"
+
+# @ polylang
+#: admin/admin-model.php:282
+msgid "The language code must be unique"
+msgstr "O código do idioma deve ser único"
+
+# @ polylang
+#: admin/admin-model.php:286
+msgid "The language must have a name"
+msgstr "O idioma deve ter um nome"
+
+# @ polylang
+#: admin/admin.php:371 admin/settings.php:162
+msgid ""
+"The language was created, but the WordPress language file was not "
+"downloaded. Please install it manually."
+msgstr ""
+"O idioma foi criado, mas o arquivo de idioma do WordPress não foi baixado. "
+"Por favor instale-o manualmente."
+
+# @ polylang
+#: admin/admin-strings.php:59
+msgid "Widget title"
+msgstr "Título do widget"
+
+# @ polylang
+#: admin/settings.php:301
+msgid "Taxonomies"
+msgstr "Taxonomias"
+
+# @ polylang
+#: admin/settings.php:302
+msgid "Custom fields"
+msgstr "Campos personalizados"
+
+# @ polylang
+#: admin/settings.php:303
+msgid "Comment status"
+msgstr "Status de comentários"
+
+# @ polylang
+#: admin/settings.php:304
+msgid "Ping status"
+msgstr "Status de ping"
+
+# @ polylang
+#: admin/settings.php:305
+msgid "Sticky posts"
+msgstr "Posts fixos"
+
+# @ polylang
+#: admin/settings.php:306
+msgid "Published date"
+msgstr "Data de publicação"
+
+# @ polylang
+#: admin/settings.php:307
+msgid "Post format"
+msgstr "Formato de post"
+
+# @ polylang
+#: admin/settings.php:308
+msgid "Page parent"
+msgstr "Página mãe"
+
+# @ polylang
+#: admin/settings.php:309
+msgid "Page template"
+msgstr "Modelo de página"
+
+# @ polylang
+#: admin/settings.php:310
+msgid "Page order"
+msgstr "Ordem de página"
+
+# @ polylang
+#: admin/settings.php:311
+msgid "Featured image"
+msgstr "Imagem destacada"
+
+# @ polylang
+#: admin/view-languages.php:38
+msgid "Edit language"
+msgstr "Editar idioma"
+
+# @ polylang
+#: admin/view-languages.php:38 admin/view-languages.php:113
+msgid "Add new language"
+msgstr "Adicionar novo idioma"
+
+# @ polylang
+#: admin/view-languages.php:54
+msgid "Choose a language"
+msgstr "Escolha um idioma"
+
+# @ polylang
+#: admin/view-languages.php:68
+msgid "You can choose a language in the list or directly edit it below."
+msgstr "Você pode escolher um idioma da lista ou editá-lo diretamente abaixo."
+
+# @ polylang
+#: admin/table-languages.php:74 admin/view-languages.php:72
+msgid "Full name"
+msgstr "Nome completo"
+
+# @ polylang
+#: admin/view-languages.php:74
+msgid "The name is how it is displayed on your site (for example: English)."
+msgstr "O nome como é exibido em seu site (por exemplo: English)."
+
+# @ polylang
+#: admin/table-languages.php:75 admin/view-languages.php:78
+msgid "Locale"
+msgstr "Locale"
+
+# @ polylang
+#: admin/view-languages.php:83
+msgid ""
+"Wordpress Locale for the language (for example: en_US). You will need to "
+"install the .mo file for this language."
+msgstr ""
+"Locale do WordPress para o idioma (por exemplo: en_US). Você precisará "
+"instalar o arquivo .mo para esse idioma."
+
+# @ polylang
+#: admin/view-languages.php:87
+msgid "Language code"
+msgstr "Código do idioma"
+
+# @ polylang
+#: admin/view-languages.php:93
+msgid "Text direction"
+msgstr "Direção do texto"
+
+# @ polylang
+#: admin/view-languages.php:97
+msgid "left to right"
+msgstr "esquerda para direita"
+
+# @ polylang
+#: admin/view-languages.php:102
+msgid "right to left"
+msgstr "direita para esquerda"
+
+# @ polylang
+#: admin/view-languages.php:104
+msgid "Choose the text direction for the language"
+msgstr "Escolha a direção do texto para o idioma"
+
+# @ polylang
+#: admin/table-languages.php:77 admin/view-languages.php:108
+msgid "Order"
+msgstr "Ordem"
+
+# @ polylang
+#: admin/view-languages.php:110
+msgid "Position of the language in the language switcher"
+msgstr "Posição do idioma no seletor de idioma"
+
+# @ polylang
+#: admin/admin-nav-menu.php:52 admin/admin-nav-menu.php:90
+#: admin/admin-nav-menu.php:93 admin/admin-nav-menu.php:124
+#: admin/admin-nav-menu.php:186 include/upgrade.php:301
+msgid "Language switcher"
+msgstr "Seletor de idioma"
+
+# @ polylang
+#: admin/view-languages.php:139
+msgid "Search translations"
+msgstr "Buscar traduções"
+
+# @ polylang
+#: admin/view-languages.php:142
+msgid "Clean strings translation database"
+msgstr "Limpar base de dados de traduções"
+
+# @ polylang
+#: admin/view-languages.php:161
+msgid "Default language"
+msgstr "Idioma padrão"
+
+# @ polylang
+#: admin/view-languages.php:176
+msgid ""
+"There are posts, pages, categories or tags without language set. Do you want "
+"to set them all to default language ?"
+msgstr ""
+"Existem posts, páginas, categorias ou tags sem um idioma definido. Deseja "
+"configurar todos para o idioma padrão?"
+
+# @ polylang
+#: admin/view-languages.php:297
+msgid "Detect browser language"
+msgstr "Detectar idioma do navegador"
+
+# @ polylang
+#: admin/view-languages.php:303
+msgid ""
+"When the front page is visited, set the language according to the browser "
+"preference"
+msgstr ""
+"Ao visitar a página inicial, definir o idioma de acordo com as preferências "
+"do navegador"
+
+# @ polylang
+#: admin/view-languages.php:184
+msgid "URL modifications"
+msgstr "Modificações de URL"
+
+# @ polylang
+#: admin/view-languages.php:241
+msgid "Hide URL language information for default language"
+msgstr "Não exibir informação de idioma no URL para o idioma padrão"
+
+# @ polylang
+#: admin/view-languages.php:310
+msgid "Media"
+msgstr "Mídia"
+
+# @ polylang
+#: admin/view-languages.php:316
+msgid "Activate languages and translations for media"
+msgstr "Ativar idiomas e traduções para mídia"
+
+# @ polylang
+#: admin/view-languages.php:363
+msgid "Synchronization"
+msgstr "Sincronização"
+
+# @ polylang
+#: admin/view-languages.php:324
+msgid "Custom post types"
+msgstr "Tipos de post personalizados"
+
+# @ polylang
+#: admin/view-languages.php:337
+msgid "Activate languages and translations for custom post types."
+msgstr "Ativar idiomas e traduções para tipos de post personalizados."
+
+# @ polylang
+#: admin/view-languages.php:344
+msgid "Custom taxonomies"
+msgstr "Taxonomias personalizadas"
+
+# @ polylang
+#: admin/view-languages.php:357
+msgid "Activate languages and translations for custom taxonomies."
+msgstr "Habilita idiomas e traduções para taxonomias personalizadas."
+
+# @ polylang
+#: admin/admin-filters-post.php:379 admin/admin-filters-term.php:612
+#: admin/table-languages.php:54 admin/view-translations-media.php:21
+msgid "Edit"
+msgstr "Editar"
+
+# @ polylang
+#: admin/table-languages.php:60 admin/table-string.php:167
+msgid "Delete"
+msgstr "Excluir"
+
+# @ polylang
+#: admin/table-languages.php:76
+msgid "Code"
+msgstr "Código"
+
+# @ polylang
+#: admin/table-languages.php:78
+msgid "Flag"
+msgstr "Bandeira"
+
+# @ polylang
+#: admin/table-languages.php:79
+msgid "Posts"
+msgstr "Posts"
+
+# @ polylang
+#: admin/table-string.php:109
+msgid "Name"
+msgstr "Nome"
+
+# @ polylang
+#: admin/table-string.php:110
+msgid "String"
+msgstr "Texto"
+
+# @ polylang
+#: admin/view-translations-media.php:30 admin/view-translations-post.php:21
+#: admin/view-translations-term.php:30
+msgid "Add new"
+msgstr "Adicionar novo"
+
+# @ polylang
+#: include/widget-languages.php:16
+msgid "Language Switcher"
+msgstr "Seletor de Idioma"
+
+# @ polylang
+#: include/widget-languages.php:16
+msgid "Displays a language switcher"
+msgstr "Exibe um seletor de idioma"
+
+# @ polylang
+#: include/widget-languages.php:97
+msgid "Title:"
+msgstr "Título:"
+
+# @ polylang
+#. translators: plugin header field 'Description'
+#: polylang.php:0
+msgid "Adds multilingual capability to WordPress"
+msgstr "Adiciona capacidade multilíngue ao WordPress"
+
+# @ polylang
+#: polylang.php:145
+#, php-format
+msgid "You are using WordPress %s. Polylang requires at least WordPress %s."
+msgstr ""
+"Você está usando o WordPress %s. Polylang requer pelo menos o WordPress %s."
+
+# @ polylang
+#: include/upgrade.php:76
+msgid ""
+"Polylang has been deactivated because you upgraded from a too old version."
+msgstr ""
+"Polylang foi desativado porque você fez atualização de uma versão muito "
+"antiga."
+
+# @ polylang
+#: include/upgrade.php:78
+#, php-format
+msgid "Please upgrade first to %s before ugrading to %s."
+msgstr "Por favor atualize primeiro para %s antes de atualizar para %s."
+
+# @ polylang
+#: admin/table-string.php:108
+msgid "Group"
+msgstr "Grupo"
+
+# @ polylang
+#: admin/table-string.php:186
+msgid "View all groups"
+msgstr "Ver todos os grupos"
+
+# @ polylang
+#: admin/table-languages.php:59
+msgid "You are about to permanently delete this language. Are you sure?"
+msgstr "Você está prestes a excluir permanentemente esse idioma. Tem certeza?"
+
+# @ polylang
+#: admin/view-languages.php:143
+msgid ""
+"Use this to remove unused strings from database, for example after a plugin "
+"has been uninstalled."
+msgstr ""
+"Use isto para remover da base de dados textos não utilizados, por exemplo "
+"após desinstalar um plugin."
+
+# @ polylang
+#: admin/view-languages.php:374
+msgid ""
+"The synchronization options allow to maintain exact same values (or "
+"translations in the case of taxonomies and page parent) of meta content "
+"between the translations of a post or page."
+msgstr ""
+"As opções de sincronização permitem manter exatamente os mesmos valores (ou "
+"traduções, no caso de taxonomias e página mãe) de meta conteúdo entre as "
+"traduções de um post ou página."
+
+# @ polylang
+#: admin/admin-model.php:278
+msgid "The language code contains invalid characters"
+msgstr "O código do idioma contém caracteres inválidos"
+
+# @ polylang
+#: admin/view-languages.php:190
+msgid "The language is set from content"
+msgstr "O idioma é definido pelo conteúdo"
+
+# @ polylang
+#: admin/view-languages.php:193
+msgid "Posts, pages, categories and tags urls are not modified."
+msgstr "URLs de posts, páginas, categorias e tags não são modificados."
+
+# @ polylang
+#: admin/view-languages.php:199
+msgid "The language is set from the directory name in pretty permalinks"
+msgstr "O idioma é definido pelo nome de diretório nos links permanentes"
+
+# @ polylang
+#: admin/view-languages.php:202 admin/view-languages.php:211
+#: admin/view-languages.php:258 admin/view-languages.php:267
+msgid "Example:"
+msgstr "Exemplo:"
+
+# @ polylang
+#: admin/view-languages.php:208
+msgid "The language is set from the subdomain name in pretty permalinks"
+msgstr "O idioma é definido pelo nome de subdomínio nos links permanentes"
+
+# @ polylang
+#: admin/view-languages.php:217
+msgid "The language is set from different domains"
+msgstr "O idioma é definido por domínios diferentes"
+
+# @ polylang
+#: admin/view-languages.php:255
+msgid "Remove /language/ in pretty permalinks"
+msgstr "Remover /language/ dos links permanentes"
+
+# @ polylang
+#: admin/view-languages.php:264
+msgid "Keep /language/ in pretty permalinks"
+msgstr "Manter /language/ nos links permanentes"
+
+# @ polylang
+#: admin/view-languages.php:279
+msgid ""
+"The front page url contains the language code instead of the page name or "
+"page id"
+msgstr ""
+"O URL da página inicial contém o código do idioma ao invés do nome ou id da "
+"página"
+
+# @ polylang
+#: admin/admin-filters-term.php:167
+#, php-format
+msgid "A translation does already exist for %s"
+msgstr "Já existe uma tradução para %s"
+
+# @ polylang
+#: admin/view-languages.php:287
+#, php-format
+msgid "Example: %s instead of %s"
+msgstr "Exemplo: %s ao invés de %s"
+
+# @ polylang
+#: admin/admin-model.php:38
+msgid "Impossible to add the language."
+msgstr "Impossível adicionar o idioma."
+
+# @ polylang
+#: admin/admin-model.php:62
+msgid "Language added."
+msgstr "Idioma adicionado."
+
+# @ polylang
+#: admin/admin-model.php:176
+msgid "Language deleted."
+msgstr "Idioma excluído."
+
+# @ polylang
+#: admin/admin-model.php:257
+msgid "Language updated."
+msgstr "Idioma atualizado."
+
+# @ polylang
+#: admin/settings.php:221
+msgid "Translations updated."
+msgstr "Traduções atualizadas."
+
+# @ polylang
+#: admin/view-languages.php:89
+msgid "Language code - preferably 2-letters ISO 639-1  (for example: en)"
+msgstr ""
+"Código do idioma - de preferência 2 letras padrão ISO 639-1 (por exemplo: en)"
+
+# @ polylang
+#: admin/admin-filters.php:202
+msgid "The chosen static front page must be translated in all languages."
+msgstr ""
+"A página inicial estática selecionada deve ser traduzida para todos os "
+"idiomas."
+
+# @ polylang
+#: admin/admin-strings.php:60
+msgid "Widget text"
+msgstr "Texto do widget"

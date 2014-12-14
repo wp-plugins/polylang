@@ -1,0 +1,630 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Polylang v1.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2014-10-16 18:40+0100\n"
+"Last-Translator: \n"
+"Language-Team: capa-pub Team <gbajro@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2\n"
+"X-Poedit-Basepath: ../\n"
+"X-Textdomain-Support: yes\n"
+"X-Generator: Poedit 1.5.4\n"
+"X-Poedit-SearchPath-0: .\n"
+
+# @ polylang
+#: admin/view-about.php:3
+#, php-format
+msgid "Polylang is provided with an extensive %sdocumentation%s (in English only). It includes information on how to set up your multilingual site and use it on a daily basis, a FAQ, as well as a documentation for programmers to adapt their plugins and themes."
+msgstr "Polylang sadrži detaljnu %sdokumentaciju%s (samo na engleskom). Ona sadrži podatke kako podesiti vaš višejezični web i kako ga koristiti na dnevnoj bazi; često postavljana pitanja kao i dokumentaciju za programere da prilagode njihove pluginove i teme."
+
+# @ polylang
+#: admin/view-about.php:9
+#, php-format
+msgid "You will also find useful information in the %ssupport forum%s. However don't forget to make a search before posting a new topic."
+msgstr "Korisne informacije ćete pronaći i  na %sforumima podrške%s. Probajte prvo potražiti odgovor na neko pitanje prije nego pošaljete novi upit."
+
+# @ polylang
+#: admin/view-about.php:16
+#, php-format
+msgid "Polylang is free of charge and is released under the same license as WordPress, the %sGPL%s."
+msgstr "Polylang je besplatan i objavljen pod istom licencom kao i WordPress, %sGPL%s."
+
+# @ polylang
+#: admin/view-about.php:22
+#, php-format
+msgid "If you wonder how you can help the project, just %sread this%s."
+msgstr "Ako se pitate kako pomoći projektu, samo %spročitajte ovo%s."
+
+# @ polylang
+#: admin/view-about.php:27
+msgid "Finally if you like this plugin or if it helps your business, donations to the author are greatly appreciated."
+msgstr "Na kraju, ako vam ovaj plugin pomaže u poslu ili vam se jednostavno sviđa, donacije autoru su vrlo cijenjene."
+
+# @ polylang
+#: admin/admin-filters-post.php:81
+#: admin/admin.php:90
+#: admin/settings.php:55
+#: admin/settings.php:82
+#: include/model.php:526
+msgid "Languages"
+msgstr "Jezici"
+
+# @ polylang
+#: include/switcher.php:22
+msgid "Displays language names"
+msgstr "Prikazuje imena jezika"
+
+# @ polylang
+#: include/switcher.php:23
+msgid "Displays flags"
+msgstr "Prikazuje zastave"
+
+# @ polylang
+#: include/switcher.php:24
+msgid "Forces link to front page"
+msgstr "Forsira linkove do početne stranice"
+
+# @ polylang
+#: include/switcher.php:25
+msgid "Hides the current language"
+msgstr "Sakriva trenutni jezik"
+
+# @ polylang
+#: include/switcher.php:29
+msgid "Displays as dropdown"
+msgstr "Prikazuje kao spuštajući izbornik"
+
+# @ polylang
+#: admin/admin.php:271
+msgid "Filters content by language"
+msgstr "Filtrira sadržaj po jeziku"
+
+# @ polylang
+#: admin/admin.php:262
+msgid "Show all languages"
+msgstr "Prikazuje sve jezike"
+
+# @ polylang
+#: admin/admin-filters-columns.php:139
+#: admin/admin-filters-columns.php:227
+msgid "Add new translation"
+msgstr "Dodaje novi prijevod"
+
+# @ polylang
+#: admin/admin-filters-columns.php:173
+#: admin/admin-filters-media.php:55
+#: admin/admin-filters-post.php:107
+#: admin/admin-filters-term.php:77
+#: admin/admin-filters-term.php:121
+#: include/model.php:527
+msgid "Language"
+msgstr "Jezik"
+
+# @ polylang
+#: admin/table-string.php:111
+#: admin/view-translations-media.php:5
+#: admin/view-translations-post.php:5
+#: admin/view-translations-term.php:6
+#: admin/view-translations-term.php:11
+msgid "Translations"
+msgstr "Prijevodi"
+
+# @ polylang
+#: admin/admin-filters-term.php:84
+#: admin/admin-filters-term.php:128
+msgid "Sets the language"
+msgstr "Postavlja jezik"
+
+# @ polylang
+#: admin/admin-filters.php:52
+msgid "The widget is displayed for:"
+msgstr "Dodatak (widget) je prikazan za:"
+
+# @ polylang
+#: admin/admin-filters.php:55
+#: include/model.php:528
+msgid "All languages"
+msgstr "Svi jezici"
+
+# @ polylang
+#: admin/admin-filters.php:123
+msgid "Admin language"
+msgstr "Jezik administratora"
+
+# @ polylang
+#: admin/admin-filters.php:126
+msgid "Wordpress default"
+msgstr "Standardna vrijednost Wordpressa"
+
+# @ polylang
+#: admin/admin.php:171
+#: admin/settings.php:87
+msgid "Settings"
+msgstr "Postavke"
+
+# @ polylang
+#: admin/admin-filters.php:160
+#: admin/admin-filters.php:169
+msgid "Upgrading language files&#8230;"
+msgstr "Osvježavanje datoteka s jezikom &#8230;"
+
+# @ polylang
+#: admin/settings.php:47
+msgid "About Polylang"
+msgstr "O Polylangu"
+
+# @ polylang
+#: admin/settings.php:63
+msgid "Strings translations"
+msgstr "Prevođenje linija teksta"
+
+# @ polylang
+#: admin/settings.php:86
+msgid "Strings translation"
+msgstr "Prijevod linije teksta"
+
+# @ polylang
+#: admin/admin-model.php:274
+msgid "Enter a valid WordPress locale"
+msgstr "Unesite ispravan locale (jezik i set karaktera) od WordPressa"
+
+# @ polylang
+#: admin/admin-model.php:282
+msgid "The language code must be unique"
+msgstr "Šifra jezika mora biti jedinstvena"
+
+# @ polylang
+#: admin/admin-model.php:286
+msgid "The language must have a name"
+msgstr "Jezik mora imati ime"
+
+# @ polylang
+#: admin/admin.php:371
+#: admin/settings.php:162
+msgid "The language was created, but the WordPress language file was not downloaded. Please install it manually."
+msgstr "Jezik je kreiran, ali datoteka jezika WordPressa nije skinuta. Molim da ju instalirate ručno."
+
+# @ polylang
+#: admin/admin-strings.php:59
+msgid "Widget title"
+msgstr "Naslov widgeta (dodatka)"
+
+# @ polylang
+#: admin/settings.php:301
+msgid "Taxonomies"
+msgstr "Taksonomija"
+
+# @ polylang
+#: admin/settings.php:302
+msgid "Custom fields"
+msgstr "Vlastita polja"
+
+# @ polylang
+#: admin/settings.php:303
+msgid "Comment status"
+msgstr "Status komentara"
+
+# @ polylang
+#: admin/settings.php:304
+msgid "Ping status"
+msgstr "Status pinga"
+
+# @ polylang
+#: admin/settings.php:305
+msgid "Sticky posts"
+msgstr "Zalijepljeni postovi"
+
+# @ polylang
+#: admin/settings.php:306
+msgid "Published date"
+msgstr "Datum objave"
+
+# @ polylang
+#: admin/settings.php:307
+msgid "Post format"
+msgstr "Format posta"
+
+# @ polylang
+#: admin/settings.php:308
+msgid "Page parent"
+msgstr "Nadređena stranica"
+
+# @ polylang
+#: admin/settings.php:309
+msgid "Page template"
+msgstr "Predložak stranice"
+
+# @ polylang
+#: admin/settings.php:310
+msgid "Page order"
+msgstr "Redoslijed stranica"
+
+# @ polylang
+#: admin/settings.php:311
+msgid "Featured image"
+msgstr "Istaknuta slika"
+
+# @ polylang
+#: admin/view-languages.php:38
+msgid "Edit language"
+msgstr "Mijenjaj jezik"
+
+# @ polylang
+#: admin/view-languages.php:38
+#: admin/view-languages.php:113
+msgid "Add new language"
+msgstr "Dodavanje novog jezika"
+
+# @ polylang
+#: admin/view-languages.php:54
+msgid "Choose a language"
+msgstr "Odaberite jezik"
+
+# @ polylang
+#: admin/view-languages.php:68
+msgid "You can choose a language in the list or directly edit it below."
+msgstr "Možete odabrati jezik na popisu ili ga direktno upisati ispod."
+
+# @ polylang
+#: admin/table-languages.php:74
+#: admin/view-languages.php:72
+msgid "Full name"
+msgstr "Puno ime"
+
+# @ polylang
+#: admin/view-languages.php:74
+msgid "The name is how it is displayed on your site (for example: English)."
+msgstr "Ime kako je prikazano na vašim stranicama (primjerice: hrvatski)"
+
+# @ polylang
+#: admin/table-languages.php:75
+#: admin/view-languages.php:78
+msgid "Locale"
+msgstr "Locale (kombinacija jezika i seta znakova)"
+
+# @ polylang
+#: admin/view-languages.php:83
+msgid "Wordpress Locale for the language (for example: en_US). You will need to install the .mo file for this language."
+msgstr "Wordpress locale za vaš jezik (primjerice hr_HR). Morat ćete instalirati .mo datoteku za vaš jezik."
+
+# @ polylang
+#: admin/view-languages.php:87
+msgid "Language code"
+msgstr "Šifra jezika"
+
+# @ polylang
+#: admin/view-languages.php:93
+msgid "Text direction"
+msgstr "Smjer teksta"
+
+# @ polylang
+#: admin/view-languages.php:97
+msgid "left to right"
+msgstr "s lijeva na desno"
+
+# @ polylang
+#: admin/view-languages.php:102
+msgid "right to left"
+msgstr "s desna na lijevo"
+
+# @ polylang
+#: admin/view-languages.php:104
+msgid "Choose the text direction for the language"
+msgstr "Odaberite smjer teksta za jezik"
+
+# @ polylang
+#: admin/table-languages.php:77
+#: admin/view-languages.php:108
+msgid "Order"
+msgstr "Redoslijed"
+
+# @ polylang
+#: admin/view-languages.php:110
+msgid "Position of the language in the language switcher"
+msgstr "Pozicija jezika na popisu jezika"
+
+# @ polylang
+#: admin/admin-nav-menu.php:52
+#: admin/admin-nav-menu.php:90
+#: admin/admin-nav-menu.php:93
+#: admin/admin-nav-menu.php:124
+#: admin/admin-nav-menu.php:186
+#: include/upgrade.php:301
+msgid "Language switcher"
+msgstr "Mijenjanje jezika"
+
+# @ polylang
+#: admin/view-languages.php:139
+msgid "Search translations"
+msgstr "Pretraga za prijevodima"
+
+# @ polylang
+#: admin/view-languages.php:142
+msgid "Clean strings translation database"
+msgstr "Počisti bazu prevedenih linija"
+
+# @ polylang
+#: admin/view-languages.php:161
+msgid "Default language"
+msgstr "Originalni jezik"
+
+# @ polylang
+#: admin/view-languages.php:176
+msgid "There are posts, pages, categories or tags without language set. Do you want to set them all to default language ?"
+msgstr "Postoje članci, stranice, kategorije i tagovi bez postavljenog jezika. Želite li da se svi postave na osnovni jezik?"
+
+# @ polylang
+#: admin/view-languages.php:297
+msgid "Detect browser language"
+msgstr "Otkrij jezik u browseru"
+
+# @ polylang
+#: admin/view-languages.php:303
+msgid "When the front page is visited, set the language according to the browser preference"
+msgstr "Kad se otvori naslovna stranica, postavi jezik ovisno o postavkama browsera"
+
+# @ polylang
+#: admin/view-languages.php:184
+msgid "URL modifications"
+msgstr "Prilagodbe URL-a"
+
+# @ polylang
+#: admin/view-languages.php:241
+msgid "Hide URL language information for default language"
+msgstr "Sakrij informacije o jeziku u URL-u za osnovni jezik"
+
+# @ polylang
+#: admin/view-languages.php:310
+msgid "Media"
+msgstr "Medij"
+
+# @ polylang
+#: admin/view-languages.php:316
+msgid "Activate languages and translations for media"
+msgstr "Aktivirajte jezike i prijevode za medije"
+
+# @ polylang
+#: admin/view-languages.php:363
+msgid "Synchronization"
+msgstr "Sinkronizacija"
+
+# @ polylang
+#: admin/view-languages.php:324
+msgid "Custom post types"
+msgstr "Prilagođeni tipovi postova"
+
+# @ polylang
+#: admin/view-languages.php:337
+msgid "Activate languages and translations for custom post types."
+msgstr "Aktivirajte jezike i prijevode za vlastite tipove postova."
+
+# @ polylang
+#: admin/view-languages.php:344
+msgid "Custom taxonomies"
+msgstr "Prilagođene taksonomije"
+
+# @ polylang
+#: admin/view-languages.php:357
+msgid "Activate languages and translations for custom taxonomies."
+msgstr "Aktivirajte jezike i prijevode za prilagođene taksonomije"
+
+# @ polylang
+#: admin/admin-filters-post.php:379
+#: admin/admin-filters-term.php:612
+#: admin/table-languages.php:54
+#: admin/view-translations-media.php:21
+msgid "Edit"
+msgstr "Uredi"
+
+# @ polylang
+#: admin/table-languages.php:60
+#: admin/table-string.php:167
+msgid "Delete"
+msgstr "Obriši"
+
+# @ polylang
+#: admin/table-languages.php:76
+msgid "Code"
+msgstr "Kod"
+
+# @ polylang
+#: admin/table-languages.php:78
+msgid "Flag"
+msgstr "Zastavica"
+
+# @ polylang
+#: admin/table-languages.php:79
+msgid "Posts"
+msgstr "Postovi"
+
+# @ polylang
+#: admin/table-string.php:109
+msgid "Name"
+msgstr "Ime"
+
+# @ polylang
+#: admin/table-string.php:110
+msgid "String"
+msgstr "Linija"
+
+# @ polylang
+#: admin/view-translations-media.php:30
+#: admin/view-translations-post.php:21
+#: admin/view-translations-term.php:30
+msgid "Add new"
+msgstr "Dodaj novi"
+
+# @ polylang
+#: include/widget-languages.php:16
+msgid "Language Switcher"
+msgstr "Prebacivanje jezika"
+
+# @ polylang
+#: include/widget-languages.php:16
+msgid "Displays a language switcher"
+msgstr "Prikazuje prebacivanje jezika"
+
+# @ polylang
+#: include/widget-languages.php:97
+msgid "Title:"
+msgstr "Naslov:"
+
+# @ polylang
+#. translators: plugin header field 'Description'
+#: polylang.php:0
+msgid "Adds multilingual capability to WordPress"
+msgstr "Dodaje višejezičnu podršku u WordPress"
+
+# @ polylang
+#: polylang.php:145
+#, php-format
+msgid "You are using WordPress %s. Polylang requires at least WordPress %s."
+msgstr "Koristite WordPress verzije %s. Polylang zahtijeva barem verziju %s."
+
+# @ polylang
+#: include/upgrade.php:76
+msgid "Polylang has been deactivated because you upgraded from a too old version."
+msgstr "Polylang je isključen jer ste nadogradili sa previše stare verzije."
+
+# @ polylang
+#: include/upgrade.php:78
+#, php-format
+msgid "Please upgrade first to %s before ugrading to %s."
+msgstr "Molimo nadogradite prvo na %s prije nadogradnje na %s."
+
+# @ polylang
+#: admin/table-string.php:108
+msgid "Group"
+msgstr "Grupa"
+
+# @ polylang
+#: admin/table-string.php:186
+msgid "View all groups"
+msgstr "Vidi sve grupe"
+
+# @ polylang
+#: admin/table-languages.php:59
+msgid "You are about to permanently delete this language. Are you sure?"
+msgstr "Planirate trajno obrisati ovaj jezik. Jeste li sigurni?"
+
+# @ polylang
+#: admin/view-languages.php:143
+msgid "Use this to remove unused strings from database, for example after a plugin has been uninstalled."
+msgstr "Koristite ovo da maknete neiskorištene linije iz baze, primjerice nakon što je neki plugin maknut."
+
+# @ polylang
+#: admin/view-languages.php:374
+msgid "The synchronization options allow to maintain exact same values (or translations in the case of taxonomies and page parent) of meta content between the translations of a post or page."
+msgstr "Opcija sinkronizacije dozvoljava da zadržimo identične vrijednosti (odnosno prijevode u primjeru taksonomije i nadređenih stranica) od meta podataka nakon prijevoda postova ili stranica."
+
+# @ polylang
+#: admin/admin-model.php:278
+msgid "The language code contains invalid characters"
+msgstr "Oznaka jezika sadrži pogrešne znakove"
+
+# @ polylang
+#: admin/view-languages.php:190
+msgid "The language is set from content"
+msgstr "Jezik je postavljen iz sadržaja"
+
+# @ polylang
+#: admin/view-languages.php:193
+msgid "Posts, pages, categories and tags urls are not modified."
+msgstr "Postovi, stranice, kategorije i oznake (tagovi) nisu promijenjeni."
+
+# @ polylang
+#: admin/view-languages.php:199
+msgid "The language is set from the directory name in pretty permalinks"
+msgstr "Jezik je postavljen po imenu direktorija u uljepšanim trajnim linkovima"
+
+# @ polylang
+#: admin/view-languages.php:202
+#: admin/view-languages.php:211
+#: admin/view-languages.php:258
+#: admin/view-languages.php:267
+msgid "Example:"
+msgstr "Primjer:"
+
+# @ polylang
+#: admin/view-languages.php:208
+msgid "The language is set from the subdomain name in pretty permalinks"
+msgstr "Jezik je postavljen po imenu poddomene u uljepšanim trajnim linkovima (permalinks)"
+
+# @ polylang
+#: admin/view-languages.php:217
+msgid "The language is set from different domains"
+msgstr "Jezik je postavljen od različitih domena"
+
+# @ polylang
+#: admin/view-languages.php:255
+msgid "Remove /language/ in pretty permalinks"
+msgstr "Ukloni /jezik/ u uljepšanim trajnim linkovima"
+
+# @ polylang
+#: admin/view-languages.php:264
+msgid "Keep /language/ in pretty permalinks"
+msgstr "Zadrži /jezik/ u uljepšanim trajnim linkovima"
+
+# @ polylang
+#: admin/view-languages.php:279
+msgid "The front page url contains the language code instead of the page name or page id"
+msgstr "URL naslovne stranice sadrži oznaku jezika umjesto imena ili oznake stranice"
+
+# @ polylang
+#: admin/admin-filters-term.php:167
+#, php-format
+msgid "A translation does already exist for %s"
+msgstr "Prijevod za %s već postoji"
+
+# @ polylang
+#: admin/view-languages.php:287
+#, php-format
+msgid "Example: %s instead of %s"
+msgstr "Primjer: %s umjesto %s"
+
+# @ polylang
+#: admin/admin-model.php:38
+msgid "Impossible to add the language."
+msgstr "Nije moguće dodati jezik"
+
+# @ polylang
+#: admin/admin-model.php:62
+msgid "Language added."
+msgstr "Jezik dodan"
+
+# @ polylang
+#: admin/admin-model.php:176
+msgid "Language deleted."
+msgstr "Jezik obrisan"
+
+# @ polylang
+#: admin/admin-model.php:257
+msgid "Language updated."
+msgstr "Jezik osvježen"
+
+# @ polylang
+#: admin/settings.php:221
+msgid "Translations updated."
+msgstr "Prijevodi osvježeni"
+
+# @ polylang
+#: admin/view-languages.php:89
+msgid "Language code - preferably 2-letters ISO 639-1  (for example: en)"
+msgstr "Oznaka jezika - preferirano dvoznačna oznaka u ISO 639-1 formatu (primjerice: hr)"
+
+# @ polylang
+#: admin/admin-filters.php:202
+msgid "The chosen static front page must be translated in all languages."
+msgstr "Naslovna (statična) stranica mora biti prevedena na svim jezicima."
+
+# @ polylang
+#: admin/admin-strings.php:60
+msgid "Widget text"
+msgstr "Tekst Widgeta"
+

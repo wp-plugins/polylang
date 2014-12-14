@@ -25,6 +25,7 @@ class PLL_Plugins_Compat {
 		add_action('pll_language_defined', array(&$this, 'wpseo_translate_options'));
 		add_filter('get_terms_args', array(&$this, 'wpseo_remove_terms_filter'));
 		add_filter('pll_home_url_white_list', create_function('$arr', "return array_merge(\$arr, array(array('file' => 'wordpress-seo')));"));
+		add_action('wpseo_opengraph', array(&$this, 'wpseo_ogp'), 2);
 
 		// Custom field template
 		add_action('add_meta_boxes', array(&$this, 'cft_copy'), 10, 2);
@@ -34,13 +35,12 @@ class PLL_Plugins_Compat {
 
 		// Twenty Fourteen
 		add_filter('transient_featured_content_ids', array(&$this, 'twenty_fourteen_featured_content_ids'));
+		add_filter('option_featured-content', array(&$this, 'twenty_fourteen_option_featured_content'));
 
-		if (!PLL_ADMIN)
-			add_filter('option_featured-content', array(&$this, 'twenty_fourteen_option_featured_content'));
-			
 		// Jetpack 3
 		add_action('jetpack_widget_get_top_posts', array(&$this, 'jetpack_widget_get_top_posts'), 10, 3);
 		add_filter('grunion_contact_form_field_html', array(&$this, 'grunion_contact_form_field_html_filter'), 10, 3);
+		add_filter('jetpack_open_graph_tags', array(&$this, 'jetpack_ogp'));
 	}
 
 	/*
@@ -102,6 +102,25 @@ class PLL_Plugins_Compat {
 	}
 
 	/*
+	 * WordPress SEO by Yoast
+	 * adds opengraph support for translations
+	 *
+	 * @since 1.6
+	 */
+	public function wpseo_ogp() {
+		global $polylang, $wpseo_og;
+
+		// WPSEO already deals with the locale
+		if (isset($polylang)) {
+			foreach ($polylang->model->get_languages_list() as $language) {
+				if ($language->slug != $polylang->curlang->slug && $polylang->links->get_translation_url($language) && $fb_locale = self::get_fb_locale($language)) {
+					$wpseo_og->og_tag('og:locale:alternate', $fb_locale);
+				}
+			}
+		}
+	}
+
+	/*
 	 * Custom field template does check $_REQUEST['post'] to populate the custom fields values
 	 *
 	 * @since 1.0.2
@@ -124,7 +143,9 @@ class PLL_Plugins_Compat {
 	 * @return array modified featured posts ids (include all languages)
 	 */
 	public function twenty_fourteen_featured_content_ids($featured_ids) {
-		if (false !== $featured_ids)
+		global $polylang;
+
+		if (empty($polylang) || false !== $featured_ids)
 			return $featured_ids;
 
 		$settings = Featured_Content::get_setting();
@@ -133,7 +154,7 @@ class PLL_Plugins_Compat {
 			return $featured_ids;
 
 		// get featured tag translations
-		$tags = $GLOBALS['polylang']->model->get_translations('term' ,$term->term_id);
+		$tags = $polylang->model->get_translations('term' ,$term->term_id);
 		$ids = array();
 
 		// Query for featured posts in all languages
@@ -169,7 +190,7 @@ class PLL_Plugins_Compat {
 	 * @return array modified $settings
 	 */
 	public function twenty_fourteen_option_featured_content($settings) {
-		if ($settings['tag-id'] && $tr = pll_get_term($settings['tag-id']))
+		if (!PLL_ADMIN && $settings['tag-id'] && $tr = pll_get_term($settings['tag-id']))
 			$settings['tag-id'] = $tr;
 
 		return $settings;
@@ -177,7 +198,7 @@ class PLL_Plugins_Compat {
 
 	/*
 	 * adapted from the same function in jetpack-3.0.2/3rd-party/wpml.php
-	 * 
+	 *
 	 * @since 1.5.4
 	 */
 	public function jetpack_widget_get_top_posts( $posts, $post_ids, $count ) {
@@ -192,7 +213,7 @@ class PLL_Plugins_Compat {
 	/*
 	 * adapted from the same function in jetpack-3.0.2/3rd-party/wpml.php
 	 * keeps using 'icl_translate' as the function registers the string
-	 * 
+	 *
 	 * @since 1.5.4
 	 */
 	public function grunion_contact_form_field_html_filter( $r, $field_label, $id ){
@@ -204,5 +225,55 @@ class PLL_Plugins_Compat {
 		}
 
 		return $r;
+	}
+
+	/*
+	 * adds opengraph support for locale and translations
+	 *
+	 * @since 1.6
+	 *
+	 * @param array $tags opengraph tags to output
+	 * @return array
+	 */
+	public function jetpack_ogp($tags) {
+		global $polylang;
+
+		if (isset($polylang)) {
+			foreach ($polylang->model->get_languages_list() as $language) {
+				if ($language->slug != $polylang->curlang->slug && $polylang->links->get_translation_url($language) && $fb_locale = self::get_fb_locale($language))
+					$tags['og:locale:alternate'][] = $fb_locale;
+				if ($language->slug == $polylang->curlang->slug && $fb_locale = self::get_fb_locale($language))
+					$tags['og:locale'] = $fb_locale;
+			}
+		}
+		return $tags;
+	}
+
+	/*
+	 * correspondance between WordPress locales and Facebook locales according to GP_Locales class in Jetpack 3.1.1
+	 *
+	 * @since 1.6
+	 *
+	 * @param object $language
+	 * @return bool|string
+	 */
+	static public function get_fb_locale($language) {
+		static $facebook_locales = array(
+			'af' => 'af_ZA', 'ar' => 'ar_AR', 'az' => 'az_AZ', 'bg_BG' => 'bg_BG', 'bn_BD' => 'bn_IN', 'bs_BA' => 'bs_BA',
+			'ca' => 'ca_ES', 'cs_CZ' => 'cs_CZ', 'cy' => 'cy_GB', 'da_DK' => 'da_DK', 'de_DE' => 'de_DE', 'el' => 'el_GR',
+			'en_US' => 'en_US', 'en_GB' => 'en_GB', 'eo' => 'eo_EO', 'es_CL' => 'es_LA', 'es_PE' => 'es_LA', 'es_PR' => 'es_LA',
+			'es_VE' => 'es_LA', 'es_CO' => 'es_LA', 'es_ES' => 'es_ES', 'et' => 'et_EE', 'eu' => 'eu_ES', 'fa_IR' => 'fa_IR',
+			'fi' => 'fi_FI', 'fo' => 'fo_FO', 'fr_FR' => 'fr_FR', 'fy' => 'fy_NL', 'ga' => 'ga_IE', 'gl_ES' => 'gl_ES',
+			'he_IL' => 'he_IL', 'hi_IN' => 'hi_IN', 'hr' => 'hr_HR', 'hu_HU' => 'hu_HU', 'hy' => 'hy_AM', 'id_ID' => 'id_ID',
+			'is_IS' => 'is_IS', 'it_IT' => 'it_IT', 'ja' => 'ja_JP', 'ka_GE' => 'ka_GE', 'ko_KR' => 'ko_KR', 'lt_LT' => 'lt_LT',
+			'lv' => 'lv_LV', 'mk_MK' => 'mk_MK', 'ml_IN' => 'ml_IN', 'ms_MY' => 'ms_MY', 'ne_NP' => 'ne_NP', 'nb_NO' => 'nb_NO',
+			'nl_NL' => 'nl_NL', 'nn_NO' => 'nn_NO', 'pa_IN' => 'pa_IN', 'pl_PL' => 'pl_PL', 'pt_BR' => 'pt_BR', 'pt_PT' => 'pt_PT',
+			'ps' => 'ps_AF', 'ro_RO' => 'ro_RO', 'ru_RU' => 'ru_RU', 'sk_SK' => 'sk_SK', 'sl_SI' => 'sl_SI', 'sq' => 'sq_AL',
+			'sr_RS' => 'sr_RS', 'sv_SE' => 'sv_SE', 'sw' => 'sw_KE', 'ta_IN' => 'ta_IN', 'te' => 'te_IN', 'th' => 'th_TH',
+			'ph' => 'tl_PH', 'tr_TR' => 'tr_TR', 'uk' => 'uk_UA', 'vi' => 'vi_VN', 'zh_CN' => 'zh_CN', 'zh_HK' => 'zh_HK',
+			'zh_TW' => 'zh_TW'
+		);
+
+		return isset($facebook_locales[$language->locale]) ? $facebook_locales[$language->locale] : false;
 	}
 }

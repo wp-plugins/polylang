@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://polylang.wordpress.com/
-Version: 1.5.3.1
+Version: 1.6.2
 Author: Frédéric Demarle
 Description: Adds multilingual capability to WordPress
 Text Domain: polylang
@@ -33,7 +33,7 @@ Domain Path: /languages
 if (!function_exists('add_action'))
 	exit();
 
-define('POLYLANG_VERSION', '1.5.3.1');
+define('POLYLANG_VERSION', '1.6.2');
 define('PLL_MIN_WP_VERSION', '3.5');
 
 define('POLYLANG_BASENAME', plugin_basename(__FILE__)); // plugin name as known by WP
@@ -52,20 +52,11 @@ if (file_exists(PLL_LOCAL_DIR . '/pll-config.php'))
 	include_once(PLL_LOCAL_DIR . '/pll-config.php');
 
 // our url. Don't use WP_PLUGIN_URL http://wordpress.org/support/topic/ssl-doesnt-work-properly
-define('POLYLANG_URL', plugins_url('/' . basename(POLYLANG_DIR)));
+define('POLYLANG_URL', plugins_url('', __FILE__));
 
 // default url to access user data such as custom flags
 if (!defined('PLL_LOCAL_URL'))
 	define('PLL_LOCAL_URL', content_url('/polylang'));
-
-// cookie name. no cookie will be used if set to false
-if (!defined('PLL_COOKIE'))
-	define('PLL_COOKIE', 'pll_language');
-
-// backward compatibility WP < 3.6
-// the search form js is no more needed in WP 3.6+ except if the search form is hardcoded elsewhere than in searchform.php
-if (!defined('PLL_SEARCH_FORM_JS') && !version_compare($GLOBALS['wp_version'], '3.6', '<'))
-	define('PLL_SEARCH_FORM_JS', false);
 
 /*
  * controls the plugin, as well as activation, and deactivation
@@ -80,6 +71,9 @@ class Polylang {
 	 * @since 0.1
 	 */
 	public function __construct() {
+		// FIXME maybe not available on every installations but widely used by WP plugins
+		spl_autoload_register(array(&$this, 'autoload')); // autoload classes
+
 		// manages plugin activation and deactivation
 		register_activation_hook( __FILE__, array(&$this, 'activate'));
 		register_deactivation_hook( __FILE__, array(&$this, 'deactivate'));
@@ -88,34 +82,17 @@ class Polylang {
 		if (isset($_GET['action'], $_GET['plugin']) && 'deactivate' == $_GET['action'] && plugin_basename(__FILE__) == $_GET['plugin'])
 			return;
 
-		// avoid loading polylang admin for frontend ajax requests
-		// special test for plupload which does not use jquery ajax and thus does not pass our ajax prefilter
-		// special test for customize_save done in frontend but for which we want to load the admin
-		if (!defined('PLL_AJAX_ON_FRONT')) {
-			$in = isset($_REQUEST['action']) && in_array($_REQUEST['action'], array('upload-attachment', 'customize_save'));
-			define('PLL_AJAX_ON_FRONT', defined('DOING_AJAX') && DOING_AJAX && empty($_REQUEST['pll_ajax_backend']) && !$in);
-		}
-
-		if (!defined('PLL_ADMIN'))
-			define('PLL_ADMIN', defined('DOING_CRON') || (is_admin() && !PLL_AJAX_ON_FRONT));
-
-		if (!defined('PLL_SETTINGS'))
-			define('PLL_SETTINGS', is_admin() && isset($_GET['page']) && $_GET['page'] == 'mlang');
-
 		// blog creation on multisite
 		add_action('wpmu_new_blog', array(&$this, 'wpmu_new_blog'), 5); // before WP attempts to send mails which can break on some PHP versions
 
-		// FIXME maybe not available on every installations but widely used by WP plugins
-		spl_autoload_register(array(&$this, 'autoload')); // autoload classes
+		// plugin initialization
+		// take no action before all plugins are loaded
+		add_action('plugins_loaded', array(&$this, 'init'), 1);
 
 		// override load text domain waiting for the language to be defined
 		// here for plugins which load text domain as soon as loaded :(
 		if (!defined('PLL_OLT') || PLL_OLT)
 			new PLL_OLT_Manager();
-
-		// plugin initialization
-		// take no action before all plugins are loaded
-		add_action('plugins_loaded', array(&$this, 'init'), 1);
 
 		// loads the API
 		require_once(PLL_INC.'/api.php');
@@ -160,6 +137,7 @@ class Polylang {
 	 */
 	public function activate() {
 		global $wp_version;
+		$this->define_constants();
 		load_plugin_textdomain('polylang', false, basename(POLYLANG_DIR).'/languages'); // plugin i18n
 
 		if (version_compare($wp_version, PLL_MIN_WP_VERSION , '<'))
@@ -212,6 +190,7 @@ class Polylang {
 		$polylang->options = &$options;
 		$polylang->model = new PLL_Admin_Model($options);
 		$polylang->links_model = $polylang->model->get_links_model();
+		do_action('pll_init');
 		flush_rewrite_rules();
 	}
 
@@ -264,6 +243,39 @@ class Polylang {
 	}
 
 	/*
+	 * defines constants
+	 * may be overriden by a plugin if set before plugins_loaded, 1
+	 *
+	 * @since 1.6
+	 */
+	protected function define_constants() {
+		// cookie name. no cookie will be used if set to false
+		if (!defined('PLL_COOKIE'))
+			define('PLL_COOKIE', 'pll_language');
+
+		// backward compatibility WP < 3.6
+		// the search form js is no more needed in WP 3.6+ except if the search form is hardcoded elsewhere than in searchform.php
+		if (!defined('PLL_SEARCH_FORM_JS') && !version_compare($GLOBALS['wp_version'], '3.6', '<'))
+			define('PLL_SEARCH_FORM_JS', false);
+
+		// avoid loading polylang admin for frontend ajax requests
+		// special test for plupload which does not use jquery ajax and thus does not pass our ajax prefilter
+		// special test for customize_save done in frontend but for which we want to load the admin
+		if (!defined('PLL_AJAX_ON_FRONT')) {
+			$in = isset($_REQUEST['action']) && in_array($_REQUEST['action'], array('upload-attachment', 'customize_save'));
+			define('PLL_AJAX_ON_FRONT', defined('DOING_AJAX') && DOING_AJAX && empty($_REQUEST['pll_ajax_backend']) && !$in);
+		}
+
+		// admin
+		if (!defined('PLL_ADMIN'))
+			define('PLL_ADMIN', defined('DOING_CRON') || (is_admin() && !PLL_AJAX_ON_FRONT));
+
+		// settings page whatever the tab
+		if (!defined('PLL_SETTINGS'))
+			define('PLL_SETTINGS', is_admin() && isset($_GET['page']) && $_GET['page'] == 'mlang');
+	}
+
+	/*
 	 * Polylang initialization
 	 * setups models and separate admin and frontend
 	 *
@@ -272,6 +284,7 @@ class Polylang {
 	public function init() {
 		global $polylang;
 
+		$this->define_constants();
 		$options = get_option('polylang');
 
 		// plugin upgrade
@@ -294,6 +307,8 @@ class Polylang {
 			$polylang = new PLL_Frontend($links_model);
 			$polylang->init();
 		}
+
+		do_action('pll_init');
 
 		if (!$model->get_languages_list())
 			do_action('pll_no_language_defined'); // to load overriden textdomains

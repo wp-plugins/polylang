@@ -9,8 +9,8 @@
 			continue;?>
 
 		<tr>
-			<td class = "pll-media-language-column"><?php echo $language->flag . '&nbsp;' . esc_html($language->name); ?></td>
-			<td class = "pll-edit-column"><?php
+			<td class = "pll-media-language-column"><span class = "pll-translation-flag"><?php echo $language->flag?></span><?php echo esc_html($language->name); ?></td>
+			<td class = "pll-media-edit-column"><?php
 				// the translation exists
 				if (($translation_id = $this->model->get_translation('post', $post_id, $language)) && $translation_id != $post_id) {
 					printf(

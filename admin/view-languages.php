@@ -181,7 +181,7 @@ case 'settings': ?><?php
 		}?>
 
 		<tr>
-			<th rowspan = <?php echo ($page_on_front ? 3 : 2) + $using_permalinks; ?>><?php _e('URL modifications', 'polylang') ?></th>
+			<th rowspan = <?php echo ($page_on_front ? 3 : 2) + $this->links_model->using_permalinks; ?>><?php _e('URL modifications', 'polylang') ?></th>
 			<td><fieldset id='pll-force-lang'>
 				<label><?php
 					printf(
@@ -194,7 +194,7 @@ case 'settings': ?><?php
 				<label><?php
 					printf(
 						'<input name="force_lang" type="radio" value="1" %s %s/> %s',
-						$using_permalinks ? '' : 'disabled="disabled"',
+						$this->links_model->using_permalinks ? '' : 'disabled="disabled"',
 						1 == $this->options['force_lang'] ? 'checked="checked"' : '',
 						__('The language is set from the directory name in pretty permalinks', 'polylang')
 					);?>
@@ -203,7 +203,7 @@ case 'settings': ?><?php
 				<label><?php
 					printf(
 						'<input name="force_lang" type="radio" value="2" %s %s/> %s',
-						$using_permalinks ? '' : 'disabled="disabled"',
+						$this->links_model->using_permalinks ? '' : 'disabled="disabled"',
 						2 == $this->options['force_lang'] ? 'checked="checked"' : '',
 						__('The language is set from the subdomain name in pretty permalinks', 'polylang')
 					);?>
@@ -212,7 +212,7 @@ case 'settings': ?><?php
 				<label><?php
 					printf(
 						'<input name="force_lang" type="radio" value="3" %s %s/> %s',
-						$using_permalinks ? '' : 'disabled="disabled"',
+						$this->links_model->using_permalinks ? '' : 'disabled="disabled"',
 						3 == $this->options['force_lang'] ? 'checked="checked"' : '',
 						__('The language is set from different domains', 'polylang')
 					);?>
@@ -224,8 +224,8 @@ case 'settings': ?><?php
 							'<td><input name="domains[%1$s]" id="pll-domain[%1$s]" type="text" value="%3$s" size="40" aria-required="true" %4$s /></td></tr>',
 							esc_attr($lg->slug),
 							esc_attr($lg->name),
-							esc_url($lg->slug == $this->options['default_lang'] ? get_option('home') : (isset($this->options['domains'][$lg->slug]) ? $this->options['domains'][$lg->slug] : '')),
-							!$using_permalinks || $lg->slug == $this->options['default_lang'] ? 'disabled="disabled"' : ''
+							esc_url($lg->slug == $this->options['default_lang'] ? $this->links_model->home : (isset($this->options['domains'][$lg->slug]) ? $this->options['domains'][$lg->slug] : '')),
+							!$this->links_model->using_permalinks || $lg->slug == $this->options['default_lang'] ? 'disabled="disabled"' : ''
 						);
 					}?>
 				</table>
@@ -244,13 +244,13 @@ case 'settings': ?><?php
 			</fieldset></td>
 		</tr><?php
 
-		if ($using_permalinks) { ?>
+		if ($this->links_model->using_permalinks) { ?>
 			<tr>
 				<td id="pll-rewrite" <?php echo 2 > $this->options['force_lang'] ? '' : 'style="display: none;"'; ?>><fieldset>
 					<label><?php
 						printf(
 							'<input name="rewrite" type="radio" value="1" %s %s/> %s',
-							$using_permalinks ? '' : 'disabled="disabled"',
+							$this->links_model->using_permalinks ? '' : 'disabled="disabled"',
 							$this->options['rewrite'] ? 'checked="checked"' : '',
 							__('Remove /language/ in pretty permalinks', 'polylang')
 						);?>
@@ -259,7 +259,7 @@ case 'settings': ?><?php
 					<label><?php
 						printf(
 							'<input name="rewrite" type="radio" value="0" %s %s/> %s',
-							$using_permalinks ? '' : 'disabled="disabled"',
+							$this->links_model->using_permalinks ? '' : 'disabled="disabled"',
 							$this->options['rewrite'] ? '' : 'checked="checked"',
 							 __('Keep /language/ in pretty permalinks', 'polylang')
 						);?>

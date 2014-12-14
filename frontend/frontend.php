@@ -20,7 +20,7 @@
  */
 class PLL_Frontend extends PLL_Base {
 	public $curlang;
-	public $links, $choose_lang, $filters, $filters_search, $auto_translate;
+	public $links, $choose_lang, $filters, $filters_search, $nav_menu, $auto_translate;
 
 	/*
 	 * constructor
@@ -32,7 +32,7 @@ class PLL_Frontend extends PLL_Base {
 	public function __construct(&$links_model) {
 		parent::__construct($links_model);
 
-		add_action('pll_language_defined', array(&$this, 'pll_language_defined'), 1, 2);
+		add_action('pll_language_defined', array(&$this, 'pll_language_defined'), 1);
 
 		// filters posts by language
 		add_filter('parse_query', array(&$this, 'parse_query'), 6);
@@ -52,7 +52,7 @@ class PLL_Frontend extends PLL_Base {
 		$this->links = new PLL_Frontend_Links($this);
 
 		$c = array('Content', 'Url', 'Url', 'Domain');
-		$class = 'PLL_Choose_Lang_' . $c[$this->options['force_lang'] * (get_option('permalink_structure') ? 1 : 0 )];
+		$class = 'PLL_Choose_Lang_' . $c[$this->options['force_lang'] * ($this->links_model->using_permalinks ? 1 : 0 )];
 		$this->choose_lang = new $class($this);
 	}
 
@@ -60,13 +60,8 @@ class PLL_Frontend extends PLL_Base {
 	 * setups filters and nav menus once the language has been defined
 	 *
 	 * @since 1.2
-	 *
-	 * @param string $slug current language slug
-	 * @param object $curlang current language object
 	 */
-	public function pll_language_defined($slug, $curlang) {
-		$this->curlang = $curlang;
-
+	public function pll_language_defined() {
 		// filters
 		$this->filters = new PLL_Frontend_Filters($this);
 		$this->filters_search = new PLL_Frontend_Filters_Search($this);
@@ -143,23 +138,9 @@ class PLL_Frontend extends PLL_Base {
 			if (empty($restore_curlang))
 				$restore_curlang = $this->curlang->slug; // to always remember the current language through blogs
 
-			// FIXME need some simplification as there are too many variables storing the same value
 			$lang = $this->model->get_language($restore_curlang);
 			$this->curlang = $lang ? $lang : $this->model->get_language($this->options['default_lang']);
-			$this->choose_lang->curlang = $this->links->curlang = $this->curlang;
-
-			$this->links->home = $this->links_model->home; // set in parent class
-
-			if ('page' == get_option('show_on_front')) {
-				$this->choose_lang->page_on_front = $this->links->page_on_front = get_option('page_on_front');
-				$this->choose_lang->page_for_posts = $this->links->page_for_posts = get_option('page_for_posts');
-			}
-			else {
-				$this->choose_lang->page_on_front = $this->links->page_on_front = 0;
-				$this->choose_lang->page_for_posts = $this->links->page_for_posts = 0;
-			}
-
-			$this->filters_search->using_permalinks = $this->links->using_permalinks = (bool) get_option('permalink_structure');
+			$this->links->init_page_on_front_cache();
 		}
 	}
 }

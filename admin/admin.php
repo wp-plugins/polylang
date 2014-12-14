@@ -8,7 +8,7 @@
  * options          => inherited, reference to Polylang options array
  * model            => inherited, reference to PLL_Model object
  * links_model      => inherited, reference to PLL_Links_Model object
- * settings_page    => optional, reference ot PLL_Settings object
+ * settings_page    => optional, reference to PLL_Settings object
  * links            => reference to PLL_Links object
  * curlang          => optional, current language used to filter admin content
  * pref_lang        => preferred language used as default when saving posts or terms
@@ -287,8 +287,7 @@ class PLL_Admin extends PLL_Base {
 	}
 	/*
 	 * downloads mofiles from http://svn.automattic.com/wordpress-i18n/
-	 * FIXME is it the best class for this?
-	 * FIXME use language packs API coming with WP 3.7 instead (does not seem to work fully yet)
+	 * FIXME backward compatibility WP < 4.0
 	 *
 	 * @since 0.6
 	 *
