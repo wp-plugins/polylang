@@ -3,8 +3,8 @@ Contributors: Chouby
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CCWWYUUQV8F4E
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, international, localization
 Requires at least: 3.5
-Tested up to: 4.0
-Stable tag: 1.6.1
+Tested up to: 4.1
+Stable tag: 1.6.2
 License: GPLv2 or later
 
 Polylang adds multilingual content management support to WordPress.
@@ -35,7 +35,7 @@ Don't hesitate to [give your feedback](http://wordpress.org/support/view/plugin-
 
 == Installation ==
 
-1. Make sure you are using WordPress 3.1 or later and that your server is running PHP5 (if you are using WordPress 3.2 or newer, it does !)
+1. Make sure you are using WordPress 3.5 or later and that your server is running PHP 5.2.4 or later (same requirement as WordPress itself)
 1. If you tried other multilingual plugins, deactivate them before activating Polylang, otherwise, you may get unexpected results !
 1. Download the plugin
 1. Extract all the files.
@@ -43,7 +43,7 @@ Don't hesitate to [give your feedback](http://wordpress.org/support/view/plugin-
 1. Activate the plugin through the 'Plugins' menu in WordPress.
 1. Go to the languages settings page and create the languages you need
 1. Add the 'language switcher' widget to let your visitors switch the language.
-1. Take care that your theme must come with the corresponding .mo files (Polylang downloads them for themes bundled with WordPress). If your theme is not internationalized yet, please refer to the [codex](http://codex.wordpress.org/I18n_for_WordPress_Developers#I18n_for_theme_and_plugin_developers) or ask the theme author to internationalize it.
+1. Take care that your theme must come with the corresponding .mo files (Polylang downloads them for themes and plugins bundled with WordPress). If your theme is not internationalized yet, please refer to the [codex](http://codex.wordpress.org/I18n_for_WordPress_Developers#I18n_for_theme_and_plugin_developers) or ask the theme author to internationalize it.
 
 == Frequently Asked Questions ==
 
@@ -63,7 +63,7 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 == Changelog ==
 
-= 1.6.2 =
+= 1.6.2 (2014-12-14) =
 
 * fix: bugs and inconsistencies compared to WPML in 'icl_get_languages' (should fix a conflict with Avada)
 * fix: https issue
