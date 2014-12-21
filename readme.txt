@@ -63,6 +63,11 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 == Changelog ==
 
+= 1.6.3 =
+
+* fix: WXR export does not include the language of untranslated terms (will now work only for newly saved terms)
+* fix: better cleaning of DB when translated objects are deleted
+
 = 1.6.2 (2014-12-14) =
 
 * fix: bugs and inconsistencies compared to WPML in 'icl_get_languages' (should fix a conflict with Avada)

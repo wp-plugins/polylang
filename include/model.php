@@ -284,6 +284,13 @@ class PLL_Model {
 				// link all translations to the new term
 				foreach($translations as $p)
 					wp_set_object_terms($p, $group, $type . '_translations');
+
+				// clean now unused translation groups
+				foreach (wp_list_pluck($terms, 'term_id') as $term_id) {
+					$term = get_term($term_id, $type . '_translations');
+					if (empty($term->count))
+						wp_delete_term($term_id, $type . '_translations');
+				}
 			}
 		}
 	}
@@ -297,6 +304,7 @@ class PLL_Model {
 	 * @param int $id post id or term id
 	 */
 	public function delete_translation($type, $id) {
+		global $wpdb;
 		$term = $this->get_object_term($id, $type . '_translations');
 
 		if (!empty($term)) {
@@ -304,11 +312,15 @@ class PLL_Model {
 			$slug = array_search($id, $this->get_translations($type, $id)); // in case some plugin stores the same value with different key
 			unset($d[$slug]);
 
-			wp_update_term((int) $term->term_id, $type . '_translations', array('description' => serialize($d)));
+			if (empty($d))
+				wp_delete_term((int) $term->term_id, $type . '_translations');
+			else
+				wp_update_term((int) $term->term_id, $type . '_translations', array('description' => serialize($d)));
 
 			if ('post' == $type)
 				wp_set_object_terms($id, null, $type . '_translations');
-			else {
+
+			elseif ($wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $wpdb->terms WHERE term_id = %d;", $id))) {
 				// always keep a group for terms to allow relationships remap when importing from a WXR file
 				$translations[$slug] = $id;
 				wp_insert_term($group = uniqid('pll_'), $type . '_translations', array('description' => serialize($translations)));
@@ -406,6 +418,11 @@ class PLL_Model {
 	 */
 	public function set_term_language($term_id, $lang) {
 		wp_set_object_terms($term_id, $lang ? $this->get_language($lang)->tl_term_id : '', 'term_language');
+
+		// add translation group for correct WXR export
+		$translations = $this->get_translations('term', $term_id);
+		if (empty($translations))
+			$this->save_translations('term', $term_id, array());
 	}
 
 	/*
