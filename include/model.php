@@ -421,8 +421,10 @@ class PLL_Model {
 
 		// add translation group for correct WXR export
 		$translations = $this->get_translations('term', $term_id);
-		if (empty($translations))
-			$this->save_translations('term', $term_id, array());
+		if ($slug = array_search($term_id, $translations))
+			unset($translations[$slug]);
+
+		$this->save_translations('term', $term_id, $translations);
 	}
 
 	/*

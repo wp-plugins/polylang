@@ -58,6 +58,7 @@ jQuery(document).ready(function($) {
 		var data = {
 			action: 'term_lang_choice',
 			lang: $(this).val(),
+			from_tag: $("input[name='from_tag']").val(),
 			term_id: $("input[name='tag_ID']").val(),
 			taxonomy: $("input[name='taxonomy']").val(),
 			post_type: typenow,

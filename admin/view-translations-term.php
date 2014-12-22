@@ -19,12 +19,12 @@ else {
 			continue;
 
 		// look for any existing translation in this language
+		// take care not ot propose a self link
 		$translation = 0;
-		if (isset($term_id) && $translation_id = $this->model->get_translation('term', $term_id, $language))
+		if (isset($term_id) && ($translation_id = $this->model->get_translation('term', $term_id, $language)) && $translation_id != $term_id)
 			$translation = get_term($translation_id, $taxonomy);
-		if (isset($_GET['from_tag']) && $translation_id = $this->model->get_term((int)$_GET['from_tag'], $language))
+		if (isset($_REQUEST['from_tag']) && ($translation_id = $this->model->get_term((int) $_REQUEST['from_tag'], $language)))
 			$translation = get_term($translation_id, $taxonomy);
-
 
 		if (isset($term_id)) { // do not display the add new link in add term form ($term_id not set !!!) {
 			$link = $add_link = sprintf(
