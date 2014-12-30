@@ -68,6 +68,7 @@ See http://polylang.wordpress.com/documentation/contribute/
 * fix: WXR export does not include the language of untranslated terms (will now work only for newly saved terms)
 * fix: better cleaning of DB when translated objects are deleted
 * fix: incorrect (ajax) translations links when modifying a term language
+* fix: warning: Illegal string offset 'taxonomy' introduced by the combination of WP 4.1 and some plugins.
 
 = 1.6.2 (2014-12-14) =
 
