@@ -80,7 +80,6 @@ class PLL_Model {
 	 * @param array $taxonomies terms taxonomies
 	 * @return array unmodified $terms
 	 */
-	// FIXME is that useful? or even desirable?
 	public function wp_get_object_terms($terms, $object_ids, $taxonomies) {
 		$taxonomies = explode("', '", trim($taxonomies, "'"));
 		if (!in_array('term_translations', $taxonomies))
