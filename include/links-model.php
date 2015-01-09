@@ -7,7 +7,8 @@
  */
 abstract class PLL_Links_Model {
 	public $model, $options;
-	public $home; // used to avoid several calls to get_option('home')
+	public $home; // used to store the home url before it is filtered
+	public $using_permalinks;
 
 	/*
 	 * constructor
@@ -20,34 +21,8 @@ abstract class PLL_Links_Model {
 		$this->model = &$model;
 		$this->options = &$model->options;
 
-		$this->home = get_option('home');
+		$this->home = home_url();
 	}
-
-	/*
-	 * returns the link to the first page when using pretty permalinks
-	 *
-	 * @since 1.2
-	 *
-	 * @param string $url url to modify
-	 * @return string modified url
-	 */
-	public function remove_paged_from_link($url) {
-		return preg_replace('#\/page\/[0-9]+\/#', '/', $url); // FIXME trailing slash ?
-	}
-
-	/*
-	 * returns the link to the paged page when using pretty permalinks
-	 *
-	 * @since 1.5
-	 *
-	 * @param string $url url to modify
-	 * @param int $page
-	 * @return string modified url
-	 */
-	public function add_paged_to_link($url, $page) {
-		return trailingslashit($url) . 'page/' . $page; // FIXME trailing slash ?
-	}
-
 
 	/*
 	 * changes the language code in url

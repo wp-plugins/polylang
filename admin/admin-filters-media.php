@@ -85,6 +85,9 @@ class PLL_Admin_Filters_Media extends PLL_Admin_Filters_Post_Base {
 		$x = new WP_Ajax_Response(array('what' => 'translations', 'data' => $data));
 		ob_end_clean();
 
+		// flag
+		$x->Add(array('what' => 'flag', 'data' => empty($lang->flag) ? esc_html($lang->slug) : $lang->flag));
+
 		$x->send();
 	}
 

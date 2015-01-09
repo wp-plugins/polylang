@@ -53,6 +53,8 @@ class PLL_Admin_Filters_Term {
 			add_action('wp_ajax_polylang-ajax-tag-search', 'wp_ajax_ajax_tag_search'); // take profit of new filter, cache...
 
 		add_filter('option_default_category', array(&$this, 'option_default_category'));
+
+		//add_action('split_shared_term', array(&$this, 'split_shared_term'), 10, 4); // FIXME planned for WP 4.2
 	}
 
 	/*
@@ -71,11 +73,16 @@ class PLL_Admin_Filters_Term {
 		printf('
 			<div class="form-field">
 				<label for="term_lang_choice">%s</label>
-				%s
+				<div id="select-add-term-language">%s</div>
 				<p>%s</p>
 			</div>',
 			__('Language', 'polylang'),
-			$dropdown->walk($this->model->get_languages_list(), array('name' => 'term_lang_choice', 'value' => 'term_id', 'selected' => $lang ? $lang->term_id : '')),
+			$dropdown->walk($this->model->get_languages_list(), array(
+				'name'     => 'term_lang_choice',
+				'value'    => 'term_id',
+				'selected' => $lang ? $lang->term_id : '',
+				'flag'     => true
+			)),
 			__('Sets the language', 'polylang')
 		);
 
@@ -108,13 +115,18 @@ class PLL_Admin_Filters_Term {
 				<th scope="row">
 					<label for="term_lang_choice">%s</label>
 				</th>
-				<td>
+				<td id="select-edit-term-language">
 					%s<br />
 					<span class="description">%s</span>
 				</td>
 			</tr>',
 			__('Language', 'polylang'),
-			$dropdown->walk($this->model->get_languages_list(), array('name' => 'term_lang_choice', 'value' => 'term_id', 'selected' => $lang ? $lang->term_id : '')),
+			$dropdown->walk($this->model->get_languages_list(), array(
+				'name'     => 'term_lang_choice',
+				'value'    => 'term_id',
+				'selected' => $lang ? $lang->term_id : '',
+				'flag'     => true
+			)),
 			__('Sets the language', 'polylang')
 		);
 
@@ -203,9 +215,22 @@ class PLL_Admin_Filters_Term {
 			$this->model->set_term_language($term_id, $_POST['term_lang_choice']);
 		}
 
+		// *post* bulk edit, in case a new term is created
+		elseif (isset($_GET['bulk_edit'], $_GET['inline_lang_choice'])) {
+			// bulk edit does not modify the language
+			if ($_GET['inline_lang_choice'] == -1)
+				return;
+
+			check_admin_referer('bulk-posts');
+			$this->model->set_term_language($term_id, $_GET['inline_lang_choice']);
+		}
+
 		// quick edit
 		elseif (isset($_POST['inline_lang_choice'])) {
-			check_ajax_referer('taxinlineeditnonce', '_inline_edit');
+			check_ajax_referer(
+				isset($_POST['action']) && 'inline-save' == $_POST['action'] ? 'inlineeditnonce' : 'taxinlineeditnonce', // post quick edit or tag quick edit ?
+				'_inline_edit'
+			);
 
 			if (isset($_POST['inline-save-tax']) && $this->model->get_term_language($term_id)->slug != $_POST['inline_lang_choice'])
 				$this->model->delete_translation('term', $term_id);
@@ -271,13 +296,13 @@ class PLL_Admin_Filters_Term {
 
 			if (isset($_POST['term_tr_lang']))
 				$translations = $this->save_translations($term_id);
+
+			do_action('pll_save_term', $term_id, $taxonomy, empty($translations) ? $this->model->get_translations('term', $term_id) : $translations);
 		}
-		
+
 		// attempts to set a default language even if no capability
 		else
 			$this->set_default_language($term_id, $taxonomy);
-
-		do_action('pll_save_term', $term_id, $taxonomy, empty($translations) ? $this->model->get_translations('term', $term_id) : $translations);
 	}
 
 	/*
@@ -383,6 +408,9 @@ class PLL_Admin_Filters_Term {
 			}
 		}
 
+		// flag
+		$x->Add(array('what' => 'flag', 'data' => empty($lang->flag) ? esc_html($lang->slug) : $lang->flag));
+
 		$x->send();
 	}
 
@@ -458,6 +486,10 @@ class PLL_Admin_Filters_Term {
 		if (!empty($args['pll_get_terms_not_translated']))
 			return $clauses;
 
+		// admin language filter for ajax paginate_links in taxonomies metabox in nav menus panel
+		if (!empty($_POST['action']) && !empty($this->curlang) && 'menu-get-metabox' == $_POST['action'])
+			return $this->model->terms_clauses($clauses, $this->curlang);
+
 		// The only ajax response I want to deal with is when changing the language in post metabox
 		if (isset($_POST['action']) && !in_array($_POST['action'], array('post_lang_choice', 'term_lang_choice', 'get-tagcloud')))
 			return $clauses;
@@ -493,7 +525,7 @@ class PLL_Admin_Filters_Term {
 		elseif (!empty($this->curlang) && (isset($screen) && $screen->base != 'post' && !($screen->base == 'edit-tags' && isset($args['class'])))) // don't apply to post edit and the category parent dropdown list
 		 	$lang = $this->curlang;
 
-		elseif (isset($_GET['post']))
+		elseif (isset($_GET['post']) && is_numeric($_GET['post'])) // is numeric avoids array of posts in *post* bulk edit
 			$lang = $this->model->get_post_language($_GET['post']);
 
 		// for the parent dropdown list in edit term
@@ -576,6 +608,44 @@ class PLL_Admin_Filters_Term {
 				return $this->model->get_term($value, $this->model->get_term_language($traces[4]['args'][0]));
 		}
 		return $value;
+	}
+
+	/*
+	 * FIXME: splitting shared terms is not planned before WP 4.2. It is not clear if all terms will be splitted at once
+	 * when splitting a shared, splits translations if these are shared terms too
+	 *
+	 * @since 1.6.2
+	 *
+	 * @param int $term_id shared term_id
+	 * @param int $new_term_id
+	 * @param int $term_taxonomy_id
+	 * @param string $taxonomy
+	 */
+	public function split_shared_term($term_id, $new_term_id, $term_taxonomy_id, $taxonomy) {
+		// avoid recursion
+		static $avoid_recursion = false;
+		if ($avoid_recursion)
+			return;
+
+		$avoid_recursion = true;
+		$lang = $this->model->get_term_language($term_id);
+
+		foreach ($this->model->get_translations('term', $term_id) as $key => $tr_id) {
+			if ($lang->slug == $key) {
+				$translations[$key] = $new_term_id;
+			}
+			else {
+				$tr_term = get_term($tr_id, $taxonomy);
+				$translations[$key] = _split_shared_term($tr_id, $tr_term->term_taxonomy_id);
+
+				// hack translation ids sent by the form to avoid overwrite in PLL_Admin_Filters_Term::save_translations
+				if (isset($_POST['term_tr_lang'][$key]) && $_POST['term_tr_lang'][$key] == $tr_id)
+					$_POST['term_tr_lang'][$key] = $translations[$key];
+			}
+			$this->model->set_term_language($translations[$key], $key);
+		}
+
+		$this->model->save_translations('term', $new_term_id, $translations);
 	}
 
 	/*

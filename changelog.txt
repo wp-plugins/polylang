@@ -2,6 +2,89 @@
 
 This file contains only old changelog. See readme.txt for newer versions.
 
+= 1.5.6 (2014-10-11) =
+
+* Fix: the admin language filter is not active for paginated taxonomy in nav menu admin panel
+* Fix: wrong redirection if a domain is a substring of another domain (ex: mysite.com and mysite.co)
+* Fix: impossible to translate numeric values in options defined in wpml-config.xml
+* Fix: call to undefined method PLL_Links::get_translation_url() with Avada theme
+* Fix: manage_{$this->screen->taxonomy}_custom_icolumn is a filter and not an action
+
+= 1.5.5 (2014-09-10) =
+
+* Fix: missing argument 4 in icl_translate
+* Fix: conflict with Vantage theme
+* Fix: possible issue with cookie domain on 'localhost'
+* Fix: filtering string translations does not work when the group name contains a space
+* Fix: Possible 404 error for attachments
+* Fix: PHP notice when a shared term is not translated in all taxonomies
+
+= 1.5.4 (2014-08-13) =
+
+* Add new API functions: pll_get_post_language, pll_get_term_language, pll_translate_string
+* Add better compatibility with Jetpack 3
+* Fix: attachments don't get any language when uploaded from frontend
+* Fix: authors cannot create tags
+* Fix: too restrictive capability checks for some edge cases
+* Fix: conflict with WPSEO: taxonomy metas cannot be saved
+
+= 1.5.3 (2014-07-12) =
+
+* Add: Capability check before creating links in post list table
+* Add: Possibility not to cache languages objects with option PLL_CACHE_LANGUAGES (for GoDaddy users)
+* Fix: Saving a header or a background in menu Appearance resets nav menus locations (introduced in 1.5)
+* Fix: sub-sub-options and deeper levels defined in wpml-config.xml are not translated
+* Fix: Fatal error when creating a new site when Polylang is network activated (introduced in v1.5.1)
+* Fix: Admin language forced to English when activating Polylang (before creating any new language)
+* Fix: 'pll_count_posts' second parameter not taken into account
+* Fix: 'edit-post' and 'create-posts' capabilities are not differentiated when saving a post
+
+= 1.5.2 (2014-06-24) =
+
+* Fix: Revert post translations terms cleaning introduced in 1.5 as it seems to cause problems
+* Fix: Impossible to delete a biographical info (introduced in 1.5)
+* Fix: Security issue reported by [Gregory Viguier](http://www.screenfeed.fr/)
+
+= 1.5.1 (2014-06-19) =
+
+* Add: filter 'pll_settings_tabs' and action 'pll_settings_active_tab_{$tab}'
+* Add: possibility to add a path when using multiple domains (same path for all languages)
+* Fix: Bad redirection if /language/ is added to urls (introduced in 1.5)
+* Fix: Nav menu locations are not saved in customizer (introduced in 1.4)
+* Fix: Unable to unset nav menu locations
+* Fix: Incorrect link for date archives in language switcher (introduced in 1.5)
+* Fix: Fatal error when using featured content in Twenty Fourteen
+* Fix: Posts bulk edit broken (introduced in 1.5)
+* Fix: Polylang does not play nice with switch_to_blog
+* Fix: Warning: reset() expects parameter 1 to be array, null given in admin-filters-columns.php on line 81
+
+= 1.5 (2014-05-29) =
+
+* Add Ukrainian translation contributed by [http://getvoip.com/](http://getvoip.com/)
+* Refresh translation metaboxes (again): now translated posts are chosen from an autocomplete input field
+* Categories and post tags translations are also chosen in an automplete input field
+* Better error management on languages pages
+* Use Dashicons instead of Icomoon icons for WP 3.8+
+* Check if translated post is readable by the current user before displaying the language switcher
+* Minimum Twenty Fourteen version is now 1.1
+* Code cleaning
+* Add support for Quick draft introduced in WP 3.8
+* Add support for object cache plugins for recent posts and recent comments widgets
+* Add support for pages with modified query in the language switcher (ex: when multiple post types queried on the same page)
+* Add new API functions: pll_languages_list, pll_set_post_language, pll_set_term_language, pll_save_post_translations, pll_save_term_translations, pll_count_posts
+* Add new filter pll_the_languages_args
+* Add support for ICL_LANGUAGE_CODE == 'all' on admin side
+* Fix: Galician flag
+* Fix: static page on front pagination is broken
+* Fix: search url may be broken
+* Fix: PHP notice in icl_get_languages
+* Fix: more robust way of detecting language in url when using directory
+* Fix: delete translations terms orphans in database
+* Fix: inconsistent behavior when setting page on front from customizer
+* Fix: deleting a category assigns posts to wrong default category
+* Fix: quick edit breaks synchronization
+* Fix: some security issues
+
 = 1.4.5 (2014-04-19) =
 
 * Fix: Notice when combined with WPSEO 1.5+

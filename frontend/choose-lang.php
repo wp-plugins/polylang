@@ -6,7 +6,7 @@
  * @since 1.2
  */
 abstract class PLL_Choose_Lang {
-	public $links, $links_model, $model, $options;
+	public $links_model, $model, $options;
 	public $page_on_front = 0, $page_for_posts = 0, $curlang;
 
 	/*
@@ -17,15 +17,13 @@ abstract class PLL_Choose_Lang {
 	 * @param object $polylang
 	 */
 	public function __construct(&$polylang) {
-		$this->links = &$polylang->links;
 		$this->links_model = &$polylang->links_model;
 		$this->model = &$polylang->model;
 		$this->options = &$polylang->options;
 
-		if ('page' == get_option('show_on_front')) {
-			$this->page_on_front = get_option('page_on_front');
-			$this->page_for_posts = get_option('page_for_posts');
-		}
+		$this->page_on_front = &$polylang->links->page_on_front;
+		$this->page_for_posts = &$polylang->links->page_for_posts;
+		$this->curlang = &$polylang->curlang;
 
 		if (PLL_AJAX_ON_FRONT || false === stripos($_SERVER['SCRIPT_FILENAME'], 'index.php'))
 			$this->set_language(empty($_REQUEST['lang']) ? $this->get_preferred_language() : $this->model->get_language($_REQUEST['lang']));
@@ -48,11 +46,14 @@ abstract class PLL_Choose_Lang {
 		if (isset($this->curlang))
 			return;
 
-		$this->curlang = $curlang;
+		// final check in case $curlang has an unexpected value
+		// see https://wordpress.org/support/topic/detect-browser-language-sometimes-setting-null-language
+		$this->curlang = ($curlang instanceof PLL_Language) ? $curlang : $this->model->get_language($this->options['default_lang']);
+
 		$this->maybe_setcookie();
 
-		$GLOBALS['text_direction'] = $curlang->is_rtl ? 'rtl' : 'ltr';
-		do_action('pll_language_defined', $curlang->slug, $curlang);
+		$GLOBALS['text_direction'] = $this->curlang->is_rtl ? 'rtl' : 'ltr';
+		do_action('pll_language_defined', $this->curlang->slug, $this->curlang);
 	}
 
 	/*
@@ -63,8 +64,15 @@ abstract class PLL_Choose_Lang {
 	 */
 	protected function maybe_setcookie() {
 		// check headers have not been sent to avoid ugly error
+		// cookie domain must be set to false for localhost (default value for COOKIE_DOMAIN) thanks to Stephen Harris.
 		if (!headers_sent() && PLL_COOKIE !== false && (!isset($_COOKIE[PLL_COOKIE]) || $_COOKIE[PLL_COOKIE] != $this->curlang->slug))
-			setcookie(PLL_COOKIE, $this->curlang->slug, time() + 31536000 /* 1 year */, COOKIEPATH, parse_url(get_option('home'), PHP_URL_HOST));
+			setcookie(
+				PLL_COOKIE,
+				$this->curlang->slug,
+				time() + 31536000 /* 1 year */,
+				COOKIEPATH,
+				2 == $this->options['force_lang'] ? parse_url($this->links_model->home, PHP_URL_HOST) : COOKIE_DOMAIN
+			);
 	}
 
 	/*
@@ -163,8 +171,8 @@ abstract class PLL_Choose_Lang {
 		// FIXME why this happens? http://wordpress.org/support/topic/polylang-crashes-1
 		// don't redirect if $_POST is not empty as it could break other plugins
 		// don't forget the query string which may be added by plugins
-		elseif (is_string($redirect = $this->links->get_home_url($this->curlang)) && empty($_POST)) {
-			$redirect = empty($_SERVER['QUERY_STRING']) ? $redirect : $redirect . (get_option('permalink_structure') ? '?' : '&') . $_SERVER['QUERY_STRING'];
+		elseif (is_string($redirect = $this->curlang->home_url) && empty($_POST)) {
+			$redirect = empty($_SERVER['QUERY_STRING']) ? $redirect : $redirect . ($this->links_model->using_permalinks ? '?' : '&') . $_SERVER['QUERY_STRING'];
 			if ($redirect = apply_filters('pll_redirect_home', $redirect)) {
 				wp_redirect($redirect);
 				exit;

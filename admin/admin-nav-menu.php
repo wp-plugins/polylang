@@ -155,23 +155,21 @@ class PLL_Admin_Nav_Menu {
 
 		// security check
 		// as 'wp_update_nav_menu_item' can be called from outside WP admin
-		if ( ! current_user_can('edit_theme_options') )
-			wp_die( __( 'Cheatin&#8217; uh?' ) );
+		if (current_user_can('edit_theme_options')) {
+			check_admin_referer( 'update-nav_menu', 'update-nav-menu-nonce' );
 
-		check_admin_referer( 'update-nav_menu', 'update-nav-menu-nonce' );
-
-		$options = array('hide_current' => 0,'force_home' => 0 ,'show_flags' => 0 ,'show_names' => 1); // default values
-		// our jQuery form has not been displayed
-		if (empty($_POST['menu-item-pll-detect'][$menu_item_db_id])) {
-			if (!get_post_meta($menu_item_db_id, '_pll_menu_item', true)) // our options were never saved
-				update_post_meta($menu_item_db_id, '_pll_menu_item', $options);
+			$options = array('hide_current' => 0,'force_home' => 0 ,'show_flags' => 0 ,'show_names' => 1); // default values
+			// our jQuery form has not been displayed
+			if (empty($_POST['menu-item-pll-detect'][$menu_item_db_id])) {
+				if (!get_post_meta($menu_item_db_id, '_pll_menu_item', true)) // our options were never saved
+					update_post_meta($menu_item_db_id, '_pll_menu_item', $options);
+			}
+			else {
+				foreach ($options as $opt => $v)
+					$options[$opt] = empty($_POST['menu-item-'.$opt][$menu_item_db_id]) ? 0 : 1;
+				update_post_meta($menu_item_db_id, '_pll_menu_item', $options); // allow us to easily identify our nav menu item
+			}
 		}
-		else {
-			foreach ($options as $opt => $v)
-				$options[$opt] = empty($_POST['menu-item-'.$opt][$menu_item_db_id]) ? 0 : 1;
-			update_post_meta($menu_item_db_id, '_pll_menu_item', $options); // allow us to easily identify our nav menu item
-		}
-
 	}
 
 	/*
@@ -198,19 +196,18 @@ class PLL_Admin_Nav_Menu {
 	 * @return unmodified $mods
 	 */
 	public function update_nav_menu_locations($mods) {
-		if (isset($mods['nav_menu_locations'])) {
+		if (current_user_can('edit_theme_options') && isset($mods['nav_menu_locations'])) {
 
-			// security check
-			if ( ! current_user_can('edit_theme_options') )
-				wp_die( __( 'Cheatin&#8217; uh?' ) );
-
+			// Manage Locations tab in Appearance -> Menus
 			if (isset($_REQUEST['action']) && 'locations' == $_REQUEST['action']) {
-				check_admin_referer( 'save-menu-locations' );
+				check_admin_referer('save-menu-locations');
 				$this->options['nav_menus'][$this->theme] = array();
 			}
 
-			elseif (isset($_REQUEST['action']) && 'update' == $_REQUEST['action']) {
-				check_admin_referer( 'update-nav_menu', 'update-nav-menu-nonce' );
+			// Edit Menus tab in Appearance -> Menus
+			// add the test of $_REQUEST['update-nav-menu-nonce'] to avoid conflict with Vantage theme
+			elseif (isset($_REQUEST['action'], $_REQUEST['update-nav-menu-nonce']) && 'update' == $_REQUEST['action']) {
+				check_admin_referer('update-nav_menu', 'update-nav-menu-nonce');
 				$this->options['nav_menus'][$this->theme] = array();
 			}
 

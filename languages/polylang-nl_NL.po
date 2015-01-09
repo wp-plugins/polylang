@@ -47,11 +47,11 @@ msgid "Finally if you like this plugin or if it helps your business, donations t
 msgstr "Tot slot, wanneer deze plugin je bevalt of wanneer het jouw bedrijfsvoering ondersteunt, donaties ten behoeve van de auteur wordt zeer gewaardeerd."
 
 # @ polylang
-#: admin/admin-filters-post.php:83
-#: admin/admin.php:73
-#: admin/settings.php:53
-#: admin/settings.php:80
-#: include/model.php:506
+#: admin/admin-filters-post.php:81
+#: admin/admin.php:90
+#: admin/settings.php:55
+#: admin/settings.php:82
+#: include/model.php:526
 msgid "Languages"
 msgstr "Talen"
 
@@ -81,28 +81,28 @@ msgid "Displays as dropdown"
 msgstr "Toon als dropdown"
 
 # @ polylang
-#: admin/admin.php:252
+#: admin/admin.php:271
 msgid "Filters content by language"
 msgstr ""
 
 # @ polylang
-#: admin/admin.php:243
+#: admin/admin.php:262
 msgid "Show all languages"
 msgstr "Toon alle talen"
 
 # @ polylang
-#: admin/admin-filters-columns.php:132
-#: admin/admin-filters-columns.php:228
+#: admin/admin-filters-columns.php:139
+#: admin/admin-filters-columns.php:227
 msgid "Add new translation"
 msgstr "Voeg nieuwe vertaling toe"
 
 # @ polylang
-#: admin/admin-filters-columns.php:169
-#: admin/admin-filters-media.php:58
+#: admin/admin-filters-columns.php:173
+#: admin/admin-filters-media.php:55
 #: admin/admin-filters-post.php:107
-#: admin/admin-filters-term.php:75
-#: admin/admin-filters-term.php:112
-#: include/model.php:507
+#: admin/admin-filters-term.php:77
+#: admin/admin-filters-term.php:121
+#: include/model.php:527
 msgid "Language"
 msgstr "Taal"
 
@@ -116,135 +116,137 @@ msgid "Translations"
 msgstr "Vertalingen"
 
 # @ polylang
-#: admin/admin-filters-term.php:77
-#: admin/admin-filters-term.php:114
+#: admin/admin-filters-term.php:84
+#: admin/admin-filters-term.php:128
 msgid "Sets the language"
 msgstr "Stelt de taal in"
 
 # @ polylang
-#: admin/admin-filters.php:46
+#: admin/admin-filters.php:52
 msgid "The widget is displayed for:"
 msgstr "Het widget wordt getoond voor:"
 
 # @ polylang
-#: admin/admin-filters.php:49
-#: include/model.php:508
+#: admin/admin-filters.php:55
+#: include/model.php:528
 msgid "All languages"
 msgstr "Alle talen"
 
 # @ polylang
-#: admin/admin-filters.php:113
+#: admin/admin-filters.php:123
 msgid "Admin language"
 msgstr "Admin taal"
 
-#: admin/admin-filters.php:116
+#: admin/admin-filters.php:126
 msgid "Wordpress default"
 msgstr ""
 
 # @ default
 # @ polylang
-#: admin/admin.php:154
-#: admin/settings.php:85
+#: admin/admin.php:171
+#: admin/settings.php:87
 msgid "Settings"
 msgstr "Instellingen"
 
 # @ polylang
-#: admin/admin-filters.php:146
+#: admin/admin-filters.php:160
+#: admin/admin-filters.php:169
 msgid "Upgrading language files&#8230;"
 msgstr "Aanpassen taalbestanden&#8230;"
 
 # @ polylang
-#: admin/settings.php:45
+#: admin/settings.php:47
 msgid "About Polylang"
 msgstr "Over Polylang"
 
 # @ polylang
-#: admin/settings.php:61
+#: admin/settings.php:63
 msgid "Strings translations"
 msgstr "Tekstvertalingen"
 
 # @ polylang
-#: admin/settings.php:84
+#: admin/settings.php:86
 msgid "Strings translation"
 msgstr "Tekstvertaling"
 
 # @ polylang
-#: admin/admin-model.php:285
+#: admin/admin-model.php:274
 msgid "Enter a valid WordPress locale"
 msgstr "Voer een geldige Wordpress lokaal in"
 
 # @ polylang
-#: admin/admin-model.php:293
+#: admin/admin-model.php:282
 msgid "The language code must be unique"
 msgstr "De taalcode moet uniek zijn"
 
 # @ polylang
-#: admin/admin-model.php:297
+#: admin/admin-model.php:286
 msgid "The language must have a name"
 msgstr "De taal moet een naam hebben"
 
 # @ polylang
-#: admin/admin.php:353
+#: admin/admin.php:371
+#: admin/settings.php:162
 msgid "The language was created, but the WordPress language file was not downloaded. Please install it manually."
 msgstr "De taal was gecreëerd, maar het Wordpress taalbestand was niet gedownload. Handmatige installatie is noodzakelijk."
 
 # @ polylang
-#: admin/settings.php:328
+#: admin/admin-strings.php:59
 msgid "Widget title"
 msgstr "Widget titel"
 
 # @ polylang
-#: admin/settings.php:346
+#: admin/settings.php:301
 msgid "Taxonomies"
 msgstr ""
 
 # @ polylang
-#: admin/settings.php:347
+#: admin/settings.php:302
 msgid "Custom fields"
 msgstr ""
 
 # @ polylang
-#: admin/settings.php:348
+#: admin/settings.php:303
 msgid "Comment status"
 msgstr ""
 
 # @ polylang
-#: admin/settings.php:349
+#: admin/settings.php:304
 msgid "Ping status"
 msgstr ""
 
 # @ polylang
-#: admin/settings.php:350
+#: admin/settings.php:305
 msgid "Sticky posts"
 msgstr ""
 
 # @ polylang
-#: admin/settings.php:351
+#: admin/settings.php:306
 msgid "Published date"
 msgstr ""
 
 # @ polylang
-#: admin/settings.php:352
+#: admin/settings.php:307
 msgid "Post format"
 msgstr ""
 
 # @ polylang
-#: admin/settings.php:353
+#: admin/settings.php:308
 msgid "Page parent"
 msgstr ""
 
 # @ polylang
-#: admin/settings.php:354
+#: admin/settings.php:309
 msgid "Page template"
 msgstr ""
 
 # @ polylang
-#: admin/settings.php:355
+#: admin/settings.php:310
 msgid "Page order"
 msgstr ""
 
 # @ polylang
-#: admin/settings.php:356
+#: admin/settings.php:311
 msgid "Featured image"
 msgstr ""
 
@@ -298,11 +300,6 @@ msgstr "Taalcode"
 
 # @ polylang
 #: admin/view-languages.php:93
-msgid "2-letters ISO 639-1 language code (for example: en)"
-msgstr "2-karakter ISO 639-1 taalcode (bv.: nl)"
-
-# @ polylang
-#: admin/view-languages.php:93
 msgid "Text direction"
 msgstr "Tekstrichting"
 
@@ -337,7 +334,7 @@ msgstr "Positionering van de taal in de taalschakelaar"
 #: admin/admin-nav-menu.php:90
 #: admin/admin-nav-menu.php:93
 #: admin/admin-nav-menu.php:124
-#: admin/admin-nav-menu.php:181
+#: admin/admin-nav-menu.php:186
 #: include/upgrade.php:301
 msgid "Language switcher"
 msgstr "Taalschakelaar"
@@ -392,7 +389,7 @@ msgstr ""
 msgid "Activate languages and translations for media"
 msgstr ""
 
-#: admin/view-languages.php:365
+#: admin/view-languages.php:363
 msgid "Synchronization"
 msgstr ""
 
@@ -417,8 +414,8 @@ msgid "Activate languages and translations for custom taxonomies."
 msgstr ""
 
 # @ polylang
-#: admin/admin-filters-post.php:351
-#: admin/admin-filters-term.php:502
+#: admin/admin-filters-post.php:379
+#: admin/admin-filters-term.php:612
 #: admin/table-languages.php:54
 #: admin/view-translations-media.php:21
 msgid "Edit"
@@ -456,9 +453,9 @@ msgid "String"
 msgstr "Tekst"
 
 # @ polylang
-#: admin/admin-filters-post.php:375
-#: admin/admin-filters-term.php:528
 #: admin/view-translations-media.php:30
+#: admin/view-translations-post.php:21
+#: admin/view-translations-term.php:30
 msgid "Add new"
 msgstr "Voeg nieuwe toe"
 
@@ -473,7 +470,7 @@ msgid "Displays a language switcher"
 msgstr "Toon een taalschakelaar"
 
 # @ polylang
-#: include/widget-languages.php:100
+#: include/widget-languages.php:97
 msgid "Title:"
 msgstr "Titel:"
 
@@ -484,7 +481,7 @@ msgid "Adds multilingual capability to WordPress"
 msgstr ""
 
 # @ polylang
-#: polylang.php:160
+#: polylang.php:145
 #, php-format
 msgid "You are using WordPress %s. Polylang requires at least WordPress %s."
 msgstr "Je gebruikt Wordpress %s. Polylang vereist tenminste Wordpress %s."
@@ -526,7 +523,7 @@ msgid "The synchronization options allow to maintain exact same values (or trans
 msgstr ""
 
 # @ polylang
-#: admin/admin-model.php:289
+#: admin/admin-model.php:278
 msgid "The language code contains invalid characters"
 msgstr ""
 
@@ -579,7 +576,7 @@ msgid "The front page url contains the language code instead of the page name or
 msgstr ""
 
 # @ polylang
-#: admin/admin-filters-term.php:143
+#: admin/admin-filters-term.php:167
 #, php-format
 msgid "A translation does already exist for %s"
 msgstr ""
@@ -591,32 +588,42 @@ msgid "Example: %s instead of %s"
 msgstr ""
 
 # @ polylang
-#: admin/admin-model.php:49
+#: admin/admin-model.php:38
 msgid "Impossible to add the language."
 msgstr ""
 
 # @ polylang
-#: admin/admin-model.php:73
+#: admin/admin-model.php:62
 msgid "Language added."
 msgstr ""
 
 # @ polylang
-#: admin/admin-model.php:187
+#: admin/admin-model.php:176
 msgid "Language deleted."
 msgstr ""
 
 # @ polylang
-#: admin/admin-model.php:268
+#: admin/admin-model.php:257
 msgid "Language updated."
 msgstr ""
 
 # @ polylang
-#: admin/settings.php:203
+#: admin/settings.php:221
 msgid "Translations updated."
 msgstr ""
 
 # @ polylang
 #: admin/view-languages.php:89
 msgid "Language code - preferably 2-letters ISO 639-1  (for example: en)"
+msgstr ""
+
+# @ polylang
+#: admin/admin-filters.php:202
+msgid "The chosen static front page must be translated in all languages."
+msgstr ""
+
+# @ polylang
+#: admin/admin-strings.php:60
+msgid "Widget text"
 msgstr ""
 
