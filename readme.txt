@@ -63,7 +63,11 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 == Changelog ==
 
-= 1.6.3 =
+= 1.6.4 =
+
+* fix: a new post is assigned the wrong (untranslated) default category if no category is assigned by the user
+
+= 1.6.3 (2015-01-09) =
 
 * Add Georgian translation contributed by [Tours in Georgia](http://www.georgia-tours.eu/)
 * fix: WXR export does not include the language of untranslated terms (will now work only for newly saved terms)

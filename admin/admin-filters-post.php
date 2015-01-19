@@ -278,6 +278,7 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 
 		// make sure we get save terms in the right language (especially tags with same name in different languages)
 		if (!empty($lang)) {
+
 			// FIXME quite a lot of queries in foreach
 			foreach ($this->model->get_translated_taxonomies() as $tax) {
 				$terms = get_the_terms($post_id, $tax);
@@ -285,10 +286,16 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 				if (is_array($terms)) {
 					$newterms = array();
 					foreach ($terms as $term) {
-						if ($newterm = $this->model->term_exists($term->name, $tax, $term->parent, $lang))
+						// check if the term is in the correct language or if a translation exist (mainly for default category)
+						if ($newterm = $this->model->get_term($term->term_id, $lang))
+							$newterms[] = (int) $newterm;
+
+						// or choose the correct language for tags (initially defined by name)
+						elseif ($newterm = $this->model->term_exists($term->name, $tax, $term->parent, $lang))
 							$newterms[] = (int) $newterm; // cast is important otherwise we get 'numeric' tags
 
-						elseif (!is_wp_error($term_info = wp_insert_term($term->name, $tax))) // create the term in the correct language
+						// or create the term in the correct language
+						elseif (!is_wp_error($term_info = wp_insert_term($term->name, $tax)))
 							$newterms[] = (int) $term_info['term_id'];
 					}
 
