@@ -66,6 +66,7 @@ See http://polylang.wordpress.com/documentation/contribute/
 = 1.6.4 =
 
 * fix: a new post is assigned the wrong (untranslated) default category if no category is assigned by the user
+* fix: the home links now have the right scheme even if PLL_CACHE_HOME_URL is not set to false
 
 = 1.6.3 (2015-01-09) =
 
