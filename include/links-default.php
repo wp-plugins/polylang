@@ -8,6 +8,7 @@
  * @since 1.2
  */
 class PLL_Links_Default extends PLL_Links_Model {
+	public $using_permalinks = false;
 
 	/*
 	 * adds language information to an url

@@ -102,13 +102,15 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 		// NOTE: the class "tags-input" allows to include the field in the autosave $_POST (see autosave.js)
 		printf('
 			<p><strong>%s</strong></p>
-			%s
+			<div id="select-%s-language">%s</div>
 			<div id="post-translations" class="translations">',
 			__('Language', 'polylang'),
+			$post_type == 'attachment' ? 'media' : 'post',
 			$dropdown->walk($this->model->get_languages_list(), array(
 				'name'     => $post_type == 'attachment' ? sprintf('attachments[%d][language]', $post_ID) : 'post_lang_choice',
 				'class'    => $post_type == 'attachment' ? 'media_lang_choice' : 'tags-input',
-				'selected' => $lang ? $lang->slug : ''
+				'selected' => $lang ? $lang->slug : '',
+				'flag'     => true
 			))
 		);
 		if ($lang)
@@ -130,7 +132,7 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 		$lang = $this->model->get_language($_POST['lang']);
 
 		$post_type_object = get_post_type_object($post_type);
-		if (!current_user_can($post_type_object->cap->edit_posts) || !current_user_can($post_type_object->cap->create_posts))
+		if (!current_user_can($post_type_object->cap->edit_post, $post_ID))
 			wp_die(-1);
 
 		$this->model->set_post_language($post_ID, $lang); // save language, useful to set the language when uploading media from post
@@ -180,6 +182,9 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 			$x->Add(array('what' => 'pages', 'data' => ob_get_contents()));
 			ob_end_clean();
 		}
+
+		// flag
+		$x->Add(array('what' => 'flag', 'data' => empty($lang->flag) ? esc_html($lang->slug) : $lang->flag));
 
 		$x->send();
 	}
@@ -273,6 +278,7 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 
 		// make sure we get save terms in the right language (especially tags with same name in different languages)
 		if (!empty($lang)) {
+
 			// FIXME quite a lot of queries in foreach
 			foreach ($this->model->get_translated_taxonomies() as $tax) {
 				$terms = get_the_terms($post_id, $tax);
@@ -280,10 +286,16 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 				if (is_array($terms)) {
 					$newterms = array();
 					foreach ($terms as $term) {
-						if ($newterm = $this->model->term_exists($term->name, $tax, $term->parent, $lang))
+						// check if the term is in the correct language or if a translation exist (mainly for default category)
+						if ($newterm = $this->model->get_term($term->term_id, $lang))
+							$newterms[] = (int) $newterm;
+
+						// or choose the correct language for tags (initially defined by name)
+						elseif ($newterm = $this->model->term_exists($term->name, $tax, $term->parent, $lang))
 							$newterms[] = (int) $newterm; // cast is important otherwise we get 'numeric' tags
 
-						elseif (!is_wp_error($term_info = wp_insert_term($term->name, $tax))) // create the term in the correct language
+						// or create the term in the correct language
+						elseif (!is_wp_error($term_info = wp_insert_term($term->name, $tax)))
 							$newterms[] = (int) $term_info['term_id'];
 					}
 
@@ -319,13 +331,13 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 
 			if (isset($_POST['post_tr_lang']))
 				$translations = $this->save_translations($post_id, $_POST['post_tr_lang']);
+
+			do_action('pll_save_post', $post_id, $post, empty($translations) ? $this->model->get_translations('post', $post_id) : $translations);
 		}
-		
+
 		// attempts to set a default language even if no capability
 		else
 			$this->set_default_language($post_id);
-			
-		do_action('pll_save_post', $post_id, $post, empty($translations) ? $this->model->get_translations('post', $post_id) : $translations);
 	}
 
 	/*

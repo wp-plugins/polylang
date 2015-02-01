@@ -44,6 +44,10 @@ class PLL_Admin_Model extends PLL_Model {
 		// don't want shared terms so use a different slug
 		wp_insert_term($args['name'], 'term_language', array('slug' => 'pll_' . $args['slug']));
 
+		// init a mo_id for this language
+		$mo = new PLL_MO();
+		$mo->export_to_db($this->get_language($args['slug']));
+
 		$this->clean_languages_cache(); // udpate the languages list now !
 
 		if (!isset($this->options['default_lang'])) {
@@ -310,6 +314,72 @@ class PLL_Admin_Model extends PLL_Model {
 			$values = array_unique($values);
 			$wpdb->query("INSERT INTO $wpdb->term_relationships (object_id, term_taxonomy_id) VALUES " . implode(',', $values));
 			$lang->update_count(); // updating term count is mandatory (thanks to AndyDeGroo)
+		}
+
+		if ('term' == $type) {
+			foreach ($ids as $id)
+				$translations[] = array($lang->slug => $id);
+
+			if (!empty($translations))
+				$this->set_translation_in_mass('term', $translations);
+		}
+	}
+
+	/*
+	 * used to create a translations groups in mass
+	 *
+	 * @since 1.6.3
+	 *
+	 * @param string $type either 'post' or 'term'
+	 * @param array $translations array of translations arrays
+	 */
+	public function set_translation_in_mass($type, $translations) {
+		global $wpdb;
+
+		foreach ($translations as $t) {
+			$term = uniqid('pll_'); // the term name
+			$terms[] = $wpdb->prepare('("%1$s", "%1$s")', $term);
+			$slugs[] = $wpdb->prepare('"%s"', $term);
+			$description[$term] = serialize($t);
+			$count[$term] = count($t);
+		}
+
+		// insert terms
+		if (!empty($terms)) {
+			$terms = array_unique($terms);
+			$wpdb->query("INSERT INTO $wpdb->terms (slug, name) VALUES " . implode(',', $terms));
+		}
+
+		// get all terms with their term_id
+		$terms = $wpdb->get_results("SELECT term_id, slug FROM $wpdb->terms WHERE slug IN (" . implode(',', $slugs) . ")");
+
+		// prepare terms taxonomy relationship
+		foreach ($terms as $term)
+			$tts[] = $wpdb->prepare('(%d, "%s", "%s", %d)', $term->term_id, $type . '_translations', $description[$term->slug], $count[$term->slug]);
+
+		// insert term_taxonomy
+		if (!empty($tts)) {
+			$tts = array_unique($tts);
+			$wpdb->query("INSERT INTO $wpdb->term_taxonomy (term_id, taxonomy, description, count) VALUES " . implode(',', $tts));
+		}
+
+		// get all terms with term_taxonomy_id
+		$terms = get_terms($type . '_translations', array('hide_empty' => false));
+
+		// prepare objects relationships
+		foreach ($terms as $term) {
+			$t = unserialize($term->description);
+			if (in_array($t, $translations)) {
+				foreach ($t as $object_id)
+					if (!empty($object_id))
+						$trs[] = $wpdb->prepare('(%d, %d)', $object_id, $term->term_taxonomy_id);
+			}
+		}
+
+		// insert term_relationships
+		if (!empty($trs)) {
+			$wpdb->query("INSERT INTO $wpdb->term_relationships (object_id, term_taxonomy_id) VALUES " . implode(',', $trs));
+			$trs = array_unique($trs);
 		}
 	}
 

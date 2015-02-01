@@ -58,6 +58,7 @@ jQuery(document).ready(function($) {
 		var data = {
 			action: 'term_lang_choice',
 			lang: $(this).val(),
+			from_tag: $("input[name='from_tag']").val(),
 			term_id: $("input[name='tag_ID']").val(),
 			taxonomy: $("input[name='taxonomy']").val(),
 			post_type: typenow,
@@ -77,6 +78,9 @@ jQuery(document).ready(function($) {
 						break;
 					case 'tag_cloud': // popular items
 						$('.tagcloud').replaceWith(this.data);
+						break;
+					case 'flag': // flag in front of the select dropdown
+						$('.pll-select-flag').html(this.data);
 						break;
 					default:
 						break;

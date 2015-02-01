@@ -29,6 +29,12 @@
  * @since 1.2
  */
 class PLL_Language {
+	public $term_id, $name, $slug, $term_group, $term_taxonomy_id, $taxonomy, $description, $parent, $count;
+	public $tl_term_id, $tl_term_taxonomy_id, $tl_count;
+	public $locale, $is_rtl;
+	public $flag_url, $flag;
+	public $home_url, $search_url;
+	public $host, $mo_id;
 
 	/*
 	 * constructor: builds a language object given its two corresponding terms in language and term_language taxonomies
@@ -79,7 +85,9 @@ class PLL_Language {
 				$this->flag_url,
 				esc_attr(apply_filters('pll_flag_title', $this->name, $this->slug, $this->locale)),
 				esc_attr($this->name)
-			));
+			),
+			$this->slug
+		);
 	}
 
 	/*
@@ -114,5 +122,24 @@ class PLL_Language {
 
 		else
 			$this->home_url = $this->search_url;
+	}
+
+	/*
+	 * set home_url scheme
+	 * this can't be cached accross pages
+	 *
+	 * @since 1.6.4
+	 */
+	public function set_home_url_scheme() {
+		if (is_ssl()) {
+			$this->home_url = str_replace('http://', 'https://', $this->home_url);
+			$this->search_url = str_replace('http://', 'https://', $this->search_url);
+		}
+
+		else {
+			$this->home_url = str_replace('https://', 'http://', $this->home_url);
+			$this->search_url = str_replace('https://', 'http://', $this->search_url);
+
+		}
 	}
 }

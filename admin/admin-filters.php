@@ -27,8 +27,15 @@ class PLL_Admin_Filters extends PLL_Filters {
 		add_action('personal_options', array(&$this, 'personal_options'));
 
 		// ugrades languages files after a core upgrade (timing is important)
-		// FIXME private action ? is there a better way to do this ?
+		// backward compatibility WP < 4.0 *AND* Polylang < 1.6
 		add_action( '_core_updated_successfully', array(&$this, 'upgrade_languages'), 1); // since WP 3.3
+
+		// upgrades plugins and themes translations files
+		add_filter('themes_update_check_locales', array(&$this, 'update_check_locales'));
+		add_filter('plugins_update_check_locales', array(&$this, 'update_check_locales'));
+
+		// checks if chosen page on front is translated
+		add_filter('pre_update_option_page_on_front', array(&$this, 'update_page_on_front'), 10, 2);
 	}
 
 	/*
@@ -145,12 +152,58 @@ class PLL_Admin_Filters extends PLL_Filters {
 	 *
 	 * @since 0.6
 	 *
-	 * @param string $version WP version
+	 * @param string $version new WP version
 	 */
 	public function upgrade_languages($version) {
-		apply_filters('update_feedback', __('Upgrading language files&#8230;', 'polylang'));
-		foreach ($this->model->get_languages_list() as $language)
-			if (!empty($_POST['locale']) && $language->locale != $_POST['locale']) // do not (re)update the language files of a localized WordPress
-				PLL_Admin::download_mo($language->locale, $version);
+		// backward compatibility WP < 4.0
+		if (version_compare($version, '4.0', '<')) {
+			apply_filters('update_feedback', __('Upgrading language files&#8230;', 'polylang'));
+			foreach ($this->model->get_languages_list() as $language)
+				if (!empty($_POST['locale']) && $language->locale != $_POST['locale']) // do not (re)update the language files of a localized WordPress
+					PLL_Admin::download_mo($language->locale, $version);
+		}
+
+		// backward compatibility WP < 4.0 *AND* Polylang < 1.6
+		// $GLOBALS['wp_version'] is the old WP version
+		elseif (version_compare($GLOBALS['wp_version'], '4.0', '<')) {
+			apply_filters('update_feedback', __('Upgrading language files&#8230;', 'polylang'));
+			PLL_Upgrade::download_language_packs();
+		}
+	}
+
+	/*
+	 * allows to update translations files for plugins and themes
+	 *
+	 * @since 1.6
+	 *
+	 * @param array $locale not used
+	 * @return array list of locales to update
+	 */
+	function update_check_locales($locales) {
+		return $this->model->get_languages_list(array('fields' => 'locale'));
+	}
+
+	/*
+	 * prevents choosing an untranslated static front page
+	 * displays an error message
+	 *
+	 * @since 1.6
+	 *
+	 * @param int $page_id new page on front page id
+	 * @param int $old_id old page on front page_id
+	 * @return int
+	 */
+	public function update_page_on_front($page_id, $old_id) {
+		if ($page_id) {
+			$translations = count($this->model->get_translations('post', $page_id));
+			$languages = count($this->model->get_languages_list());
+
+			if ($languages > 1 && $translations != $languages) {
+				$page_id = $old_id;
+				add_settings_error('reading', 'pll_page_on_front_error', __('The chosen static front page must be translated in all languages.', 'polylang'));
+			}
+		}
+
+		return $page_id;
 	}
 }

@@ -88,7 +88,7 @@ class PLL_Upgrade {
 	 * @since 1.2
 	 */
 	public function _upgrade() {
-		foreach (array('0.9', '1.0', '1.1', '1.2', '1.2.1', '1.2.3', '1.3', '1.4', '1.4.1', '1.4.4', '1.5') as $version)
+		foreach (array('0.9', '1.0', '1.1', '1.2', '1.2.1', '1.2.3', '1.3', '1.4', '1.4.1', '1.4.4', '1.5', '1.6') as $version)
 			if (version_compare($this->options['version'], $version, '<'))
 				call_user_func(array(&$this, 'upgrade_' . str_replace('.', '_', $version)));
 
@@ -447,4 +447,54 @@ class PLL_Upgrade {
 		delete_transient('pll_languages_list');
 	}
 
+	/*
+	 * upgrades if the previous version is < 1.6
+	 * upgrades core language files to get the .po file (only for WP 4.0+)
+	 *
+	 * @since 1.6
+	 */
+	protected function upgrade_1_6() {
+		if (version_compare($GLOBALS['wp_version'], '4.0', '>=')) {
+			self::download_language_packs();
+		}
+	}
+
+	/*
+	 * downloads language packs
+	 * intended to be used only one time (at upgrade to Polylang 1.6 or first upgrade of WP 4.0 or later)
+	 * adapted from wp_download_language_pack
+	 * rewritten because wp_download_language_pack checks the existence of .mo and I need to download .po
+	 *
+	 * @since 1.6
+	 */
+	static function download_language_packs() {
+		$languages = pll_languages_list(array('fields' => 'locale'));
+
+		// prevents upgrade if the .po file is already here. Let WP manage the upgrades :)
+		foreach ($languages as $key => $locale) {
+			if (file_exists(WP_LANG_DIR . "/$locale.po"))
+				unset($languages[$key]);
+		}
+
+		if (empty($languages))
+			return;
+
+		require_once(ABSPATH . 'wp-admin/includes/translation-install.php');
+		$translations = wp_get_available_translations();
+		if (!$translations)
+			return;
+
+		foreach ($translations as $translation) {
+			if (in_array($translation['language'], $languages)) {
+				$translation['type'] = 'core';
+				$translations_to_load[] = (object) $translation;
+			}
+		}
+
+		if (!empty($translations_to_load)) {
+			require_once(ABSPATH . 'wp-admin/includes/class-wp-upgrader.php');
+			$upgrader = new Language_Pack_Upgrader(new Automatic_Upgrader_Skin);
+			$upgrader->bulk_upgrade($translations_to_load, array('clear_update_cache' => false));
+		}
+	}
 }

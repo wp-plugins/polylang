@@ -21,7 +21,7 @@ class PLL_Widget_Recent_Comments extends WP_Widget_Recent_Comments {
 	 * @param array $args Display arguments including before_title, after_title, before_widget, and after_widget.
 	 * @param array $instance The settings for the particular instance of the widget
 	 */
-	function widget( $args, $instance ) {
+	public function widget( $args, $instance ) {
 		global $comments, $comment;
 
 		$cache = array();
@@ -41,13 +41,13 @@ class PLL_Widget_Recent_Comments extends WP_Widget_Recent_Comments {
 			return;
 		}
 
-		extract($args, EXTR_SKIP);
 		$output = '';
 
 		$title = ( ! empty( $instance['title'] ) ) ? $instance['title'] : __( 'Recent Comments' );
 
 		/** This filter is documented in wp-includes/default-widgets.php */
 		$title = apply_filters( 'widget_title', $title, $instance, $this->id_base );
+
 		$number = ( ! empty( $instance['number'] ) ) ? absint( $instance['number'] ) : 5;
 		if ( ! $number )
 			$number = 5;
@@ -67,9 +67,10 @@ class PLL_Widget_Recent_Comments extends WP_Widget_Recent_Comments {
 			'post_status' => 'publish'
 		) ) );
 
-		$output .= $before_widget;
-		if ( $title )
-			$output .= $before_title . $title . $after_title;
+		$output .= $args['before_widget'];
+		if ( $title ) {
+			$output .= $args['before_title'] . $title . $args['after_title'];
+		}
 
 		$output .= '<ul id="recentcomments">';
 		if ( $comments ) {
@@ -82,7 +83,7 @@ class PLL_Widget_Recent_Comments extends WP_Widget_Recent_Comments {
 			}
 		}
 		$output .= '</ul>';
-		$output .= $after_widget;
+		$output .= $args['after_widget'];
 
 		echo $output;
 
@@ -91,7 +92,7 @@ class PLL_Widget_Recent_Comments extends WP_Widget_Recent_Comments {
 			wp_cache_set( 'widget_recent_comments', $cache, 'widget' );
 		}
 	}
-
+	
 	/*
 	 * backward compatibility with WP < 3.9
 	 *
