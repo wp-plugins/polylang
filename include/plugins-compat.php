@@ -22,10 +22,7 @@ class PLL_Plugins_Compat {
 		add_action('init', create_function('',"\$GLOBALS['wp_taxonomies']['language']->yarpp_support = 1;"), 20);
 
 		// WordPress SEO by Yoast
-		add_action('pll_language_defined', array(&$this, 'wpseo_translate_options'));
-		add_filter('get_terms_args', array(&$this, 'wpseo_remove_terms_filter'));
-		add_filter('pll_home_url_white_list', create_function('$arr', "return array_merge(\$arr, array(array('file' => 'wordpress-seo')));"));
-		add_action('wpseo_opengraph', array(&$this, 'wpseo_ogp'), 2);
+		add_action('pll_language_defined', array(&$this, 'wpseo_init'));
 
 		// Custom field template
 		add_action('add_meta_boxes', array(&$this, 'cft_copy'), 10, 2);
@@ -72,23 +69,100 @@ class PLL_Plugins_Compat {
 
 	/*
 	 * WordPress SEO by Yoast
-	 * reloads options once the language has been defined to enable translations
-	 * useful only when the language is set from content
+	 * translate options
+	 * add specific filters and actions
 	 *
-	 * @since 1.2
+	 * @since 1.6.4
 	 */
-	public function wpseo_translate_options() {
-		if (defined('WPSEO_VERSION') && !PLL_ADMIN && did_action('wp_loaded')) {
+	public function wpseo_init() {
+		global $polylang;
+
+		if (!defined('WPSEO_VERSION') || PLL_ADMIN)
+			return;
+
+		// reloads options once the language has been defined to enable translations
+		// useful only when the language is set from content
+		if (did_action('wp_loaded')) {
 			global $wpseo_front;
 			$options = version_compare(WPSEO_VERSION, '1.5', '<') ? get_wpseo_options_arr() : WPSEO_Options::get_option_names();
 			foreach ( $options as $opt )
 				$wpseo_front->options = array_merge( $wpseo_front->options, (array) get_option( $opt ) );
 		}
+
+		// one sitemap per language when using multiple domains or subdomains
+		// because WPSEO does not accept several domains or subdomains in one sitemap
+		if ($polylang->options['force_lang'] > 1) {
+			add_filter('home_url', array(&$this, 'wpseo_home_url'), 10, 2); // fix home_url
+			add_filter('wpseo_posts_join', array(&$this, 'wpseo_posts_join'), 10, 2);
+			add_filter('wpseo_posts_where', array(&$this, 'wpseo_posts_where'), 10, 2);
+		}
+
+		// one sitemap for all languages when the language is set from the content or directory name
+		else {
+			add_filter('get_terms_args', array(&$this, 'wpseo_remove_terms_filter'));
+		}
+
+		add_filter('pll_home_url_white_list', create_function('$arr', "return array_merge(\$arr, array(array('file' => 'wordpress-seo')));"));
+		add_action('wpseo_opengraph', array(&$this, 'wpseo_ogp'), 2);
+	}
+
+	/*
+	 * WordPress SEO by Yoast
+	 * fixes the home url as well as the stylesheet url
+	 * only when using multiple domains or subdomains
+	 *
+	 * @since 1.6.4
+	 *
+	 * @param string $url
+	 * @return $url
+	 */
+	public function wpseo_home_url($url, $path) {
+		global $polylang;
+
+		$uri = empty($path) ? ltrim($_SERVER['REQUEST_URI'], '/') : $path;
+
+		if ('sitemap_index.xml' === $uri || preg_match('#([^/]+?)-sitemap([0-9]+)?\.xml|([a-z]+)?-?sitemap\.xsl#', $uri))
+			$url = $polylang->links_model->switch_language_in_link($url, $polylang->curlang);
+
+		return $url;
+	}
+
+	/*
+	 * WordPress SEO by Yoast
+	 * modifies the sql request for posts sitemaps
+	 * only when using multiple domains or subdomains
+	 *
+	 * @since 1.6.4
+	 *
+	 * @param string $sql join clause
+	 * @param string $post_type
+	 * @return string
+	 */
+	public function wpseo_posts_join($sql, $post_type) {
+		global $polylang;
+		return pll_is_translated_post_type($post_type) ? $sql. $polylang->model->join_clause('post') : $sql;
+	}
+
+	/*
+	 * WordPress SEO by Yoast
+	 * modifies the sql request for posts sitemaps
+	 * only when using multiple domains or subdomains
+	 *
+	 * @since 1.6.4
+	 *
+	 * @param string $sql where clause
+	 * @param string $post_type
+	 * @return string
+	 */
+	public function wpseo_posts_where($sql, $post_type) {
+		global $polylang;
+		return pll_is_translated_post_type($post_type) ? $sql . $polylang->model->where_clause($polylang->curlang, 'post') : $sql;
 	}
 
 	/*
 	 * WordPress SEO by Yoast
 	 * removes the language filter for the taxonomy sitemaps
+	 * only when the language is set from the content or directory name
 	 *
 	 * @since 1.0.3
 	 *
@@ -96,7 +170,7 @@ class PLL_Plugins_Compat {
 	 * @return array modified list of arguments
 	 */
 	public function wpseo_remove_terms_filter($args) {
-		if (defined('WPSEO_VERSION') && isset($GLOBALS['wp_query']->query['sitemap']))
+		if (isset($GLOBALS['wp_query']->query['sitemap']))
 			$args['lang'] = 0;
 		return $args;
 	}
@@ -111,7 +185,7 @@ class PLL_Plugins_Compat {
 		global $polylang, $wpseo_og;
 
 		// WPSEO already deals with the locale
-		if (isset($polylang)) {
+		if (isset($polylang) && method_exists($wpseo_og, 'og_tag')) {
 			foreach ($polylang->model->get_languages_list() as $language) {
 				if ($language->slug != $polylang->curlang->slug && $polylang->links->get_translation_url($language) && $fb_locale = self::get_fb_locale($language)) {
 					$wpseo_og->og_tag('og:locale:alternate', $fb_locale);

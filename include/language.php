@@ -123,4 +123,23 @@ class PLL_Language {
 		else
 			$this->home_url = $this->search_url;
 	}
+
+	/*
+	 * set home_url scheme
+	 * this can't be cached accross pages
+	 *
+	 * @since 1.6.4
+	 */
+	public function set_home_url_scheme() {
+		if (is_ssl()) {
+			$this->home_url = str_replace('http://', 'https://', $this->home_url);
+			$this->search_url = str_replace('http://', 'https://', $this->search_url);
+		}
+
+		else {
+			$this->home_url = str_replace('https://', 'http://', $this->home_url);
+			$this->search_url = str_replace('https://', 'http://', $this->search_url);
+
+		}
+	}
 }

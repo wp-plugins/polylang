@@ -196,8 +196,7 @@ class PLL_Model {
 				$language->set_home_url();
 
 			// ensures that the (possibly cached) home url uses the right scheme http or https
-			$language->home_url = set_url_scheme($language->home_url);
-			$language->search_url = set_url_scheme($language->search_url);
+			$language->set_home_url_scheme();
 
 			// add flags (not in db cache as they may be different on frontend and admin)
 			$language->set_flag();
