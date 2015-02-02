@@ -270,7 +270,7 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 		// 'post-quickpress-save', 'post-quickpress-publish' = backward compatibility WP < 3.8
 		elseif (isset($_REQUEST['action']) && in_array($_REQUEST['action'], array('post-quickpress-save', 'post-quickpress-publish', 'post-quickdraft-save'))) {
 			check_admin_referer('add-' . $post->post_type);
-			$this->model->set_post_language($post_id, $this->pref_lang); // default language for Quick draft
+			$this->model->set_post_language($post_id, $lang = $this->pref_lang); // default language for Quick draft
 		}
 
 		else

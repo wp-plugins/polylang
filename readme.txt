@@ -63,6 +63,10 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 == Changelog ==
 
+= 1.6.5 =
+
+* fix: quick draft posts are always assigned the default category in the default language
+
 = 1.6.4 (2015-02-01) =
 
 * Add es_MX to predefined languages list
