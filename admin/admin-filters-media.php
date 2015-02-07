@@ -117,6 +117,8 @@ class PLL_Admin_Filters_Media extends PLL_Admin_Filters_Post_Base {
 		$translations[$_GET['new_lang']] = $tr_id;
 		$this->model->save_translations('post', $tr_id, $translations);
 
+		do_action('pll_translate_media', $tr_id, $post, $translations);
+
 		wp_redirect(admin_url(sprintf('post.php?post=%d&action=edit', $tr_id))); // WP 3.5+
 		exit;
 	}

@@ -36,7 +36,7 @@ class PLL_Links_Directory extends PLL_Links_Permalinks {
 		add_action('setup_theme', array(&$this, 'add_permastruct'), 2);
 
 		// make sure to prepare rewrite rules when flushing
-		add_action('pre_option_rewrite_rules', array(&$this, 'prepare_rewrite_rules'), 20); // after Polylang
+		add_action('pre_option_rewrite_rules', array(&$this, 'prepare_rewrite_rules'));
 
 		// refresh rewrite rules if the 'page_on_front' option is modified
 		add_action('update_option_page_on_front', 'flush_rewrite_rules');
@@ -168,27 +168,22 @@ class PLL_Links_Directory extends PLL_Links_Permalinks {
 		if ($this->options['hide_default'])
 			$languages = array_diff($languages, array($this->options['default_lang']));
 
-		if (!empty($languages)) {
-			$front = ltrim($wp_rewrite->front, '/');
-			$front = !empty($front) && 0 === strpos(key($rules), $front) ? $front : ''; // does this set of rules uses front?
-			$front = $wp_rewrite->root . $front;
-			$slug = $front . ($this->options['rewrite'] ? '' : 'language/') . '('.implode('|', $languages).')/';
-		}
+		if (!empty($languages))
+			$slug = $wp_rewrite->root . ($this->options['rewrite'] ? '' : 'language/') . '('.implode('|', $languages).')/';
 
 		// for custom post type archives
 		$cpts = array_intersect($this->model->get_translated_post_types(), get_post_types(array('_builtin' => false)));
 		$cpts = $cpts ? '#post_type=('.implode('|', $cpts).')#' : '';
 
 		foreach ($rules as $key => $rule) {
-			// we don't need the lang parameter for post types and taxonomies
-			// moreover adding it would create issues for pages and taxonomies
+			// special case for translated post types and taxonomies to allow canonical redirection
 			if ($this->options['force_lang'] && in_array($filter, array_merge($this->model->get_translated_post_types(), $this->model->get_translated_taxonomies()))) {
 				if (isset($slug))
-					$newrules[$slug . str_replace($front, '', $key)] = str_replace(
-						array('[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '[1]'),
-						array('[9]', '[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]'),
+					$newrules[$slug.str_replace($wp_rewrite->root, '', $key)] = str_replace(
+						array('[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '[1]', '?'),
+						array('[9]', '[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '?lang=$matches[1]&'),
 						$rule
-					); // hopefully it is sufficient!
+					); // should be enough!
 
 				if ($this->options['hide_default']) {
 					$newrules[$key] = $rules[$key];
@@ -198,9 +193,9 @@ class PLL_Links_Directory extends PLL_Links_Permalinks {
 			}
 
 			// rewrite rules filtered by language
-			elseif (in_array($filter, $this->always_rewrite) || ($cpts && preg_match($cpts, $rule) && !strpos($rule, 'name=')) || ($filter != 'rewrite_rules_array' && $this->options['force_lang'])) {
+			elseif (in_array($filter, $this->always_rewrite) || in_array($filter, $this->model->get_filtered_taxonomies()) || ($cpts && preg_match($cpts, $rule) && !strpos($rule, 'name=')) || ($filter != 'rewrite_rules_array' && $this->options['force_lang'])) {
 				if (isset($slug))
-					$newrules[$slug . str_replace($front, '', $key)] = str_replace(
+					$newrules[$slug.str_replace($wp_rewrite->root, '', $key)] = str_replace(
 						array('[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '[1]', '?'),
 						array('[9]', '[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '?lang=$matches[1]&'),
 						$rule

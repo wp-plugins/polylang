@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://polylang.wordpress.com/
-Version: 1.6beta3
+Version: 1.7beta1
 Author: Frédéric Demarle
 Description: Adds multilingual capability to WordPress
 Text Domain: polylang
@@ -10,7 +10,7 @@ Domain Path: /languages
 */
 
 /*
- * Copyright 2011-2014 Frédéric Demarle
+ * Copyright 2011-2015 Frédéric Demarle
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,15 +33,16 @@ Domain Path: /languages
 if (!function_exists('add_action'))
 	exit();
 
-define('POLYLANG_VERSION', '1.6beta3');
-define('PLL_MIN_WP_VERSION', '3.5');
+define('POLYLANG_VERSION', '1.7beta1');
+define('PLL_MIN_WP_VERSION', '3.8');
 
 define('POLYLANG_BASENAME', plugin_basename(__FILE__)); // plugin name as known by WP
 
 define('POLYLANG_DIR', dirname(__FILE__)); // our directory
 define('PLL_INC', POLYLANG_DIR . '/include');
-define('PLL_FRONT_INC',  POLYLANG_DIR . '/frontend');
-define('PLL_ADMIN_INC',  POLYLANG_DIR . '/admin');
+define('PLL_FRONT_INC', POLYLANG_DIR . '/frontend');
+define('PLL_ADMIN_INC', POLYLANG_DIR . '/admin');
+define('PLL_INSTALL_INC', POLYLANG_DIR . '/install');
 
 // default directory to store user data such as custom flags
 if (!defined('PLL_LOCAL_DIR'))
@@ -52,7 +53,7 @@ if (file_exists(PLL_LOCAL_DIR . '/pll-config.php'))
 	include_once(PLL_LOCAL_DIR . '/pll-config.php');
 
 // our url. Don't use WP_PLUGIN_URL http://wordpress.org/support/topic/ssl-doesnt-work-properly
-define('POLYLANG_URL', plugins_url('/' . basename(POLYLANG_DIR)));
+define('POLYLANG_URL', plugins_url('', __FILE__));
 
 // default url to access user data such as custom flags
 if (!defined('PLL_LOCAL_URL'))
@@ -74,16 +75,11 @@ class Polylang {
 		// FIXME maybe not available on every installations but widely used by WP plugins
 		spl_autoload_register(array(&$this, 'autoload')); // autoload classes
 
-		// manages plugin activation and deactivation
-		register_activation_hook( __FILE__, array(&$this, 'activate'));
-		register_deactivation_hook( __FILE__, array(&$this, 'deactivate'));
+		$install = new PLL_Install(POLYLANG_BASENAME);
 
 		// stopping here if we are going to deactivate the plugin (avoids breaking rewrite rules)
-		if (isset($_GET['action'], $_GET['plugin']) && 'deactivate' == $_GET['action'] && plugin_basename(__FILE__) == $_GET['plugin'])
+		if ($install->is_deactivation())
 			return;
-
-		// blog creation on multisite
-		add_action('wpmu_new_blog', array(&$this, 'wpmu_new_blog'), 5); // before WP attempts to send mails which can break on some PHP versions
 
 		// plugin initialization
 		// take no action before all plugins are loaded
@@ -107,125 +103,6 @@ class Polylang {
 	}
 
 	/*
-	 * activation or deactivation for all blogs
-	 *
-	 * @since 1.2
-	 *
-	 * @param string $what either 'activate' or 'deactivate'
-	 */
-	protected function do_for_all_blogs($what) {
-		// network
-		if (is_multisite() && isset($_GET['networkwide']) && ($_GET['networkwide'] == 1)) {
-			global $wpdb;
-
-			foreach ($wpdb->get_col("SELECT blog_id FROM $wpdb->blogs") as $blog_id) {
-				switch_to_blog($blog_id);
-				$what == 'activate' ? $this->_activate() : $this->_deactivate();
-			}
-			restore_current_blog();
-		}
-
-		// single blog
-		else
-			$what == 'activate' ? $this->_activate() : $this->_deactivate();
-	}
-
-	/*
-	 * plugin activation for multisite
-	 *
-	 * @since 0.1
-	 */
-	public function activate() {
-		global $wp_version;
-		$this->define_constants();
-		load_plugin_textdomain('polylang', false, basename(POLYLANG_DIR).'/languages'); // plugin i18n
-
-		if (version_compare($wp_version, PLL_MIN_WP_VERSION , '<'))
-			die (sprintf('<p style = "font-family: sans-serif; font-size: 12px; color: #333; margin: -5px">%s</p>',
-				sprintf(__('You are using WordPress %s. Polylang requires at least WordPress %s.', 'polylang'),
-					esc_html($wp_version),
-					PLL_MIN_WP_VERSION
-				)
-			));
-
-		$this->do_for_all_blogs('activate');
-	}
-
-	/*
-	 * plugin activation
-	 *
-	 * @since 0.5
-	 */
-	protected function _activate() {
-		global $polylang;
-
-		if ($options = get_option('polylang')) {
-			// plugin upgrade
-			if (version_compare($options['version'], POLYLANG_VERSION, '<')) {
-				$upgrade = new PLL_Upgrade($options);
-				$upgrade->upgrade_at_activation();
-			}
-		}
-		// defines default values for options in case this is the first installation
-		else {
-			$options = array(
-				'browser'       => 1, // default language for the front page is set by browser preference
-				'rewrite'       => 1, // remove /language/ in permalinks (was the opposite before 0.7.2)
-				'hide_default'  => 0, // do not remove URL language information for default language
-				'force_lang'    => 0, // do not add URL language information when useless
-				'redirect_lang' => 0, // do not redirect the language page to the homepage
-				'media_support' => 1, // support languages and translation for media by default
-				'sync'          => array(), // synchronisation is disabled by default (was the opposite before 1.2)
-				'post_types'    => array_values(get_post_types(array('_builtin' => false, 'show_ui => true'))),
-				'taxonomies'    => array_values(get_taxonomies(array('_builtin' => false, 'show_ui => true'))),
-				'domains'       => array(),
-				'version'       => POLYLANG_VERSION,
-			);
-
-			update_option('polylang', $options);
-		}
-
-		// always provide a global $polylang object and add our rewrite rules if needed
-		$polylang = new StdClass();
-		$polylang->options = &$options;
-		$polylang->model = new PLL_Admin_Model($options);
-		$polylang->links_model = $polylang->model->get_links_model();
-		do_action('pll_init');
-		flush_rewrite_rules();
-	}
-
-	/*
-	 * plugin deactivation for multisite
-	 *
-	 * @since 0.1
-	 */
-	public function deactivate() {
-		$this->do_for_all_blogs('deactivate');
-	}
-
-	/*
-	 * plugin deactivation
-	 *
-	 * @since 0.5
-	 */
-	protected function _deactivate() {
-		flush_rewrite_rules();
-	}
-
-	/*
-	 * blog creation on multisite (to set default options)
-	 *
-	 * @since 0.9.4
-	 *
-	 * @param int $blog_id
-	 */
-	public function wpmu_new_blog($blog_id) {
-		switch_to_blog($blog_id);
-		$this->_activate();
-		restore_current_blog();
-	}
-
-	/*
 	 * autoload classes
 	 *
 	 * @since 1.2
@@ -233,13 +110,23 @@ class Polylang {
 	 * @param string $class
 	 */
 	public function autoload($class) {
+		// not a Polylang class
+		if (false === strpos($class, 'PLL_'))
+			return;
+
 		$class = str_replace('_', '-', strtolower(substr($class, 4)));
-		foreach (array(PLL_INC, PLL_FRONT_INC, PLL_ADMIN_INC) as $path) {
-			if (file_exists($file = "$path/$class.php")) {
-				require_once($file);
-				break;
-			}
-		}
+
+		if ((0 === strpos($class, 'choose') || 0 === strpos($class, 'frontend')) && file_exists($file = PLL_FRONT_INC . "/$class.php"))
+			require_once($file);
+
+		elseif ((0 === strpos($class, 'install') || 'upgrade' === $class) && file_exists($file = PLL_INSTALL_INC . "/$class.php"))
+			require_once($file);
+
+		elseif ((0 === strpos($class, 'admin') || 0 === strpos($class, 'table') || 'settings' === $class || 'wp-import' === $class) && file_exists($file = PLL_ADMIN_INC . "/$class.php"))
+			require_once($file);
+
+		elseif (file_exists($file = PLL_INC . "/$class.php"))
+			require_once($file);
 	}
 
 	/*
@@ -248,15 +135,10 @@ class Polylang {
 	 *
 	 * @since 1.6
 	 */
-	protected function define_constants() {
+	static public function define_constants() {
 		// cookie name. no cookie will be used if set to false
 		if (!defined('PLL_COOKIE'))
 			define('PLL_COOKIE', 'pll_language');
-
-		// backward compatibility WP < 3.6
-		// the search form js is no more needed in WP 3.6+ except if the search form is hardcoded elsewhere than in searchform.php
-		if (!defined('PLL_SEARCH_FORM_JS') && !version_compare($GLOBALS['wp_version'], '3.6', '<'))
-			define('PLL_SEARCH_FORM_JS', false);
 
 		// avoid loading polylang admin for frontend ajax requests
 		// special test for plupload which does not use jquery ajax and thus does not pass our ajax prefilter

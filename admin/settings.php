@@ -41,6 +41,21 @@ class PLL_Settings {
 		// test of $this->active_tab avoids displaying the automatically generated screen options on other tabs
 		switch ($this->active_tab) {
 			case 'lang':
+				ob_start();
+				include(PLL_ADMIN_INC.'/view-recommended.php');
+				$content = trim(ob_get_contents());
+				ob_end_clean();
+
+				if (strlen($content) > 0) {
+					add_meta_box(
+						'pll_recommended',
+						__('Recommended plugins', 'polylang'),
+						create_function('', "echo '$content';"),
+						'settings_page_mlang',
+						'normal'
+					);
+				}
+
 				if (!defined('PLL_DISPLAY_ABOUT') || PLL_DISPLAY_ABOUT) {
 					add_meta_box(
 						'pll_about_box',
@@ -120,12 +135,15 @@ class PLL_Settings {
 					$mo = new PLL_MO();
 					$mo->import_from_db($language);
 					foreach ($data as $key=>$row) {
-						$data[$key]['translations'][$language->name] = $mo->translate($row['string']);
+						$data[$key]['translations'][$language->slug] = $mo->translate($row['string']);
 						$data[$key]['row'] = $key; // store the row number for convenience
 					}
 				}
 
-				$string_table = new PLL_Table_String($groups, $selected);
+				// get an array with language slugs as keys, names as values
+				$languages = array_combine(wp_list_pluck($listlanguages, 'slug'), wp_list_pluck($listlanguages, 'name'));
+				
+				$string_table = new PLL_Table_String(compact('languages', 'groups', 'selected'));
 				$string_table->prepare_items($data);
 				break;
 
@@ -155,7 +173,7 @@ class PLL_Settings {
 						PLL_Admin::download_mo($_POST['locale']);
 					}
 
-					else {
+					elseif ('en_US' != $_POST['locale']) {
 						// attempts to install the language pack
 						require_once(ABSPATH . 'wp-admin/includes/translation-install.php');
 						if (!wp_download_language_pack($_POST['locale']))
@@ -197,13 +215,13 @@ class PLL_Settings {
 					$strings = PLL_Admin_Strings::get_strings();
 
 					foreach ($this->model->get_languages_list() as $language) {
-						if(empty($_POST['translation'][$language->name])) // in case the language filter is active (thanks to John P. Bloch)
+						if(empty($_POST['translation'][$language->slug])) // in case the language filter is active (thanks to John P. Bloch)
 							continue;
 
 						$mo = new PLL_MO();
 						$mo->import_from_db($language);
 
-						foreach ($_POST['translation'][$language->name] as $key => $translation) {
+						foreach ($_POST['translation'][$language->slug] as $key => $translation) {
 							$translation = apply_filters('pll_sanitize_string_translation', $translation, $strings[$key]['name'], $strings[$key]['context']);
 							$mo->add_entry($mo->make_entry($strings[$key]['string'], $translation));
 						}
@@ -248,7 +266,7 @@ class PLL_Settings {
 					foreach ($_POST['domains'] as $key => $domain) {
 						$this->options['domains'][$key] = esc_url_raw(trim($domain));
 					}
-					$this->options['domains'][$this->options['default_lang']] = get_option('home');
+					$this->options['domains'][$this->options['default_lang']] = $this->links_model->home;
 				}
 
 				foreach (array('browser', 'hide_default', 'redirect_lang', 'media_support') as $key)

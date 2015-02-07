@@ -30,8 +30,6 @@ class PLL_Frontend_Links extends PLL_Links {
 	 * @since 1.6
 	 */
 	public function init_page_on_front_cache() {
-		$this->page_on_front = $this->page_for_posts = 0;
-
 		if ('page' == get_option('show_on_front')) {
 			$this->page_on_front = get_option('page_on_front');
 			$this->page_for_posts = get_option('page_for_posts');
@@ -72,7 +70,7 @@ class PLL_Frontend_Links extends PLL_Links {
 
 		// redirects to canonical url
 		if ($this->links_model->using_permalinks)
-			add_action('wp', array(&$this, 'check_canonical_url')); // before Wordpress redirect_canonical
+			add_action('wp', array(&$this, 'check_canonical_url'), 10, 0); // before Wordpress redirect_canonical, avoid passing the WP object
 	}
 
 	/*
@@ -88,7 +86,7 @@ class PLL_Frontend_Links extends PLL_Links {
 	}
 
 	/*
-	 * modifies post format links
+	 * modifies filtered taxonomies (post format like) links
 	 *
 	 * @since 0.7
 	 *
@@ -98,18 +96,19 @@ class PLL_Frontend_Links extends PLL_Links {
 	 * @return string modified link
 	 */
 	public function term_link($link, $term, $tax) {
-		if (isset($this->_links[$link]))
-			return $this->_links[$link];
+		$cache_key = 'term:' . $term->term_id;
+		if (false === $_link = $this->cache->get($cache_key)) {
+			if (in_array($tax, $this->model->get_filtered_taxonomies())) {
+				$_link = $this->links_model->add_language_to_link($link, $this->curlang);
+				$_link = apply_filters('pll_term_link', $_link, $this->curlang, $term);
+				$this->cache->set($cache_key, $_link);
+			}
 
-		if ('post_format' == $tax) {
-			$link = $this->links_model->add_language_to_link($link, $this->curlang);
-			$link = apply_filters('pll_term_link', $link, $this->curlang, $term);
+			else {
+				$_link = parent::term_link($link, $term, $tax);
+			}
 		}
-
-		else
-			$link = parent::term_link($link, $term, $tax);
-
-		return $this->_links[$link] = $link;
+		return $_link;
 	}
 
 	/*
@@ -122,7 +121,7 @@ class PLL_Frontend_Links extends PLL_Links {
 	 * @return string modified link
 	 */
 	public function page_link($link, $id) {
-		if ($this->page_on_front && ($lang = $this->model->get_post_language($id)) && $id == $this->model->get_post($this->page_on_front, $lang))
+		if ($this->page_on_front && ($lang = $this->model->get_post_language($id)) && $id == $lang->page_on_front)
 			return $lang->home_url;
 
 		return $link;
@@ -158,9 +157,14 @@ class PLL_Frontend_Links extends PLL_Links {
 	 */
 	public function redirect_canonical($redirect_url, $requested_url) {
 		global $wp_query;
-		if (is_page() && !is_feed() && isset($wp_query->queried_object) && 'page' == get_option('show_on_front') && $wp_query->queried_object->ID == get_option('page_on_front')) {
+		if (is_page() && !is_feed() && isset($wp_query->queried_object) && $wp_query->queried_object->ID == $this->curlang->page_on_front) {
 			return is_paged() ? $this->links_model->add_paged_to_link($this->get_home_url(), $wp_query->query_vars['page']) : $this->get_home_url();
 		}
+
+		// protect against chained redirects
+		if ($redirect_url != $this->check_canonical_url($redirect_url, false))
+			return false;
+
 		return $redirect_url;
 	}
 
@@ -179,6 +183,7 @@ class PLL_Frontend_Links extends PLL_Links {
 
 		static $white_list, $black_list; // avoid evaluating this at each function call
 
+		// we *want* to filter the home url in these cases
 		if (empty($white_list)) {
 			$white_list = apply_filters('pll_home_url_white_list',  array(
 				array('file' => get_theme_root()),
@@ -187,17 +192,18 @@ class PLL_Frontend_Links extends PLL_Links {
 			));
 		}
 
-		if (empty($black_list))
-			$black_list = apply_filters('pll_home_url_black_list',  array(array('function' => 'get_search_form')));
+		// we don't want to filter the home url in these cases
+		if (empty($black_list)) {
+			$black_list = apply_filters('pll_home_url_black_list',  array(
+				array('file' => 'searchform.php'), // since WP 3.6 searchform.php is passed through get_search_form
+				array('function' => 'get_search_form')
+			));
+		}
 
 		$traces = version_compare(PHP_VERSION, '5.2.5', '>=') ? debug_backtrace(false) : debug_backtrace();
 
 		foreach ($traces as $trace) {
-			// searchform.php is not passed through get_search_form filter prior to WP 3.6
-			// backward compatibility WP < 3.6
-			if (isset($trace['file']) && strpos($trace['file'], 'searchform.php'))
-				return $this->links_model->using_permalinks && version_compare($GLOBALS['wp_version'], '3.6', '<') ? $this->get_home_url($this->curlang, true) : $url;
-
+			// black list first
 			foreach ($black_list as $v) {
 				if ((isset($trace['file'], $v['file']) && strpos($trace['file'], $v['file']) !== false) || (isset($trace['function'], $v['function']) && $trace['function'] == $v['function']))
 					return $url;
@@ -222,10 +228,8 @@ class PLL_Frontend_Links extends PLL_Links {
 	 * @return string
 	 */
 	public function get_translation_url($language) {
-		static $translation_url = array(); // used to cache results
-
-		if (isset($translation_url[$this->model->blog_id][$language->slug]))
-			return $translation_url[$this->model->blog_id][$language->slug];
+		if (false !== $translation_url = $this->cache->get('translation_url:' . $language->slug))
+			return $translation_url;
 
 		global $wp_query;
 		$qv = $wp_query->query_vars;
@@ -236,15 +240,16 @@ class PLL_Frontend_Links extends PLL_Links {
 			$url = get_permalink($id);
 
 		// page for posts
-		// FIXME the last test should be useless now since I test is_posts_page
-		elseif ($wp_query->is_posts_page && !empty($wp_query->queried_object_id) && ($id = $this->model->get_post($wp_query->queried_object_id, $language)) && $id == $this->model->get_post($this->page_for_posts, $language))
+		elseif ($wp_query->is_posts_page && !empty($wp_query->queried_object_id) && ($id = $this->model->get_post($wp_query->queried_object_id, $language)))
 			$url = get_permalink($id);
 
+		// page
 		elseif (is_page() && ($id = $this->model->get_post($wp_query->queried_object_id, $language)) && $this->current_user_can_read($id))
-			$url = $hide && $id == $this->model->get_post($this->page_on_front, $language) ? $this->links_model->home : get_page_link($id);
+			$url = $hide && $id == $language->page_on_front ? $this->links_model->home : get_page_link($id);
 
-		elseif (!is_tax('post_format') && !is_tax('language') && (is_category() || is_tag() || is_tax()) ) {
-			$term = get_queried_object();
+		// translated taxonomy
+		// take care that is_tax() is false for categories and tags
+		elseif ((is_category() || is_tag() || is_tax()) && ($term = get_queried_object()) && $this->model->is_translated_taxonomy($term->taxonomy)) {
 			$lang = $this->model->get_term_language($term->term_id);
 
 			if (!$lang || $language->slug == $lang->slug)
@@ -261,7 +266,9 @@ class PLL_Frontend_Links extends PLL_Links {
 			$url = $this->get_archive_url($language);
 
 		elseif (is_archive()) {
-			$keys = array('post_type', 'm', 'year', 'monthnum', 'day', 'author', 'author_name', 'post_format');
+			$keys = array('post_type', 'm', 'year', 'monthnum', 'day', 'author', 'author_name');
+			$keys = array_merge($keys, $this->model->get_filtered_taxonomies_query_vars());
+
 			// check if there are existing translations before creating the url
 			if ($this->model->count_posts($language, array_intersect_key($qv, array_flip($keys))))
 				$url = $this->get_archive_url($language);
@@ -270,7 +277,9 @@ class PLL_Frontend_Links extends PLL_Links {
 		elseif (is_home() || is_tax('language') )
 			$url = $this->get_home_url($language);
 
-		return $translation_url[$this->model->blog_id][$language->slug] = apply_filters('pll_translation_url', (isset($url) && !is_wp_error($url) ? $url : null), $language->slug);
+		$translation_url = apply_filters('pll_translation_url', (isset($url) && !is_wp_error($url) ? $url : null), $language->slug);
+		$this->cache->set('translation_url:' . $language->slug, $translation_url);
+		return $translation_url;
 	}
 
 	/*
@@ -322,35 +331,64 @@ class PLL_Frontend_Links extends PLL_Links {
 	 * redirects incoming links to the proper URL to avoid duplicate content
 	 *
 	 * @since 0.9.6
+	 *
+	 * @param string $requested_url optional
+	 * @param bool $do_redirect optional, whether to perform the redirection or not
+	 * @return string if redirect is not performed
 	 */
-	public function check_canonical_url() {
+	public function check_canonical_url($requested_url = '', $do_redirect = true) {
 		global $wp_query, $post;
 
+		// don't redirect preview link
+		if (is_preview())
+			return;
+
+		// don't redirect mysite.com/?attachment_id= to mysite.com/en/?attachment_id=
+		if (1 == $this->options['force_lang'] && is_attachment() && isset($_GET['attachment_id']))
+			return;
+
+		// if the default language code is not hidden and the static front page url contains the page name
+		// the customizer lands here and the code below would redirect to the list of posts
+		if (isset($_POST['wp_customize'], $_POST['customized']))
+			return;
+
+		if (empty($requested_url))
+			$requested_url  = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+
 		if (is_single() || is_page()) {
-			if (isset($post->ID) && $this->model->is_translated_post_type($post->post_type))
+			if (isset($post->ID) && $this->model->is_translated_post_type($post->post_type)) {
 				$language = $this->model->get_post_language((int)$post->ID);
+				$redirect_url = get_permalink($post->ID);
+			}
 		}
+
 		elseif (is_category() || is_tag() || is_tax()) {
 			$obj = $wp_query->get_queried_object();
-			if ($this->model->is_translated_taxonomy($obj->taxonomy))
+			if ($this->model->is_translated_taxonomy($obj->taxonomy)) {
 				$language = $this->model->get_term_language((int)$obj->term_id);
+				$redirect_url = get_term_link((int)$obj->term_id, $obj->taxonomy);
+			}
 		}
+
 		elseif ($wp_query->is_posts_page) {
 			$obj = $wp_query->get_queried_object();
 			$language = $this->model->get_post_language((int)$obj->ID);
+			$redirect_url = get_permalink($obj->ID);
 		}
 
-		$redirect_url = $requested_url  = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+		if (empty($language)) {
+			$language = $this->curlang;
+			$redirect_url = $requested_url;
+		}
+
+		$redirect_url = apply_filters('pll_check_canonical_url', $redirect_url, $language);
 
 		// the language is not correctly set so let's redirect to the correct url for this object
-		if ($this->options['force_lang'] && isset($language))
-			$redirect_url = $this->links_model->switch_language_in_link($redirect_url, $language);
-
-		$redirect_url = apply_filters('pll_check_canonical_url', $redirect_url, empty($language) ? $this->curlang : $language);
-
-		if ($requested_url != $redirect_url) {
+		if ($do_redirect && $requested_url != $redirect_url) {
 			wp_redirect($redirect_url, 301);
 			exit;
 		}
+
+		return $redirect_url;
 	}
 }

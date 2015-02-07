@@ -21,7 +21,7 @@ class PLL_Links_Default extends PLL_Links_Model {
 	 * @return string modified url
 	 */
 	public function add_language_to_link($url, $lang) {
-		return !empty($lang) && '_get_page_link' != current_filter() ? add_query_arg( 'lang', $lang->slug, $url ) : $url;
+		return empty($lang) || ($this->options['hide_default'] && $this->options['default_lang'] == $lang->slug) ? $url : add_query_arg( 'lang', $lang->slug, $url );
 	}
 
 	/*

@@ -28,7 +28,7 @@ jQuery(document).ready(function($) {
 				});
 				$(this).append(h);
 
-				ids = Array('hide_current','force_home','show_flags','show_names'); // reverse order
+				ids = Array('hide_if_no_translation', 'hide_current','force_home','show_flags','show_names'); // reverse order
 
 				// add the fields
 				for(var i = 0; i < ids.length; i++) {

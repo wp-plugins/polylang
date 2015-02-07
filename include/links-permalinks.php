@@ -7,7 +7,7 @@
  */
 abstract class PLL_Links_Permalinks extends PLL_Links_Model {
 	public $using_permalinks = true;
-	protected $always_rewrite = array('date', 'root', 'comments', 'search', 'author', 'post_format');
+	protected $always_rewrite = array('date', 'root', 'comments', 'search', 'author');
 
 	/*
 	 * returns the link to the first page when using pretty permalinks
@@ -41,7 +41,7 @@ abstract class PLL_Links_Permalinks extends PLL_Links_Model {
 	 */
 	public function get_rewrite_rules_filters() {
 		// make sure we have the right post types and taxonomies
-		$types = array_values(array_merge($this->model->get_translated_post_types(), $this->model->get_translated_taxonomies()));
+		$types = array_values(array_merge($this->model->get_translated_post_types(), $this->model->get_translated_taxonomies(), $this->model->get_filtered_taxonomies()));
 		$types = array_merge($this->always_rewrite, $types);
 		return apply_filters('pll_rewrite_rules', $types); // allow plugins to add rewrite rules to the language filter
 	}

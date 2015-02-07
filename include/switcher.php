@@ -19,10 +19,11 @@ class PLL_Switcher {
 	 */
 	static public function get_switcher_options($type = 'widget', $key ='string') {
 		$options = array(
-			'show_names'   => array('string' => __('Displays language names', 'polylang'), 'default' => 1),
-			'show_flags'   => array('string' => __('Displays flags', 'polylang'), 'default' => 0),
-			'force_home'   => array('string' => __('Forces link to front page', 'polylang'), 'default' => 0),
-			'hide_current' => array('string' => __('Hides the current language', 'polylang'), 'default' => 0),
+			'show_names'             => array('string' => __('Displays language names', 'polylang'), 'default' => 1),
+			'show_flags'             => array('string' => __('Displays flags', 'polylang'), 'default' => 0),
+			'force_home'             => array('string' => __('Forces link to front page', 'polylang'), 'default' => 0),
+			'hide_current'           => array('string' => __('Hides the current language', 'polylang'), 'default' => 0),
+			'hide_if_no_translation' => array('string' => __('Hides languages with no translation', 'polylang'), 'default' => 0),
 		);
 
 		if ($type != 'menu')
@@ -126,6 +127,7 @@ class PLL_Switcher {
 			return $elements;
 
 		if ($args['dropdown']) {
+			$args['name'] = 'lang_choice_' . $args['dropdown'];
 			$walker = new PLL_Walker_Dropdown();
 			$args['selected'] = pll_current_language();
 		}
@@ -133,6 +135,25 @@ class PLL_Switcher {
 			$walker = new PLL_Walker_List();
 
 		$out = apply_filters('pll_the_languages', $walker->walk($elements, $args), $args);
+
+		// javascript to switch the language when using a dropdown list
+		if ($args['dropdown']) {
+			foreach ($links->model->get_languages_list() as $language) {
+				$urls[$language->slug] = $args['force_home'] || ($url = $links->get_translation_url($language)) == null ? $links->get_home_url($language) : $url;
+			}
+
+			$out .= sprintf("
+				<script type='text/javascript'>
+					//<![CDATA[
+					var urls = %s;
+					document.getElementById('%s').onchange = function() {
+						location.href = urls[this.value];
+					}
+					//]]>
+				</script>",
+				wp_json_encode($urls), esc_js($args['name'])
+			);
+		}
 
 		if ($args['echo'])
 			echo $out;

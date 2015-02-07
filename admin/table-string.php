@@ -11,7 +11,7 @@ if(!class_exists('WP_List_Table')){
  * @since 0.6
  */
 class PLL_Table_String extends WP_List_Table {
-	protected $groups, $group_selected;
+	protected $languages, $groups, $group_selected;
 
 	/*
 	 * constructor
@@ -21,14 +21,15 @@ class PLL_Table_String extends WP_List_Table {
 	 * @param array $groups
 	 * @param string $group_selected
 	 */
-	function __construct($groups = array(), $group_selected = -1) {
+	function __construct($args) {
 		parent::__construct(array(
 			'plural'   => 'Strings translations', // do not translate (used for css class)
 			'ajax'	 => false
 		));
 
-		$this->groups = &$groups;
-		$this->group_selected = $group_selected;
+		$this->languages = $args['languages'];
+		$this->groups = $args['groups'];
+		$this->group_selected = $args['selected'];
 	}
 
 	/*
@@ -89,7 +90,7 @@ class PLL_Table_String extends WP_List_Table {
 			$out .= sprintf('<div class="translation"><label for="%1$s-%2$s">%3$s</label>'.$input_type.'</div>'."\n",
 				esc_attr($key),
 				esc_attr($item['row']),
-				esc_html($key),
+				esc_html($this->languages[$key]),
 				format_to_edit($translation)); // don't interpret special chars
 		}
 		return $out;

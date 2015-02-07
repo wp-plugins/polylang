@@ -26,6 +26,7 @@ $languages = array(
 	array('eo', 'eo', 'Esperanto'),
 	array('es', 'es_CL', 'Español'),
 	array('es', 'es_ES', 'Español'),
+	array('es', 'es_MX', 'Español'),
 	array('es', 'es_PE', 'Español'),
 	array('es', 'es_VE', 'Español'),
 	array('et', 'et', 'Eesti'),

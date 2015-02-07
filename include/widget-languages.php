@@ -26,6 +26,10 @@ class PLL_Widget_Languages extends WP_Widget {
 	 */
 	function widget($args, $instance) {
 		global $polylang;
+
+		// sets a unique id for dropdown
+		$instance['dropdown'] = empty($instance['dropdown']) ? 0 : $args['widget_id'];
+
 		if (!(isset($polylang) && $polylang->model->get_languages_list() && $list = pll_the_languages(array_merge($instance, array('echo' => 0)))))
 			return;
 
@@ -34,32 +38,6 @@ class PLL_Widget_Languages extends WP_Widget {
 			echo $args['before_title'] . $title . $args['after_title'];
 		echo $instance['dropdown'] ? $list : "<ul>\n" . $list . "</ul>\n";
 		echo $args['after_widget'];
-
-		// javascript to switch the language when using a dropdown list
-		if ($instance['dropdown']) {
-			foreach ($polylang->model->get_languages_list() as $language) {
-				$url = $instance['force_home'] || ($url = $polylang->links->get_translation_url($language)) == null ? $polylang->links->get_home_url($language) : $url;
-				$urls[] = '"'.esc_js($language->slug).'":"'.esc_url($url).'"';
-			}
-
-			$urls = implode(',', $urls);
-
-			$js = "
-				<script type='text/javascript'>
-					//<![CDATA[
-					var urls = {{$urls}};
-					var d = document.getElementById('lang_choice');
-					d.onchange = function() {
-						for (var i in urls) {
-							if (this.value == i)
-								location.href = urls[i];
-						}
-					}
-					//]]>
-				</script>";
-
-			echo $js;
-		}
 	}
 
 	/*

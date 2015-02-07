@@ -27,7 +27,7 @@ class PLL_Admin_Filters extends PLL_Filters {
 		add_action('personal_options', array(&$this, 'personal_options'));
 
 		// ugrades languages files after a core upgrade (timing is important)
-		// backward compatibility WP < 4.0.1
+		// backward compatibility WP < 4.0 *AND* Polylang < 1.6
 		add_action( '_core_updated_successfully', array(&$this, 'upgrade_languages'), 1); // since WP 3.3
 
 		// upgrades plugins and themes translations files
@@ -194,12 +194,14 @@ class PLL_Admin_Filters extends PLL_Filters {
 	 * @return int
 	 */
 	public function update_page_on_front($page_id, $old_id) {
-		$translations = $this->model->get_translations('post', $page_id);
-		$languages = $this->model->get_languages_list();
+		if ($page_id) {
+			$translations = count($this->model->get_translations('post', $page_id));
+			$languages = count($this->model->get_languages_list());
 
-		if ($page_id && count($translations) != count($languages)) {
-			$page_id = $old_id;
-			add_settings_error('reading', 'pll_page_on_front_error', __('The chosen static front page must be translated in all languages.', 'polylang'));
+			if ($languages > 1 && $translations != $languages) {
+				$page_id = $old_id;
+				add_settings_error('reading', 'pll_page_on_front_error', __('The chosen static front page must be translated in all languages.', 'polylang'));
+			}
 		}
 
 		return $page_id;

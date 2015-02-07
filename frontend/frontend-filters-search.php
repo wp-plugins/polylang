@@ -26,9 +26,9 @@ class PLL_Frontend_Filters_Search {
 		// adds the language information in admin bar search form
 		add_action('add_admin_bar_menus', array(&$this, 'add_admin_bar_menus'));
 
-		// backward compatibility WP < 3.6
 		// adds javascript at the end of the document
-		if (!$this->links_model->using_permalinks && (!defined('PLL_SEARCH_FORM_JS') || PLL_SEARCH_FORM_JS))
+		// was used for WP < 3.6. kept just in case
+		if (defined('PLL_SEARCH_FORM_JS') && PLL_SEARCH_FORM_JS)
 			add_action('wp_footer', array(&$this, 'wp_print_footer_scripts'));
 	}
 
@@ -89,8 +89,7 @@ class PLL_Frontend_Filters_Search {
 	}
 
 	/*
-	 * modifies the search form since filtering get_search_form won't work if the template uses searchform.php or the search form is hardcoded
-	 * now only for backward compatibility WP < 3.6
+	 * allows modifying the search form if it does not pass get_search_form
 	 *
 	 * @since 0.1
 	 */

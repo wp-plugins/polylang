@@ -22,10 +22,7 @@ class PLL_Plugins_Compat {
 		add_action('init', create_function('',"\$GLOBALS['wp_taxonomies']['language']->yarpp_support = 1;"), 20);
 
 		// WordPress SEO by Yoast
-		add_action('pll_language_defined', array(&$this, 'wpseo_translate_options'));
-		add_filter('get_terms_args', array(&$this, 'wpseo_remove_terms_filter'));
-		add_filter('pll_home_url_white_list', create_function('$arr', "return array_merge(\$arr, array(array('file' => 'wordpress-seo')));"));
-		add_action('wpseo_opengraph', array(&$this, 'wpseo_ogp'), 2);
+		add_action('pll_language_defined', array(&$this, 'wpseo_init'));
 
 		// Custom field template
 		add_action('add_meta_boxes', array(&$this, 'cft_copy'), 10, 2);
@@ -50,7 +47,7 @@ class PLL_Plugins_Compat {
 	 * @since 1.2
 	 */
 	function maybe_wordpress_importer() {
-		if (class_exists('WP_Import')) {
+		if (defined('WP_LOAD_IMPORTERS') && class_exists('WP_Import')) {
 			remove_action('admin_init', 'wordpress_importer_init');
 			add_action('admin_init', array(&$this, 'wordpress_importer_init'));
 		}
@@ -72,23 +69,100 @@ class PLL_Plugins_Compat {
 
 	/*
 	 * WordPress SEO by Yoast
-	 * reloads options once the language has been defined to enable translations
-	 * useful only when the language is set from content
+	 * translate options
+	 * add specific filters and actions
 	 *
-	 * @since 1.2
+	 * @since 1.6.4
 	 */
-	public function wpseo_translate_options() {
-		if (defined('WPSEO_VERSION') && !PLL_ADMIN && did_action('wp_loaded')) {
+	public function wpseo_init() {
+		global $polylang;
+
+		if (!defined('WPSEO_VERSION') || PLL_ADMIN)
+			return;
+
+		// reloads options once the language has been defined to enable translations
+		// useful only when the language is set from content
+		if (did_action('wp_loaded')) {
 			global $wpseo_front;
 			$options = version_compare(WPSEO_VERSION, '1.5', '<') ? get_wpseo_options_arr() : WPSEO_Options::get_option_names();
 			foreach ( $options as $opt )
 				$wpseo_front->options = array_merge( $wpseo_front->options, (array) get_option( $opt ) );
 		}
+
+		// one sitemap per language when using multiple domains or subdomains
+		// because WPSEO does not accept several domains or subdomains in one sitemap
+		if ($polylang->options['force_lang'] > 1) {
+			add_filter('home_url', array(&$this, 'wpseo_home_url'), 10, 2); // fix home_url
+			add_filter('wpseo_posts_join', array(&$this, 'wpseo_posts_join'), 10, 2);
+			add_filter('wpseo_posts_where', array(&$this, 'wpseo_posts_where'), 10, 2);
+		}
+
+		// one sitemap for all languages when the language is set from the content or directory name
+		else {
+			add_filter('get_terms_args', array(&$this, 'wpseo_remove_terms_filter'));
+		}
+
+		add_filter('pll_home_url_white_list', create_function('$arr', "return array_merge(\$arr, array(array('file' => 'wordpress-seo')));"));
+		add_action('wpseo_opengraph', array(&$this, 'wpseo_ogp'), 2);
+	}
+
+	/*
+	 * WordPress SEO by Yoast
+	 * fixes the home url as well as the stylesheet url
+	 * only when using multiple domains or subdomains
+	 *
+	 * @since 1.6.4
+	 *
+	 * @param string $url
+	 * @return $url
+	 */
+	public function wpseo_home_url($url, $path) {
+		global $polylang;
+
+		$uri = empty($path) ? ltrim($_SERVER['REQUEST_URI'], '/') : $path;
+
+		if ('sitemap_index.xml' === $uri || preg_match('#([^/]+?)-sitemap([0-9]+)?\.xml|([a-z]+)?-?sitemap\.xsl#', $uri))
+			$url = $polylang->links_model->switch_language_in_link($url, $polylang->curlang);
+
+		return $url;
+	}
+
+	/*
+	 * WordPress SEO by Yoast
+	 * modifies the sql request for posts sitemaps
+	 * only when using multiple domains or subdomains
+	 *
+	 * @since 1.6.4
+	 *
+	 * @param string $sql join clause
+	 * @param string $post_type
+	 * @return string
+	 */
+	public function wpseo_posts_join($sql, $post_type) {
+		global $polylang;
+		return pll_is_translated_post_type($post_type) ? $sql. $polylang->model->join_clause('post') : $sql;
+	}
+
+	/*
+	 * WordPress SEO by Yoast
+	 * modifies the sql request for posts sitemaps
+	 * only when using multiple domains or subdomains
+	 *
+	 * @since 1.6.4
+	 *
+	 * @param string $sql where clause
+	 * @param string $post_type
+	 * @return string
+	 */
+	public function wpseo_posts_where($sql, $post_type) {
+		global $polylang;
+		return pll_is_translated_post_type($post_type) ? $sql . $polylang->model->where_clause($polylang->curlang, 'post') : $sql;
 	}
 
 	/*
 	 * WordPress SEO by Yoast
 	 * removes the language filter for the taxonomy sitemaps
+	 * only when the language is set from the content or directory name
 	 *
 	 * @since 1.0.3
 	 *
@@ -96,7 +170,7 @@ class PLL_Plugins_Compat {
 	 * @return array modified list of arguments
 	 */
 	public function wpseo_remove_terms_filter($args) {
-		if (defined('WPSEO_VERSION') && isset($GLOBALS['wp_query']->query['sitemap']))
+		if (isset($GLOBALS['wp_query']->query['sitemap']))
 			$args['lang'] = 0;
 		return $args;
 	}
@@ -111,9 +185,11 @@ class PLL_Plugins_Compat {
 		global $polylang, $wpseo_og;
 
 		// WPSEO already deals with the locale
-		foreach ($polylang->model->get_languages_list() as $language) {
-			if ($language->slug != $polylang->curlang->slug && $polylang->links->get_translation_url($language) && $fb_locale = self::get_fb_locale($language)) {
-				$wpseo_og->og_tag('og:locale:alternate', $fb_locale);
+		if (isset($polylang) && method_exists($wpseo_og, 'og_tag')) {
+			foreach ($polylang->model->get_languages_list() as $language) {
+				if ($language->slug != $polylang->curlang->slug && $polylang->links->get_translation_url($language) && $fb_locale = self::get_fb_locale($language)) {
+					$wpseo_og->og_tag('og:locale:alternate', $fb_locale);
+				}
 			}
 		}
 	}
@@ -141,7 +217,9 @@ class PLL_Plugins_Compat {
 	 * @return array modified featured posts ids (include all languages)
 	 */
 	public function twenty_fourteen_featured_content_ids($featured_ids) {
-		if (false !== $featured_ids)
+		global $polylang;
+
+		if (empty($polylang) || false !== $featured_ids)
 			return $featured_ids;
 
 		$settings = Featured_Content::get_setting();
@@ -150,7 +228,7 @@ class PLL_Plugins_Compat {
 			return $featured_ids;
 
 		// get featured tag translations
-		$tags = $GLOBALS['polylang']->model->get_translations('term' ,$term->term_id);
+		$tags = $polylang->model->get_translations('term' ,$term->term_id);
 		$ids = array();
 
 		// Query for featured posts in all languages
@@ -233,18 +311,22 @@ class PLL_Plugins_Compat {
 	 */
 	public function jetpack_ogp($tags) {
 		global $polylang;
-		foreach ($polylang->model->get_languages_list() as $language) {
-			if ($language->slug != $polylang->curlang->slug && $polylang->links->get_translation_url($language) && $fb_locale = self::get_fb_locale($language))
-				$tags['og:locale:alternate'][] = $fb_locale;
-			if ($language->slug == $polylang->curlang->slug && $fb_locale = self::get_fb_locale($language))
-				$tags['og:locale'] = $fb_locale;
-		}
 
+		if (isset($polylang)) {
+			foreach ($polylang->model->get_languages_list() as $language) {
+				if ($language->slug != $polylang->curlang->slug && $polylang->links->get_translation_url($language) && $fb_locale = self::get_fb_locale($language))
+					$tags['og:locale:alternate'][] = $fb_locale;
+				if ($language->slug == $polylang->curlang->slug && $fb_locale = self::get_fb_locale($language))
+					$tags['og:locale'] = $fb_locale;
+			}
+		}
 		return $tags;
 	}
 
 	/*
-	 * correspondance between WordPress locales and Facebook locales according to GP_Locales class in Jetpack 3.1.1
+	 * correspondance between WordPress locales and Facebook locales
+	 * @see http://wpcentral.io/internationalization/
+	 * @see https://www.facebook.com/translations/FacebookLocales.xml
 	 *
 	 * @since 1.6
 	 *
@@ -253,19 +335,21 @@ class PLL_Plugins_Compat {
 	 */
 	static public function get_fb_locale($language) {
 		static $facebook_locales = array(
-			'af' => 'af_ZA', 'ar' => 'ar_AR', 'az' => 'az_AZ', 'bg_BG' => 'bg_BG', 'bn_BD' => 'bn_IN', 'bs_BA' => 'bs_BA',
-			'ca' => 'ca_ES', 'cs_CZ' => 'cs_CZ', 'cy' => 'cy_GB', 'da_DK' => 'da_DK', 'de_DE' => 'de_DE', 'el' => 'el_GR',
-			'en_US' => 'en_US', 'en_GB' => 'en_GB', 'eo' => 'eo_EO', 'es_CL' => 'es_LA', 'es_PE' => 'es_LA', 'es_PR' => 'es_LA',
-			'es_VE' => 'es_LA', 'es_CO' => 'es_LA', 'es_ES' => 'es_ES', 'et' => 'et_EE', 'eu' => 'eu_ES', 'fa_IR' => 'fa_IR',
-			'fi' => 'fi_FI', 'fo' => 'fo_FO', 'fr_FR' => 'fr_FR', 'fy' => 'fy_NL', 'ga' => 'ga_IE', 'gl_ES' => 'gl_ES',
+			'af' => 'af_ZA', 'ar' => 'ar_AR', 'az' => 'az_AZ', 'bel' => 'be_BY', 'bg_BG' => 'bg_BG', 'bn_BD' => 'bn_IN',
+			'bs_BA' => 'bs_BA', 'ca' => 'ca_ES', 'ckb' => 'ku_TR', 'cs_CZ' => 'cs_CZ', 'cy' => 'cy_GB', 'da_DK' => 'da_DK',
+			'de_DE' => 'de_DE', 'el' => 'el_GR', 'en_US' => 'en_US', 'en_GB' => 'en_GB', 'eo' => 'eo_EO', 'es_CL' => 'es_LA',
+			'es_CO' => 'es_LA', 'es_MX' => 'es_LA', 'es_PE' => 'es_LA', 'es_PR' => 'es_LA', 'es_VE' => 'es_LA', 'es_ES' => 'es_ES',
+			'et' => 'et_EE', 'eu' => 'eu_ES', 'fa_IR' => 'fa_IR', 'fi' => 'fi_FI', 'fo' => 'fo_FO', 'fr_CA' => 'fr_CA',
+			'fr_FR' => 'fr_FR', 'fy' => 'fy_NL', 'ga' => 'ga_IE', 'gl_ES' => 'gl_ES', 'gn' => 'gn_PY', 'gu_IN' => 'gu_IN',
 			'he_IL' => 'he_IL', 'hi_IN' => 'hi_IN', 'hr' => 'hr_HR', 'hu_HU' => 'hu_HU', 'hy' => 'hy_AM', 'id_ID' => 'id_ID',
-			'is_IS' => 'is_IS', 'it_IT' => 'it_IT', 'ja' => 'ja_JP', 'ka_GE' => 'ka_GE', 'ko_KR' => 'ko_KR', 'lt_LT' => 'lt_LT',
-			'lv' => 'lv_LV', 'mk_MK' => 'mk_MK', 'ml_IN' => 'ml_IN', 'ms_MY' => 'ms_MY', 'ne_NP' => 'ne_NP', 'nb_NO' => 'nb_NO',
-			'nl_NL' => 'nl_NL', 'nn_NO' => 'nn_NO', 'pa_IN' => 'pa_IN', 'pl_PL' => 'pl_PL', 'pt_BR' => 'pt_BR', 'pt_PT' => 'pt_PT',
-			'ps' => 'ps_AF', 'ro_RO' => 'ro_RO', 'ru_RU' => 'ru_RU', 'sk_SK' => 'sk_SK', 'sl_SI' => 'sl_SI', 'sq' => 'sq_AL',
-			'sr_RS' => 'sr_RS', 'sv_SE' => 'sv_SE', 'sw' => 'sw_KE', 'ta_IN' => 'ta_IN', 'te' => 'te_IN', 'th' => 'th_TH',
-			'ph' => 'tl_PH', 'tr_TR' => 'tr_TR', 'uk' => 'uk_UA', 'vi' => 'vi_VN', 'zh_CN' => 'zh_CN', 'zh_HK' => 'zh_HK',
-			'zh_TW' => 'zh_TW'
+			'is_IS' => 'is_IS', 'it_IT' => 'it_IT', 'ja' => 'ja_JP', 'jv_ID' => 'jv_ID', 'ka_GE' => 'ka_GE', 'kk' => 'kk_KZ',
+			'km' => 'km_kH', 'kn' => 'kn_IN', 'ko_KR' => 'ko_KR', 'lt_LT' => 'lt_LT', 'lv' => 'lv_LV', 'mk_MK' => 'mk_MK',
+			'ml_IN' => 'ml_IN', 'mn' => 'mn_MN', 'mr' => 'mr_IN', 'ms_MY' => 'ms_MY', 'ne_NP' => 'ne_NP', 'nb_NO' => 'nb_NO',
+			'nl_NL' => 'nl_NL', 'nn_NO' => 'nn_NO', 'pa_IN' => 'pa_IN', 'pl_PL' => 'pl_PL', 'ps' => 'ps_AF', 'pt_BR' => 'pt_BR',
+			'pt_PT' => 'pt_PT', 'ps' => 'ps_AF', 'ro_RO' => 'ro_RO', 'ru_RU' => 'ru_RU', 'si_LK' => 'si_LK', 'sk_SK' => 'sk_SK',
+			'sl_SI' => 'sl_SI', 'sq' => 'sq_AL', 'sr_RS' => 'sr_RS', 'sv_SE' => 'sv_SE', 'sw' => 'sw_KE', 'ta_IN' => 'ta_IN',
+			'te' => 'te_IN', 'tg' => 'tg_TJ', 'th' => 'th_TH', 'ph' => 'tl_PH', 'tr_TR' => 'tr_TR', 'uk' => 'uk_UA',
+			'ur' => 'ur_PK', 'uz_UZ' => 'uz_UZ', 'vi' => 'vi_VN', 'zh_CN' => 'zh_CN', 'zh_HK' => 'zh_HK', 'zh_TW' => 'zh_TW'
 		);
 
 		return isset($facebook_locales[$language->locale]) ? $facebook_locales[$language->locale] : false;

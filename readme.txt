@@ -2,9 +2,9 @@
 Contributors: Chouby
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CCWWYUUQV8F4E
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, international, localization
-Requires at least: 3.5
-Tested up to: 4.0
-Stable tag: 1.5.6
+Requires at least: 3.8
+Tested up to: 4.1
+Stable tag: 1.6.4
 License: GPLv2 or later
 
 Polylang adds multilingual content management support to WordPress.
@@ -24,7 +24,7 @@ Polylang allows you to create a bilingual or multilingual WordPress site. You wr
 
 = Translators =
 
-The plugin admin interface is currently available in 34 languages: English, French, German by [Christian Ries](http://www.singbyfoot.lu), Russian by [yoyurec](http://yoyurec.in.ua) and unostar, Greek by [theodotos](http://www.ubuntucy.org), Dutch by [AlbertGn](http://wordpress.org/support/profile/albertgn), Hebrew by [ArielK](http://www.arielk.net), Polish by [Peter Paciorkiewicz](http://www.paciorkiewicz.pl), [Bartosz](http://www.dfactory.eu/) and Sebastian Janus, Latvian by [@AndyDeGroo](http://twitter.com/AndyDeGroo), Italian by [Luca Barbetti](http://wordpress.org/support/profile/lucabarbetti), Danish by [Compute](http://wordpress.org/support/profile/compute), Spanish by Curro, Portuguese by [Vitor Carvalho](http://vcarvalho.com/), Lithuanian by [Naglis Jonaitis](http://najo.lt/), Turkish by [darchws](http://darch.ws/) and [Abdullah Pazarbasi](http://www.abdullahpazarbasi.com/), Finnish by [Jani Alha](http://www.wysiwyg.fi), Bulgarian by [pavelsof](http://wordpress.org/support/profile/pavelsof), Belarusian by [Alexander Markevitch](http://fourfeathers.by/), Afrikaans by [Kobus Joubert](http://translate3d.com/), Hungarian by Csaba Erdei, Norwegian by [Tom Boersma](http://www.oransje.com/), Slovak by [Branco (WebHostingGeeks.com)](http://webhostinggeeks.com/user-reviews/), Swedish by [matsii](http://wordpress.org/support/profile/matsii) and [Jon Täng](http://jontang.se), Catalan by [Núria Martínez Berenguer](http://www.linkedin.com/profile/view?id=127867004&trk=nav_responsive_tab_profile&locale=en_US), Ukrainian by [cmd soft](http://www.cmd-soft.com/) and [http://getvoip.com/](http://getvoip.com/), Estonian by [Ahto Naris](http://profiles.wordpress.org/ahtonaris/), Venetian by Michele Brunelli, simplified Chinese by [Changmeng Hu](http://www.wpdaxue.com), Indonesian by [ajoull](http://www.ajoull.com/), Arabic by [Anas Sulaiman](http://ahs.pw/), Traditional Chinese by [香腸](http://sofree.cc/), Czech by [Přemysl Karbula](http://www.premyslkarbula.cz), Serbian by Sinisa, Myanmar by Sithu Thwin
+The plugin admin interface is currently available in 37 languages: English, French, German by [Christian Ries](http://www.singbyfoot.lu), Russian by [yoyurec](http://yoyurec.in.ua) and unostar, Greek by [theodotos](http://www.ubuntucy.org), Dutch by [AlbertGn](http://wordpress.org/support/profile/albertgn), Hebrew by [ArielK](http://www.arielk.net), Polish by [Peter Paciorkiewicz](http://www.paciorkiewicz.pl), [Bartosz](http://www.dfactory.eu/) and Sebastian Janus, Latvian by [@AndyDeGroo](http://twitter.com/AndyDeGroo), Italian by [Luca Barbetti](http://wordpress.org/support/profile/lucabarbetti), Danish by [Compute](http://wordpress.org/support/profile/compute), Spanish by Curro, Portuguese by [Vitor Carvalho](http://vcarvalho.com/), Lithuanian by [Naglis Jonaitis](http://najo.lt/), Turkish by [darchws](http://darch.ws/) and [Abdullah Pazarbasi](http://www.abdullahpazarbasi.com/), Finnish by [Jani Alha](http://www.wysiwyg.fi), Bulgarian by [pavelsof](http://wordpress.org/support/profile/pavelsof), Belarusian by [Alexander Markevitch](http://fourfeathers.by/), Afrikaans by [Kobus Joubert](http://translate3d.com/), Hungarian by Csaba Erdei, Norwegian by [Tom Boersma](http://www.oransje.com/), Slovak by [Branco (WebHostingGeeks.com)](http://webhostinggeeks.com/user-reviews/), Swedish by [matsii](http://wordpress.org/support/profile/matsii) and [Jon Täng](http://jontang.se), Catalan by [Núria Martínez Berenguer](http://www.linkedin.com/profile/view?id=127867004&trk=nav_responsive_tab_profile&locale=en_US), Ukrainian by [cmd soft](http://www.cmd-soft.com/), [http://getvoip.com/](http://getvoip.com/) and [Andrii Ryzhkov](https://github.com/andriiryzhkov), Estonian by [Ahto Naris](http://profiles.wordpress.org/ahtonaris/), Venetian by Michele Brunelli, simplified Chinese by [Changmeng Hu](http://www.wpdaxue.com), Indonesian by [ajoull](http://www.ajoull.com/), Arabic by [Anas Sulaiman](http://ahs.pw/), Traditional Chinese by [香腸](http://sofree.cc/), Czech by [Přemysl Karbula](http://www.premyslkarbula.cz), Serbian by Sinisa, Myanmar by Sithu Thwin, Croatian by Bajro, Brazilian Portuguese by [Henrique Vianna](http://henriquevianna.com/), Georgian by [Tours in Georgia](http://www.georgia-tours.eu/)
 = Credits =
 
 Most of the flags included with Polylang are coming from [famfamfam](http://famfamfam.com/) and are public domain. Icons are coming from [Icomoon](http://icomoon.io/) and are licensed under GPL. Wherever third party code has been used, credit has been given in the code’s comments.
@@ -35,7 +35,7 @@ Don't hesitate to [give your feedback](http://wordpress.org/support/view/plugin-
 
 == Installation ==
 
-1. Make sure you are using WordPress 3.1 or later and that your server is running PHP5 (if you are using WordPress 3.2 or newer, it does !)
+1. Make sure you are using WordPress 3.5 or later and that your server is running PHP 5.2.4 or later (same requirement as WordPress itself)
 1. If you tried other multilingual plugins, deactivate them before activating Polylang, otherwise, you may get unexpected results !
 1. Download the plugin
 1. Extract all the files.
@@ -43,7 +43,7 @@ Don't hesitate to [give your feedback](http://wordpress.org/support/view/plugin-
 1. Activate the plugin through the 'Plugins' menu in WordPress.
 1. Go to the languages settings page and create the languages you need
 1. Add the 'language switcher' widget to let your visitors switch the language.
-1. Take care that your theme must come with the corresponding .mo files (Polylang downloads them for themes bundled with WordPress). If your theme is not internationalized yet, please refer to the [codex](http://codex.wordpress.org/I18n_for_WordPress_Developers#I18n_for_theme_and_plugin_developers) or ask the theme author to internationalize it.
+1. Take care that your theme must come with the corresponding .mo files (Polylang downloads them for themes and plugins bundled with WordPress). If your theme is not internationalized yet, please refer to the [codex](http://codex.wordpress.org/I18n_for_WordPress_Developers#I18n_for_theme_and_plugin_developers) or ask the theme author to internationalize it.
 
 == Frequently Asked Questions ==
 
@@ -61,15 +61,80 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 1. The Polylang languages admin panel in WordPress 3.8
 
-== Upgrade Notice ==
-
-= 1.5.6 =
-Polylang 1.2 introduced major internal changes. More than ever, make a database backup before upgrading from 1.1.6 or older! If you are using a version older than 0.8, please ugrade to 0.9.8 before ugrading to 1.5.6
-
 == Changelog ==
 
-= 1.6 =
+= 1.7 =
 
+* Minimum WordPress version is now v3.8
+* Add compatibility with nested tax queries introduced in WP 4.1
+* Add the possibility to set the language from the code in url when using default permalinks
+* Adding the language code in url is now default at first activation (should improve the out of the box compatibility with other plugins and themes)
+* Add new language switcher option to hide a language with no translation
+* pll_the_languages() now outputs the js code to handle language change in dropdown list (as done by the widget)
+* Improve performance by using base64 encoded flags + various slight optimizations
+* Improve protection against chained redirects
+* The find posts list is now filtered per media language when clicking on attach link in Media library
+* The category checklist in quick edit is now filtered per post language instead of admin language filter
+* Quick and bulk language edit don't break translations anymore if the new language is free
+* Make it impossible to change the language of the default categories
+* Make sure that a default category defined in settings->writing is translated in all languages
+* fix: after adding a term translation, need to refresh the page before adding a new term
+* fix: term translations rows are not modified in list table when a term is added / deleted or inline edited
+* fix: post translations rows are not modified in list table when a post is inline edited
+* fix: using brackets in language name breaks strings translations
+* fix: quick edit may conflict with other plugins
+* fix: impossible to use several dropdown languages widgets
+* fix: the categories widget does not work correctly with dropdown
+* fix: autosave post always created after manual save
+
+= 1.6.5 =
+
+* Add new correspondances between WordPress locales and Facebook locales (for WPSEO and Jetpack users)
+* fix: quick draft posts are always assigned the default category in the default language
+
+= 1.6.4 (2015-02-01) =
+
+* Add es_MX to predefined languages list
+* Add compatibility with WordPress SEO sitemaps for multiple domains and subdomains
+* fix: a new post is assigned the wrong (untranslated) default category if no category is assigned by the user
+* fix: the home links now have the right scheme even if PLL_CACHE_HOME_URL is not set to false
+* fix: fatal error when using old versions of WPSEO (I should do what I tell other to do!)
+* fix: strings translations are not switched when using switch_to_blog
+
+= 1.6.3 (2015-01-09) =
+
+* Add Georgian translation contributed by [Tours in Georgia](http://www.georgia-tours.eu/)
+* fix: WXR export does not include the language of untranslated terms (will now work only for newly saved terms)
+* fix: better cleaning of DB when translated objects are deleted
+* fix: incorrect (ajax) translations links when modifying a term language
+* fix: warning: Illegal string offset 'taxonomy' introduced by the combination of WP 4.1 and some plugins.
+
+= 1.6.2 (2014-12-14) =
+
+* fix: bugs and inconsistencies compared to WPML in 'icl_get_languages' (should fix a conflict with Avada)
+* fix: https issue
+* fix: stop displaying an error when adding en_US as new language (translation not downloaded)
+* fix: infinite redirect loop on (unattached) attachment links
+* fix: impossible to add tags in post quick edit (introduced in 1.5)
+* fix: the customizer does not land to the right page when cumulating: static front page + page name in url + default language code not hidden
+* fix: read parent theme wpml-config.xml before child theme
+* fix: add protection to avoid empty language
+* fix: page preview link again
+
+= 1.6.1 (2014-11-19) =
+
+* Add Brazilian Portuguese translation contributed by [Henrique Vianna](http://henriquevianna.com/)
+* Improve compatibility with Types: allow custom fields to be populated when creating a new translation
+* Make it impossible to remove the translations of the default category
+* Fix: possibility to add a path when using multiple domains (same path for all languages) broken since v1.5.6
+* Fix: preview link for non default language when using multiple domains
+* Fix: error displayed when setting the static front page and only one language has been defined
+* Fix: revert changes on rewrite rules with front introduced in 1.6
+* Fix: conflict with WordPress SEO when no language has been created
+
+= 1.6 (2014-10-27) =
+
+* Add Croatian translation contributed by Bajro
 * Add new languages to predefined languages list: Azerbaijani, English (Australia), English (UK), Basque
 * Add flag in front of the language select dropdown for posts and terms
 * Add widget text translation
@@ -81,89 +146,5 @@ Polylang 1.2 introduced major internal changes. More than ever, make a database 
 * Fix home pages duplicate urls when using domains or subdomains
 * Fix rewrite rules with front
 * Fix: terms are always in default language when created from post bulk edit
-
-= 1.5.6 (2014-10-11) =
-
-* Fix: the admin language filter is not active for paginated taxonomy in nav menu admin panel
-* Fix: wrong redirection if a domain is a substring of another domain (ex: mysite.com and mysite.co)
-* Fix: impossible to translate numeric values in options defined in wpml-config.xml
-* Fix: call to undefined method PLL_Links::get_translation_url() with Avada theme
-* Fix: manage_{$this->screen->taxonomy}_custom_icolumn is a filter and not an action
-
-= 1.5.5 (2014-09-10) =
-
-* Fix: missing argument 4 in icl_translate
-* Fix: conflict with Vantage theme
-* Fix: possible issue with cookie domain on 'localhost'
-* Fix: filtering string translations does not work when the group name contains a space
-* Fix: Possible 404 error for attachments
-* Fix: PHP notice when a shared term is not translated in all taxonomies
-
-= 1.5.4 (2014-08-13) =
-
-* Add new API functions: pll_get_post_language, pll_get_term_language, pll_translate_string
-* Add better compatibility with Jetpack 3
-* Fix: attachments don't get any language when uploaded from frontend
-* Fix: authors cannot create tags
-* Fix: too restrictive capability checks for some edge cases
-* Fix: conflict with WPSEO: taxonomy metas cannot be saved
-
-= 1.5.3 (2014-07-12) =
-
-* Add: Capability check before creating links in post list table
-* Add: Possibility not to cache languages objects with option PLL_CACHE_LANGUAGES (for GoDaddy users)
-* Fix: Saving a header or a background in menu Appearance resets nav menus locations (introduced in 1.5)
-* Fix: sub-sub-options and deeper levels defined in wpml-config.xml are not translated
-* Fix: Fatal error when creating a new site when Polylang is network activated (introduced in v1.5.1)
-* Fix: Admin language forced to English when activating Polylang (before creating any new language)
-* Fix: 'pll_count_posts' second parameter not taken into account
-* Fix: 'edit-post' and 'create-posts' capabilities are not differentiated when saving a post
-
-= 1.5.2 (2014-06-24) =
-
-* Fix: Revert post translations terms cleaning introduced in 1.5 as it seems to cause problems
-* Fix: Impossible to delete a biographical info (introduced in 1.5)
-* Fix: Security issue reported by [Gregory Viguier](http://www.screenfeed.fr/)
-
-= 1.5.1 (2014-06-19) =
-
-* Add: filter 'pll_settings_tabs' and action 'pll_settings_active_tab_{$tab}'
-* Add: possibility to add a path when using multiple domains (same path for all languages)
-* Fix: Bad redirection if /language/ is added to urls (introduced in 1.5)
-* Fix: Nav menu locations are not saved in customizer (introduced in 1.4)
-* Fix: Unable to unset nav menu locations
-* Fix: Incorrect link for date archives in language switcher (introduced in 1.5)
-* Fix: Fatal error when using featured content in Twenty Fourteen
-* Fix: Posts bulk edit broken (introduced in 1.5)
-* Fix: Polylang does not play nice with switch_to_blog
-* Fix: Warning: reset() expects parameter 1 to be array, null given in admin-filters-columns.php on line 81
-
-= 1.5 (2014-05-29) =
-
-* Add Ukrainian translation contributed by [http://getvoip.com/](http://getvoip.com/)
-* Refresh translation metaboxes (again): now translated posts are chosen from an autocomplete input field
-* Categories and post tags translations are also chosen in an automplete input field
-* Better error management on languages pages
-* Use Dashicons instead of Icomoon icons for WP 3.8+
-* Check if translated post is readable by the current user before displaying the language switcher
-* Minimum Twenty Fourteen version is now 1.1
-* Code cleaning
-* Add support for Quick draft introduced in WP 3.8
-* Add support for object cache plugins for recent posts and recent comments widgets
-* Add support for pages with modified query in the language switcher (ex: when multiple post types queried on the same page)
-* Add new API functions: pll_languages_list, pll_set_post_language, pll_set_term_language, pll_save_post_translations, pll_save_term_translations, pll_count_posts
-* Add new filter pll_the_languages_args
-* Add support for ICL_LANGUAGE_CODE == 'all' on admin side
-* Fix: Galician flag
-* Fix: static page on front pagination is broken
-* Fix: search url may be broken
-* Fix: PHP notice in icl_get_languages
-* Fix: more robust way of detecting language in url when using directory
-* Fix: delete translations terms orphans in database
-* Fix: inconsistent behavior when setting page on front from customizer
-* Fix: deleting a category assigns posts to wrong default category
-* Fix: quick edit breaks synchronization
-* Fix: some security issues
-
 
 See changelog.txt for older changelog
