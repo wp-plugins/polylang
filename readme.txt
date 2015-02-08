@@ -65,7 +65,9 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 = 1.6.5 =
 
+* Add new correspondances between WordPress locales and Facebook locales (for WPSEO and Jetpack users)
 * fix: quick draft posts are always assigned the default category in the default language
+* fix: Notice: Undefined offset: 0 in wp-includes/query.php introduced in WP 4.1
 
 = 1.6.4 (2015-02-01) =
 
