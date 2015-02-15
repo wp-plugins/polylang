@@ -220,7 +220,7 @@ class PLL_Admin extends PLL_Base {
 	/*
 	 * avoids parsing a tax query when all languages are requested
 	 * fixes https://wordpress.org/support/topic/notice-undefined-offset-0-in-wp-includesqueryphp-on-line-3877 introduced in WP 4.1
-	 * @see also https://core.trac.wordpress.org/ticket/31246
+	 * @see the suggestion of @boonebgorges, https://core.trac.wordpress.org/ticket/31246
 	 * 
 	 * @since 1.6.5
 	 * 

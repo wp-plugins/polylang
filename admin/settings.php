@@ -340,7 +340,8 @@ class PLL_Settings {
 			set_transient('settings_errors', $errors, 30);
 			$args['settings-updated'] = 1;
 		}
-		wp_redirect(add_query_arg($args,  wp_get_referer() ));
+		// remove possible 'pll_action' and 'lang' query args from the referer before redirecting
+		wp_redirect(add_query_arg($args,  remove_query_arg( array('pll_action', 'lang'), wp_get_referer() )));
 		exit;
 	}
 }
