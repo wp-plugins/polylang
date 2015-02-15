@@ -110,11 +110,24 @@ class PLL_Frontend extends PLL_Base {
 			if (empty($taxonomies) && !$query->is_comment_feed && !$query->is_post_type_archive && !$query->is_date && !$query->is_author && !$query->is_category && !$query->is_tag)
 				$query->is_archive = false;
 
-			if ($query->is_author || $query->is_post_type_archive || $query->is_date || $query->is_search) {
-				if (empty($taxonomies)) // unset the is_tax flag except if another custom tax is queried
-					$query->is_tax = false;
-
-				unset($query->queried_object); // unset queried object (language) 
+			// unset the is_tax flag except if another custom tax is queried
+			// reset the queried object
+			if (empty($taxonomies) && ($query->is_author || $query->is_post_type_archive || $query->is_date || $query->is_search)) {
+				$query->is_tax = false;
+				unset($query->queried_object);
+				get_queried_object();
+			} 
+					
+			// move the language tax_query at the end to avoid it being the queried object
+			if (!empty($taxonomies)) {
+				$tax_query_in_and = wp_list_filter( $query->tax_query->queried_terms, array( 'operator' => 'NOT IN' ), 'NOT' );
+				$queried_taxonomies = array_keys( $tax_query_in_and );
+				
+				if ('language' == reset( $queried_taxonomies )) {
+					$query->tax_query->queried_terms['language'] = array_shift($query->tax_query->queried_terms);
+					unset($query->queried_object);
+					get_queried_object();
+				}
 			}
 		}
 	}
