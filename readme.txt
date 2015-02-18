@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, international, localization
 Requires at least: 3.5
 Tested up to: 4.1
-Stable tag: 1.6.4
+Stable tag: 1.6.5
 License: GPLv2 or later
 
 Polylang adds multilingual content management support to WordPress.
@@ -63,12 +63,13 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 == Changelog ==
 
-= 1.6.5 =
+= 1.6.5 (2015-02-18) =
 
 * Add new correspondances between WordPress locales and Facebook locales (for WPSEO and Jetpack users)
 * fix: quick draft posts are always assigned the default category in the default language
 * fix: Notice: Undefined offset: 0 in wp-includes/query.php introduced in WP 4.1
-* fix: is_tax and is_archive are unset when a custom taxonomy term is queried
+* fix: is_tax and is_archive are not correctly set when a custom taxonomy term is queried
+* fix: conflict introduced by WPSEO 1.7.2+
 
 = 1.6.4 (2015-02-01) =
 
