@@ -102,16 +102,32 @@ class PLL_Frontend extends PLL_Base {
 			if (empty($qv['post_type']) && !$query->is_search)
 				$query->set('post_type', 'post');
 
+			// do we query another custom taxonomy?
+			$taxonomies = array_diff(wp_list_pluck($query->tax_query->queries, 'taxonomy'), array('language', 'category', 'post_tag'));
+
 			// unset the is_archive flag for language pages to prevent loading the archive template
 			// keep archive flag for comment feed otherwise the language filter does not work
-			if (!$query->is_comment_feed && !$query->is_post_type_archive && !$query->is_date && !$query->is_author && !$query->is_category && !$query->is_tag && !$query->is_tax('post_format'))
+			if (empty($taxonomies) && !$query->is_comment_feed && !$query->is_post_type_archive && !$query->is_date && !$query->is_author && !$query->is_category && !$query->is_tag)
 				$query->is_archive = false;
 
-			// unset the is_tax flag for authors pages and post types archives
-			// FIXME Should I do this for other cases?
-			if ($query->is_author || $query->is_post_type_archive || $query->is_date || $query->is_search) {
+			// unset the is_tax flag except if another custom tax is queried
+			// reset the queried object
+			if (empty($taxonomies) && ($query->is_author || $query->is_post_type_archive || $query->is_date || $query->is_search)) {
 				$query->is_tax = false;
 				unset($query->queried_object);
+				get_queried_object();
+			} 
+					
+			// move the language tax_query at the end to avoid it being the queried object
+			if (!empty($taxonomies)) {
+				$tax_query_in_and = wp_list_filter( $query->tax_query->queried_terms, array( 'operator' => 'NOT IN' ), 'NOT' );
+				$queried_taxonomies = array_keys( $tax_query_in_and );
+				
+				if ('language' == reset( $queried_taxonomies )) {
+					$query->tax_query->queried_terms['language'] = array_shift($query->tax_query->queried_terms);
+					unset($query->queried_object);
+					get_queried_object();
+				}
 			}
 		}
 	}

@@ -83,7 +83,13 @@ class PLL_Plugins_Compat {
 		// reloads options once the language has been defined to enable translations
 		// useful only when the language is set from content
 		if (did_action('wp_loaded')) {
-			global $wpseo_front;
+			if (version_compare(WPSEO_VERSION, '1.7.2', '<')) {
+				global $wpseo_front;
+			}
+			else {
+				$wpseo_front = WPSEO_Frontend::get_instance();
+			}
+
 			$options = version_compare(WPSEO_VERSION, '1.5', '<') ? get_wpseo_options_arr() : WPSEO_Options::get_option_names();
 			foreach ( $options as $opt )
 				$wpseo_front->options = array_merge( $wpseo_front->options, (array) get_option( $opt ) );
@@ -324,7 +330,9 @@ class PLL_Plugins_Compat {
 	}
 
 	/*
-	 * correspondance between WordPress locales and Facebook locales according to GP_Locales class in Jetpack 3.1.1
+	 * correspondance between WordPress locales and Facebook locales
+	 * @see http://wpcentral.io/internationalization/
+	 * @see https://www.facebook.com/translations/FacebookLocales.xml
 	 *
 	 * @since 1.6
 	 *
@@ -333,19 +341,21 @@ class PLL_Plugins_Compat {
 	 */
 	static public function get_fb_locale($language) {
 		static $facebook_locales = array(
-			'af' => 'af_ZA', 'ar' => 'ar_AR', 'az' => 'az_AZ', 'bg_BG' => 'bg_BG', 'bn_BD' => 'bn_IN', 'bs_BA' => 'bs_BA',
-			'ca' => 'ca_ES', 'cs_CZ' => 'cs_CZ', 'cy' => 'cy_GB', 'da_DK' => 'da_DK', 'de_DE' => 'de_DE', 'el' => 'el_GR',
-			'en_US' => 'en_US', 'en_GB' => 'en_GB', 'eo' => 'eo_EO', 'es_CL' => 'es_LA', 'es_PE' => 'es_LA', 'es_PR' => 'es_LA',
-			'es_VE' => 'es_LA', 'es_CO' => 'es_LA', 'es_ES' => 'es_ES', 'et' => 'et_EE', 'eu' => 'eu_ES', 'fa_IR' => 'fa_IR',
-			'fi' => 'fi_FI', 'fo' => 'fo_FO', 'fr_FR' => 'fr_FR', 'fy' => 'fy_NL', 'ga' => 'ga_IE', 'gl_ES' => 'gl_ES',
+			'af' => 'af_ZA', 'ar' => 'ar_AR', 'az' => 'az_AZ', 'bel' => 'be_BY', 'bg_BG' => 'bg_BG', 'bn_BD' => 'bn_IN',
+			'bs_BA' => 'bs_BA', 'ca' => 'ca_ES', 'ckb' => 'ku_TR', 'cs_CZ' => 'cs_CZ', 'cy' => 'cy_GB', 'da_DK' => 'da_DK',
+			'de_DE' => 'de_DE', 'el' => 'el_GR', 'en_US' => 'en_US', 'en_GB' => 'en_GB', 'eo' => 'eo_EO', 'es_CL' => 'es_LA',
+			'es_CO' => 'es_LA', 'es_MX' => 'es_LA', 'es_PE' => 'es_LA', 'es_PR' => 'es_LA', 'es_VE' => 'es_LA', 'es_ES' => 'es_ES',
+			'et' => 'et_EE', 'eu' => 'eu_ES', 'fa_IR' => 'fa_IR', 'fi' => 'fi_FI', 'fo' => 'fo_FO', 'fr_CA' => 'fr_CA',
+			'fr_FR' => 'fr_FR', 'fy' => 'fy_NL', 'ga' => 'ga_IE', 'gl_ES' => 'gl_ES', 'gn' => 'gn_PY', 'gu_IN' => 'gu_IN',
 			'he_IL' => 'he_IL', 'hi_IN' => 'hi_IN', 'hr' => 'hr_HR', 'hu_HU' => 'hu_HU', 'hy' => 'hy_AM', 'id_ID' => 'id_ID',
-			'is_IS' => 'is_IS', 'it_IT' => 'it_IT', 'ja' => 'ja_JP', 'ka_GE' => 'ka_GE', 'ko_KR' => 'ko_KR', 'lt_LT' => 'lt_LT',
-			'lv' => 'lv_LV', 'mk_MK' => 'mk_MK', 'ml_IN' => 'ml_IN', 'ms_MY' => 'ms_MY', 'ne_NP' => 'ne_NP', 'nb_NO' => 'nb_NO',
-			'nl_NL' => 'nl_NL', 'nn_NO' => 'nn_NO', 'pa_IN' => 'pa_IN', 'pl_PL' => 'pl_PL', 'pt_BR' => 'pt_BR', 'pt_PT' => 'pt_PT',
-			'ps' => 'ps_AF', 'ro_RO' => 'ro_RO', 'ru_RU' => 'ru_RU', 'sk_SK' => 'sk_SK', 'sl_SI' => 'sl_SI', 'sq' => 'sq_AL',
-			'sr_RS' => 'sr_RS', 'sv_SE' => 'sv_SE', 'sw' => 'sw_KE', 'ta_IN' => 'ta_IN', 'te' => 'te_IN', 'th' => 'th_TH',
-			'ph' => 'tl_PH', 'tr_TR' => 'tr_TR', 'uk' => 'uk_UA', 'vi' => 'vi_VN', 'zh_CN' => 'zh_CN', 'zh_HK' => 'zh_HK',
-			'zh_TW' => 'zh_TW'
+			'is_IS' => 'is_IS', 'it_IT' => 'it_IT', 'ja' => 'ja_JP', 'jv_ID' => 'jv_ID', 'ka_GE' => 'ka_GE', 'kk' => 'kk_KZ',
+			'km' => 'km_kH', 'kn' => 'kn_IN', 'ko_KR' => 'ko_KR', 'lt_LT' => 'lt_LT', 'lv' => 'lv_LV', 'mk_MK' => 'mk_MK',
+			'ml_IN' => 'ml_IN', 'mn' => 'mn_MN', 'mr' => 'mr_IN', 'ms_MY' => 'ms_MY', 'ne_NP' => 'ne_NP', 'nb_NO' => 'nb_NO',
+			'nl_NL' => 'nl_NL', 'nn_NO' => 'nn_NO', 'pa_IN' => 'pa_IN', 'pl_PL' => 'pl_PL', 'ps' => 'ps_AF', 'pt_BR' => 'pt_BR',
+			'pt_PT' => 'pt_PT', 'ps' => 'ps_AF', 'ro_RO' => 'ro_RO', 'ru_RU' => 'ru_RU', 'si_LK' => 'si_LK', 'sk_SK' => 'sk_SK',
+			'sl_SI' => 'sl_SI', 'sq' => 'sq_AL', 'sr_RS' => 'sr_RS', 'sv_SE' => 'sv_SE', 'sw' => 'sw_KE', 'ta_IN' => 'ta_IN',
+			'te' => 'te_IN', 'tg' => 'tg_TJ', 'th' => 'th_TH', 'ph' => 'tl_PH', 'tr_TR' => 'tr_TR', 'uk' => 'uk_UA',
+			'ur' => 'ur_PK', 'uz_UZ' => 'uz_UZ', 'vi' => 'vi_VN', 'zh_CN' => 'zh_CN', 'zh_HK' => 'zh_HK', 'zh_TW' => 'zh_TW'
 		);
 
 		return isset($facebook_locales[$language->locale]) ? $facebook_locales[$language->locale] : false;
