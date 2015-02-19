@@ -102,8 +102,11 @@ class PLL_Frontend extends PLL_Base {
 			if (empty($qv['post_type']) && !$query->is_search)
 				$query->set('post_type', 'post');
 
+			$tax_query_in_and = wp_list_filter( $query->tax_query->queried_terms, array( 'operator' => 'NOT IN' ), 'NOT' );
+			$queried_taxonomies = array_keys( $tax_query_in_and );
+
 			// do we query another custom taxonomy?
-			$taxonomies = array_diff(wp_list_pluck($query->tax_query->queries, 'taxonomy'), array('language', 'category', 'post_tag'));
+			$taxonomies = array_diff($queried_taxonomies , array('language', 'category', 'post_tag'));
 
 			// unset the is_archive flag for language pages to prevent loading the archive template
 			// keep archive flag for comment feed otherwise the language filter does not work
@@ -119,15 +122,10 @@ class PLL_Frontend extends PLL_Base {
 			} 
 					
 			// move the language tax_query at the end to avoid it being the queried object
-			if (!empty($taxonomies)) {
-				$tax_query_in_and = wp_list_filter( $query->tax_query->queried_terms, array( 'operator' => 'NOT IN' ), 'NOT' );
-				$queried_taxonomies = array_keys( $tax_query_in_and );
-				
-				if ('language' == reset( $queried_taxonomies )) {
-					$query->tax_query->queried_terms['language'] = array_shift($query->tax_query->queried_terms);
-					unset($query->queried_object);
-					get_queried_object();
-				}
+			if (!empty($taxonomies) && 'language' == reset( $queried_taxonomies )) {
+				$query->tax_query->queried_terms['language'] = array_shift($query->tax_query->queried_terms);
+				unset($query->queried_object);
+				get_queried_object();
 			}
 		}
 	}

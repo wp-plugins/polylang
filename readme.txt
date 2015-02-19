@@ -63,6 +63,10 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 == Changelog ==
 
+= 1.6.6
+
+* fix: Illegal string offset 'taxonomy' introduced in v1.6.5
+
 = 1.6.5 (2015-02-18) =
 
 * Add new correspondances between WordPress locales and Facebook locales (for WPSEO and Jetpack users)
