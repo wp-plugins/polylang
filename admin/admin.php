@@ -72,6 +72,8 @@ class PLL_Admin extends PLL_Base {
 		// filter admin language for users
 		// we must not call user info before WordPress defines user roles in wp-settings.php
 		add_filter('setup_theme', array(&$this, 'init_user'));
+		add_filter('request', array(&$this, 'request'));
+
 
 		// adds the languages in admin bar
 		add_action('admin_bar_menu', array(&$this, 'admin_bar_menu'), 100); // 100 determines the position
@@ -209,6 +211,23 @@ class PLL_Admin extends PLL_Base {
 		}
 		else
 			do_action('pll_no_language_defined'); // to load overriden textdomains
+	}
+	
+	/*
+	 * avoids parsing a tax query when all languages are requested
+	 * fixes https://wordpress.org/support/topic/notice-undefined-offset-0-in-wp-includesqueryphp-on-line-3877 introduced in WP 4.1
+	 * @see the suggestion of @boonebgorges, https://core.trac.wordpress.org/ticket/31246
+	 * 
+	 * @since 1.6.5
+	 * 
+	 * @param array $qvars
+	 * @return array
+	 */
+	public function request($qvars) {
+			if (isset($qvars['lang']) && 'all' === $qvars['lang'])
+				unset($qvars['lang']);
+				
+			return $qvars;
 	}
 
 	/*

@@ -50,7 +50,8 @@ class PLL_Admin_Filters_Term {
 		add_filter('option_default_category', array(&$this, 'option_default_category'));
 		add_action('update_option_default_category', array(&$this, 'update_option_default_category'), 10, 2);
 
-		//add_action('split_shared_term', array(&$this, 'split_shared_term'), 10, 4); // FIXME planned for WP 4.2
+		// updates the translations term ids when splitting a shared term
+		add_action('split_shared_term', array(&$this, 'split_shared_term'), 10, 4); // WP 4.2
 	}
 
 	/*
@@ -588,10 +589,10 @@ class PLL_Admin_Filters_Term {
 	}
 
 	/*
-	 * FIXME: splitting shared terms is not planned before WP 4.2. It is not clear if all terms will be splitted at once
-	 * when splitting a shared, splits translations if these are shared terms too
+	 * updates the translations term ids when splitting a shared term
+	 * splits translations if these are shared terms too
 	 *
-	 * @since 1.6.2
+	 * @since 1.7
 	 *
 	 * @param int $term_id shared term_id
 	 * @param int $new_term_id

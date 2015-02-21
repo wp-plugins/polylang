@@ -97,11 +97,32 @@ class PLL_Frontend extends PLL_Base {
 			if (empty($qv['post_type']) && !$query->is_search && !$query->is_page)
 				$query->set('post_type', 'post');
 
-			// unset the is_tax flag for authors pages and post types archives
-			// FIXME Should I do this for other cases?
-			if ($query->is_author || $query->is_post_type_archive || $query->is_date || $query->is_search) {
+			if (isset($query->tax_query->queried_terms)) {
+				$tax_query_in_and = wp_list_filter( $query->tax_query->queried_terms, array( 'operator' => 'NOT IN' ), 'NOT' );
+				$queried_taxonomies = array_keys( $tax_query_in_and );
+
+				// do we query another custom taxonomy?
+				$taxonomies = array_diff($queried_taxonomies , array('language', 'category', 'post_tag'));
+			}
+
+			// unset the is_archive flag for language pages to prevent loading the archive template
+			// keep archive flag for comment feed otherwise the language filter does not work
+			if (empty($taxonomies) && !$query->is_comment_feed && !$query->is_post_type_archive && !$query->is_date && !$query->is_author && !$query->is_category && !$query->is_tag)
+				$query->is_archive = false;
+
+			// unset the is_tax flag except if another custom tax is queried
+			// reset the queried object
+			if (empty($taxonomies) && ($query->is_author || $query->is_post_type_archive || $query->is_date || $query->is_search)) {
 				$query->is_tax = false;
 				unset($query->queried_object);
+				get_queried_object();
+			} 
+					
+			// move the language tax_query at the end to avoid it being the queried object
+			if (!empty($taxonomies) && 'language' == reset( $queried_taxonomies )) {
+				$query->tax_query->queried_terms['language'] = array_shift($query->tax_query->queried_terms);
+				unset($query->queried_object);
+				get_queried_object();
 			}
 		}
 	}
@@ -138,6 +159,7 @@ class PLL_Frontend extends PLL_Base {
 	/*
 	 * check if translated taxonomy is queried
 	 * compatible with nested queries introduced in WP 4.1
+	 * @see https://wordpress.org/support/topic/tax_query-bug
 	 *
 	 * @since 1.7
 	 *
@@ -146,7 +168,7 @@ class PLL_Frontend extends PLL_Base {
 	 */
 	protected function have_translated_taxonomy($tax_queries) {
 		foreach ($tax_queries as $tax_query) {
-			if (isset($tax_query['taxonomy']) && $this->model->is_translated_taxonomy($tax_query['taxonomy']))
+			if (isset($tax_query['taxonomy']) && $this->model->is_translated_taxonomy($tax_query['taxonomy']) && ! ( isset($tax_query['operator']) && 'NOT IN' === $tax_query['operator'] ) )
 				return true;
 
 			// nested queries

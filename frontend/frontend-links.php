@@ -234,19 +234,46 @@ class PLL_Frontend_Links extends PLL_Links {
 		global $wp_query;
 		$qv = $wp_query->query_vars;
 		$hide = $this->options['default_lang'] == $language->slug && $this->options['hide_default'];
+		
+		// make sure that we have the queried object
+		// see https://wordpress.org/support/topic/patch-for-fixing-a-notice
+		$queried_object_id = $wp_query->get_queried_object_id();
 
 		// post and attachment
-		if (is_single() && ($this->options['media_support'] || !is_attachment()) && ($id = $this->model->get_post($wp_query->queried_object_id, $language)) && $this->current_user_can_read($id))
+		if (is_single() && ($this->options['media_support'] || !is_attachment()) && ($id = $this->model->get_post($queried_object_id, $language)) && $this->current_user_can_read($id))
 			$url = get_permalink($id);
 
 		// page for posts
-		elseif ($wp_query->is_posts_page && !empty($wp_query->queried_object_id) && ($id = $this->model->get_post($wp_query->queried_object_id, $language)))
+		elseif ($wp_query->is_posts_page && !empty($queried_object_id) && ($id = $this->model->get_post($wp_query->queried_object_id, $language)))
 			$url = get_permalink($id);
 
 		// page
-		elseif (is_page() && ($id = $this->model->get_post($wp_query->queried_object_id, $language)) && $this->current_user_can_read($id))
+		elseif (is_page() && ($id = $this->model->get_post($queried_object_id, $language)) && $this->current_user_can_read($id))
 			$url = $hide && $id == $language->page_on_front ? $this->links_model->home : get_page_link($id);
 
+		elseif (is_search()) {
+			$url = $this->get_archive_url($language);
+			
+			// special case for search filtered by translated taxonomies: taxonomy terms are translated in the translation url
+			if (!empty($wp_query->tax_query->queries)) {
+
+				foreach ($wp_query->tax_query->queries as $tax_query) {
+					if (!empty($tax_query['taxonomy']) && $this->model->is_translated_taxonomy($tax_query['taxonomy'])) {
+
+						$tax = get_taxonomy($tax_query['taxonomy']);
+						$terms = get_terms($tax->name, array('fields' => 'id=>slug')); // filtered by current language
+
+						foreach ($tax_query['terms'] as $slug) {
+							if ($term_id = $this->model->get_translation('term', array_search($slug, $terms), $language)) { // get the translated term_id
+								$term = get_term($term_id, $tax->name);
+								$url = str_replace($slug, $term->slug, $url);
+							}
+						}
+					}
+				}
+			}
+		}
+		
 		// translated taxonomy
 		// take care that is_tax() is false for categories and tags
 		elseif ((is_category() || is_tag() || is_tax()) && ($term = get_queried_object()) && $this->model->is_translated_taxonomy($term->taxonomy)) {
@@ -261,9 +288,6 @@ class PLL_Frontend_Links extends PLL_Links {
 					$url = get_term_link($tr_term, $term->taxonomy);
 			}
 		}
-
-		elseif (is_search())
-			$url = $this->get_archive_url($language);
 
 		elseif (is_archive()) {
 			$keys = array('post_type', 'm', 'year', 'monthnum', 'day', 'author', 'author_name');
@@ -337,11 +361,12 @@ class PLL_Frontend_Links extends PLL_Links {
 	 * @return string if redirect is not performed
 	 */
 	public function check_canonical_url($requested_url = '', $do_redirect = true) {
-		global $wp_query, $post;
+		global $wp_query, $post, $is_IIS;
 
-		// don't redirect preview link
-		if (is_preview())
+		// don't redirect in same cases as WP
+		if ( is_trackback() || is_search() || is_comments_popup() || is_admin() || is_preview() || is_robots() || ( $is_IIS && !iis7_supports_permalinks() ) ) {
 			return;
+		}
 
 		// don't redirect mysite.com/?attachment_id= to mysite.com/en/?attachment_id=
 		if (1 == $this->options['force_lang'] && is_attachment() && isset($_GET['attachment_id']))
@@ -381,10 +406,11 @@ class PLL_Frontend_Links extends PLL_Links {
 			$redirect_url = $requested_url;
 		}
 
+		// allow plugins to change the redirection or even cancel it by setting $redirect_url to false 
 		$redirect_url = apply_filters('pll_check_canonical_url', $redirect_url, $language);
 
 		// the language is not correctly set so let's redirect to the correct url for this object
-		if ($do_redirect && $requested_url != $redirect_url) {
+		if ($do_redirect && $redirect_url && $requested_url != $redirect_url) {
 			wp_redirect($redirect_url, 301);
 			exit;
 		}

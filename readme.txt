@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, international, localization
 Requires at least: 3.8
 Tested up to: 4.1
-Stable tag: 1.6.4
+Stable tag: 1.6.5
 License: GPLv2 or later
 
 Polylang adds multilingual content management support to WordPress.
@@ -67,6 +67,8 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 * Minimum WordPress version is now v3.8
 * Add compatibility with nested tax queries introduced in WP 4.1
+* Add compatibility with splitting shared terms to be introduced in WP 4.2
+* Add the possibility to change the domain in the default language when using multiple domains (avoids a conflict with the domain mapping plugin)
 * Add the possibility to set the language from the code in url when using default permalinks
 * Adding the language code in url is now default at first activation (should improve the out of the box compatibility with other plugins and themes)
 * Add new language switcher option to hide a language with no translation
@@ -74,6 +76,7 @@ See http://polylang.wordpress.com/documentation/contribute/
 * Improve performance by using base64 encoded flags + various slight optimizations
 * Improve protection against chained redirects
 * The find posts list is now filtered per media language when clicking on attach link in Media library
+* Copy alternative text when creating a media translation 
 * The category checklist in quick edit is now filtered per post language instead of admin language filter
 * Quick and bulk language edit don't break translations anymore if the new language is free
 * Make it impossible to change the language of the default categories
@@ -86,11 +89,21 @@ See http://polylang.wordpress.com/documentation/contribute/
 * fix: impossible to use several dropdown languages widgets
 * fix: the categories widget does not work correctly with dropdown
 * fix: autosave post always created after manual save
+* fix: tax query not filtered by language when using 'NOT IN' operator on a translated taxonomy
+* fix: incorrect translation url for searches filtered by taxonomy
 
-= 1.6.5 =
+= 1.6.6
+
+* fix: Illegal string offset 'taxonomy' introduced in v1.6.5
+* fix: Undefined property: WP_Query::$queried_object_id when calling pll_the_languages(array('raw' => 1)) in a function hooked to 'wp'. props [KLicheR](https://wordpress.org/support/profile/klicher)
+
+= 1.6.5 (2015-02-18) =
 
 * Add new correspondances between WordPress locales and Facebook locales (for WPSEO and Jetpack users)
 * fix: quick draft posts are always assigned the default category in the default language
+* fix: Notice: Undefined offset: 0 in wp-includes/query.php introduced in WP 4.1
+* fix: is_tax and is_archive are not correctly set when a custom taxonomy term is queried
+* fix: conflict introduced by WPSEO 1.7.2+
 
 = 1.6.4 (2015-02-01) =
 

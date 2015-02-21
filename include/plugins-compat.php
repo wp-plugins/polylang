@@ -83,7 +83,13 @@ class PLL_Plugins_Compat {
 		// reloads options once the language has been defined to enable translations
 		// useful only when the language is set from content
 		if (did_action('wp_loaded')) {
-			global $wpseo_front;
+			if (version_compare(WPSEO_VERSION, '1.7.2', '<')) {
+				global $wpseo_front;
+			}
+			else {
+				$wpseo_front = WPSEO_Frontend::get_instance();
+			}
+
 			$options = version_compare(WPSEO_VERSION, '1.5', '<') ? get_wpseo_options_arr() : WPSEO_Options::get_option_names();
 			foreach ( $options as $opt )
 				$wpseo_front->options = array_merge( $wpseo_front->options, (array) get_option( $opt ) );

@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://polylang.wordpress.com/
-Version: 1.7beta1
+Version: 1.7beta2
 Author: Frédéric Demarle
 Description: Adds multilingual capability to WordPress
 Text Domain: polylang
@@ -33,7 +33,7 @@ Domain Path: /languages
 if (!function_exists('add_action'))
 	exit();
 
-define('POLYLANG_VERSION', '1.7beta1');
+define('POLYLANG_VERSION', '1.7beta2');
 define('PLL_MIN_WP_VERSION', '3.8');
 
 define('POLYLANG_BASENAME', plugin_basename(__FILE__)); // plugin name as known by WP
@@ -51,13 +51,6 @@ if (!defined('PLL_LOCAL_DIR'))
 // includes local config file if exists
 if (file_exists(PLL_LOCAL_DIR . '/pll-config.php'))
 	include_once(PLL_LOCAL_DIR . '/pll-config.php');
-
-// our url. Don't use WP_PLUGIN_URL http://wordpress.org/support/topic/ssl-doesnt-work-properly
-define('POLYLANG_URL', plugins_url('', __FILE__));
-
-// default url to access user data such as custom flags
-if (!defined('PLL_LOCAL_URL'))
-	define('PLL_LOCAL_URL', content_url('/polylang'));
 
 /*
  * controls the plugin, as well as activation, and deactivation
@@ -111,7 +104,7 @@ class Polylang {
 	 */
 	public function autoload($class) {
 		// not a Polylang class
-		if (false === strpos($class, 'PLL_'))
+		if (0 !== strncmp('PLL_', $class, 4))
 			return;
 
 		$class = str_replace('_', '-', strtolower(substr($class, 4)));
@@ -136,6 +129,14 @@ class Polylang {
 	 * @since 1.6
 	 */
 	static public function define_constants() {
+		// our url. Don't use WP_PLUGIN_URL http://wordpress.org/support/topic/ssl-doesnt-work-properly
+		if (!defined('POLYLANG_URL'))
+			define('POLYLANG_URL', plugins_url('', __FILE__));
+
+		// default url to access user data such as custom flags
+		if (!defined('PLL_LOCAL_URL'))
+			define('PLL_LOCAL_URL', content_url('/polylang'));
+			
 		// cookie name. no cookie will be used if set to false
 		if (!defined('PLL_COOKIE'))
 			define('PLL_COOKIE', 'pll_language');
@@ -166,7 +167,7 @@ class Polylang {
 	public function init() {
 		global $polylang;
 
-		$this->define_constants();
+		self::define_constants();
 		$options = get_option('polylang');
 
 		// plugin upgrade

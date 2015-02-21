@@ -73,11 +73,10 @@ $page_on_front = 'page' == get_option('show_on_front') ? get_option('page_on_fro
 				foreach ($listlanguages as  $lg) {
 					printf(
 						'<tr><td><label for="pll-domain[%1$s]">%2$s</label></td>' .
-						'<td><input name="domains[%1$s]" id="pll-domain[%1$s]" type="text" value="%3$s" size="40" aria-required="true" %4$s /></td></tr>',
+						'<td><input name="domains[%1$s]" id="pll-domain[%1$s]" type="text" value="%3$s" size="40" aria-required="true" /></td></tr>',
 						esc_attr($lg->slug),
 						esc_attr($lg->name),
-						esc_url($lg->slug == $this->options['default_lang'] ? $this->links_model->home : (isset($this->options['domains'][$lg->slug]) ? $this->options['domains'][$lg->slug] : '')),
-						!$this->links_model->using_permalinks || $lg->slug == $this->options['default_lang'] ? 'disabled="disabled"' : ''
+						esc_url(isset($this->options['domains'][$lg->slug]) ? $this->options['domains'][$lg->slug] : ($lg->slug == $this->options['default_lang'] ? $this->links_model->home : ''))
 					);
 				}?>
 			</table>
