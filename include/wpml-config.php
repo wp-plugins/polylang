@@ -10,7 +10,9 @@
  * @since 1.0
  */
 class PLL_WPML_Config {
-	protected $values, $index, $wpml_config, $strings;
+	static protected $instance; // for singleton
+	protected $values, $index, $strings;
+	public $tags;
 
 	/*
 	 * constructor
@@ -19,6 +21,20 @@ class PLL_WPML_Config {
 	 */
 	public function __construct() {
 		$this->init();
+	}
+	
+	/*
+	 * access to the single instance of the class
+	 *
+	 * @since 1.7
+	 *
+	 * @return object
+	 */
+	static public function instance() {
+		if (empty(self::$instance))
+			self::$instance = new self();
+
+		return self::$instance;
 	}
 
 	/*
@@ -55,7 +71,7 @@ class PLL_WPML_Config {
 					$arr[$k[0]][$k[1]][0] = $elem;
 				}
 
-				$this->wpml_config[$k[0]][$context] = $arr[$k[0]];
+				$this->tags[$k[0]][$context] = $arr[$k[0]];
 			}
 		}
 	}
@@ -115,7 +131,7 @@ class PLL_WPML_Config {
 	 * @since 1.0
 	 */
 	public function init() {
-		$this->wpml_config = array();
+		$this->tags = array();
 
 		// theme
 		if (file_exists($file = ($template = get_template_directory()) .'/wpml-config.xml'))
@@ -139,20 +155,20 @@ class PLL_WPML_Config {
 		if (file_exists($file = PLL_LOCAL_DIR.'/wpml-config.xml'))
  			$this->xml_parse(file_get_contents($file), 'polylang');
 
-		if (isset($this->wpml_config['custom-fields']))
+		if (isset($this->tags['custom-fields']))
 			add_filter('pll_copy_post_metas', array(&$this, 'copy_post_metas'), 10, 2);
 
-		if (isset($this->wpml_config['custom-types']))
+		if (isset($this->tags['custom-types']))
 			add_filter('pll_get_post_types', array(&$this, 'translate_types'), 10, 2);
 
-		if (isset($this->wpml_config['taxonomies']))
+		if (isset($this->tags['taxonomies']))
 			add_filter('pll_get_taxonomies', array(&$this, 'translate_taxonomies'), 10, 2);
 
-		if (!isset($this->wpml_config['admin-texts']))
+		if (!isset($this->tags['admin-texts']))
 			return;
 
 		// get a cleaner array for easy manipulation
-		foreach ($this->wpml_config['admin-texts'] as $context => $arr)
+		foreach ($this->tags['admin-texts'] as $context => $arr)
 			foreach ($arr as $keys)
 				$this->strings[$context] = $this->admin_texts_recursive($keys);
 
@@ -223,7 +239,7 @@ class PLL_WPML_Config {
 	 * @return array the list of custom fields to copy or synchronize
 	 */
 	public function copy_post_metas($metas, $sync) {
-		foreach ($this->wpml_config['custom-fields'] as $context) {
+		foreach ($this->tags['custom-fields'] as $context) {
 			foreach ($context['custom-field'] as $cf) {
 				// copy => copy and synchronize
 				// translate => copy but don't synchronize
@@ -248,7 +264,7 @@ class PLL_WPML_Config {
 	 * @return array list of post type names for which Polylang manages language and translations
 	 */
 	public function translate_types($types, $hide) {
-		foreach ($this->wpml_config['custom-types'] as $context) {
+		foreach ($this->tags['custom-types'] as $context) {
 			foreach ($context['custom-type'] as $pt) {
 				if ($pt['attributes']['translate'] == 1 && !$hide)
 					$types[$pt['value']] = $pt['value'];
@@ -269,7 +285,7 @@ class PLL_WPML_Config {
 	 * @return array list of taxonomy names for which Polylang manages language and translations
 	 */
 	public function translate_taxonomies($taxonomies, $hide) {
-		foreach ($this->wpml_config['taxonomies'] as $context) {
+		foreach ($this->tags['taxonomies'] as $context) {
 			foreach ($context['taxonomy'] as $tax) {
 				if ($tax['attributes']['translate'] == 1 && !$hide)
 					$taxonomies[$tax['value']] = $tax['value'];

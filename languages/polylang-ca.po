@@ -14,7 +14,7 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-KeywordsList: _e;__;_x\n"
 "X-Poedit-Basepath: .\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.6.3\n"
 "X-Poedit-SearchPath-0: ..\n"
 "X-Poedit-SearchPath-1: ../include\n"
 
@@ -579,14 +579,14 @@ msgstr "Text del widget"
 # @ polylang
 #: admin/settings.php:52
 msgid "Recommended plugins"
-msgstr ""
+msgstr "Connectors recomanats"
 
 # @ polylang
 #: admin/view-tab-settings.php:51
 msgid "The language is set from the code in the URL"
-msgstr ""
+msgstr "L'idioma s'extreu del codi de l'URL"
 
 # @ polylang
 #: include/switcher.php:26
 msgid "Hides languages with no translation"
-msgstr ""
+msgstr "Amaga idiomes que no tinguin traducció"

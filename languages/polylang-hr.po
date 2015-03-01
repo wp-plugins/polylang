@@ -31,7 +31,7 @@ msgstr ""
 "Polylang sadrži detaljnu %sdokumentaciju%s (samo na engleskom). Ona sadrži "
 "podatke kako podesiti vaš višejezični web i kako ga koristiti na dnevnoj "
 "bazi; često postavljana pitanja kao i dokumentaciju za programere da "
-"prilagode njihove pluginove i teme."
+"prilagode njihove dodatke i teme."
 
 # @ polylang
 #: admin/view-about.php:9
@@ -40,7 +40,7 @@ msgid ""
 "You will also find useful information in the %ssupport forum%s. However "
 "don't forget to make a search before posting a new topic."
 msgstr ""
-"Korisne informacije ćete pronaći i  na %sforumima podrške%s. Probajte prvo "
+"Korisne informacije ćete pronaći i na %sforumima podrške%s. Probajte prvo "
 "potražiti odgovor na neko pitanje prije nego pošaljete novi upit."
 
 # @ polylang
@@ -50,8 +50,8 @@ msgid ""
 "Polylang is free of charge and is released under the same license as "
 "WordPress, the %sGPL%s."
 msgstr ""
-"Polylang je besplatan i objavljen pod istom licencom kao i WordPress, %sGPL"
-"%s."
+"Polylang je besplatan i objavljen pod istom licencom kao i "
+"WordPress, %sGPL%s."
 
 # @ polylang
 #: admin/view-about.php:22
@@ -65,7 +65,7 @@ msgid ""
 "Finally if you like this plugin or if it helps your business, donations to "
 "the author are greatly appreciated."
 msgstr ""
-"Na kraju, ako vam ovaj plugin pomaže u poslu ili vam se jednostavno sviđa, "
+"Na kraju, ako vam ovaj dodatak pomaže u poslu ili vam se jednostavno sviđa, "
 "donacije autoru su vrlo cijenjene."
 
 # @ polylang
@@ -136,7 +136,7 @@ msgstr "Postavlja jezik"
 # @ polylang
 #: admin/admin-filters.php:52
 msgid "The widget is displayed for:"
-msgstr "Dodatak (widget) je prikazan za:"
+msgstr "Widget je prikazan za:"
 
 # @ polylang
 #: admin/admin-filters.php:55 include/model.php:563
@@ -181,7 +181,7 @@ msgstr "Prijevod linije teksta"
 # @ polylang
 #: admin/admin-model.php:244
 msgid "Enter a valid WordPress locale"
-msgstr "Unesite ispravan locale (jezik i set karaktera) od WordPressa"
+msgstr "Unesite ispravan locale (jezik i set znakova) od WordPressa"
 
 # @ polylang
 #: admin/admin-model.php:252
@@ -199,13 +199,13 @@ msgid ""
 "The language was created, but the WordPress language file was not "
 "downloaded. Please install it manually."
 msgstr ""
-"Jezik je kreiran, ali datoteka jezika WordPressa nije skinuta. Molim da ju "
+"Jezik je kreiran, ali datoteka jezika WordPressa nije skinuta. Molim da istu "
 "instalirate ručno."
 
 # @ polylang
 #: admin/admin-strings.php:59
 msgid "Widget title"
-msgstr "Naslov widgeta (dodatka)"
+msgstr "Naslov widgeta" 
 
 # @ polylang
 #: admin/settings.php:319
@@ -303,7 +303,7 @@ msgid ""
 "Wordpress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
 msgstr ""
-"Wordpress locale za vaš jezik (primjerice hr_HR). Morat ćete instalirati .mo "
+"Wordpress locale za vaš jezik (primjerice hr). Morat ćete instalirati .mo "
 "datoteku za vaš jezik."
 
 # @ polylang
@@ -383,7 +383,7 @@ msgid ""
 "When the front page is visited, set the language according to the browser "
 "preference"
 msgstr ""
-"Kad se otvori naslovna stranica, postavi jezik ovisno o postavkama browsera"
+"Kada se otvori naslovna stranica, postavi jezik ovisno o postavkama browsera"
 
 # @ polylang
 #: admin/view-tab-settings.php:37
@@ -503,7 +503,7 @@ msgstr "Koristite WordPress verzije %s. Polylang zahtijeva barem verziju %s."
 #: install/upgrade.php:76
 msgid ""
 "Polylang has been deactivated because you upgraded from a too old version."
-msgstr "Polylang je isključen jer ste nadogradili sa previše stare verzije."
+msgstr "Polylang je isključen jer ste imali zastarjelu verziju dodatka."
 
 # @ polylang
 #: install/upgrade.php:78
@@ -533,7 +533,7 @@ msgid ""
 "has been uninstalled."
 msgstr ""
 "Koristite ovo da maknete neiskorištene linije iz baze, primjerice nakon što "
-"je neki plugin maknut."
+"je neki dodatak maknut."
 
 # @ polylang
 #: admin/view-tab-settings.php:226
@@ -654,14 +654,14 @@ msgstr "Tekst Widgeta"
 # @ polylang
 #: admin/settings.php:52
 msgid "Recommended plugins"
-msgstr ""
+msgstr "Preporučeni dodaci"
 
 # @ polylang
 #: admin/view-tab-settings.php:51
 msgid "The language is set from the code in the URL"
-msgstr ""
+msgstr "Jezik je postavljen preko oznake jezika u URL-u"
 
 # @ polylang
 #: include/switcher.php:26
 msgid "Hides languages with no translation"
-msgstr ""
+msgstr "Sakrij jezike koji nisu prevedeni"

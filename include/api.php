@@ -129,6 +129,9 @@ function pll_register_string($name, $string, $context = 'polylang', $multiline =
 function pll__($string) {
 	static $cache; // cache object to avoid translating the same string several times
 
+	if (!did_action('pll_language_defined')) // no need for translation
+		return $string;
+		
 	if (empty($cache))
 		$cache = new PLL_Cache();
 

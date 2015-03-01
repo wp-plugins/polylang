@@ -125,7 +125,7 @@ class PLL_Admin_Filters_Columns {
 		if ($id = $this->model->get_post($post_id, $language)) {
 			if (current_user_can($post_type_object->cap->edit_post, $post_id)) {
 				printf('<a class="%1$s" title="%2$s" href="%3$s"></a>',
-					$id == $post_id ? 'pll_icon_tick' : 'pll_icon_edit translation_' . $id,
+					$id == $post_id ? 'pll_icon_tick' : esc_attr('pll_icon_edit translation_' . $id),
 					esc_attr(get_post($id)->post_title),
 					esc_url(get_edit_post_link($id))
 				);
@@ -218,7 +218,7 @@ class PLL_Admin_Filters_Columns {
 		// link to edit term (or a translation)
 		if (($id = $this->model->get_term($term_id, $language)) && $term = get_term($id, $taxonomy)) {
 			$out .= sprintf('<a class="%1$s" title="%2$s" href="%3$s"></a>',
-				$id == $term_id ? 'pll_icon_tick' : 'pll_icon_edit translation_' . $id,
+				$id == $term_id ? 'pll_icon_tick' : esc_attr('pll_icon_edit translation_' . $id),
 				esc_attr($term->name),
 				esc_url(get_edit_term_link($id, $taxonomy, $post_type))
 			);

@@ -208,7 +208,7 @@ class PLL_Model {
 			// ensures that the (possibly cached) home url uses the right scheme http or https
 			$language->set_home_url_scheme();
 
-			// use custom flage on frontend only
+			// use custom flags on frontend only
 			if (!PLL_ADMIN)
 				$language->set_custom_flag();
 		}
@@ -225,7 +225,13 @@ class PLL_Model {
 	 * @param string $taxonomy taxonomy name
 	 */
 	public function clean_languages_cache($term = 0, $taxonomy = null) {
-		if (empty($taxonomy->name) || 'language' == $taxonomy->name) {
+		// depending on WP version, the action is passed an object or a string
+		// backward compatibility with WP < 4.2
+		if ( !empty($taxonomy) && is_object($taxonomy) ) {
+			$taxonomy = $taxonomy->name;
+		}
+
+		if (empty($taxonomy) || 'language' == $taxonomy) {
 			delete_transient('pll_languages_list');
 			$this->cache->clean();
 		}
