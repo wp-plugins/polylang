@@ -124,7 +124,7 @@
 
 		// filter category checklist
 		function filter_terms(lang) {
-			if (undefined != typeof(pll_term_languages)) {
+			if ("undefined" != typeof(pll_term_languages)) {
 				$.each(pll_term_languages, function(lg, term_tax) {
 					$.each(term_tax, function(tax, terms) {
 						$.each(terms, function(i) {

@@ -127,7 +127,7 @@ th[class*='column-language_'], td[class*='column-language_'] {
 	margin-right: 4px;
 }
 
-#term-translations table {
+#add-term-translations, #edit-term-translations {
 	width: 95%;
 }
 
@@ -153,6 +153,7 @@ th[class*='column-language_'], td[class*='column-language_'] {
 
 [class^="pll_icon_"] {
 	font: 20px/1 'dashicons';
+	vertical-align: middle;
 }
 
 /* admin bar */
@@ -176,13 +177,42 @@ th[class*='column-language_'], td[class*='column-language_'] {
 	.stringstranslations .column-name {
 		display: none;
 	}
-
-	/* translations tables should be kept as table */
-	#term-translations .term-translations th,
-	#term-translations .term-translations td {
-		display: table-cell;
+	
+	/* hide selected language flag and translations language name */
+	#select-add-term-language .pll-select-flag,
+	#select-edit-term-language .pll-select-flag,
+	#edit-term-translations .pll-language-name {
+		display: none;
+	}
+	
+	#edit-term-translations {
+		width: 100%;
 	}
 
+	#add-term-translations .pll-language-column {
+		line-height: 38px;	
+	}
+	
+	#edit-term-translations td {
+		padding: 8px 10px;
+	}
+	
+	#edit-term-translations .pll-language-column,
+	#edit-term-translations .pll-edit-column {
+		width: 20px;
+	}
+
+	/* translations tables should be kept as table */
+	.term-translations .pll-language-column,
+	.term-translations .pll-edit-column,
+	.term-translations .pll-translation-column {
+		display: table-cell;
+	}
+	
+	.term-translations .hidden {
+		display: none;
+	}
+	
 	/* admin bar */
 	#wpadminbar li#wp-admin-bar-languages {
 		display: block; /*shows our menu on mobile devices */

@@ -634,24 +634,24 @@ msgstr "رمز اللغة - يفضل أن يكون حرفين حسب المعي�
 # @ polylang
 #: admin/admin-filters.php:203
 msgid "The chosen static front page must be translated in all languages."
-msgstr ""
+msgstr "يجب أن تكون الصفحة الأمامية المختارة مترجمة إلى جميع اللغات."
 
 # @ polylang
 #: admin/admin-strings.php:60
 msgid "Widget text"
-msgstr ""
+msgstr "نص الودجت"
 
 # @ polylang
 #: admin/settings.php:52
 msgid "Recommended plugins"
-msgstr ""
+msgstr "إضافات مستحسنة"
 
 # @ polylang
 #: admin/view-tab-settings.php:51
 msgid "The language is set from the code in the URL"
-msgstr ""
+msgstr "تحدد اللغة من رمزها في الرابط"
 
 # @ polylang
 #: include/switcher.php:26
 msgid "Hides languages with no translation"
-msgstr ""
+msgstr "اخف اللغات التي ليس لها ترجمات"

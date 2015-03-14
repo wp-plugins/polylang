@@ -7,13 +7,14 @@
  * @since 1.0
  */
 class PLL_Plugins_Compat {
+	static protected $instance; // for singleton
 
 	/*
 	 * constructor
 	 *
 	 * @since 1.0
 	 */
-	public function __construct() {
+	protected function __construct() {
 		// WordPress Importer
 		add_action('init', array(&$this, 'maybe_wordpress_importer'));
 
@@ -40,6 +41,20 @@ class PLL_Plugins_Compat {
 		add_filter('jetpack_open_graph_tags', array(&$this, 'jetpack_ogp'));
 	}
 
+	/*
+	 * access to the single instance of the class
+	 *
+	 * @since 1.7
+	 *
+	 * @return object
+	 */
+	static public function instance() {
+		if (empty(self::$instance))
+			self::$instance = new self();
+
+		return self::$instance;
+	}
+	
 	/*
 	 * WordPress Importer
 	 * if WordPress Importer is active, replace the wordpress_importer_init function

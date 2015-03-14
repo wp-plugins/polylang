@@ -8,6 +8,7 @@
 class PLL_Admin_Filters_Term {
 	public $links, $model, $options, $curlang, $pref_lang;
 	protected $pre_term_name; // used to store the term name before creating a slug if needed
+	protected $post_id; // used to store the current post_id when bulk editing posts
 
 	/*
 	 * constructor: setups filters and actions
@@ -36,6 +37,7 @@ class PLL_Admin_Filters_Term {
 		add_filter('wp_dropdown_cats', array(&$this, 'wp_dropdown_cats'));
 		add_action('create_term', array(&$this, 'save_term'), 999, 3);
 		add_action('edit_term', array(&$this, 'save_term'), 999, 3); // late as it may conflict with other plugins, see http://wordpress.org/support/topic/polylang-and-wordpress-seo-by-yoast
+		add_action('pre_post_update', array(&$this, 'pre_post_update'));
 		add_filter('pre_term_name', array(&$this, 'pre_term_name'));
 		add_filter('pre_term_slug', array(&$this, 'pre_term_slug'), 10, 2);
 
@@ -154,6 +156,18 @@ class PLL_Admin_Filters_Term {
 	}
 
 	/*
+	 * stores the current post_id when bulk editing posts for use in save_language and pre_term_slug
+	 * 
+	 * @since 1.7
+	 * 
+	 * @param int $post_id
+	 */
+	public function pre_post_update($post_id) {
+		if (isset($_GET['bulk_edit']))
+			$this->post_id = $post_id;
+	}
+	
+	/*
 	 * allows to set a language by default for terms if it has no language yet
 	 *
 	 * @since 1.5.4
@@ -181,6 +195,7 @@ class PLL_Admin_Filters_Term {
 	 * @param string $taxonomy
 	 */
 	protected function save_language($term_id, $taxonomy) {
+		global $wpdb;
 		// security checks are necessary to accept language modifications
 		// as 'wp_update_term' can be called from outside WP admin
 
@@ -197,12 +212,38 @@ class PLL_Admin_Filters_Term {
 
 		// *post* bulk edit, in case a new term is created
 		elseif (isset($_GET['bulk_edit'], $_GET['inline_lang_choice'])) {
-			// bulk edit does not modify the language
-			if ($_GET['inline_lang_choice'] == -1)
-				return;
-
 			check_admin_referer('bulk-posts');
-			$this->model->set_term_language($term_id, $_GET['inline_lang_choice']);
+
+			// bulk edit does not modify the language
+			// so we possibly create a tag in several languages
+			if ($_GET['inline_lang_choice'] == -1) {
+				// the language of the current term is set a according to the language of the current post
+				$this->model->set_term_language($term_id, $this->model->get_post_language($this->post_id)); 
+				
+				// get all terms with the same name
+				// no WP function to get all terms with the exact same name so let's use our custom query
+				$term = get_term($term_id, $taxonomy);
+				$terms = $wpdb->get_results($wpdb->prepare("
+					SELECT pll_tr.term_taxonomy_id, t.term_id FROM $wpdb->terms AS t
+					INNER JOIN $wpdb->term_relationships AS pll_tr ON pll_tr.object_id = t.term_id
+					INNER JOIN $wpdb->term_taxonomy AS tt ON tt.term_taxonomy_id = pll_tr.term_taxonomy_id
+					WHERE t.name = %s AND tt.taxonomy = %s",
+					$term->name, 'term_language'
+				));
+				
+				// if we have several terms with the same name, they are translations of each other
+				if (count($terms) > 1) {
+					foreach ($terms as $term) {
+							$translations[$this->model->get_language($term->term_taxonomy_id)->slug] = $term->term_id;
+					}
+
+					$this->model->save_translations('term', $term_id, $translations);
+				}
+			}
+			
+			else {
+				$this->model->set_term_language($term_id, $_GET['inline_lang_choice']);
+			}
 		}
 
 		// quick edit
@@ -335,6 +376,17 @@ class PLL_Admin_Filters_Term {
 
 			elseif (isset($_POST['inline_lang_choice']))
 				$slug = $name . '-' . $this->model->get_language($_POST['inline_lang_choice'])->slug;
+				
+			// *post* bulk edit, in case a new term is created
+			elseif (isset($_GET['bulk_edit'], $_GET['inline_lang_choice'])) {
+				// bulk edit does not modify the language
+				if ($_GET['inline_lang_choice'] == -1) {
+					$slug = $name . '-' .  $this->model->get_post_language($this->post_id)->slug;
+				}
+				else {
+					$slug = $name . '-' . $this->model->get_language($_GET['inline_lang_choice'])->slug;
+				}
+			}
 		}
 
 		return $slug;

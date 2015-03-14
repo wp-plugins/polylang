@@ -69,8 +69,7 @@ class PLL_Frontend_Links extends PLL_Links {
 		}
 
 		// redirects to canonical url
-		if ($this->links_model->using_permalinks)
-			add_action('wp', array(&$this, 'check_canonical_url'), 10, 0); // before Wordpress redirect_canonical, avoid passing the WP object
+		add_action('wp', array(&$this, 'check_canonical_url'), 10, 0); // before Wordpress redirect_canonical, avoid passing the WP object
 	}
 
 	/*
@@ -167,6 +166,20 @@ class PLL_Frontend_Links extends PLL_Links {
 
 		return $redirect_url;
 	}
+	
+	/*
+	 * checks if a file is in a directory or its subdirectories
+	 * the comparison takes care of Windows on which WP can mix \ and /
+	 * 
+	 * @since 1.7
+	 *  
+	 * @param string $file
+	 * @param string $dir
+	 * @return bool
+	 */
+	protected function is_file_in($file, $dir) {
+		return strpos(str_replace('\\', '/', $file), str_replace('\\', '/', $dir)) !== false;
+	}
 
 	/*
 	 * filters the home url to get the right language
@@ -205,13 +218,13 @@ class PLL_Frontend_Links extends PLL_Links {
 		foreach ($traces as $trace) {
 			// black list first
 			foreach ($black_list as $v) {
-				if ((isset($trace['file'], $v['file']) && strpos($trace['file'], $v['file']) !== false) || (isset($trace['function'], $v['function']) && $trace['function'] == $v['function']))
+				if ((isset($trace['file'], $v['file']) && $this->is_file_in($trace['file'], $v['file'])) || (isset($trace['function'], $v['function']) && $trace['function'] == $v['function']))
 					return $url;
 			}
 
 			foreach ($white_list as $v) {
 				if ((isset($trace['function'], $v['function']) && $trace['function'] == $v['function']) ||
-					(isset($trace['file'], $v['file']) && strpos($trace['file'], $v['file']) !== false && in_array($trace['function'], array('home_url', 'get_home_url', 'bloginfo', 'get_bloginfo'))))
+					(isset($trace['file'], $v['file']) && $this->is_file_in($trace['file'], $v['file']) && in_array($trace['function'], array('home_url', 'get_home_url', 'bloginfo', 'get_bloginfo'))))
 					$ok = true;
 			}
 		}
@@ -383,7 +396,6 @@ class PLL_Frontend_Links extends PLL_Links {
 		if (is_single() || is_page()) {
 			if (isset($post->ID) && $this->model->is_translated_post_type($post->post_type)) {
 				$language = $this->model->get_post_language((int)$post->ID);
-				$redirect_url = get_permalink($post->ID);
 			}
 		}
 
@@ -391,19 +403,22 @@ class PLL_Frontend_Links extends PLL_Links {
 			$obj = $wp_query->get_queried_object();
 			if ($this->model->is_translated_taxonomy($obj->taxonomy)) {
 				$language = $this->model->get_term_language((int)$obj->term_id);
-				$redirect_url = get_term_link((int)$obj->term_id, $obj->taxonomy);
 			}
 		}
 
 		elseif ($wp_query->is_posts_page) {
 			$obj = $wp_query->get_queried_object();
 			$language = $this->model->get_post_language((int)$obj->ID);
-			$redirect_url = get_permalink($obj->ID);
 		}
 
 		if (empty($language)) {
 			$language = $this->curlang;
 			$redirect_url = $requested_url;
+		}
+		else {
+			$redirect_url = $this->options['force_lang'] ?
+				$this->links_model->switch_language_in_link($requested_url, $language) :
+				$this->links_model->remove_language_from_link($requested_url);
 		}
 
 		// allow plugins to change the redirection or even cancel it by setting $redirect_url to false 

@@ -10,6 +10,7 @@
  * @since 1.2
  */
 class PLL_OLT_Manager {
+	static protected $instance; // for singleton
 	protected $default_locale;
 	protected $list_textdomains = array(); // all text domains
 	public $labels = array(); // post types and taxonomies labels to translate
@@ -35,6 +36,20 @@ class PLL_OLT_Manager {
 		// allows Polylang to be the first plugin loaded ;-)
 		add_filter('pre_update_option_active_plugins', array(&$this, 'make_polylang_first'));
 		add_filter('pre_update_option_active_sitewide_plugins', array(&$this, 'make_polylang_first'));
+	}
+
+	/*
+	 * access to the single instance of the class
+	 *
+	 * @since 1.7
+	 *
+	 * @return object
+	 */
+	static public function instance() {
+		if (empty(self::$instance))
+			self::$instance = new self();
+
+		return self::$instance;
 	}
 
 	/*
@@ -78,7 +93,7 @@ class PLL_OLT_Manager {
 		foreach (array_diff_key($GLOBALS['wp_post_types'], array_flip($post_types)) as $pt)
 			$this->translate_labels($pt);
 
-		// act only if the language has not been set early (before default textdomain loading and $wp_locale creation
+		// act only if the language has not been set early (before default textdomain loading and $wp_locale creation)
 		if (did_action('after_setup_theme')) {
 			// reinitializes wp_locale for weekdays and months
 			unset($GLOBALS['wp_locale']);

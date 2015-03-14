@@ -86,7 +86,7 @@ class PLL_Switcher {
 	 *
 	 * list of parameters accepted in $args:
 	 *
-	 * dropdown               => the list is displayed as dropdown if set to 1, defaults to 0
+	 * dropdown               => the list is displayed as dropdown if set, defaults to 0
 	 * echo                   => echoes the list if set to 1, defaults to 1
 	 * hide_if_empty          => hides languages with no posts (or pages) if set to 1, defaults to 1
 	 * show_flags             => displays flags if set to 1, defaults to 0
@@ -121,6 +121,11 @@ class PLL_Switcher {
 		);
 		$args = wp_parse_args($args, $defaults);
 		$args = apply_filters('pll_the_languages_args', $args);
+		
+		// prevents showing empty options in dropdown
+		if ($args['dropdown'])
+			$args['show_names'] = 1;
+		
 		$elements = $this->get_elements($links, $args);
 
 		if ($args['raw'])
@@ -142,16 +147,17 @@ class PLL_Switcher {
 				$urls[$language->slug] = $args['force_home'] || ($url = $links->get_translation_url($language)) == null ? $links->get_home_url($language) : $url;
 			}
 
-			$out .= sprintf("
-				<script type='text/javascript'>
+			// accept only few valid characters for the urls_x variable name (as the widget id includes '-' which is invalid)
+			$out .= sprintf('
+				<script type="text/javascript">
 					//<![CDATA[
-					var urls = %s;
-					document.getElementById('%s').onchange = function() {
-						location.href = urls[this.value];
+					var %1$s = %2$s;
+					document.getElementById("%3$s").onchange = function() {
+						location.href = %1$s[this.value];
 					}
 					//]]>
-				</script>",
-				wp_json_encode($urls), esc_js($args['name'])
+				</script>',
+				'urls_' . preg_replace('#[^a-zA-Z0-9]#', '', $args['dropdown']), wp_json_encode($urls), esc_js($args['name'])
 			);
 		}
 

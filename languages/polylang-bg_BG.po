@@ -578,14 +578,14 @@ msgstr "Текст на джаджата"
 # @ polylang
 #: admin/settings.php:52
 msgid "Recommended plugins"
-msgstr ""
+msgstr "Препоръчани разширения"
 
 # @ polylang
 #: admin/view-tab-settings.php:51
 msgid "The language is set from the code in the URL"
-msgstr ""
+msgstr "Езикът се определя от кода в адреса (URL)"
 
 # @ polylang
 #: include/switcher.php:26
 msgid "Hides languages with no translation"
-msgstr ""
+msgstr "Скриване не езици без превод"

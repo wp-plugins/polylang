@@ -35,14 +35,16 @@ else {
 			$link = $this->edit_translation_link($translation->term_id, $taxonomy, $post_type);
 		} ?>
 
-		<tr><?php
+		<tr>
+			<td class = "pll-language-column">
+				<span class = "pll-translation-flag"><?php echo $language->flag; ?></span><?php 
+				if (isset($term_id)) { ?>
+					<span class = "pll-language-name"><?php echo esc_html($language->name); ?></span><?php
+				} ?>
+			</td> <?php
 			if (isset($term_id)) { ?>
-				<td class = "pll-language-column"><span class = "pll-translation-flag"><?php echo $language->flag?></span><?php echo esc_html($language->name); ?></td>
 				<td class = "hidden"><?php echo $add_link;?></td>
 				<td class = "pll-edit-column"><?php echo $link;?></td><?php
-			}
-			else { ?>
-				<td class = "pll-language-column"><?php echo $language->flag ? $language->flag : esc_html($language->slug); ?></td><?php
 			} ?>
 			<td class = "pll-translation-column"><?php
 				printf('
