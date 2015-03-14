@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Polylang v0.9.8\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2014-10-04 07:40+0100\n"
+"PO-Revision-Date: 2015-02-15 07:02+0100\n"
 "Last-Translator: Tom Boersma <info@oransje.com>\n"
 "Language-Team: \n"
 "Language: nb_NO\n"
@@ -16,7 +16,7 @@ msgstr ""
 "_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2\n"
 "X-Poedit-Basepath: ../\n"
 "X-Textdomain-Support: yes\n"
-"X-Generator: Poedit 1.6.5\n"
+"X-Generator: Poedit 1.7.4\n"
 "X-Poedit-SearchPath-0: .\n"
 
 # @ polylang
@@ -68,8 +68,8 @@ msgstr ""
 "donasjoner til forfatteren er verdsatt i høyeste grad."
 
 # @ polylang
-#: admin/admin-filters-post.php:81 admin/admin.php:90 admin/settings.php:55
-#: admin/settings.php:82 include/model.php:526
+#: admin/admin-filters-post.php:115 admin/admin.php:90 admin/settings.php:70
+#: admin/settings.php:97 include/model.php:561
 msgid "Languages"
 msgstr "Språk"
 
@@ -94,41 +94,41 @@ msgid "Hides the current language"
 msgstr "Skjuler nåværende språk"
 
 # @ polylang
-#: include/switcher.php:29
+#: include/switcher.php:30
 msgid "Displays as dropdown"
 msgstr "Vises som dropdown"
 
 # @ polylang
-#: admin/admin.php:271
+#: admin/admin.php:267
 msgid "Filters content by language"
 msgstr "Filtre innhold etter språk"
 
 # @ polylang
-#: admin/admin.php:262
+#: admin/admin.php:258
 msgid "Show all languages"
 msgstr "Vis alle språk"
 
 # @ polylang
-#: admin/admin-filters-columns.php:139 admin/admin-filters-columns.php:227
+#: admin/admin-filters-columns.php:140 admin/admin-filters-columns.php:230
 msgid "Add new translation"
 msgstr "Legg til ny oversettelse"
 
 # @ polylang
 #: admin/admin-filters-columns.php:173 admin/admin-filters-media.php:55
-#: admin/admin-filters-post.php:107 admin/admin-filters-term.php:77
-#: admin/admin-filters-term.php:121 include/model.php:527
+#: admin/admin-filters-post.php:141 admin/admin-filters-term.php:75
+#: admin/admin-filters-term.php:122 include/model.php:562
 msgid "Language"
 msgstr "Språk"
 
 # @ polylang
-#: admin/table-string.php:111 admin/view-translations-media.php:5
+#: admin/table-string.php:112 admin/view-translations-media.php:5
 #: admin/view-translations-post.php:5 admin/view-translations-term.php:6
 #: admin/view-translations-term.php:11
 msgid "Translations"
 msgstr "Oversettelser"
 
 # @ polylang
-#: admin/admin-filters-term.php:84 admin/admin-filters-term.php:128
+#: admin/admin-filters-term.php:82 admin/admin-filters-term.php:130
 msgid "Sets the language"
 msgstr "Bestemmer språket"
 
@@ -138,7 +138,7 @@ msgid "The widget is displayed for:"
 msgstr "Widgeten vises for:"
 
 # @ polylang
-#: admin/admin-filters.php:55 include/model.php:528
+#: admin/admin-filters.php:55 include/model.php:563
 msgid "All languages"
 msgstr "Alle språk"
 
@@ -154,7 +154,7 @@ msgstr "WordPress standard"
 
 # @ default
 # @ polylang
-#: admin/admin.php:171 admin/settings.php:87
+#: admin/admin.php:167 admin/settings.php:102
 msgid "Settings"
 msgstr "Innstillinger"
 
@@ -164,37 +164,37 @@ msgid "Upgrading language files&#8230;"
 msgstr "Oppgraderer språkfiler&#8230;"
 
 # @ polylang
-#: admin/settings.php:47
+#: admin/settings.php:62
 msgid "About Polylang"
 msgstr "Om Polylang"
 
 # @ polylang
-#: admin/settings.php:63
+#: admin/settings.php:78
 msgid "Strings translations"
 msgstr "String oversettelser"
 
 # @ polylang
-#: admin/settings.php:86
+#: admin/settings.php:101
 msgid "Strings translation"
 msgstr "String oversettelse"
 
 # @ polylang
-#: admin/admin-model.php:274
+#: admin/admin-model.php:244
 msgid "Enter a valid WordPress locale"
 msgstr "Tast inn en gyldig WordPress Locale"
 
 # @ polylang
-#: admin/admin-model.php:282
+#: admin/admin-model.php:252
 msgid "The language code must be unique"
 msgstr "Språkkoden må være unikt"
 
 # @ polylang
-#: admin/admin-model.php:286
+#: admin/admin-model.php:256
 msgid "The language must have a name"
 msgstr "Språket må ha et navn"
 
 # @ polylang
-#: admin/admin.php:371 admin/settings.php:162
+#: admin/admin.php:367 admin/settings.php:180
 msgid ""
 "The language was created, but the WordPress language file was not "
 "downloaded. Please install it manually."
@@ -208,97 +208,97 @@ msgid "Widget title"
 msgstr "Widget tittel"
 
 # @ polylang
-#: admin/settings.php:301
+#: admin/settings.php:319
 msgid "Taxonomies"
 msgstr "Taksonomier"
 
 # @ polylang
-#: admin/settings.php:302
+#: admin/settings.php:320
 msgid "Custom fields"
 msgstr "Tilpassede felt"
 
 # @ polylang
-#: admin/settings.php:303
+#: admin/settings.php:321
 msgid "Comment status"
 msgstr "Kommentar status"
 
 # @ polylang
-#: admin/settings.php:304
+#: admin/settings.php:322
 msgid "Ping status"
 msgstr "Ping status"
 
 # @ polylang
-#: admin/settings.php:305
+#: admin/settings.php:323
 msgid "Sticky posts"
 msgstr "Klebrige innlegg"
 
 # @ polylang
-#: admin/settings.php:306
+#: admin/settings.php:324
 msgid "Published date"
 msgstr "Dato publisering"
 
 # @ default
-#: admin/settings.php:307
+#: admin/settings.php:325
 msgid "Post format"
 msgstr "Format"
 
 # @ default
-#: admin/settings.php:308
+#: admin/settings.php:326
 msgid "Page parent"
 msgstr "Side forelder"
 
 # @ polylang
-#: admin/settings.php:309
+#: admin/settings.php:327
 msgid "Page template"
 msgstr "Sidemal"
 
 # @ polylang
-#: admin/settings.php:310
+#: admin/settings.php:328
 msgid "Page order"
 msgstr "Side rekkefølge"
 
 # @ polylang
-#: admin/settings.php:311
+#: admin/settings.php:329
 msgid "Featured image"
 msgstr "Fremhevet bilde"
 
 # @ polylang
-#: admin/view-languages.php:38
+#: admin/view-tab-lang.php:21
 msgid "Edit language"
 msgstr "Rediger språk"
 
 # @ polylang
-#: admin/view-languages.php:38 admin/view-languages.php:113
+#: admin/view-tab-lang.php:21 admin/view-tab-lang.php:96
 msgid "Add new language"
 msgstr "Legg til nytt språk"
 
 # @ polylang
-#: admin/view-languages.php:54
+#: admin/view-tab-lang.php:37
 msgid "Choose a language"
 msgstr "Velg et språk"
 
 # @ polylang
-#: admin/view-languages.php:68
+#: admin/view-tab-lang.php:51
 msgid "You can choose a language in the list or directly edit it below."
 msgstr "Du kan velge et språk fra listen eller redigere direkte nedenfor."
 
 # @ polylang
-#: admin/table-languages.php:74 admin/view-languages.php:72
+#: admin/table-languages.php:74 admin/view-tab-lang.php:55
 msgid "Full name"
 msgstr "Fullt navn"
 
 # @ polylang
-#: admin/view-languages.php:74
+#: admin/view-tab-lang.php:57
 msgid "The name is how it is displayed on your site (for example: English)."
 msgstr "Navnet som det vises på nettstedet ditt (for eksempel: English)."
 
 # @ polylang
-#: admin/table-languages.php:75 admin/view-languages.php:78
+#: admin/table-languages.php:75 admin/view-tab-lang.php:61
 msgid "Locale"
 msgstr "Locale"
 
 # @ polylang
-#: admin/view-languages.php:83
+#: admin/view-tab-lang.php:66
 msgid ""
 "Wordpress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
@@ -307,64 +307,64 @@ msgstr ""
 "filen for dette språket."
 
 # @ polylang
-#: admin/view-languages.php:87
+#: admin/view-tab-lang.php:70
 msgid "Language code"
 msgstr "Språkkode"
 
 # @ polylang
-#: admin/view-languages.php:93
+#: admin/view-tab-lang.php:76
 msgid "Text direction"
 msgstr "Tekstretning"
 
 # @ polylang
-#: admin/view-languages.php:97
+#: admin/view-tab-lang.php:80
 msgid "left to right"
 msgstr "venstre til høyre"
 
 # @ polylang
-#: admin/view-languages.php:102
+#: admin/view-tab-lang.php:85
 msgid "right to left"
 msgstr "høyre til venstre"
 
 # @ polylang
-#: admin/view-languages.php:104
+#: admin/view-tab-lang.php:87
 msgid "Choose the text direction for the language"
 msgstr "Velg tekstretning for språket"
 
 # @ polylang
-#: admin/table-languages.php:77 admin/view-languages.php:108
+#: admin/table-languages.php:77 admin/view-tab-lang.php:91
 msgid "Order"
 msgstr "Rekkefølge"
 
 # @ polylang
-#: admin/view-languages.php:110
+#: admin/view-tab-lang.php:93
 msgid "Position of the language in the language switcher"
 msgstr "Språkets plasering i språkskifteren"
 
 # @ polylang
-#: admin/admin-nav-menu.php:52 admin/admin-nav-menu.php:90
-#: admin/admin-nav-menu.php:93 admin/admin-nav-menu.php:124
-#: admin/admin-nav-menu.php:186 include/upgrade.php:301
+#: admin/admin-nav-menu.php:54 admin/admin-nav-menu.php:92
+#: admin/admin-nav-menu.php:95 admin/admin-nav-menu.php:126
+#: admin/admin-nav-menu.php:188 install/upgrade.php:301
 msgid "Language switcher"
 msgstr "Språkskifter"
 
 # @ polylang
-#: admin/view-languages.php:139
+#: admin/view-tab-strings.php:8
 msgid "Search translations"
 msgstr "Søk oversettelser"
 
 # @ polylang
-#: admin/view-languages.php:142
+#: admin/view-tab-strings.php:11
 msgid "Clean strings translation database"
 msgstr "Rens string oversettelsene i databasen"
 
 # @ polylang
-#: admin/view-languages.php:161
+#: admin/view-tab-settings.php:14
 msgid "Default language"
 msgstr "Standard språk"
 
 # @ polylang
-#: admin/view-languages.php:176
+#: admin/view-tab-settings.php:29
 msgid ""
 "There are posts, pages, categories or tags without language set. Do you want "
 "to set them all to default language ?"
@@ -373,70 +373,70 @@ msgstr ""
 "sette dem alle til standard språk?"
 
 # @ polylang
-#: admin/view-languages.php:297
+#: admin/view-tab-settings.php:149
 msgid "Detect browser language"
 msgstr "Detekter nettleserens språkpreferance"
 
 # @ polylang
-#: admin/view-languages.php:303
+#: admin/view-tab-settings.php:155
 msgid ""
 "When the front page is visited, set the language according to the browser "
 "preference"
 msgstr "Når forsiden besøkes, velg språk i henhold til nettleserens preferanse"
 
 # @ polylang
-#: admin/view-languages.php:184
+#: admin/view-tab-settings.php:37
 msgid "URL modifications"
 msgstr "URL modifikasjoner"
 
 # @ polylang
-#: admin/view-languages.php:241
+#: admin/view-tab-settings.php:93
 msgid "Hide URL language information for default language"
 msgstr "Skjul URL språkinformasjon for standard språk"
 
 # @ polylang
-#: admin/view-languages.php:310
+#: admin/view-tab-settings.php:162
 msgid "Media"
 msgstr "Media"
 
 # @ polylang
-#: admin/view-languages.php:316
+#: admin/view-tab-settings.php:168
 msgid "Activate languages and translations for media"
 msgstr "Aktiver språk og oversettelser for media"
 
 # @ polylang
-#: admin/view-languages.php:363
+#: admin/view-tab-settings.php:215
 msgid "Synchronization"
 msgstr "Synkronisering"
 
 # @ polylang
-#: admin/view-languages.php:324
+#: admin/view-tab-settings.php:176
 msgid "Custom post types"
 msgstr "Tilpassede innleggstyper"
 
 # @ polylang
-#: admin/view-languages.php:337
+#: admin/view-tab-settings.php:189
 msgid "Activate languages and translations for custom post types."
 msgstr "Aktiver språk og oversettelser for tilpassede innleggstyper."
 
 # @ polylang
-#: admin/view-languages.php:344
+#: admin/view-tab-settings.php:196
 msgid "Custom taxonomies"
 msgstr "Tilpassede taksonomier"
 
 # @ polylang
-#: admin/view-languages.php:357
+#: admin/view-tab-settings.php:209
 msgid "Activate languages and translations for custom taxonomies."
 msgstr "Aktiver språk og oversettelser for tilpassede taksonomier."
 
 # @ polylang
-#: admin/admin-filters-post.php:379 admin/admin-filters-term.php:612
+#: admin/admin-filters-post.php:433 admin/admin-filters-term.php:642
 #: admin/table-languages.php:54 admin/view-translations-media.php:21
 msgid "Edit"
 msgstr "Rediger"
 
 # @ polylang
-#: admin/table-languages.php:60 admin/table-string.php:167
+#: admin/table-languages.php:60 admin/table-string.php:168
 msgid "Delete"
 msgstr "Slett"
 
@@ -456,12 +456,12 @@ msgid "Posts"
 msgstr "Innlegg"
 
 # @ polylang
-#: admin/table-string.php:109
+#: admin/table-string.php:110
 msgid "Name"
 msgstr "Navn"
 
 # @ polylang
-#: admin/table-string.php:110
+#: admin/table-string.php:111
 msgid "String"
 msgstr "String"
 
@@ -482,7 +482,7 @@ msgid "Displays a language switcher"
 msgstr "Viser en språkskifter"
 
 # @ polylang
-#: include/widget-languages.php:97
+#: include/widget-languages.php:75
 msgid "Title:"
 msgstr "Tittel:"
 
@@ -493,13 +493,13 @@ msgid "Adds multilingual capability to WordPress"
 msgstr "Legger til flerspråklig funksjonalitet til Wordpress"
 
 # @ polylang
-#: polylang.php:145
+#: install/install.php:24
 #, php-format
 msgid "You are using WordPress %s. Polylang requires at least WordPress %s."
 msgstr "Du bruker WordPress %s. Polylang krever minst WordPress %s."
 
 # @ polylang
-#: include/upgrade.php:76
+#: install/upgrade.php:76
 msgid ""
 "Polylang has been deactivated because you upgraded from a too old version."
 msgstr ""
@@ -507,18 +507,18 @@ msgstr ""
 "versjon."
 
 # @ polylang
-#: include/upgrade.php:78
+#: install/upgrade.php:78
 #, php-format
 msgid "Please upgrade first to %s before ugrading to %s."
 msgstr "Vennligst oppgrader først til %s før du oppgraderer til %s."
 
 # @ polylang
-#: admin/table-string.php:108
+#: admin/table-string.php:109
 msgid "Group"
 msgstr "Gruppe"
 
 # @ polylang
-#: admin/table-string.php:186
+#: admin/table-string.php:187
 msgid "View all groups"
 msgstr "Vis alle grupper"
 
@@ -528,7 +528,7 @@ msgid "You are about to permanently delete this language. Are you sure?"
 msgstr "Du holder på å slette dette språket permanent. Er du sikkert?"
 
 # @ polylang
-#: admin/view-languages.php:143
+#: admin/view-tab-strings.php:12
 msgid ""
 "Use this to remove unused strings from database, for example after a plugin "
 "has been uninstalled."
@@ -537,7 +537,7 @@ msgstr ""
 "utvidelse er avinstallert."
 
 # @ polylang
-#: admin/view-languages.php:374
+#: admin/view-tab-settings.php:226
 msgid ""
 "The synchronization options allow to maintain exact same values (or "
 "translations in the case of taxonomies and page parent) of meta content "
@@ -548,66 +548,60 @@ msgstr ""
 "metainnhold mellom oversettelser av et innlegg eller en side."
 
 # @ polylang
-#: admin/admin-model.php:278
+#: admin/admin-model.php:248
 msgid "The language code contains invalid characters"
 msgstr "Språkkoden inneholder ugyldige tegn"
 
 # @ polylang
-#: admin/view-languages.php:190
+#: admin/view-tab-settings.php:43
 msgid "The language is set from content"
 msgstr "Språket bestemmes av innhold"
 
 # @ polylang
-#: admin/view-languages.php:193
+#: admin/view-tab-settings.php:46
 msgid "Posts, pages, categories and tags urls are not modified."
 msgstr "Innlegg, sider, kategrier og stikkord urls er ikke tilpasset."
 
 # @ polylang
-#: admin/view-languages.php:199
+#: admin/view-tab-settings.php:51
 msgid "The language is set from the directory name in pretty permalinks"
 msgstr "Språket bestemmes av directory navnet i pene permalenker"
 
 # @ polylang
-#: admin/view-languages.php:202 admin/view-languages.php:211
-#: admin/view-languages.php:258 admin/view-languages.php:267
+#: admin/view-tab-settings.php:54 admin/view-tab-settings.php:63
+#: admin/view-tab-settings.php:110 admin/view-tab-settings.php:119
 msgid "Example:"
 msgstr "Eksempel:"
 
 # @ polylang
-#: admin/view-languages.php:208
+#: admin/view-tab-settings.php:60
 msgid "The language is set from the subdomain name in pretty permalinks"
 msgstr "Språket bestemmes av subdomenenavn i pene permalenker"
 
 # @ polylang
-#: admin/view-languages.php:217
+#: admin/view-tab-settings.php:69
 msgid "The language is set from different domains"
 msgstr "Språket bestemmes av andre domener"
 
 # @ polylang
-#: admin/view-languages.php:255
+#: admin/view-tab-settings.php:107
 msgid "Remove /language/ in pretty permalinks"
 msgstr "Fjern /language/ i pene permalenker"
 
 # @ polylang
-#: admin/view-languages.php:264
+#: admin/view-tab-settings.php:116
 msgid "Keep /language/ in pretty permalinks"
 msgstr "Behold /language/ i pene permalenker"
 
 # @ polylang
-#: admin/view-languages.php:279
+#: admin/view-tab-settings.php:131
 msgid ""
 "The front page url contains the language code instead of the page name or "
 "page id"
 msgstr "Forside url inneholder språkkoden i stedet for sidenavn eller side id"
 
 # @ polylang
-#: admin/admin-filters-term.php:167
-#, php-format
-msgid "A translation does already exist for %s"
-msgstr "Det finnes allerede en oversettelse for %s"
-
-# @ polylang
-#: admin/view-languages.php:287
+#: admin/view-tab-settings.php:139
 #, php-format
 msgid "Example: %s instead of %s"
 msgstr "Eksempel: %s i stedet for %s"
@@ -618,32 +612,32 @@ msgid "Impossible to add the language."
 msgstr "Ikke mulig å legge til språket."
 
 # @ polylang
-#: admin/admin-model.php:62
+#: admin/admin-model.php:66
 msgid "Language added."
 msgstr "Språk lagt til."
 
 # @ polylang
-#: admin/admin-model.php:176
+#: admin/admin-model.php:146
 msgid "Language deleted."
 msgstr "Språk slettet."
 
 # @ polylang
-#: admin/admin-model.php:257
+#: admin/admin-model.php:227
 msgid "Language updated."
 msgstr "Språk oppdatert."
 
 # @ polylang
-#: admin/settings.php:221
+#: admin/settings.php:239
 msgid "Translations updated."
 msgstr "Oversettelser oppdatert."
 
 # @ polylang
-#: admin/view-languages.php:89
+#: admin/view-tab-lang.php:72
 msgid "Language code - preferably 2-letters ISO 639-1  (for example: en)"
 msgstr "Språkkode - helst 2-bokstav ISO 639-1  (for eksempel: en)"
 
 # @ polylang
-#: admin/admin-filters.php:202
+#: admin/admin-filters.php:203
 msgid "The chosen static front page must be translated in all languages."
 msgstr "Den valgte statiske forsiden må være oversettes for alle språk."
 
@@ -651,3 +645,18 @@ msgstr "Den valgte statiske forsiden må være oversettes for alle språk."
 #: admin/admin-strings.php:60
 msgid "Widget text"
 msgstr "Widget tekst"
+
+# @ polylang
+#: admin/settings.php:52
+msgid "Recommended plugins"
+msgstr "Anbefalte utvidelser"
+
+# @ polylang
+#: admin/view-tab-settings.php:51
+msgid "The language is set from the code in the URL"
+msgstr "Språket bestemmes av koden i URL'en"
+
+# @ polylang
+#: include/switcher.php:26
+msgid "Hides languages with no translation"
+msgstr "Gjemmer språk uten oversettelser"

@@ -30,24 +30,25 @@ class PLL_Choose_Lang_Url extends PLL_Choose_lang {
 	 * @since 1.2
 	 */
 	public function set_language_from_url() {
+		$host = str_replace('www.', '', parse_url($this->links_model->home, PHP_URL_HOST));
+		$home_path = parse_url($this->links_model->home, PHP_URL_PATH);
+
+		$requested_host = str_replace('www.', '', $_SERVER['HTTP_HOST']);
+		$requested_uri = rtrim(str_replace($this->index, '', $_SERVER['REQUEST_URI']), '/'); // some PHP setups turn requests for / into /index.php in REQUEST_URI
+
 		// home is resquested
-		// some PHP setups turn requests for / into /index.php in REQUEST_URI
-		// thanks to Gonçalo Peres for pointing out the issue with queries unknown to WP
-		// http://wordpress.org/support/topic/plugin-polylang-language-homepage-redirection-problem-and-solution-but-incomplete?replies=4#post-2729566
-		if (str_replace('www.', '', home_url('/')) == trailingslashit((is_ssl() ? 'https://' : 'http://').str_replace('www.', '', $_SERVER['HTTP_HOST']).str_replace(array($this->index, '?'.$_SERVER['QUERY_STRING']), array('', ''), $_SERVER['REQUEST_URI']))) {
-			// take care to post & page preview http://wordpress.org/support/topic/static-frontpage-url-parameter-url-language-information
-			if (isset($_GET['preview']) && ( (isset($_GET['p']) && $id = $_GET['p']) || (isset($_GET['page_id']) && $id = $_GET['page_id']) ))
-				$curlang = ($lg = $this->model->get_post_language($id)) ? $lg : $this->model->get_language($this->options['default_lang']);
-
-			// take care to (unattached) attachments
-			elseif (isset($_GET['attachment_id']) && $id = $_GET['attachment_id'])
-				$curlang = ($lg = $this->model->get_post_language($id)) ? $lg : $this->get_preferred_language();
-
-			else {
-				$this->home_language();
-				add_action('setup_theme', array(&$this, 'home_requested'));
-			}
+		if ($requested_host == $host && $requested_uri == $home_path && empty($_SERVER['QUERY_STRING'])) {
+			$this->home_language();
+			add_action('setup_theme', array(&$this, 'home_requested'));
 		}
+
+		// take care to post & page preview http://wordpress.org/support/topic/static-frontpage-url-parameter-url-language-information
+		elseif (isset($_GET['preview']) && ( (isset($_GET['p']) && $id = $_GET['p']) || (isset($_GET['page_id']) && $id = $_GET['page_id']) ))
+			$curlang = ($lg = $this->model->get_post_language($id)) ? $lg : $this->model->get_language($this->options['default_lang']);
+
+		// take care to (unattached) attachments
+		elseif (isset($_GET['attachment_id']) && $id = $_GET['attachment_id'])
+				$curlang = ($lg = $this->model->get_post_language($id)) ? $lg : $this->get_preferred_language();
 
 		elseif ($slug = $this->links_model->get_language_from_url())
 			$curlang = $this->model->get_language($slug);

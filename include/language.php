@@ -21,6 +21,8 @@
  * is_rtl              => 1 if the language is rtl
  * flag_url            => url of the flag
  * flag                => html img of the flag
+ * custom_flag_url     => url of the custom flag if exists, internal use only, moves to flag_url on frontend
+ * custom_flag         => html img of the custom flag if exists, internal use only, moves to flag on frontend
  * home_url            => home url in this language
  * search_url          => home url to use in search forms
  * host                => host of this language
@@ -34,6 +36,7 @@ class PLL_Language {
 	public $locale, $is_rtl;
 	public $flag_url, $flag;
 	public $home_url, $search_url;
+	public $page_on_front = 0, $page_for_posts = 0;
 	public $host, $mo_id;
 
 	/*
@@ -69,25 +72,49 @@ class PLL_Language {
 	 * @since 1.2
 	 */
 	public function set_flag() {
-		if (file_exists(POLYLANG_DIR.($file = '/flags/'.$this->locale.'.png')))
-			$url = POLYLANG_URL.$file;
+		$flags['']['url'] = '';
 
-		// overwrite with custom flags
-		// never use custom flags on admin side
-		if (!PLL_ADMIN && ( file_exists(PLL_LOCAL_DIR.($file = '/'.$this->locale.'.png')) || file_exists(PLL_LOCAL_DIR.($file = '/'.$this->locale.'.jpg')) ))
-			$url = PLL_LOCAL_URL.$file;
+		// Polylang builtin flags
+		if (file_exists(POLYLANG_DIR.($file = '/flags/'.$this->locale.'.png'))) {
+			$flags['']['url'] = $flags['']['src'] = POLYLANG_URL.$file;
 
-		$this->flag_url = empty($url) ? '' : esc_url($url);
+			// if base64 encoded flags are preferred
+			if (!defined('PLL_ENCODED_FLAGS') || PLL_ENCODED_FLAGS)
+				$flags['']['src'] = 'data:image/png;base64,' . base64_encode(file_get_contents(POLYLANG_DIR.$file));
+		}
 
-		$this->flag = apply_filters('pll_get_flag', empty($this->flag_url) ? '' :
-			sprintf(
-				'<img src="%s" title="%s" alt="%s" />',
-				$this->flag_url,
-				esc_attr(apply_filters('pll_flag_title', $this->name, $this->slug, $this->locale)),
-				esc_attr($this->name)
-			),
-			$this->slug
-		);
+		// custom flags ?
+		if (file_exists(PLL_LOCAL_DIR.($file = '/'.$this->locale.'.png')) || file_exists(PLL_LOCAL_DIR.($file = '/'.$this->locale.'.jpg')) ) {
+			$flags['custom_']['url'] = $flags['custom_']['src'] = PLL_LOCAL_URL.$file;
+		}
+
+		foreach($flags as $key => $flag) {
+			$this->{$key . 'flag_url'} = empty($flag['url']) ? '' : esc_url($flag['url']);
+
+			$this->{$key . 'flag'} = apply_filters('pll_get_flag', empty($flag['src']) ? '' :
+				sprintf(
+					'<img src="%s" title="%s" alt="%s" />',
+					$flag['src'],
+					esc_attr(apply_filters('pll_flag_title', $this->name, $this->slug, $this->locale)),
+					esc_attr($this->name)
+				),
+				$this->slug
+			);
+		}
+	}
+
+	/*
+	 * replace flag by custom flag
+	 *
+	 * @since 1.7
+	 */
+	public function set_custom_flag() {
+		// overwrite with custom flags on frontend only
+		if (!empty($this->custom_flag)) {
+			$this->flag = $this->custom_flag;
+			$this->flag_url = $this->custom_flag_url;
+			unset($this->custom_flag, $this->custom_flag_url); // hide this
+		}
 	}
 
 	/*
@@ -102,12 +129,15 @@ class PLL_Language {
 
 	/*
 	 * set home_url and search_url properties
+	 * set page_on_front and page_for_posts too
 	 *
 	 * @since 1.3
 	 */
 	public function set_home_url() {
+		global $polylang;
+
 		// home url for search form (can't use the page url if a static page is used as front page)
-		$this->search_url = $GLOBALS['polylang']->links_model->home_url($this);
+		$this->search_url = $polylang->links_model->home_url($this);
 
 		// add a trailing slash as done by WP on homepage (otherwise could break the search form when the permalink structure does not include one)
 		// only for pretty permalinks
@@ -122,6 +152,13 @@ class PLL_Language {
 
 		else
 			$this->home_url = $this->search_url;
+
+		// page on front and page for posts
+		// FIXME here for convenience but should be moved outside
+		if ('page' == get_option('show_on_front')) {
+			$this->page_on_front = $polylang->model->get_post(get_option('page_on_front'), $this);
+			$this->page_for_posts = $polylang->model->get_post(get_option('page_for_posts'), $this);
+		}
 	}
 
 	/*
@@ -139,7 +176,6 @@ class PLL_Language {
 		else {
 			$this->home_url = str_replace('https://', 'http://', $this->home_url);
 			$this->search_url = str_replace('https://', 'http://', $this->search_url);
-
 		}
 	}
 }

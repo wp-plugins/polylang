@@ -22,9 +22,7 @@ class PLL_Admin_Sync {
 		add_action('add_meta_boxes', array(&$this, 'add_meta_boxes'), 5, 2); // before Types which populates custom fields in same hook with priority 10
 
 		add_action('pll_save_post', array(&$this, 'pll_save_post'), 10, 3);
-
-		if (in_array('taxonomies', $this->options['sync']))
-			add_action('pll_save_term', array(&$this, 'pll_save_term'), 10, 3);
+		add_action('pll_save_term', array(&$this, 'pll_save_term'), 10, 3);
 	}
 
 	/*
@@ -63,6 +61,23 @@ class PLL_Admin_Sync {
 	}
 
 	/*
+	 * get the list of taxonomies to copy or to synchronize
+	 *
+	 * @since 1.7
+	 *
+	 * @param bool $sync true if it is synchronization, false if it is a copy
+	 * @return array list of taxonomy names
+	 */
+	public function get_taxonomies_to_copy($sync) {
+		$taxonomies = !$sync || in_array('taxonomies', $this->options['sync']) ? $this->model->get_translated_taxonomies() : array();
+		if (!$sync || in_array('post_format', $this->options['sync']))
+			$taxonomies[] = 'post_format';
+
+		return array_unique(apply_filters('pll_copy_taxonomies', $taxonomies, $sync));
+	}
+
+
+	/*
 	 * copy or synchronize terms and metas
 	 *
 	 * @since 0.9
@@ -74,11 +89,13 @@ class PLL_Admin_Sync {
 	 */
 	public function copy_post_metas($from, $to, $lang, $sync = false) {
 		// copy or synchronize terms
-		if (!$sync || in_array('taxonomies', $this->options['sync'])) {
-			// FIXME quite a lot of query in foreach
-			foreach ($this->model->get_translated_taxonomies() as $tax) {
+		// FIXME quite a lot of query in foreach
+		foreach ($this->get_taxonomies_to_copy($sync) as $tax) {
+			$terms = get_the_terms($from, $tax);
+
+			// translated taxonomy
+			if ($this->model->is_translated_taxonomy($tax)) {
 				$newterms = array();
-				$terms = get_the_terms($from, $tax);
 				if (is_array($terms)) {
 					foreach ($terms as $term) {
 						if ($term_id = $this->model->get_translation('term', $term->term_id, $lang))
@@ -100,11 +117,13 @@ class PLL_Admin_Sync {
 				if (!empty($newterms) || $sync)
 					wp_set_object_terms($to, $newterms, $tax); // replace terms in translation
 			}
-		}
 
-		// copy or synchronize post formats
-		if (!$sync || in_array('post_format', $this->options['sync']))
-			($format = get_post_format($from)) ? set_post_format($to, $format) : set_post_format($to, '');
+			// untranslated taxonomy (post format)
+			// don't use simple get_post_format / set_post_format to generalize the case to other taxonomies
+			else {
+				wp_set_object_terms($to, is_array($terms) ? array_map('intval', wp_list_pluck($terms, 'term_id')) : null, $tax);
+			}
+		}
 
 		// copy or synchronize post metas and allow plugins to do the same
 		$metas = get_post_custom($from);
@@ -195,6 +214,10 @@ class PLL_Admin_Sync {
 	 * @param array $translations translations of the term
 	 */
 	public function pll_save_term($term_id, $taxonomy, $translations) {
+		// check if the taxonomy is synchronized
+		if (!$this->model->is_translated_taxonomy($taxonomy) || !in_array($taxonomy, $this->get_taxonomies_to_copy(true)))
+			return;
+
 		// get all posts associated to this term
 		$posts = get_posts(array(
 			'numberposts' => -1,

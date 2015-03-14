@@ -20,8 +20,8 @@ class PLL_Frontend_Filters extends PLL_Filters{
 		add_filter('locale', array(&$this, 'get_locale'));
 
 		// translates page for posts and page on front
-		add_filter('option_page_for_posts', array(&$this, 'translate_page'));
-		add_filter('option_page_on_front', array(&$this, 'translate_page'));
+		add_filter('option_page_on_front', array(&$this, 'translate_page_on_front'));
+		add_filter('option_page_for_posts', array(&$this, 'translate_page_for_posts'));
 
 		// filter sticky posts by current language
 		add_filter('option_sticky_posts', array(&$this, 'option_sticky_posts'));
@@ -40,7 +40,7 @@ class PLL_Frontend_Filters extends PLL_Filters{
 		// strings translation (must be applied before WordPress applies its default formatting filters)
 		foreach (array('widget_text', 'widget_title', 'option_blogname', 'option_blogdescription', 'option_date_format', 'option_time_format') as $filter)
 			add_filter($filter, 'pll__', 1);
-	
+
 		// translates biography
 		add_filter('get_user_metadata', array(&$this,'get_user_metadata'), 10, 3);
 
@@ -48,7 +48,7 @@ class PLL_Frontend_Filters extends PLL_Filters{
 		add_action('save_post', array(&$this, 'save_post'), 200, 2);
 		add_action('create_term', array(&$this, 'save_term'), 10, 3);
 		add_action('edit_term', array(&$this, 'save_term'), 10, 3);
-		
+
 		if ($this->options['media_support'])
 			add_action('add_attachment', array(&$this, 'set_default_language'));
 
@@ -75,19 +75,29 @@ class PLL_Frontend_Filters extends PLL_Filters{
 	}
 
 	/*
-	 * translates page for posts and page on front
+	 * translates page on front
 	 *
-	 * @since 0.8
+	 * @since 1.7
 	 *
-	 * @param int $v page for posts or page on front page id
+	 * @param int $v page on front page id
 	 * @return int
 	 */
-	public function translate_page($v) {
-		// FIXME comes too late when language is set from content
-		static $posts = array(); // the fonction may be often called so let's store the result
-
+	public function translate_page_on_front($v) {
 		// returns the current page if there is no translation to avoid ugly notices
-		return isset($this->curlang) && $v && (isset($posts[$this->model->blog_id][$v]) || $posts[$this->model->blog_id][$v] = $this->model->get_post($v, $this->curlang)) ? $posts[$this->model->blog_id][$v] : $v;
+		return isset($this->curlang->page_on_front) ? $this->curlang->page_on_front : $v;
+	}
+
+	/*
+	 * translates page for posts
+	 *
+	 * @since 1.7
+	 *
+	 * @param int $v page for posts page id
+	 * @return int
+	 */
+	public function translate_page_for_posts($v) {
+		// returns the current page if there is no translation to avoid ugly notices
+		return isset($this->curlang->page_for_posts) ? $this->curlang->page_for_posts : $v;
 	}
 
 	/*
@@ -201,7 +211,7 @@ class PLL_Frontend_Filters extends PLL_Filters{
 				$this->model->set_post_language($post_id, $this->curlang);
 		}
 	}
-	
+
 	/*
 	 * called when a post (or page) is saved, published or updated
 	 * does nothing except on post types which are filterable

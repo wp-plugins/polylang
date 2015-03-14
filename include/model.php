@@ -7,8 +7,7 @@
  */
 class PLL_Model {
 	public $options;
-	public $languages; // used to cache the list of languages
-	public $blog_id; // used to get one cache array per site
+	protected $cache; // our internal non persistent cache object
 
 	/*
 	 * constructor: registers custom taxonomies and setups filters and actions
@@ -19,7 +18,7 @@ class PLL_Model {
 	 */
 	public function __construct(&$options) {
 		$this->options = &$options;
-		$this->blog_id = get_current_blog_id();
+		$this->cache = new PLL_Cache();
 
 		// register our taxonomies as soon as possible
 		// this is early registration, not ready for rewrite rules as wp_rewrite will be setup later
@@ -34,9 +33,10 @@ class PLL_Model {
 		add_filter('wp_get_object_terms', array(&$this, 'wp_get_object_terms'), 10, 3);
 
 		// we need to clean languages cache when editing a language,
-		// when editing page of front or when modifying the permalink structure
+		// when editing page of front, page for posts or when modifying the permalink structure
 		add_action('edited_term_taxonomy', array(&$this, 'clean_languages_cache'), 10, 2);
 		add_action('update_option_page_on_front', array(&$this, 'clean_languages_cache'));
+		add_action('update_option_page_for_posts', array(&$this, 'clean_languages_cache'));
 		add_action('update_option_permalink_structure', array(&$this, 'clean_languages_cache'));
 
 		// registers completely the language taxonomy
@@ -109,10 +109,17 @@ class PLL_Model {
 				array('term_language', 'term_translations') :
 				array('language', 'post_translations');
 
+			// query terms
 			foreach (wp_get_object_terms($object_id, $taxonomies) as $t) {
-				wp_cache_add($object_id, array($t), $t->taxonomy . '_relationships'); // store it the way WP wants it
+				$terms[$t->taxonomy] = $t;
 				if ($t->taxonomy == $taxonomy)
 					$term = $t;
+			}
+
+			// store it the way WP wants it
+			// set an empty cache if no term found in the taxonomy
+			foreach ($taxonomies as $tax) {
+				wp_cache_add($object_id, empty($terms[$tax]) ? array() : array($terms[$tax]), $tax . '_relationships');
 			}
 		}
 		else {
@@ -138,7 +145,7 @@ class PLL_Model {
 	 * @return array|string|int list of PLL_Language objects or PLL_Language object properties
 	 */
 	public function get_languages_list($args = array()) {
-		if (empty($this->languages[$this->blog_id])) {
+		if (false === $languages = $this->cache->get('languages')) {
 			if ((defined('PLL_CACHE_LANGUAGES') && !PLL_CACHE_LANGUAGES) || false === ($languages = get_transient('pll_languages_list'))) {
 				$languages = get_terms('language', array('hide_empty' => false, 'orderby'=> 'term_group'));
 				$languages = empty($languages) || is_wp_error($languages) ? array() : $languages;
@@ -158,7 +165,7 @@ class PLL_Model {
 				}
 			}
 
-			$this->languages[$this->blog_id] = $languages;
+			$this->cache->set('languages', $languages);
 
 			// need to wait for $wp_rewrite availibility to set homepage urls
 			did_action('setup_theme') ? $this->_languages_list() : add_action('setup_theme', array(&$this, '_languages_list'));
@@ -167,7 +174,7 @@ class PLL_Model {
 		$args = wp_parse_args($args, array('hide_empty' => false));
 
 		// remove empty languages if requested
-		$languages = array_filter($this->languages[$this->blog_id], create_function('$v', sprintf('return $v->count || !%d;', $args['hide_empty'])));
+		$languages = array_filter($languages, create_function('$v', sprintf('return $v->count || !%d;', $args['hide_empty'])));
 
 		return empty($args['fields']) ? $languages : wp_list_pluck($languages, $args['fields']);
 	}
@@ -182,24 +189,28 @@ class PLL_Model {
 	 */
 	public function _languages_list() {
 		if ((defined('PLL_CACHE_LANGUAGES') && !PLL_CACHE_LANGUAGES) || false === get_transient('pll_languages_list')) {
-			if (!defined('PLL_CACHE_HOME_URL') || PLL_CACHE_HOME_URL) {
-				foreach ($this->languages[$this->blog_id] as $language)
+			foreach ($languages = $this->cache->get('languages') as $language) {
+				$language->set_flag();
+
+				if (!defined('PLL_CACHE_HOME_URL') || PLL_CACHE_HOME_URL) {
 					$language->set_home_url();
+				}
 			}
 
 			if (!defined('PLL_CACHE_LANGUAGES') || PLL_CACHE_LANGUAGES)
-				set_transient('pll_languages_list', $this->languages[$this->blog_id]);
+				set_transient('pll_languages_list', $languages);
 		}
 
-		foreach ($this->languages[$this->blog_id] as $language) {
+		foreach ($this->cache->get('languages') as $language) {
 			if (defined('PLL_CACHE_HOME_URL') && !PLL_CACHE_HOME_URL)
 				$language->set_home_url();
 
 			// ensures that the (possibly cached) home url uses the right scheme http or https
 			$language->set_home_url_scheme();
 
-			// add flags (not in db cache as they may be different on frontend and admin)
-			$language->set_flag();
+			// use custom flags on frontend only
+			if (!PLL_ADMIN)
+				$language->set_custom_flag();
 		}
 	}
 
@@ -214,9 +225,15 @@ class PLL_Model {
 	 * @param string $taxonomy taxonomy name
 	 */
 	public function clean_languages_cache($term = 0, $taxonomy = null) {
-		if (empty($taxonomy->name) || 'language' == $taxonomy->name) {
+		// depending on WP version, the action is passed an object or a string
+		// backward compatibility with WP < 4.2
+		if ( !empty($taxonomy) && is_object($taxonomy) ) {
+			$taxonomy = $taxonomy->name;
+		}
+
+		if (empty($taxonomy) || 'language' == $taxonomy) {
 			delete_transient('pll_languages_list');
-			$this->languages[$this->blog_id] = array();
+			$this->cache->clean();
 		}
 	}
 
@@ -229,20 +246,20 @@ class PLL_Model {
 	 * @return object|bool PLL_Language object, false if no language found
 	 */
 	public function get_language($value) {
-		static $language;
-
 		if (is_object($value))
 			return $this->get_language($value->term_id); // will force cast to PLL_Language
 
-		if (empty($language[$this->blog_id][$value])) {
-			foreach ($this->get_languages_list() as $lang)
-				$language[$this->blog_id][$lang->term_id]
-					= $language[$this->blog_id][$lang->tl_term_id]
-					= $language[$this->blog_id][$lang->slug]
-					= $language[$this->blog_id][$lang->locale] = $lang;
+		if (false === $return = $this->cache->get('language:' . $value)) {
+			foreach ($this->get_languages_list() as $lang) {
+				$this->cache->set('language:' . $lang->term_id, $lang);
+				$this->cache->set('language:' . $lang->tl_term_id, $lang);
+				$this->cache->set('language:' . $lang->slug, $lang);
+				$this->cache->set('language:' . $lang->locale, $lang);
+			}
+			$return = $this->cache->get('language:' . $value);
 		}
 
-		return empty($language[$this->blog_id][$value]) ? false : $language[$this->blog_id][$value];
+		return $return;
 	}
 
 	/*
@@ -606,6 +623,7 @@ class PLL_Model {
 	 * @since 1.2
 	 *
 	 * @param string|array $post_type post type name or array of post type names
+	 * @return bool
 	 */
 	public function is_translated_post_type($post_type) {
 		$post_types = $this->get_translated_post_types(false);
@@ -636,15 +654,99 @@ class PLL_Model {
 	}
 
 	/*
-	 * returns true if Polylang manages languages and translations for this post type
+	 * returns true if Polylang manages languages and translations for this taxonomy
 	 *
 	 * @since 1.2
 	 *
 	 * @param string|array $tax taxonomy name or array of taxonomy names
+	 * @return bool
 	 */
 	public function is_translated_taxonomy($tax) {
 		$taxonomies = $this->get_translated_taxonomies(false);
 		return (is_array($tax) && array_intersect($tax, $taxonomies) || in_array($tax, $taxonomies));
+	}
+
+	/*
+	 * return taxonomies that need to be filtered (post_format like)
+	 *
+	 * @since 1.7
+	 *
+	 * @param bool $filter true if we should return only valid registered taxonomies
+	 * @return array array of registered taxonomy names
+	 */
+	public function get_filtered_taxonomies($filter = true) {
+		static $taxonomies = null;
+
+		if (null === $taxonomies || !did_action('after_setup_theme')) {
+			$taxonomies = array('post_format' => 'post_format');
+			$taxonomies = apply_filters('pll_filtered_taxonomies', $taxonomies, false);
+		}
+
+		return $filter ? array_intersect($taxonomies, get_taxonomies()) : $taxonomies;
+	}
+
+	/*
+	 * returns true if Polylang filters this taxonomy per language
+	 *
+	 * @since 1.7
+	 *
+	 * @param string|array $tax taxonomy name or array of taxonomy names
+	 * @return bool
+	 */
+	public function is_filtered_taxonomy($tax) {
+		$taxonomies = $this->get_filtered_taxonomies(false);
+		return (is_array($tax) && array_intersect($tax, $taxonomies) || in_array($tax, $taxonomies));
+	}
+
+	/*
+	 * returns the query vars of all filtered taxonomies
+	 *
+	 * @since 1.7
+	 *
+	 * @return array
+	 */
+	public function get_filtered_taxonomies_query_vars() {
+		$query_vars = array();
+		foreach ($this->get_filtered_taxonomies() as $filtered_tax) {
+			$tax = get_taxonomy($filtered_tax);
+			$query_vars[] = $tax->query_var;
+		}
+		return $query_vars;
+	}
+
+	/*
+	 * create a default category for a language
+	 *
+	 * @since 1.2
+	 *
+	 * @param object|string|int $lang language
+	 */
+	public function create_default_category($lang) {
+		$lang = $this->get_language($lang);
+
+		// create a new category
+		// FIXME this is translated in admin language when we would like it in $lang
+		$cat_name = __('Uncategorized');
+		$cat_slug = sanitize_title($cat_name . '-' . $lang->slug);
+		$cat = wp_insert_term($cat_name, 'category', array('slug' => $cat_slug));
+
+		// check that the category was not previously created (in case the language was deleted and recreated)
+		$cat = isset($cat->error_data['term_exists']) ? $cat->error_data['term_exists'] : $cat['term_id'];
+
+		// set language
+		$this->set_term_language((int) $cat, $lang);
+
+		// this is a translation of the default category
+		$default = (int) get_option('default_category');
+		$translations = $this->get_translations('term', $default);
+		if (empty($translations)) {
+			if ($lg = $this->get_term_language($default))
+				$translations[$lg->slug] = $default;
+			else
+				$translations = array();
+		}
+
+		$this->save_translations('term', (int) $cat, $translations);
 	}
 
 	/*
@@ -736,11 +838,14 @@ class PLL_Model {
 			if (!empty($q['author']))
 				$where .= $wpdb->prepare(" AND p.post_author = %d", $q['author']);
 
-			if (!empty($q['post_format'])) {
-				$join .= " INNER JOIN {$wpdb->term_relationships} AS tr ON tr.object_id = p.ID";
-				$join .= " INNER JOIN {$wpdb->term_taxonomy} AS tt ON tt.term_taxonomy_id = tr.term_taxonomy_id";
-				$join .= " INNER JOIN {$wpdb->terms} AS t ON t.term_id = tt.term_id";
-				$where .= $wpdb->prepare(" AND t.slug = %s", $q['post_format']);
+			// filtered taxonomies (post_format)
+			foreach ($this->get_filtered_taxonomies_query_vars() as $tax_qv) {
+				if (!empty($q[$tax_qv])) {
+					$join .= " INNER JOIN {$wpdb->term_relationships} AS tr ON tr.object_id = p.ID";
+					$join .= " INNER JOIN {$wpdb->term_taxonomy} AS tt ON tt.term_taxonomy_id = tr.term_taxonomy_id";
+					$join .= " INNER JOIN {$wpdb->terms} AS t ON t.term_id = tt.term_id";
+					$where .= $wpdb->prepare(" AND t.slug = %s", $q[$tax_qv]);
+				}
 			}
 
 			$res = $wpdb->get_results($select . $join . $where . $groupby, ARRAY_A);

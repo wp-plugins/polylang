@@ -14,7 +14,7 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-KeywordsList: _e;__;_x\n"
 "X-Poedit-Basepath: .\n"
-"X-Generator: Poedit 1.6.9\n"
+"X-Generator: Poedit 1.5.4\n"
 "X-Poedit-SearchPath-0: ..\n"
 "X-Poedit-SearchPath-1: ../include\n"
 
@@ -62,8 +62,8 @@ msgstr ""
 "Mikäli pidit tästä lisäosasta tai se auttaa yritystäsi, lahjoituksia "
 "tekijälle arvostetaan suuresti."
 
-#: admin/admin-filters-post.php:81 admin/admin.php:90 admin/settings.php:55
-#: admin/settings.php:82 include/model.php:526
+#: admin/admin-filters-post.php:115 admin/admin.php:90 admin/settings.php:70
+#: admin/settings.php:97 include/model.php:561
 msgid "Languages"
 msgstr "Kielet"
 
@@ -83,35 +83,35 @@ msgstr "Pakottaa linkin etusivulle"
 msgid "Hides the current language"
 msgstr "Piilottaa nykyisen kielen"
 
-#: include/switcher.php:29
+#: include/switcher.php:30
 msgid "Displays as dropdown"
 msgstr "Näytä pudotusvalikkona"
 
-#: admin/admin.php:271
+#: admin/admin.php:267
 msgid "Filters content by language"
 msgstr "Suodata sisältöä kielen mukaan"
 
-#: admin/admin.php:262
+#: admin/admin.php:258
 msgid "Show all languages"
 msgstr "Näytä kaikki kielet"
 
-#: admin/admin-filters-columns.php:139 admin/admin-filters-columns.php:227
+#: admin/admin-filters-columns.php:140 admin/admin-filters-columns.php:230
 msgid "Add new translation"
 msgstr "Lisää uusi käännös"
 
 #: admin/admin-filters-columns.php:173 admin/admin-filters-media.php:55
-#: admin/admin-filters-post.php:107 admin/admin-filters-term.php:77
-#: admin/admin-filters-term.php:121 include/model.php:527
+#: admin/admin-filters-post.php:141 admin/admin-filters-term.php:75
+#: admin/admin-filters-term.php:122 include/model.php:562
 msgid "Language"
 msgstr "Kieli"
 
-#: admin/table-string.php:111 admin/view-translations-media.php:5
+#: admin/table-string.php:112 admin/view-translations-media.php:5
 #: admin/view-translations-post.php:5 admin/view-translations-term.php:6
 #: admin/view-translations-term.php:11
 msgid "Translations"
 msgstr "Käännökset"
 
-#: admin/admin-filters-term.php:84 admin/admin-filters-term.php:128
+#: admin/admin-filters-term.php:82 admin/admin-filters-term.php:130
 msgid "Sets the language"
 msgstr "Aseta kieli"
 
@@ -119,7 +119,7 @@ msgstr "Aseta kieli"
 msgid "The widget is displayed for:"
 msgstr "Vimpain näytetään:"
 
-#: admin/admin-filters.php:55 include/model.php:528
+#: admin/admin-filters.php:55 include/model.php:563
 msgid "All languages"
 msgstr "Kaikki kielet"
 
@@ -131,7 +131,7 @@ msgstr "Ylläpidon kieli"
 msgid "Wordpress default"
 msgstr "Wordpress oletus"
 
-#: admin/admin.php:171 admin/settings.php:87
+#: admin/admin.php:167 admin/settings.php:102
 msgid "Settings"
 msgstr "Asetukset"
 
@@ -139,31 +139,31 @@ msgstr "Asetukset"
 msgid "Upgrading language files&#8230;"
 msgstr "Päivitetään kielitiedostoja&#8230;"
 
-#: admin/settings.php:47
+#: admin/settings.php:62
 msgid "About Polylang"
 msgstr "Tietoja Polylang:sta"
 
-#: admin/settings.php:63
+#: admin/settings.php:78
 msgid "Strings translations"
 msgstr "Merkkijonojen käännökset"
 
-#: admin/settings.php:86
+#: admin/settings.php:101
 msgid "Strings translation"
 msgstr "Merkkijonojen käännös"
 
-#: admin/admin-model.php:274
+#: admin/admin-model.php:244
 msgid "Enter a valid WordPress locale"
 msgstr "Syötä oikeanmuotoinen WordPress lokaali"
 
-#: admin/admin-model.php:282
+#: admin/admin-model.php:252
 msgid "The language code must be unique"
 msgstr "Kielikoodin täytyy olla uniikki"
 
-#: admin/admin-model.php:286
+#: admin/admin-model.php:256
 msgid "The language must have a name"
 msgstr "Kielellä täytyy olla nimi"
 
-#: admin/admin.php:371 admin/settings.php:162
+#: admin/admin.php:367 admin/settings.php:180
 msgid ""
 "The language was created, but the WordPress language file was not "
 "downloaded. Please install it manually."
@@ -175,87 +175,87 @@ msgid "Widget title"
 msgstr "Vimpaimen otsikko"
 
 # @ polylang
-#: admin/settings.php:301
+#: admin/settings.php:319
 msgid "Taxonomies"
 msgstr "Luokittelut"
 
 # @ polylang
-#: admin/settings.php:302
+#: admin/settings.php:320
 msgid "Custom fields"
 msgstr "Mukautetut kentät"
 
 # @ polylang
-#: admin/settings.php:303
+#: admin/settings.php:321
 msgid "Comment status"
 msgstr "Kommentin tila"
 
 # @ polylang
-#: admin/settings.php:304
+#: admin/settings.php:322
 msgid "Ping status"
 msgstr "Ping-tila"
 
 # @ polylang
-#: admin/settings.php:305
+#: admin/settings.php:323
 msgid "Sticky posts"
 msgstr "Kiinnitetyt artikkelit"
 
 # @ polylang
-#: admin/settings.php:306
+#: admin/settings.php:324
 msgid "Published date"
 msgstr "Julkaisupäivämäärä"
 
 # @ polylang
-#: admin/settings.php:307
+#: admin/settings.php:325
 msgid "Post format"
 msgstr "Artikkelin muoto"
 
-#: admin/settings.php:308
+#: admin/settings.php:326
 msgid "Page parent"
 msgstr "Sivun yläsivu"
 
 # @ polylang
-#: admin/settings.php:309
+#: admin/settings.php:327
 msgid "Page template"
 msgstr "Sivun sivupohja"
 
-#: admin/settings.php:310
+#: admin/settings.php:328
 msgid "Page order"
 msgstr "Sivun järjestys"
 
 # @ polylang
-#: admin/settings.php:311
+#: admin/settings.php:329
 msgid "Featured image"
 msgstr "Artikkelikuva"
 
-#: admin/view-languages.php:38
+#: admin/view-tab-lang.php:21
 msgid "Edit language"
 msgstr "Muokkaa kieltä"
 
-#: admin/view-languages.php:38 admin/view-languages.php:113
+#: admin/view-tab-lang.php:21 admin/view-tab-lang.php:96
 msgid "Add new language"
 msgstr "Lisää uusi kieli"
 
-#: admin/view-languages.php:54
+#: admin/view-tab-lang.php:37
 msgid "Choose a language"
 msgstr "Valitse kieli"
 
-#: admin/view-languages.php:68
+#: admin/view-tab-lang.php:51
 msgid "You can choose a language in the list or directly edit it below."
 msgstr "Voit valita kielen listalta tai muokata sitä suoraan alla."
 
-#: admin/table-languages.php:74 admin/view-languages.php:72
+#: admin/table-languages.php:74 admin/view-tab-lang.php:55
 msgid "Full name"
 msgstr "Täydellinen nimi"
 
-#: admin/view-languages.php:74
+#: admin/view-tab-lang.php:57
 msgid "The name is how it is displayed on your site (for example: English)."
 msgstr "Nimi kuinka se esiintyy sivustollasi (esimerkiksi: Englanti)."
 
-#: admin/table-languages.php:75 admin/view-languages.php:78
+#: admin/table-languages.php:75 admin/view-tab-lang.php:61
 msgid "Locale"
 msgstr "Lokaali"
 
-#: admin/view-languages.php:83
+#: admin/view-tab-lang.php:66
 msgid ""
 "Wordpress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
@@ -263,53 +263,53 @@ msgstr ""
 "Wordpress lokaali tälle kielelle (esimerkiksi: en_US). Sinun pitää asentaa ."
 "mo-tiedosto tälle kielelle."
 
-#: admin/view-languages.php:87
+#: admin/view-tab-lang.php:70
 msgid "Language code"
 msgstr "Kielikoodi"
 
-#: admin/view-languages.php:93
+#: admin/view-tab-lang.php:76
 msgid "Text direction"
 msgstr "Tekstin suunta"
 
-#: admin/view-languages.php:97
+#: admin/view-tab-lang.php:80
 msgid "left to right"
 msgstr "vasemmalta oikealle"
 
-#: admin/view-languages.php:102
+#: admin/view-tab-lang.php:85
 msgid "right to left"
 msgstr "oikealta vasemmalle"
 
-#: admin/view-languages.php:104
+#: admin/view-tab-lang.php:87
 msgid "Choose the text direction for the language"
 msgstr "Valitse kielen tekstin suunta"
 
-#: admin/table-languages.php:77 admin/view-languages.php:108
+#: admin/table-languages.php:77 admin/view-tab-lang.php:91
 msgid "Order"
 msgstr "Järjestys"
 
-#: admin/view-languages.php:110
+#: admin/view-tab-lang.php:93
 msgid "Position of the language in the language switcher"
 msgstr "Kielen sijainti kielivalinnassa"
 
-#: admin/admin-nav-menu.php:52 admin/admin-nav-menu.php:90
-#: admin/admin-nav-menu.php:93 admin/admin-nav-menu.php:124
-#: admin/admin-nav-menu.php:186 include/upgrade.php:301
+#: admin/admin-nav-menu.php:54 admin/admin-nav-menu.php:92
+#: admin/admin-nav-menu.php:95 admin/admin-nav-menu.php:126
+#: admin/admin-nav-menu.php:188 install/upgrade.php:301
 msgid "Language switcher"
 msgstr "Kielivalinta"
 
-#: admin/view-languages.php:139
+#: admin/view-tab-strings.php:8
 msgid "Search translations"
 msgstr "Haun käännökset"
 
-#: admin/view-languages.php:142
+#: admin/view-tab-strings.php:11
 msgid "Clean strings translation database"
 msgstr "Tyhjennä merkkijonot käännöstietokannasta"
 
-#: admin/view-languages.php:161
+#: admin/view-tab-settings.php:14
 msgid "Default language"
 msgstr "Oletuskieli"
 
-#: admin/view-languages.php:176
+#: admin/view-tab-settings.php:29
 msgid ""
 "There are posts, pages, categories or tags without language set. Do you want "
 "to set them all to default language ?"
@@ -317,64 +317,64 @@ msgstr ""
 "Siellä on artikkeleita, sivuja, kategorioita tai tageja ilman asetettua "
 "kieltä. Haluatko asettaa ne oletuskielelle?"
 
-#: admin/view-languages.php:297
+#: admin/view-tab-settings.php:149
 msgid "Detect browser language"
 msgstr "Tunnista selaimen kieli"
 
-#: admin/view-languages.php:303
+#: admin/view-tab-settings.php:155
 msgid ""
 "When the front page is visited, set the language according to the browser "
 "preference"
 msgstr "Kun etusivulla vieraillaan, aseta kieli selaimen asetuksen mukaan"
 
-#: admin/view-languages.php:184
+#: admin/view-tab-settings.php:37
 msgid "URL modifications"
 msgstr "URL muunnokset"
 
-#: admin/view-languages.php:241
+#: admin/view-tab-settings.php:93
 msgid "Hide URL language information for default language"
 msgstr "Piilota URL-osoitteen kielitieto oletuskieleltä"
 
 # @ polylang
-#: admin/view-languages.php:310
+#: admin/view-tab-settings.php:162
 msgid "Media"
 msgstr "Media"
 
 # @ polylang
-#: admin/view-languages.php:316
+#: admin/view-tab-settings.php:168
 msgid "Activate languages and translations for media"
 msgstr "Aktivoi kielet ja käännökset mediassa."
 
-#: admin/view-languages.php:363
+#: admin/view-tab-settings.php:215
 msgid "Synchronization"
 msgstr "Synkronointi"
 
 # @ polylang
-#: admin/view-languages.php:324
+#: admin/view-tab-settings.php:176
 msgid "Custom post types"
 msgstr "Mukautetut artikkelien mallit"
 
 # @ polylang
-#: admin/view-languages.php:337
+#: admin/view-tab-settings.php:189
 msgid "Activate languages and translations for custom post types."
 msgstr "Aktivoi kielet ja käännökset mukautettujen artikkelien malleissa."
 
 # @ polylang
-#: admin/view-languages.php:344
+#: admin/view-tab-settings.php:196
 msgid "Custom taxonomies"
 msgstr "Mukautetut luokittelut"
 
 # @ polylang
-#: admin/view-languages.php:357
+#: admin/view-tab-settings.php:209
 msgid "Activate languages and translations for custom taxonomies."
 msgstr "Aktivoi kielet ja käännökset mukautettuissa luokitteluissa."
 
-#: admin/admin-filters-post.php:379 admin/admin-filters-term.php:612
+#: admin/admin-filters-post.php:433 admin/admin-filters-term.php:642
 #: admin/table-languages.php:54 admin/view-translations-media.php:21
 msgid "Edit"
 msgstr "Muokkaa"
 
-#: admin/table-languages.php:60 admin/table-string.php:167
+#: admin/table-languages.php:60 admin/table-string.php:168
 msgid "Delete"
 msgstr "Poista"
 
@@ -390,11 +390,11 @@ msgstr "Lippu"
 msgid "Posts"
 msgstr "Artikkelit"
 
-#: admin/table-string.php:109
+#: admin/table-string.php:110
 msgid "Name"
 msgstr "Nimi"
 
-#: admin/table-string.php:110
+#: admin/table-string.php:111
 msgid "String"
 msgstr "Merkkijono"
 
@@ -411,7 +411,7 @@ msgstr "Kielivalinta"
 msgid "Displays a language switcher"
 msgstr "Näytä kielivalinta"
 
-#: include/widget-languages.php:97
+#: include/widget-languages.php:75
 msgid "Title:"
 msgstr "Otsikko:"
 
@@ -421,32 +421,32 @@ msgstr "Otsikko:"
 msgid "Adds multilingual capability to WordPress"
 msgstr "Lisää monikielisyyden tuen WordPressiin"
 
-#: polylang.php:145
+#: install/install.php:24
 #, php-format
 msgid "You are using WordPress %s. Polylang requires at least WordPress %s."
 msgstr ""
 "Käytät WordPress versiota %s. Polylang vaatii vähintään WordPress version %s."
 
 # @ polylang
-#: include/upgrade.php:76
+#: install/upgrade.php:76
 msgid ""
 "Polylang has been deactivated because you upgraded from a too old version."
 msgstr ""
 "Polylang on poistettu käytöstä, koska päivitit liian vanhasta versiosta."
 
 # @ polylang
-#: include/upgrade.php:78
+#: install/upgrade.php:78
 #, php-format
 msgid "Please upgrade first to %s before ugrading to %s."
 msgstr "Päivitä ensin versioon %s ennen kuin päivität %s."
 
 # @ polylang
-#: admin/table-string.php:108
+#: admin/table-string.php:109
 msgid "Group"
 msgstr "Ryhmä"
 
 # @ polylang
-#: admin/table-string.php:186
+#: admin/table-string.php:187
 msgid "View all groups"
 msgstr "Näytä kaikki ryhmät"
 
@@ -456,7 +456,7 @@ msgid "You are about to permanently delete this language. Are you sure?"
 msgstr "Olet aikaissa pysyvästi poistaa tämän kielen. Oletko varma?"
 
 # @ polylang
-#: admin/view-languages.php:143
+#: admin/view-tab-strings.php:12
 msgid ""
 "Use this to remove unused strings from database, for example after a plugin "
 "has been uninstalled."
@@ -465,7 +465,7 @@ msgstr ""
 "esimerkiksi lisäosan poiston jälkeen."
 
 # @ polylang
-#: admin/view-languages.php:374
+#: admin/view-tab-settings.php:226
 msgid ""
 "The synchronization options allow to maintain exact same values (or "
 "translations in the case of taxonomies and page parent) of meta content "
@@ -475,51 +475,51 @@ msgstr ""
 "taksonomioiden käännösten olleessa kyseessä) metatietojen artikkelien tai "
 "sivujen välillä."
 
-#: admin/admin-model.php:278
+#: admin/admin-model.php:248
 msgid "The language code contains invalid characters"
 msgstr "Kielikoodi sisältää virhellisiä merkkejä"
 
-#: admin/view-languages.php:190
+#: admin/view-tab-settings.php:43
 msgid "The language is set from content"
 msgstr "Kieli on asetettu sisällöstä"
 
-#: admin/view-languages.php:193
+#: admin/view-tab-settings.php:46
 msgid "Posts, pages, categories and tags urls are not modified."
 msgstr ""
 "Artikkelien, sivujen, kategorioiden ja avainsanojen url-osoitteet eivät ole "
 "muokattuja."
 
-#: admin/view-languages.php:199
+#: admin/view-tab-settings.php:51
 msgid "The language is set from the directory name in pretty permalinks"
 msgstr ""
 "Kieli on asetettu hakemiston nimestä käyttäjäystävällisissä kestolinkeissä"
 
 # @ polylang
-#: admin/view-languages.php:202 admin/view-languages.php:211
-#: admin/view-languages.php:258 admin/view-languages.php:267
+#: admin/view-tab-settings.php:54 admin/view-tab-settings.php:63
+#: admin/view-tab-settings.php:110 admin/view-tab-settings.php:119
 msgid "Example:"
 msgstr "Esimerkki:"
 
-#: admin/view-languages.php:208
+#: admin/view-tab-settings.php:60
 msgid "The language is set from the subdomain name in pretty permalinks"
 msgstr ""
 "Kieli on asetettu aliverkkotunnuksesta käyttäjäystävällisissä kestolinkeissä"
 
 # @ polylang
-#: admin/view-languages.php:217
+#: admin/view-tab-settings.php:69
 msgid "The language is set from different domains"
 msgstr "Kieli on asetettu eri verkkotunnukselle"
 
-#: admin/view-languages.php:255
+#: admin/view-tab-settings.php:107
 msgid "Remove /language/ in pretty permalinks"
 msgstr "Poista /kieli/ käyttäjäystävällisistä kestolinkeistä"
 
-#: admin/view-languages.php:264
+#: admin/view-tab-settings.php:116
 msgid "Keep /language/ in pretty permalinks"
 msgstr "Säilytä /kieli/ käyttäjäystävällisissä kestolinkeissä"
 
 # @ polylang
-#: admin/view-languages.php:279
+#: admin/view-tab-settings.php:131
 msgid ""
 "The front page url contains the language code instead of the page name or "
 "page id"
@@ -528,13 +528,7 @@ msgstr ""
 "sijasta"
 
 # @ polylang
-#: admin/admin-filters-term.php:167
-#, php-format
-msgid "A translation does already exist for %s"
-msgstr "Käännös löytyy jo %s"
-
-# @ polylang
-#: admin/view-languages.php:287
+#: admin/view-tab-settings.php:139
 #, php-format
 msgid "Example: %s instead of %s"
 msgstr "Esimerkki: %s %s sijasta"
@@ -544,31 +538,31 @@ msgid "Impossible to add the language."
 msgstr "Kielen lisääminen on mahdotonta."
 
 # @ polylang
-#: admin/admin-model.php:62
+#: admin/admin-model.php:66
 msgid "Language added."
 msgstr "Kieli lisätty."
 
 # @ polylang
-#: admin/admin-model.php:176
+#: admin/admin-model.php:146
 msgid "Language deleted."
 msgstr "Kieli poistettu."
 
 # @ polylang
-#: admin/admin-model.php:257
+#: admin/admin-model.php:227
 msgid "Language updated."
 msgstr "Kieli päivitetty."
 
 # @ polylang
-#: admin/settings.php:221
+#: admin/settings.php:239
 msgid "Translations updated."
 msgstr "Käännökset päivitetty."
 
-#: admin/view-languages.php:89
+#: admin/view-tab-lang.php:72
 msgid "Language code - preferably 2-letters ISO 639-1  (for example: en)"
 msgstr "Kielikoodi - mieluiten 2-kirjainta ISO 639-1  (esimerkiksi: en)"
 
 # @ polylang
-#: admin/admin-filters.php:202
+#: admin/admin-filters.php:203
 msgid "The chosen static front page must be translated in all languages."
 msgstr "Valittu staattinen etusivu täytyy täytyy kääntää kaikille kielille."
 
@@ -576,87 +570,16 @@ msgstr "Valittu staattinen etusivu täytyy täytyy kääntää kaikille kielille
 msgid "Widget text"
 msgstr "Vimpaimen teksti"
 
-#~ msgid "2-letters ISO 639-1 language code (for example: en)"
-#~ msgstr "2-kirjaiminen ISO 639-1 kielikoodi (esimerkiksi: en)"
+# @ polylang
+#: admin/settings.php:52
+msgid "Recommended plugins"
+msgstr ""
 
-#~ msgid "Translation"
-#~ msgstr "Käännös"
+#: admin/view-tab-settings.php:51
+msgid "The language is set from the code in the URL"
+msgstr ""
 
-#~ msgid "ID of pages in other languages:"
-#~ msgstr "Sivun ID toisilla kielillä:"
-
-#~ msgid "Page ID"
-#~ msgstr "Sivun ID"
-
-#~ msgid "Post ID"
-#~ msgstr "Artikkelin ID"
-
-#~ msgid "No untranslated term"
-#~ msgstr "Ei kääntämättömiä termejä"
-
-#~ msgid ""
-#~ "When using static front page, redirect the language page (example: %s) to "
-#~ "the front page in the right language"
-#~ msgstr ""
-#~ "Kun käytetään staattista etusivua, uudelleenohjaa kielisivu (esimerkiksi: "
-#~ "%s) oikean kielen etusivulle"
-
-#~ msgid ""
-#~ "For some reasons, Polylang could not create a table in your database."
-#~ msgstr "Jostain syystä Polylang ei voinut luoda taulukkoa tietokantaasi."
-
-#~ msgid "Displays a language switcher at the end of the menu"
-#~ msgstr "Näytä kielivalinta valikon lopussa"
-
-#~ msgid "Theme locations and languages"
-#~ msgstr "Teeman sijainnit ja kielet"
-
-#~ msgid ""
-#~ "Please go to the %slanguages page%s to set theme locations and languages"
-#~ msgstr "Siirry %skielisivulle%s asettamaan teemojen sijainnit ja kielet"
-
-#~ msgid "Menus"
-#~ msgstr "Valikot"
-
-#~ msgid "Error: Restore of local flags failed!"
-#~ msgstr "Virhe: Paikallisten lippujen palautus epäonnistui!"
-
-#~ msgid "Please move your local flags from %s to %s"
-#~ msgstr "Siirrä paikalliset lippusi kansiosta %s kansioon %s"
-
-#~ msgid "%1$s %2$s"
-#~ msgstr "%1$s %2$s"
-
-#~ msgid "View posts for %1$s %2$s"
-#~ msgstr "Näytä artikkelit %1$s %2$s"
-
-#~ msgid "Site Title"
-#~ msgstr "Sivuston otsikko"
-
-#~ msgid "Tagline"
-#~ msgstr "Kuvaus"
-
-#~ msgid "&mdash; No Change &mdash;"
-#~ msgstr "&mdash; Ei muutosta &mdash;"
-
-#~ msgid "Page's language:"
-#~ msgstr "Sivun kieli:"
-
-#~ msgid "Post's language:"
-#~ msgstr "Artikkelin kieli:"
-
-#~ msgid "None"
-#~ msgstr "Ei mitään"
-
-#~ msgid "Update"
-#~ msgstr "Päivitä"
-
-#~ msgid ""
-#~ "Allow to synchronize categories, tags, featured image and other metas "
-#~ "between translations of a post or page"
-#~ msgstr ""
-#~ "Salli kategorioiden, tagien, artikkelikuvan ja muiden meta-tietojen "
-#~ "synkronointi artikkelin tai sivun käännösten välillä"
-
-#~ msgid "Search"
-#~ msgstr "Hae"
+# @ polylang
+#: include/switcher.php:26
+msgid "Hides languages with no translation"
+msgstr ""

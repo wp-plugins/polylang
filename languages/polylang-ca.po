@@ -14,7 +14,7 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-KeywordsList: _e;__;_x\n"
 "X-Poedit-Basepath: .\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.6.3\n"
 "X-Poedit-SearchPath-0: ..\n"
 "X-Poedit-SearchPath-1: ../include\n"
 
@@ -62,8 +62,8 @@ msgstr ""
 "Finalment, si t'agrada aquest plugin i el trobes útil per al teu negoci, "
 "pots fer-ne un donatiu. L'autor t'ho agrairà enormement."
 
-#: admin/admin-filters-post.php:81 admin/admin.php:90 admin/settings.php:55
-#: admin/settings.php:82 include/model.php:526
+#: admin/admin-filters-post.php:115 admin/admin.php:90 admin/settings.php:70
+#: admin/settings.php:97 include/model.php:561
 msgid "Languages"
 msgstr "Idiomes"
 
@@ -83,35 +83,35 @@ msgstr "Força un enllaç cap a la pàgina principal"
 msgid "Hides the current language"
 msgstr "Oculta l'idioma actual"
 
-#: include/switcher.php:29
+#: include/switcher.php:30
 msgid "Displays as dropdown"
 msgstr "Mostra com a menú desplegable"
 
-#: admin/admin.php:271
+#: admin/admin.php:267
 msgid "Filters content by language"
 msgstr "Filters content by language"
 
-#: admin/admin.php:262
+#: admin/admin.php:258
 msgid "Show all languages"
 msgstr "Mostra tots els idiomes"
 
-#: admin/admin-filters-columns.php:139 admin/admin-filters-columns.php:227
+#: admin/admin-filters-columns.php:140 admin/admin-filters-columns.php:230
 msgid "Add new translation"
 msgstr "Afegeix traducció nova"
 
 #: admin/admin-filters-columns.php:173 admin/admin-filters-media.php:55
-#: admin/admin-filters-post.php:107 admin/admin-filters-term.php:77
-#: admin/admin-filters-term.php:121 include/model.php:527
+#: admin/admin-filters-post.php:141 admin/admin-filters-term.php:75
+#: admin/admin-filters-term.php:122 include/model.php:562
 msgid "Language"
 msgstr "Idioma"
 
-#: admin/table-string.php:111 admin/view-translations-media.php:5
+#: admin/table-string.php:112 admin/view-translations-media.php:5
 #: admin/view-translations-post.php:5 admin/view-translations-term.php:6
 #: admin/view-translations-term.php:11
 msgid "Translations"
 msgstr "Traduccions"
 
-#: admin/admin-filters-term.php:84 admin/admin-filters-term.php:128
+#: admin/admin-filters-term.php:82 admin/admin-filters-term.php:130
 msgid "Sets the language"
 msgstr "Estableix l'idioma"
 
@@ -119,7 +119,7 @@ msgstr "Estableix l'idioma"
 msgid "The widget is displayed for:"
 msgstr "El widget es mostra per a:"
 
-#: admin/admin-filters.php:55 include/model.php:528
+#: admin/admin-filters.php:55 include/model.php:563
 msgid "All languages"
 msgstr "Tots els idiomes"
 
@@ -131,7 +131,7 @@ msgstr "Idioma de l'administrador"
 msgid "Wordpress default"
 msgstr "Opció per defecte de Wordpress"
 
-#: admin/admin.php:171 admin/settings.php:87
+#: admin/admin.php:167 admin/settings.php:102
 msgid "Settings"
 msgstr "Paràmetres"
 
@@ -139,31 +139,31 @@ msgstr "Paràmetres"
 msgid "Upgrading language files&#8230;"
 msgstr "S'estan actualitzant els arxius d'idioma&#8230;"
 
-#: admin/settings.php:47
+#: admin/settings.php:62
 msgid "About Polylang"
 msgstr "Sobre Polylang"
 
-#: admin/settings.php:63
+#: admin/settings.php:78
 msgid "Strings translations"
 msgstr "Traduccions de cadenes"
 
-#: admin/settings.php:86
+#: admin/settings.php:101
 msgid "Strings translation"
 msgstr "Traducció de cadenes"
 
-#: admin/admin-model.php:274
+#: admin/admin-model.php:244
 msgid "Enter a valid WordPress locale"
 msgstr "Introdueix un codi d'idioma i regió vàlid de WordPress"
 
-#: admin/admin-model.php:282
+#: admin/admin-model.php:252
 msgid "The language code must be unique"
 msgstr "El codi d'idioma ha de ser únic"
 
-#: admin/admin-model.php:286
+#: admin/admin-model.php:256
 msgid "The language must have a name"
 msgstr "L'idioma ha de tenir un nom"
 
-#: admin/admin.php:371 admin/settings.php:162
+#: admin/admin.php:367 admin/settings.php:180
 msgid ""
 "The language was created, but the WordPress language file was not "
 "downloaded. Please install it manually."
@@ -176,87 +176,87 @@ msgid "Widget title"
 msgstr "Títol del widget"
 
 # @ polylang
-#: admin/settings.php:301
+#: admin/settings.php:319
 msgid "Taxonomies"
 msgstr "Taxonomies"
 
 # @ polylang
-#: admin/settings.php:302
+#: admin/settings.php:320
 msgid "Custom fields"
 msgstr "Camps personalitzats"
 
 # @ polylang
-#: admin/settings.php:303
+#: admin/settings.php:321
 msgid "Comment status"
 msgstr "Estat del comentari"
 
 # @ polylang
-#: admin/settings.php:304
+#: admin/settings.php:322
 msgid "Ping status"
 msgstr "Estat dels pings"
 
 # @ polylang
-#: admin/settings.php:305
+#: admin/settings.php:323
 msgid "Sticky posts"
 msgstr "Entrades adherides (sticky)"
 
 # @ polylang
-#: admin/settings.php:306
+#: admin/settings.php:324
 msgid "Published date"
 msgstr "Data de publicació"
 
 # @ polylang
-#: admin/settings.php:307
+#: admin/settings.php:325
 msgid "Post format"
 msgstr "Format de l'entrada"
 
-#: admin/settings.php:308
+#: admin/settings.php:326
 msgid "Page parent"
 msgstr "Pàgina mare"
 
 # @ polylang
-#: admin/settings.php:309
+#: admin/settings.php:327
 msgid "Page template"
 msgstr "Plantilla de la pàgina"
 
-#: admin/settings.php:310
+#: admin/settings.php:328
 msgid "Page order"
 msgstr "Ordre de la pàgina"
 
 # @ polylang
-#: admin/settings.php:311
+#: admin/settings.php:329
 msgid "Featured image"
 msgstr "Imatge destacada"
 
-#: admin/view-languages.php:38
+#: admin/view-tab-lang.php:21
 msgid "Edit language"
 msgstr "Edita idioma"
 
-#: admin/view-languages.php:38 admin/view-languages.php:113
+#: admin/view-tab-lang.php:21 admin/view-tab-lang.php:96
 msgid "Add new language"
 msgstr "Afegeix idioma"
 
-#: admin/view-languages.php:54
+#: admin/view-tab-lang.php:37
 msgid "Choose a language"
 msgstr "Tria idioma"
 
-#: admin/view-languages.php:68
+#: admin/view-tab-lang.php:51
 msgid "You can choose a language in the list or directly edit it below."
 msgstr "Pots triar un idioma de la llista o editar-lo directament a sota"
 
-#: admin/table-languages.php:74 admin/view-languages.php:72
+#: admin/table-languages.php:74 admin/view-tab-lang.php:55
 msgid "Full name"
 msgstr "Nom complet"
 
-#: admin/view-languages.php:74
+#: admin/view-tab-lang.php:57
 msgid "The name is how it is displayed on your site (for example: English)."
 msgstr "El nom és el que apareix al teu lloc web (per exemple: català)"
 
-#: admin/table-languages.php:75 admin/view-languages.php:78
+#: admin/table-languages.php:75 admin/view-tab-lang.php:61
 msgid "Locale"
 msgstr "Codi d'idioma i regió (locale)"
 
-#: admin/view-languages.php:83
+#: admin/view-tab-lang.php:66
 msgid ""
 "Wordpress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
@@ -264,53 +264,53 @@ msgstr ""
 "Codi d'idioma i regió de Wordpress (per exemple: ca_ES). Hauràs d'instal·lar "
 "l'arxiu .mo per a aquest idioma"
 
-#: admin/view-languages.php:87
+#: admin/view-tab-lang.php:70
 msgid "Language code"
 msgstr "Codi d'idioma"
 
-#: admin/view-languages.php:93
+#: admin/view-tab-lang.php:76
 msgid "Text direction"
 msgstr "Direcció del text"
 
-#: admin/view-languages.php:97
+#: admin/view-tab-lang.php:80
 msgid "left to right"
 msgstr "d'esquerra a dreta"
 
-#: admin/view-languages.php:102
+#: admin/view-tab-lang.php:85
 msgid "right to left"
 msgstr "de dreta a esquerra"
 
-#: admin/view-languages.php:104
+#: admin/view-tab-lang.php:87
 msgid "Choose the text direction for the language"
 msgstr "Tria la direcció del text de l'idioma "
 
-#: admin/table-languages.php:77 admin/view-languages.php:108
+#: admin/table-languages.php:77 admin/view-tab-lang.php:91
 msgid "Order"
 msgstr "Ordre"
 
-#: admin/view-languages.php:110
+#: admin/view-tab-lang.php:93
 msgid "Position of the language in the language switcher"
 msgstr "Posició al selector d'idioma"
 
-#: admin/admin-nav-menu.php:52 admin/admin-nav-menu.php:90
-#: admin/admin-nav-menu.php:93 admin/admin-nav-menu.php:124
-#: admin/admin-nav-menu.php:186 include/upgrade.php:301
+#: admin/admin-nav-menu.php:54 admin/admin-nav-menu.php:92
+#: admin/admin-nav-menu.php:95 admin/admin-nav-menu.php:126
+#: admin/admin-nav-menu.php:188 install/upgrade.php:301
 msgid "Language switcher"
 msgstr "Selector d'idioma"
 
-#: admin/view-languages.php:139
+#: admin/view-tab-strings.php:8
 msgid "Search translations"
 msgstr "Cerca traduccions"
 
-#: admin/view-languages.php:142
+#: admin/view-tab-strings.php:11
 msgid "Clean strings translation database"
 msgstr "Neteja la base de dades de traduccions de cadenes"
 
-#: admin/view-languages.php:161
+#: admin/view-tab-settings.php:14
 msgid "Default language"
 msgstr "Idioma predeterminat"
 
-#: admin/view-languages.php:176
+#: admin/view-tab-settings.php:29
 msgid ""
 "There are posts, pages, categories or tags without language set. Do you want "
 "to set them all to default language ?"
@@ -318,11 +318,11 @@ msgstr ""
 "Hi ha entrades, pàgines, categories o etiquetes sense idioma establert. Per "
 "establir-hi l'idioma predeterminat, marca aquesta casella."
 
-#: admin/view-languages.php:297
+#: admin/view-tab-settings.php:149
 msgid "Detect browser language"
 msgstr "Detecta l'idioma del navegador"
 
-#: admin/view-languages.php:303
+#: admin/view-tab-settings.php:155
 msgid ""
 "When the front page is visited, set the language according to the browser "
 "preference"
@@ -330,54 +330,54 @@ msgstr ""
 "Estableix l'idioma d'acord amb les preferències del navegador quan es visita "
 "la pàgina principal"
 
-#: admin/view-languages.php:184
+#: admin/view-tab-settings.php:37
 msgid "URL modifications"
 msgstr "Modificacions d'URL"
 
-#: admin/view-languages.php:241
+#: admin/view-tab-settings.php:93
 msgid "Hide URL language information for default language"
 msgstr "Oculta la informació d'idioma de l'URL a l'idioma predeterminat"
 
 # @ polylang
-#: admin/view-languages.php:310
+#: admin/view-tab-settings.php:162
 msgid "Media"
 msgstr "Mitjans"
 
 # @ polylang
-#: admin/view-languages.php:316
+#: admin/view-tab-settings.php:168
 msgid "Activate languages and translations for media"
 msgstr "Activa idiomes i traduccions per als mitjans"
 
-#: admin/view-languages.php:363
+#: admin/view-tab-settings.php:215
 msgid "Synchronization"
 msgstr "Sincronització"
 
 # @ polylang
-#: admin/view-languages.php:324
+#: admin/view-tab-settings.php:176
 msgid "Custom post types"
 msgstr "Tipus d'entrada personalitzats"
 
 # @ polylang
-#: admin/view-languages.php:337
+#: admin/view-tab-settings.php:189
 msgid "Activate languages and translations for custom post types."
 msgstr "Activa idiomes i traduccions per a tipus d'entrada personalitzats."
 
 # @ polylang
-#: admin/view-languages.php:344
+#: admin/view-tab-settings.php:196
 msgid "Custom taxonomies"
 msgstr "Taxonomies personalitzades"
 
 # @ polylang
-#: admin/view-languages.php:357
+#: admin/view-tab-settings.php:209
 msgid "Activate languages and translations for custom taxonomies."
 msgstr "Activa idiomes i traduccions per a taxonomies personalitzades."
 
-#: admin/admin-filters-post.php:379 admin/admin-filters-term.php:612
+#: admin/admin-filters-post.php:433 admin/admin-filters-term.php:642
 #: admin/table-languages.php:54 admin/view-translations-media.php:21
 msgid "Edit"
 msgstr "Edita"
 
-#: admin/table-languages.php:60 admin/table-string.php:167
+#: admin/table-languages.php:60 admin/table-string.php:168
 msgid "Delete"
 msgstr "Elimina"
 
@@ -393,11 +393,11 @@ msgstr "Bandera"
 msgid "Posts"
 msgstr "Entrades"
 
-#: admin/table-string.php:109
+#: admin/table-string.php:110
 msgid "Name"
 msgstr "Nom"
 
-#: admin/table-string.php:110
+#: admin/table-string.php:111
 msgid "String"
 msgstr "Cadena"
 
@@ -414,7 +414,7 @@ msgstr "Selector d'idioma"
 msgid "Displays a language switcher"
 msgstr "Mostra un selector d'idioma"
 
-#: include/widget-languages.php:97
+#: include/widget-languages.php:75
 msgid "Title:"
 msgstr "Títol:"
 
@@ -424,7 +424,7 @@ msgstr "Títol:"
 msgid "Adds multilingual capability to WordPress"
 msgstr "Afegeix capacitat multilingüística a Wordpress"
 
-#: polylang.php:145
+#: install/install.php:24
 #, php-format
 msgid "You are using WordPress %s. Polylang requires at least WordPress %s."
 msgstr ""
@@ -432,7 +432,7 @@ msgstr ""
 "%s."
 
 # @ polylang
-#: include/upgrade.php:76
+#: install/upgrade.php:76
 msgid ""
 "Polylang has been deactivated because you upgraded from a too old version."
 msgstr ""
@@ -440,18 +440,18 @@ msgstr ""
 "antiga."
 
 # @ polylang
-#: include/upgrade.php:78
+#: install/upgrade.php:78
 #, php-format
 msgid "Please upgrade first to %s before ugrading to %s."
 msgstr "Actualitza'l primer a %s abans d'actualizar-lo a %s."
 
 # @ polylang
-#: admin/table-string.php:108
+#: admin/table-string.php:109
 msgid "Group"
 msgstr "Grup"
 
 # @ polylang
-#: admin/table-string.php:186
+#: admin/table-string.php:187
 msgid "View all groups"
 msgstr "Mostra tots els grups"
 
@@ -462,7 +462,7 @@ msgstr ""
 "Estàs a punt d'esborrar aquest idioma de manera permanent. N'estàs segur?"
 
 # @ polylang
-#: admin/view-languages.php:143
+#: admin/view-tab-strings.php:12
 msgid ""
 "Use this to remove unused strings from database, for example after a plugin "
 "has been uninstalled."
@@ -471,7 +471,7 @@ msgstr ""
 "fan servir, per exemple, després de desinstal·lar un plugin."
 
 # @ polylang
-#: admin/view-languages.php:374
+#: admin/view-tab-settings.php:226
 msgid ""
 "The synchronization options allow to maintain exact same values (or "
 "translations in the case of taxonomies and page parent) of meta content "
@@ -481,48 +481,48 @@ msgstr ""
 "valors (o traduccions en cas de taxonomies y pàgines mare) de contingut meta "
 "entre les traduccions d'una entrada o pàgina."
 
-#: admin/admin-model.php:278
+#: admin/admin-model.php:248
 msgid "The language code contains invalid characters"
 msgstr "El codi d'idioma conté caràcters invàlids"
 
 # @ polylang
-#: admin/view-languages.php:190
+#: admin/view-tab-settings.php:43
 msgid "The language is set from content"
 msgstr "L'idioma s'extreu del contingut"
 
-#: admin/view-languages.php:193
+#: admin/view-tab-settings.php:46
 msgid "Posts, pages, categories and tags urls are not modified."
 msgstr "L'url de les entrades, pàgines, categories i etiquetes no es modifica."
 
-#: admin/view-languages.php:199
+#: admin/view-tab-settings.php:51
 msgid "The language is set from the directory name in pretty permalinks"
 msgstr "L'idioma s'extreu del nom del directori dels enllaços amigables"
 
 # @ polylang
-#: admin/view-languages.php:202 admin/view-languages.php:211
-#: admin/view-languages.php:258 admin/view-languages.php:267
+#: admin/view-tab-settings.php:54 admin/view-tab-settings.php:63
+#: admin/view-tab-settings.php:110 admin/view-tab-settings.php:119
 msgid "Example:"
 msgstr "Exemple:"
 
-#: admin/view-languages.php:208
+#: admin/view-tab-settings.php:60
 msgid "The language is set from the subdomain name in pretty permalinks"
 msgstr "L'idioma s'extreu del nom del subdomini dels enllaços amigables"
 
 # @ polylang
-#: admin/view-languages.php:217
+#: admin/view-tab-settings.php:69
 msgid "The language is set from different domains"
 msgstr "L'idioma s'extreu a partir dels diversos dominis"
 
-#: admin/view-languages.php:255
+#: admin/view-tab-settings.php:107
 msgid "Remove /language/ in pretty permalinks"
 msgstr "Esborra la part /idioma/ dels enllaços amigables"
 
-#: admin/view-languages.php:264
+#: admin/view-tab-settings.php:116
 msgid "Keep /language/ in pretty permalinks"
 msgstr "Mantén /idioma/ dels enllaços amigables"
 
 # @ polylang
-#: admin/view-languages.php:279
+#: admin/view-tab-settings.php:131
 msgid ""
 "The front page url contains the language code instead of the page name or "
 "page id"
@@ -531,13 +531,7 @@ msgstr ""
 "de la pàgina"
 
 # @ polylang
-#: admin/admin-filters-term.php:167
-#, php-format
-msgid "A translation does already exist for %s"
-msgstr "Ja existeix una traducció per a %s"
-
-# @ polylang
-#: admin/view-languages.php:287
+#: admin/view-tab-settings.php:139
 #, php-format
 msgid "Example: %s instead of %s"
 msgstr "Exemple: %s en comptes de %s"
@@ -547,33 +541,33 @@ msgid "Impossible to add the language."
 msgstr "No es pot afegir l'idioma."
 
 # @ polylang
-#: admin/admin-model.php:62
+#: admin/admin-model.php:66
 msgid "Language added."
 msgstr "S'ha afegit l'idioma"
 
 # @ polylang
-#: admin/admin-model.php:176
+#: admin/admin-model.php:146
 msgid "Language deleted."
 msgstr "S'ha esborrat l'idioma."
 
 # @ polylang
-#: admin/admin-model.php:257
+#: admin/admin-model.php:227
 msgid "Language updated."
 msgstr "S'ha actualitzat l'idioma."
 
 # @ polylang
-#: admin/settings.php:221
+#: admin/settings.php:239
 msgid "Translations updated."
 msgstr "S'ha actualitzat la traducció."
 
-#: admin/view-languages.php:89
+#: admin/view-tab-lang.php:72
 msgid "Language code - preferably 2-letters ISO 639-1  (for example: en)"
 msgstr ""
 "Codi d'idioma - preferiblement de dues lletres segons la norma ISO 639-1 "
 "(per exemple: ca)"
 
 # @ polylang
-#: admin/admin-filters.php:202
+#: admin/admin-filters.php:203
 msgid "The chosen static front page must be translated in all languages."
 msgstr ""
 "La pàgina d'inici estàtica que has triat s'ha de traduir a tots els idiomes."
@@ -582,98 +576,17 @@ msgstr ""
 msgid "Widget text"
 msgstr "Text del widget"
 
-#~ msgid "2-letters ISO 639-1 language code (for example: en)"
-#~ msgstr "Codi d'idioma ISO 639-1 de 2 lletres (per exemple: ca)"
+# @ polylang
+#: admin/settings.php:52
+msgid "Recommended plugins"
+msgstr "Connectors recomanats"
 
-#~ msgid "Translation"
-#~ msgstr "Traducció"
+# @ polylang
+#: admin/view-tab-settings.php:51
+msgid "The language is set from the code in the URL"
+msgstr "L'idioma s'extreu del codi de l'URL"
 
-#~ msgid "ID of pages in other languages:"
-#~ msgstr "ID de pàgines en altres idiomes:"
-
-#~ msgid "Page ID"
-#~ msgstr "ID de pàgina"
-
-#~ msgid "Post ID"
-#~ msgstr "ID d'entrada"
-
-#~ msgid "No untranslated term"
-#~ msgstr "No hi ha termes sense traduir"
-
-#~ msgid ""
-#~ "When using static front page, redirect the language page (example: %s) to "
-#~ "the front page in the right language"
-#~ msgstr ""
-#~ "En fer servir una pàgina principal estàtica, redirigeix la pàgina "
-#~ "d'idioma (per exemple: %s) a la pàgina d'inici en l'idioma correcte"
-
-#~ msgid ""
-#~ "The language code, for example /en/, is added to all urls when using "
-#~ "pretty permalinks."
-#~ msgstr ""
-#~ "El codi d'idioma, per exemple /ca/, s'afegeix a totes les URLs en fer "
-#~ "enllaços permanents"
-
-#~ msgid ""
-#~ "For some reasons, Polylang could not create a table in your database."
-#~ msgstr ""
-#~ "Per alguna raó, Polylang no ha pogut crear una taula a la teva base de "
-#~ "dades."
-
-#~ msgid "Displays a language switcher at the end of the menu"
-#~ msgstr "Mostra un selector d'idioma al final del menú"
-
-#~ msgid "Theme locations and languages"
-#~ msgstr "Idiomes i localitzacions del tema"
-
-#~ msgid ""
-#~ "Please go to the %slanguages page%s to set theme locations and languages"
-#~ msgstr ""
-#~ "Ves a %spàgina d'idiomes%s per establir els idiomes i localitzacions del "
-#~ "tema"
-
-#~ msgid "Menus"
-#~ msgstr "Menús"
-
-#~ msgid "Error: Restore of local flags failed!"
-#~ msgstr "Error: ha fallat el restabliment de les banderes d'idioma!"
-
-#~ msgid "Please move your local flags from %s to %s"
-#~ msgstr "Mou les banderes d'idioma de %s a %s"
-
-#~ msgid "%1$s %2$s"
-#~ msgstr "%1$s %2$s"
-
-#~ msgid "View posts for %1$s %2$s"
-#~ msgstr "Mostra entrades per a %1$s %2$s"
-
-#~ msgid "Site Title"
-#~ msgstr "Títol del lloc web"
-
-#~ msgid "Tagline"
-#~ msgstr "Descripció"
-
-#~ msgid "&mdash; No Change &mdash;"
-#~ msgstr "&mdash; Sense canvis &mdash;"
-
-#~ msgid "Page's language:"
-#~ msgstr "Idioma de la pàgina:"
-
-#~ msgid "Post's language:"
-#~ msgstr "Idioma de l'entrada:"
-
-#~ msgid "None"
-#~ msgstr "Cap"
-
-#~ msgid "Update"
-#~ msgstr "Actualitza"
-
-#~ msgid ""
-#~ "Allow to synchronize categories, tags, featured image and other metas "
-#~ "between translations of a post or page"
-#~ msgstr ""
-#~ "Permet sincronitzar categories, etiquetes, imatges destacades i altres "
-#~ "metas entre traduccions d'una entrada o pàgina"
-
-#~ msgid "Search"
-#~ msgstr "Cerca"
+# @ polylang
+#: include/switcher.php:26
+msgid "Hides languages with no translation"
+msgstr "Amaga idiomes que no tinguin traducció"

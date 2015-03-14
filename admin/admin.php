@@ -110,7 +110,8 @@ class PLL_Admin extends PLL_Base {
 		// FIXME: check if I can load more scripts in footer
 		$scripts = array(
 			'admin' => array( array('settings_page_mlang'), array('jquery', 'wp-ajax-response', 'postbox'), 1 , 0),
-			'post'  => array( array('post', 'media', 'async-upload', 'edit'),  array('jquery', 'wp-ajax-response', 'inline-edit-post', 'post', 'jquery-ui-autocomplete'), 0 , 0),
+			'post'  => array( array('post', 'media', 'async-upload', 'edit'),  array('jquery', 'wp-ajax-response', 'post', 'jquery-ui-autocomplete'), 0 , 1),
+			'media' => array( array('upload'), array('jquery'), 0 , 1),
 			'term'  => array( array('edit-tags'), array('jquery', 'wp-ajax-response', 'jquery-ui-autocomplete'), 0, 1),
 			'user'  => array( array('profile', 'user-edit'), array('jquery'), 0 , 0),
 		);
@@ -120,11 +121,6 @@ class PLL_Admin extends PLL_Base {
 				wp_enqueue_script('pll_'.$script, POLYLANG_URL .'/js/'.$script.$suffix.'.js', $v[1], POLYLANG_VERSION, $v[3]);
 
 		wp_enqueue_style('polylang_admin', POLYLANG_URL .'/css/admin'.$suffix.'.css', array(), POLYLANG_VERSION);
-
-		// backward compatibility WP < 3.8
-		// don't load this for old versions
-		if (version_compare($GLOBALS['wp_version'], '3.8alpha' , '>='))
-			wp_enqueue_style('polylang_admin_mobi', POLYLANG_URL .'/css/admin-mobi'.$suffix.'.css', array(), POLYLANG_VERSION);
 	}
 
 	/*

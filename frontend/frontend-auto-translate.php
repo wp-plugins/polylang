@@ -99,7 +99,6 @@ class PLL_Frontend_Auto_Translate {
 			}
 		}
 
-
 		// custom taxonomies
 		// according to codex, this type of query is deprecated as of WP 3.1 but it does not appear in WP 3.5 source code
 		foreach (array_intersect($this->model->get_translated_taxonomies(), get_taxonomies(array('_builtin' => false))) as $taxonomy) {
@@ -116,20 +115,8 @@ class PLL_Frontend_Auto_Translate {
 		}
 
 		// tax_query since WP 3.1
-		if (!empty($qv['tax_query']) && is_array($qv['tax_query'])) {
-			foreach ($qv['tax_query'] as $key => $q) {
-				if (isset($q['taxonomy']) && $this->model->is_translated_taxonomy($q['taxonomy'])) {
-					$arr = array();
-					$field = isset($q['field']) && in_array($q['field'], array('slug', 'name')) ? $q['field'] : 'term_id';
-					foreach ( (array) $q['terms'] as $t)
-						$arr[] = (($tag = get_term_by($field, $t, $q['taxonomy'])) && ($tr_id = pll_get_term($tag->term_id)) && !is_wp_error($tr = get_term($tr_id, $q['taxonomy']))) ?
-							$tr->$field : $t;
-
-					$qv['tax_query'][$key]['terms'] = $arr;
-				}
-			}
-		}
-
+		if (!empty($qv['tax_query']) && is_array($qv['tax_query']))
+			$qv['tax_query'] = $this->translate_tax_query_recursive($qv['tax_query']);
 
 		// p, page_id, post_parent can only take one id
 		foreach (array('p', 'page_id', 'post_parent') as $key)
@@ -182,5 +169,35 @@ class PLL_Frontend_Auto_Translate {
 			$args['include'] = $arr;
 		}
 		return $args;
+	}
+
+	/*
+	 * translates tax queries
+	 * compatible with nested tax queries introduced in WP 4.1
+	 *
+	 * @since 1.7
+	 *
+	 * @param array $tax_queries
+	 * @return array translated tax queries
+	 */
+	protected function translate_tax_query_recursive($tax_queries) {
+		foreach ($tax_queries as $key => $q) {
+			if (isset($q['taxonomy']) && $this->model->is_translated_taxonomy($q['taxonomy'])) {
+				$arr = array();
+				$field = isset($q['field']) && in_array($q['field'], array('slug', 'name')) ? $q['field'] : 'term_id';
+				foreach ( (array) $q['terms'] as $t)
+					$arr[] = (($tag = get_term_by($field, $t, $q['taxonomy'])) && ($tr_id = pll_get_term($tag->term_id)) && !is_wp_error($tr = get_term($tr_id, $q['taxonomy']))) ?
+						$tr->$field : $t;
+
+				$tax_queries[$key]['terms'] = $arr;
+			}
+
+			// nested queries
+			elseif (is_array($q)) {
+				$tax_queries[$key] = $this->translate_tax_query_recursive($q);
+			}
+		}
+
+		return $tax_queries;
 	}
 }

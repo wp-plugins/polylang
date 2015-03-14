@@ -127,7 +127,7 @@ th[class*='column-language_'], td[class*='column-language_'] {
 	margin-right: 4px;
 }
 
-#term-translations table {
+#add-term-translations, #edit-term-translations {
 	width: 95%;
 }
 
@@ -141,34 +141,19 @@ th[class*='column-language_'], td[class*='column-language_'] {
 }
 
 /* icon fonts */
-/* backward compatibility WP < 3.8 */
-/* use same policy as WP for dashicons for font order and file vs embedded */
-@font-face {
-	font-family: 'polylang';
-	src: url('polylang.eot');
-}
-
-@font-face {
-    font-family: 'polylang';
-    src: url(data:application/x-font-woff;charset=utf-8;base64,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) format('woff'),
-		url('polylang.ttf') format('truetype'),
-		url('polylang.svg#polylang') format('svg');
-	font-weight: normal;
-	font-style: normal;
-}
-
 .pll_icon_tick:before {
-	content: "\e600";
+	content: "\f147";
 }
 .pll_icon_add:before {
-	content: "\e601";
+	content: "\f132";
 }
 .pll_icon_edit:before {
-	content: "\e602";
+	content: "\f464";
 }
 
-[class^="pll_icon_"], #wpadminbar #wp-admin-bar-languages .ab-icon:before {
-	font-family: 'polylang';
+[class^="pll_icon_"] {
+	font: 20px/1 'dashicons';
+	vertical-align: middle;
 }
 
 /* admin bar */
@@ -181,15 +166,75 @@ th[class*='column-language_'], td[class*='column-language_'] {
 	top: 4px;
 }
 
-/* backward compatibility WP < 3.8 */
 #wpadminbar #wp-admin-bar-languages .ab-icon:before {
-	font: 20px/1 'polylang';
-	content: "\e603";
+	content: "\f326";
 	top: 1px;
 }
 
-/* backward compatibility WP < 3.8 */
-#wpadminbar #wp-admin-bar-languages .ab-item .ab-icon {
-	margin: 0 6px 0 0;
-	padding: 4px 0;
+@media screen and ( max-width: 782px ) {
+	/* strings translations table */
+	.stringstranslations .column-context,
+	.stringstranslations .column-name {
+		display: none;
+	}
+	
+	/* hide selected language flag and translations language name */
+	#select-add-term-language .pll-select-flag,
+	#select-edit-term-language .pll-select-flag,
+	#edit-term-translations .pll-language-name {
+		display: none;
+	}
+	
+	#edit-term-translations {
+		width: 100%;
+	}
+
+	#add-term-translations .pll-language-column {
+		line-height: 38px;	
+	}
+	
+	#edit-term-translations td {
+		padding: 8px 10px;
+	}
+	
+	#edit-term-translations .pll-language-column,
+	#edit-term-translations .pll-edit-column {
+		width: 20px;
+	}
+
+	/* translations tables should be kept as table */
+	.term-translations .pll-language-column,
+	.term-translations .pll-edit-column,
+	.term-translations .pll-translation-column {
+		display: table-cell;
+	}
+	
+	.term-translations .hidden {
+		display: none;
+	}
+	
+	/* admin bar */
+	#wpadminbar li#wp-admin-bar-languages {
+		display: block; /*shows our menu on mobile devices */
+	}
+
+	#wpadminbar #wp-admin-bar-languages > .ab-item {
+		width: 50px;
+		text-align: center;
+	}
+
+	#wpadminbar #wp-admin-bar-languages > .ab-item .ab-icon:before {
+		font: 32px/1 'dashicons';
+		top: -1px;
+	}
+
+	#wpadminbar #wp-admin-bar-languages > .ab-item img {
+		margin: 19px 0;
+	}
+
+	#wpadminbar #wp-admin-bar-languages #wp-admin-bar-all .ab-item .ab-icon {
+		margin-right: 6px;
+		font-size: 20px !important;
+		line-height: 20px !important;
+	}
 }

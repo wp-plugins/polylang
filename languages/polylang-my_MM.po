@@ -3,9 +3,10 @@ msgstr ""
 "Project-Id-Version: Polylang v1.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2014-10-04 08:21+0630\n"
+"PO-Revision-Date: 2015-02-14 09:22+0100\n"
 "Last-Translator: Sithu Thwin <sithu@thwin.net>\n"
 "Language-Team: \n"
+"Language: my_MM\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -16,7 +17,6 @@ msgstr ""
 "X-Poedit-Basepath: ../\n"
 "X-Textdomain-Support: yes\n"
 "X-Generator: Poedit 1.5.4\n"
-"Language: my_MM\n"
 "X-Poedit-SearchPath-0: .\n"
 
 # @ polylang
@@ -67,8 +67,8 @@ msgstr ""
 "တင်ရှိမည်ဖြစ်သည်။"
 
 # @ polylang
-#: admin/admin-filters-post.php:81 admin/admin.php:90 admin/settings.php:55
-#: admin/settings.php:82 include/model.php:526
+#: admin/admin-filters-post.php:115 admin/admin.php:90 admin/settings.php:70
+#: admin/settings.php:97 include/model.php:561
 msgid "Languages"
 msgstr "ဘာသာစကားများ"
 
@@ -93,41 +93,41 @@ msgid "Hides the current language"
 msgstr "ယခုအသုံးပြုထားသော ဘာသာစကားအား ဖျောက်ထားပါ"
 
 # @ polylang
-#: include/switcher.php:29
+#: include/switcher.php:30
 msgid "Displays as dropdown"
 msgstr "ဆွဲချဇယားအဖြစ်ပြပါ"
 
 # @ polylang
-#: admin/admin.php:271
+#: admin/admin.php:267
 msgid "Filters content by language"
 msgstr "အကြောင်းအရာများအား ဘာသာစကားဖြင့် စစ်ထုတ်ပါ"
 
 # @ polylang
-#: admin/admin.php:262
+#: admin/admin.php:258
 msgid "Show all languages"
 msgstr "ဘာသာစကားအားလုံးပြပါ"
 
 # @ polylang
-#: admin/admin-filters-columns.php:139 admin/admin-filters-columns.php:227
+#: admin/admin-filters-columns.php:140 admin/admin-filters-columns.php:230
 msgid "Add new translation"
 msgstr "ဘာသာစကားအသစ်ထည့်ရန်"
 
 # @ polylang
 #: admin/admin-filters-columns.php:173 admin/admin-filters-media.php:55
-#: admin/admin-filters-post.php:107 admin/admin-filters-term.php:77
-#: admin/admin-filters-term.php:121 include/model.php:527
+#: admin/admin-filters-post.php:141 admin/admin-filters-term.php:75
+#: admin/admin-filters-term.php:122 include/model.php:562
 msgid "Language"
 msgstr "ဘာသာစကား"
 
 # @ polylang
-#: admin/table-string.php:111 admin/view-translations-media.php:5
+#: admin/table-string.php:112 admin/view-translations-media.php:5
 #: admin/view-translations-post.php:5 admin/view-translations-term.php:6
 #: admin/view-translations-term.php:11
 msgid "Translations"
 msgstr "ဘာသာပြန်များ"
 
 # @ polylang
-#: admin/admin-filters-term.php:84 admin/admin-filters-term.php:128
+#: admin/admin-filters-term.php:82 admin/admin-filters-term.php:130
 msgid "Sets the language"
 msgstr "ဘာသာစကား သတ်မှတ်ရန်"
 
@@ -137,7 +137,7 @@ msgid "The widget is displayed for:"
 msgstr "ဝစ်ဂျစ်ဖော်ပြမှု - "
 
 # @ polylang
-#: admin/admin-filters.php:55 include/model.php:528
+#: admin/admin-filters.php:55 include/model.php:563
 msgid "All languages"
 msgstr "ဘာသာစကားအားလုံး"
 
@@ -152,7 +152,7 @@ msgid "Wordpress default"
 msgstr "WordPress မူလဘာသာစကား"
 
 # @ polylang
-#: admin/admin.php:171 admin/settings.php:87
+#: admin/admin.php:167 admin/settings.php:102
 msgid "Settings"
 msgstr "သတ်မှတ်ချက်များ"
 
@@ -162,37 +162,37 @@ msgid "Upgrading language files&#8230;"
 msgstr "ဘာသာစကားဖိုင်များ အသစ်ဖြည့်စွက်နေသည်&#8230;"
 
 # @ polylang
-#: admin/settings.php:47
+#: admin/settings.php:62
 msgid "About Polylang"
 msgstr "Polylang အကြောင်း"
 
 # @ polylang
-#: admin/settings.php:63
+#: admin/settings.php:78
 msgid "Strings translations"
 msgstr "စာကြောင်းဘာသာပြန်များ"
 
 # @ polylang
-#: admin/settings.php:86
+#: admin/settings.php:101
 msgid "Strings translation"
 msgstr "စာကြောင်းဘာသာပြန်"
 
 # @ polylang
-#: admin/admin-model.php:274
+#: admin/admin-model.php:244
 msgid "Enter a valid WordPress locale"
 msgstr "သင့်လျှော်မှန်ကန်သော WordPress ဘာသာစကား သင်္ကေတကို ဖြည့်သွင်းပါ"
 
 # @ polylang
-#: admin/admin-model.php:282
+#: admin/admin-model.php:252
 msgid "The language code must be unique"
 msgstr "ဘာသာစကားကုတ်မှာ တစ်မျိုးစီ သီးသန့်ဖြစ်ရမည်"
 
 # @ polylang
-#: admin/admin-model.php:286
+#: admin/admin-model.php:256
 msgid "The language must have a name"
 msgstr "ဘာသာစကားတွင် အမည်ရှိရမည်"
 
 # @ polylang
-#: admin/admin.php:371 admin/settings.php:162
+#: admin/admin.php:367 admin/settings.php:180
 msgid ""
 "The language was created, but the WordPress language file was not "
 "downloaded. Please install it manually."
@@ -206,97 +206,97 @@ msgid "Widget title"
 msgstr "ဝစ်ဂျက်ခေါင်းစဉ်"
 
 # @ polylang
-#: admin/settings.php:301
+#: admin/settings.php:319
 msgid "Taxonomies"
 msgstr "ဝေါဟာရအုပ်စုများ"
 
 # @ polylang
-#: admin/settings.php:302
+#: admin/settings.php:320
 msgid "Custom fields"
 msgstr "စိတ်ကြိုက်ဖြည့်ရန်"
 
 # @ polylang
-#: admin/settings.php:303
+#: admin/settings.php:321
 msgid "Comment status"
 msgstr "မှတ်ချက် အခြေအ"
 
 # @ polylang
-#: admin/settings.php:304
+#: admin/settings.php:322
 msgid "Ping status"
 msgstr "ချိတ်ဆက်မှု အခြေအ"
 
 # @ polylang
-#: admin/settings.php:305
+#: admin/settings.php:323
 msgid "Sticky posts"
 msgstr "ဦးစားပေးစာမူ"
 
 # @ polylang
-#: admin/settings.php:306
+#: admin/settings.php:324
 msgid "Published date"
 msgstr "ထုတ်ဝေခဲ့သောနေ့စွဲ"
 
 # @ polylang
-#: admin/settings.php:307
+#: admin/settings.php:325
 msgid "Post format"
 msgstr "စာမူပုံစံ"
 
 # @ polylang
-#: admin/settings.php:308
+#: admin/settings.php:326
 msgid "Page parent"
 msgstr "စာမျက်နှာပင်"
 
 # @ polylang
-#: admin/settings.php:309
+#: admin/settings.php:327
 msgid "Page template"
 msgstr "စာမျက်နှာ စံပုံစံ"
 
 # @ polylang
-#: admin/settings.php:310
+#: admin/settings.php:328
 msgid "Page order"
 msgstr "စာမျက်နှာ အစီအစဉ်"
 
 # @ polylang
-#: admin/settings.php:311
+#: admin/settings.php:329
 msgid "Featured image"
 msgstr "သရုပ်ဖော် ရုပ်ပုံ"
 
 # @ polylang
-#: admin/view-languages.php:38
+#: admin/view-tab-lang.php:21
 msgid "Edit language"
 msgstr "ဘာသာစကား ပြုပြင်ရန်"
 
 # @ polylang
-#: admin/view-languages.php:38 admin/view-languages.php:113
+#: admin/view-tab-lang.php:21 admin/view-tab-lang.php:96
 msgid "Add new language"
 msgstr "ဘာသာစကားအသစ်ထည့်ရန်"
 
 # @ polylang
-#: admin/view-languages.php:54
+#: admin/view-tab-lang.php:37
 msgid "Choose a language"
 msgstr "ဘာသာစကားရွေးရန်"
 
 # @ polylang
-#: admin/view-languages.php:68
+#: admin/view-tab-lang.php:51
 msgid "You can choose a language in the list or directly edit it below."
 msgstr "စာရင်းအတွင်းရှိ ဘာသာစကားတစ်ခုအားရွေးပါ သို့မဟုတ် အောက်တွင် တိုက်ရိုက် ပြုပြင်ပါ။"
 
 # @ polylang
-#: admin/table-languages.php:74 admin/view-languages.php:72
+#: admin/table-languages.php:74 admin/view-tab-lang.php:55
 msgid "Full name"
 msgstr "အမည်အပြည့်အစုံ"
 
 # @ polylang
-#: admin/view-languages.php:74
+#: admin/view-tab-lang.php:57
 msgid "The name is how it is displayed on your site (for example: English)."
 msgstr "သင့်ဆိုဒ်တွင် ဖော်ပြမည့်အမည်။ (ဥပမာ။   ။ အင်္ဂလိပ်)။"
 
 # @ polylang
-#: admin/table-languages.php:75 admin/view-languages.php:78
+#: admin/table-languages.php:75 admin/view-tab-lang.php:61
 msgid "Locale"
 msgstr "ေဒသန္တရဘာသာစကားအုပ်စု"
 
 # @ polylang
-#: admin/view-languages.php:83
+#: admin/view-tab-lang.php:66
 msgid ""
 "Wordpress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
@@ -305,64 +305,64 @@ msgstr ""
 "ထည့်သွင်းပေးရန်လိုအပ်ပါသည်။"
 
 # @ polylang
-#: admin/view-languages.php:87
+#: admin/view-tab-lang.php:70
 msgid "Language code"
 msgstr "ဘာသာစကားကုတ်"
 
 # @ polylang
-#: admin/view-languages.php:93
+#: admin/view-tab-lang.php:76
 msgid "Text direction"
 msgstr "စာသားဦးတည်ရာ"
 
 # @ polylang
-#: admin/view-languages.php:97
+#: admin/view-tab-lang.php:80
 msgid "left to right"
 msgstr "ဘယ်မှ ညာ"
 
 # @ polylang
-#: admin/view-languages.php:102
+#: admin/view-tab-lang.php:85
 msgid "right to left"
 msgstr "ညာမှ ဘယ်"
 
 # @ polylang
-#: admin/view-languages.php:104
+#: admin/view-tab-lang.php:87
 msgid "Choose the text direction for the language"
 msgstr "ဘာသာစကားအတွက် စာသားဦးတည်ရာကို ရွေးပါ"
 
 # @ polylang
-#: admin/table-languages.php:77 admin/view-languages.php:108
+#: admin/table-languages.php:77 admin/view-tab-lang.php:91
 msgid "Order"
 msgstr "အစီအစဉ်"
 
 # @ polylang
-#: admin/view-languages.php:110
+#: admin/view-tab-lang.php:93
 msgid "Position of the language in the language switcher"
 msgstr "ဘာသာစကားပြောင်းခလုပ်ရှိ နေရာ"
 
 # @ polylang
-#: admin/admin-nav-menu.php:52 admin/admin-nav-menu.php:90
-#: admin/admin-nav-menu.php:93 admin/admin-nav-menu.php:124
-#: admin/admin-nav-menu.php:186 include/upgrade.php:301
+#: admin/admin-nav-menu.php:54 admin/admin-nav-menu.php:92
+#: admin/admin-nav-menu.php:95 admin/admin-nav-menu.php:126
+#: admin/admin-nav-menu.php:188 install/upgrade.php:301
 msgid "Language switcher"
 msgstr "ဘာသာစကားပြောင်းခလုပ်"
 
 # @ polylang
-#: admin/view-languages.php:139
+#: admin/view-tab-strings.php:8
 msgid "Search translations"
 msgstr "ဘာသာပြန်များရှာရန်"
 
 # @ polylang
-#: admin/view-languages.php:142
+#: admin/view-tab-strings.php:11
 msgid "Clean strings translation database"
 msgstr "ဘာသာပြန် ဒေတာဗေ့စ်အား ရှင်းပါ"
 
 # @ polylang
-#: admin/view-languages.php:161
+#: admin/view-tab-settings.php:14
 msgid "Default language"
 msgstr "မူလ ဘာသာစကား"
 
 # @ polylang
-#: admin/view-languages.php:176
+#: admin/view-tab-settings.php:29
 msgid ""
 "There are posts, pages, categories or tags without language set. Do you want "
 "to set them all to default language ?"
@@ -371,12 +371,12 @@ msgstr ""
 "ရှိနေပါသည်။ မူလဘာသာစကားဖြင့် သတ်မှတ်ပေးလိုပါသလား။"
 
 # @ polylang
-#: admin/view-languages.php:297
+#: admin/view-tab-settings.php:149
 msgid "Detect browser language"
 msgstr "ဘရောက်ဇာ ဘာသာစကားအား စစ်ဆေးရန်"
 
 # @ polylang
-#: admin/view-languages.php:303
+#: admin/view-tab-settings.php:155
 msgid ""
 "When the front page is visited, set the language according to the browser "
 "preference"
@@ -384,58 +384,58 @@ msgstr ""
 "ပင်မစာမျက်နှာသို့ လာရောက်လည်ပတ်သောအခါ ဘရောက်ဇာသတ်မှတ်ချက်ကို မူတည်၍ ဘာသာစကားအား သတ်မှတ်ဖော်ပြပါ"
 
 # @ polylang
-#: admin/view-languages.php:184
+#: admin/view-tab-settings.php:37
 msgid "URL modifications"
 msgstr "URL ပြုပြင်ခြင်း"
 
 # @ polylang
-#: admin/view-languages.php:241
+#: admin/view-tab-settings.php:93
 msgid "Hide URL language information for default language"
 msgstr "မူလဘာသာစကားအတွက် URL မှ ဘာသာစကား အချက်အလက်အား ဖျောက်ထားရန်"
 
 # @ polylang
-#: admin/view-languages.php:310
+#: admin/view-tab-settings.php:162
 msgid "Media"
 msgstr "မီဒီယာ"
 
 # @ polylang
-#: admin/view-languages.php:316
+#: admin/view-tab-settings.php:168
 msgid "Activate languages and translations for media"
 msgstr "မီဒီယာအတွက် ဘာသာစကားနှင့် ဘာသာပြန်များ ဖွင့်ထားရန်"
 
 # @ polylang
-#: admin/view-languages.php:363
+#: admin/view-tab-settings.php:215
 msgid "Synchronization"
 msgstr "တိုက်ရိုက်ကူးယူချိတ်ဆက်ခြင်း"
 
 # @ polylang
-#: admin/view-languages.php:324
+#: admin/view-tab-settings.php:176
 msgid "Custom post types"
 msgstr "စိတ်ကြိုက် စာမူအမျိုးအစား"
 
 # @ polylang
-#: admin/view-languages.php:337
+#: admin/view-tab-settings.php:189
 msgid "Activate languages and translations for custom post types."
 msgstr "စိတ်ကြိုက်စာမူအများအစားများအတွက် ဘာသာစကားနှင့် ဘာသာပြန်များဖွင့်ထားရန်"
 
 # @ polylang
-#: admin/view-languages.php:344
+#: admin/view-tab-settings.php:196
 msgid "Custom taxonomies"
 msgstr "စိတ်ကြိုက်ဝေါဟာရများ"
 
 # @ polylang
-#: admin/view-languages.php:357
+#: admin/view-tab-settings.php:209
 msgid "Activate languages and translations for custom taxonomies."
 msgstr "စိတ်ကြိုက်ဝေါဟာရများအတွက် ဘာသာစကားနှင့် ဘာသာပြန်များဖွင့်ရန်"
 
 # @ polylang
-#: admin/admin-filters-post.php:379 admin/admin-filters-term.php:612
+#: admin/admin-filters-post.php:433 admin/admin-filters-term.php:642
 #: admin/table-languages.php:54 admin/view-translations-media.php:21
 msgid "Edit"
 msgstr "ပြုပြင်"
 
 # @ polylang
-#: admin/table-languages.php:60 admin/table-string.php:167
+#: admin/table-languages.php:60 admin/table-string.php:168
 msgid "Delete"
 msgstr "ဖျက်"
 
@@ -455,12 +455,12 @@ msgid "Posts"
 msgstr "စာမူများ"
 
 # @ polylang
-#: admin/table-string.php:109
+#: admin/table-string.php:110
 msgid "Name"
 msgstr "အမည်"
 
 # @ polylang
-#: admin/table-string.php:110
+#: admin/table-string.php:111
 msgid "String"
 msgstr "စာကြောင်း"
 
@@ -481,7 +481,7 @@ msgid "Displays a language switcher"
 msgstr "ဘာသာစားပြောင်းခလုပ်ဖော်ပြရန်"
 
 # @ polylang
-#: include/widget-languages.php:97
+#: include/widget-languages.php:75
 msgid "Title:"
 msgstr "ခေါင်းစဉ်  :"
 
@@ -492,30 +492,30 @@ msgid "Adds multilingual capability to WordPress"
 msgstr "ဘာသာစကားပေါင်းစုံစနစ်အား WordPress အတွင်းထည့်သွင်းရန်"
 
 # @ polylang
-#: polylang.php:145
+#: install/install.php:24
 #, php-format
 msgid "You are using WordPress %s. Polylang requires at least WordPress %s."
 msgstr "သင် WordPress %s အား အသုံးပြုနေသည်။ WordPress %s အား Polylang မှ လိုအပ်ပါသည်။"
 
 # @ polylang
-#: include/upgrade.php:76
+#: install/upgrade.php:76
 msgid ""
 "Polylang has been deactivated because you upgraded from a too old version."
 msgstr "အလွန်ဟောင်းလွန်းသော ဗားရှင်းမှ အဆင့်မြှင့်တင်ခြင်းပြုလုပ်ခဲ့သဖြင့် Polylang အား ပိတ်ထားလိုက်သည်။"
 
 # @ polylang
-#: include/upgrade.php:78
+#: install/upgrade.php:78
 #, php-format
 msgid "Please upgrade first to %s before ugrading to %s."
 msgstr "%sသို့ အဆင့်မြှင့်တင်ပြီးမှ %s သို့ အဆင့်မြှင့်ပါ။"
 
 # @ polylang
-#: admin/table-string.php:108
+#: admin/table-string.php:109
 msgid "Group"
 msgstr "အုပ်စု"
 
 # @ polylang
-#: admin/table-string.php:186
+#: admin/table-string.php:187
 msgid "View all groups"
 msgstr "အုပ်စုအားလုံးကိုကြည့်ရန်"
 
@@ -525,7 +525,7 @@ msgid "You are about to permanently delete this language. Are you sure?"
 msgstr "ဒီဘာသာစကားကို အပြီးဖျက်တော့မည်။ တကယ်သေချာရဲ့လား။"
 
 # @ polylang
-#: admin/view-languages.php:143
+#: admin/view-tab-strings.php:12
 msgid ""
 "Use this to remove unused strings from database, for example after a plugin "
 "has been uninstalled."
@@ -534,7 +534,7 @@ msgstr ""
 "ဖျက်ထုတ်လိုက်သောအခါ။"
 
 # @ polylang
-#: admin/view-languages.php:374
+#: admin/view-tab-settings.php:226
 msgid ""
 "The synchronization options allow to maintain exact same values (or "
 "translations in the case of taxonomies and page parent) of meta content "
@@ -545,66 +545,60 @@ msgstr ""
 "ဘာသာပြန်များ)အား တူညီမှု ရှိစေရန် ထိန်းသိမ်းဆောင်ရွက်ပေးသည်။"
 
 # @ polylang
-#: admin/admin-model.php:278
+#: admin/admin-model.php:248
 msgid "The language code contains invalid characters"
 msgstr "ဘာသာစကားကုဒ်တွင် သင့်လျှော်မှုမရှိသော အက္ခရာများပါဝင်နေသည်။"
 
 # @ polylang
-#: admin/view-languages.php:190
+#: admin/view-tab-settings.php:43
 msgid "The language is set from content"
 msgstr "အကြောင်းအရာအပေါ်မူတည်၍ ဘာသာစကားအား သတ်မှတ်ရန်"
 
 # @ polylang
-#: admin/view-languages.php:193
+#: admin/view-tab-settings.php:46
 msgid "Posts, pages, categories and tags urls are not modified."
 msgstr "စာမူများ၊ စာမျက်နှာများ၊ ကဏ္ဍများနှင့် စကားစုတွဲများအတွက် URL များအား မပြုပြင်ပါ။"
 
 # @ polylang
-#: admin/view-languages.php:199
+#: admin/view-tab-settings.php:51
 msgid "The language is set from the directory name in pretty permalinks"
 msgstr "ချိတ်ဆက်လိပ်စာတွင် တည်နေရာညွှန်းအမည်ဖြင့် ဘာသာစကားအား သတ်မှတ်ရန်"
 
 # @ polylang
-#: admin/view-languages.php:202 admin/view-languages.php:211
-#: admin/view-languages.php:258 admin/view-languages.php:267
+#: admin/view-tab-settings.php:54 admin/view-tab-settings.php:63
+#: admin/view-tab-settings.php:110 admin/view-tab-settings.php:119
 msgid "Example:"
 msgstr "ဥပမာ။   ။"
 
 # @ polylang
-#: admin/view-languages.php:208
+#: admin/view-tab-settings.php:60
 msgid "The language is set from the subdomain name in pretty permalinks"
 msgstr "ချိတ်ဆက်လိပ်စာတွင် ဒိုမိန်းခွဲအမည်ဖြင့် ဘာသာစကားအား သတ်မှတ်ရန်"
 
 # @ polylang
-#: admin/view-languages.php:217
+#: admin/view-tab-settings.php:69
 msgid "The language is set from different domains"
 msgstr "မတူညီသော ဒိုမိန်းများမှ ဘာသာစကားအား သတ်မှတ်သည်"
 
 # @ polylang
-#: admin/view-languages.php:255
+#: admin/view-tab-settings.php:107
 msgid "Remove /language/ in pretty permalinks"
 msgstr "ချိတ်ဆက်လိပ်စာမှ /language/ အား ဖယ်ရှားရန်"
 
 # @ polylang
-#: admin/view-languages.php:264
+#: admin/view-tab-settings.php:116
 msgid "Keep /language/ in pretty permalinks"
 msgstr "ချိတ်ဆက်လိပ်စာတွင် /language/ အား ဖော်ပြထားရန်"
 
 # @ polylang
-#: admin/view-languages.php:279
+#: admin/view-tab-settings.php:131
 msgid ""
 "The front page url contains the language code instead of the page name or "
 "page id"
 msgstr "ပင်မစာမျက်နှာ URL တွင် စာမျက်နှာအမည် သို့မဟုတ် စာမျက်နှာ id အစား ဘာသာစကားကုဒ်ပါဝင်သည်"
 
 # @ polylang
-#: admin/admin-filters-term.php:167
-#, php-format
-msgid "A translation does already exist for %s"
-msgstr "%s အတွက် ဘာသာပြန် ရှိပြီးဖြစ်သည်။"
-
-# @ polylang
-#: admin/view-languages.php:287
+#: admin/view-tab-settings.php:139
 #, php-format
 msgid "Example: %s instead of %s"
 msgstr "ဥပမာ။   ။ %s သည် %s ၏ အစားဖြစ်သည်။"
@@ -615,34 +609,34 @@ msgid "Impossible to add the language."
 msgstr "ဘာသာစကား အသစ်ထည့်ရန် မဖြစ်နိုင်ပါ။"
 
 # @ polylang
-#: admin/admin-model.php:62
+#: admin/admin-model.php:66
 msgid "Language added."
 msgstr "ဘာသာစကား ထည့်ပြီးပြီ။"
 
 # @ polylang
-#: admin/admin-model.php:176
+#: admin/admin-model.php:146
 msgid "Language deleted."
 msgstr "ဘာသာစကား ဖျက်ပြီးပြီ။"
 
 # @ polylang
-#: admin/admin-model.php:257
+#: admin/admin-model.php:227
 msgid "Language updated."
 msgstr "ဘာသာစကား အသစ်ဖြည့်စွက်ပြုပြင်ပြီးပါပြီ။"
 
 # @ polylang
-#: admin/settings.php:221
+#: admin/settings.php:239
 msgid "Translations updated."
 msgstr "ဘာသာပြန် အသစ်ဖြည့်စွက်ပြုပြင်ပြီးပါပြီ။"
 
 # @ polylang
-#: admin/view-languages.php:89
+#: admin/view-tab-lang.php:72
 msgid "Language code - preferably 2-letters ISO 639-1  (for example: en)"
 msgstr ""
 "ဘာသာစကား ကုဒ်သင်္ကေတ - အက္ခရာ ၂ လုံးပါဝင်သော ISO 639-1 ဘာသာစကားကုတ် ဖြစ်သင့်ပါသည် "
 "( ဥပမာ။   ။ my )"
 
 # @ polylang
-#: admin/admin-filters.php:202
+#: admin/admin-filters.php:203
 msgid "The chosen static front page must be translated in all languages."
 msgstr "ရွေးချယ်ထားသော ပင်မစာမျက်နှာအား ဘာသာစကားအားလံုးသို့ ဘာသာပြန်ဆိုထားရမည်။"
 
@@ -650,3 +644,18 @@ msgstr "ရွေးချယ်ထားသော ပင်မစာမျက�
 #: admin/admin-strings.php:60
 msgid "Widget text"
 msgstr "ဝစ်ဂျက်စာသား"
+
+# @ polylang
+#: admin/settings.php:52
+msgid "Recommended plugins"
+msgstr ""
+
+# @ polylang
+#: admin/view-tab-settings.php:51
+msgid "The language is set from the code in the URL"
+msgstr ""
+
+# @ polylang
+#: include/switcher.php:26
+msgid "Hides languages with no translation"
+msgstr ""

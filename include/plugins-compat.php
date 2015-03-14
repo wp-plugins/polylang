@@ -7,13 +7,14 @@
  * @since 1.0
  */
 class PLL_Plugins_Compat {
+	static protected $instance; // for singleton
 
 	/*
 	 * constructor
 	 *
 	 * @since 1.0
 	 */
-	public function __construct() {
+	protected function __construct() {
 		// WordPress Importer
 		add_action('init', array(&$this, 'maybe_wordpress_importer'));
 
@@ -41,13 +42,27 @@ class PLL_Plugins_Compat {
 	}
 
 	/*
+	 * access to the single instance of the class
+	 *
+	 * @since 1.7
+	 *
+	 * @return object
+	 */
+	static public function instance() {
+		if (empty(self::$instance))
+			self::$instance = new self();
+
+		return self::$instance;
+	}
+	
+	/*
 	 * WordPress Importer
 	 * if WordPress Importer is active, replace the wordpress_importer_init function
 	 *
 	 * @since 1.2
 	 */
 	function maybe_wordpress_importer() {
-		if (class_exists('WP_Import')) {
+		if (defined('WP_LOAD_IMPORTERS') && class_exists('WP_Import')) {
 			remove_action('admin_init', 'wordpress_importer_init');
 			add_action('admin_init', array(&$this, 'wordpress_importer_init'));
 		}

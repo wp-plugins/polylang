@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Polylang 1.5.6\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-10-27 02:47+0200\n"
-"PO-Revision-Date: 2014-10-27 03:59+0200\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2015-02-14 09:22+0100\n"
 "Last-Translator: Andis Grosšteins <andis.grossteins@gmail.com>\n"
 "Language-Team: \n"
 "Language: lv_LV\n"
@@ -17,333 +17,8 @@ msgstr ""
 "_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2\n"
 "X-Poedit-Basepath: ../\n"
 "X-Textdomain-Support: yes\n"
-"X-Generator: Poedit 1.5.7\n"
+"X-Generator: Poedit 1.5.4\n"
 "X-Poedit-SearchPath-0: .\n"
-
-#  polylang
-#: polylang.php:167
-#, php-format
-msgid "You are using WordPress %s. Polylang requires at least WordPress %s."
-msgstr ""
-"Jūs lietojat WordPress %s. Polylang nepieciešama vismaz WordPress %s versija."
-
-# @ polylang
-#: admin/admin-filters-columns.php:139 admin/admin-filters-columns.php:227
-msgid "Add new translation"
-msgstr "Pievienot jaunu tulkojumu"
-
-#: admin/admin-filters-columns.php:159
-msgid "&mdash; No Change &mdash;"
-msgstr "&mdash; Bez izmaiņām &mdash;"
-
-# @ polylang
-#: admin/admin-filters-columns.php:173 admin/admin-filters-media.php:55
-#: admin/admin-filters-post.php:107 admin/admin-filters-term.php:77
-#: admin/admin-filters-term.php:116 include/model.php:550
-msgid "Language"
-msgstr "Valoda"
-
-# @ polylang
-#: admin/admin-filters-post.php:81 admin/admin.php:90 admin/settings.php:53
-#: admin/settings.php:80 include/model.php:549
-msgid "Languages"
-msgstr "Valodas"
-
-# @ polylang
-#: admin/admin-filters-post.php:374 admin/admin-filters-term.php:599
-#: admin/table-languages.php:54 admin/view-translations-media.php:21
-msgid "Edit"
-msgstr "Rediģēt"
-
-# @ polylang
-#: admin/admin-filters-term.php:79 admin/admin-filters-term.php:118
-msgid "Sets the language"
-msgstr "Nosaka valodu"
-
-# @ polylang
-#: admin/admin-filters-term.php:157
-#, php-format
-msgid "A translation does already exist for %s"
-msgstr "Tulkojums %s jau eksistē"
-
-#: admin/admin-filters-term.php:366
-msgid "None"
-msgstr "Neviens"
-
-# @ polylang
-#: admin/admin-filters.php:45
-msgid "The widget is displayed for:"
-msgstr "Logdaļa tiek rādīta:"
-
-# @ polylang
-#: admin/admin-filters.php:48 include/model.php:551
-msgid "All languages"
-msgstr "Visas valodas"
-
-# @ polylang
-#: admin/admin-filters.php:116
-msgid "Admin language"
-msgstr "Vadības valoda"
-
-# @ polylang
-#: admin/admin-filters.php:119
-msgid "Wordpress default"
-msgstr "WordPress noklusējums"
-
-# @ polylang
-#: admin/admin-filters.php:151
-msgid "Upgrading language files&#8230;"
-msgstr "Atjaunina valodu failus&#8230;"
-
-# @ polylang
-#: admin/admin-model.php:38
-msgid "Impossible to add the language."
-msgstr "Neizdevās pievienot valodu."
-
-# @ polylang
-#: admin/admin-model.php:62
-msgid "Language added."
-msgstr "Valoda pievienota."
-
-#: admin/admin-model.php:77
-msgid "Uncategorized"
-msgstr "Bez kategorijas"
-
-# @ polylang
-#: admin/admin-model.php:176
-msgid "Language deleted."
-msgstr "Valoda izdzēsta."
-
-# @ polylang
-#: admin/admin-model.php:257
-msgid "Language updated."
-msgstr "Valoda atjaunināta."
-
-# @ polylang
-#: admin/admin-model.php:274
-msgid "Enter a valid WordPress locale"
-msgstr "Lūdzu ievadiet derīgu WordPress lokāles kodu."
-
-# @ polylang
-#: admin/admin-model.php:278
-msgid "The language code contains invalid characters"
-msgstr "Ievadītais valodas kods satur neatļautus simbolus"
-
-# @ polylang
-#: admin/admin-model.php:282
-msgid "The language code must be unique"
-msgstr "Valodas kodam jābūt unikālam"
-
-# @ polylang
-#: admin/admin-model.php:286
-msgid "The language must have a name"
-msgstr "Valodai ir nepieciešams nosaukums"
-
-# @ polylang
-#: admin/admin-nav-menu.php:52 admin/admin-nav-menu.php:90
-#: admin/admin-nav-menu.php:93 admin/admin-nav-menu.php:124
-#: admin/admin-nav-menu.php:186 include/upgrade.php:301
-msgid "Language switcher"
-msgstr "Valodu izvēlne"
-
-# @ default
-# @ polylang
-#: admin/admin.php:171 admin/settings.php:85
-msgid "Settings"
-msgstr "Uzstādījumi"
-
-# @ polylang
-#: admin/admin.php:262
-msgid "Show all languages"
-msgstr "Rādīt visas valodas"
-
-# @ polylang
-#: admin/admin.php:271
-msgid "Filters content by language"
-msgstr "Filtrēt saturu pēc valodas"
-
-# @ polylang
-#: admin/admin.php:372
-msgid ""
-"The language was created, but the WordPress language file was not "
-"downloaded. Please install it manually."
-msgstr ""
-"Valoda tika izveidota, bet WordPress tulkojumu fails netika lejuplādēts. "
-"Lūdzu uzstādiet to manuāli."
-
-# @ polylang
-#: admin/settings.php:45
-msgid "About Polylang"
-msgstr "Par Polylang"
-
-# @ polylang
-#: admin/settings.php:61
-msgid "Strings translations"
-msgstr "Tekstu tulkojumi"
-
-# @ polylang
-#: admin/settings.php:84
-msgid "Strings translation"
-msgstr "Tekstu tulkošana"
-
-# @ polylang
-#: admin/settings.php:205
-msgid "Translations updated."
-msgstr "Tulkojums atjaunināts."
-
-# @ default
-# @ polylang
-#: admin/settings.php:265
-msgid "Settings saved."
-msgstr "Iestatījumi saglabāti."
-
-# @ polylang
-#: admin/settings.php:308
-msgid "Site Title"
-msgstr "Vietnes nosaukums"
-
-#: admin/settings.php:309
-msgid "Tagline"
-msgstr "Bloga apakšvirsraksts vai sauklis"
-
-#: admin/settings.php:310
-msgid "Date Format"
-msgstr "Datuma formāts"
-
-#: admin/settings.php:311
-msgid "Time Format"
-msgstr "Laika formāts"
-
-# @ polylang
-#: admin/settings.php:330
-msgid "Widget title"
-msgstr "Logdaļas virsraksts"
-
-# @ polylang
-#: admin/settings.php:348
-msgid "Taxonomies"
-msgstr "Taksonomijas"
-
-# @ polylang
-#: admin/settings.php:349
-msgid "Custom fields"
-msgstr "Lietotāja lauki"
-
-# @ polylang
-#: admin/settings.php:350
-msgid "Comment status"
-msgstr "Komentāru statuss"
-
-# @ polylang
-#: admin/settings.php:351
-msgid "Ping status"
-msgstr "Atpingu statuss"
-
-# @ polylang
-#: admin/settings.php:352
-msgid "Sticky posts"
-msgstr "Izceltie raksti"
-
-# @ polylang
-#: admin/settings.php:353
-msgid "Published date"
-msgstr "Publicēšanas Datums"
-
-# @ polylang
-#: admin/settings.php:354
-msgid "Post format"
-msgstr "Raksta formāts"
-
-# @ default
-#: admin/settings.php:355
-msgid "Page parent"
-msgstr "Vecāka lapa"
-
-# @ polylang
-#: admin/settings.php:356
-msgid "Page template"
-msgstr "Lapas veidne"
-
-# @ polylang
-#: admin/settings.php:357
-msgid "Page order"
-msgstr "Kārtas numurs"
-
-# @ polylang
-#: admin/settings.php:358
-msgid "Featured image"
-msgstr "Satura izvēlētais attēls"
-
-# @ polylang
-#: admin/table-languages.php:59
-msgid "You are about to permanently delete this language. Are you sure?"
-msgstr "Šī valoda tiks neatgriezeniski dzēsta. Vai esat pārliecināts?"
-
-# @ polylang
-#: admin/table-languages.php:60 admin/table-string.php:167
-msgid "Delete"
-msgstr "Dzēst"
-
-# @ polylang
-#: admin/table-languages.php:74 admin/view-languages.php:72
-msgid "Full name"
-msgstr "Pilns nosaukums"
-
-# @ polylang
-#: admin/table-languages.php:75 admin/view-languages.php:78
-msgid "Locale"
-msgstr "Lokāle"
-
-# @ polylang
-#: admin/table-languages.php:76
-msgid "Code"
-msgstr "Kods"
-
-# @ polylang
-#: admin/table-languages.php:77 admin/view-languages.php:108
-msgid "Order"
-msgstr "Secība"
-
-# @ polylang
-#: admin/table-languages.php:78
-msgid "Flag"
-msgstr "Karogs"
-
-# @ polylang
-#: admin/table-languages.php:79
-msgid "Posts"
-msgstr "Raksti"
-
-# @ polylang
-#: admin/table-string.php:108
-msgid "Group"
-msgstr "Grupa"
-
-# @ polylang
-#: admin/table-string.php:109
-msgid "Name"
-msgstr "Nosaukums"
-
-# @ polylang
-#: admin/table-string.php:110
-msgid "String"
-msgstr "Teksts"
-
-# @ polylang
-#: admin/table-string.php:111 admin/view-translations-media.php:5
-#: admin/view-translations-post.php:5 admin/view-translations-term.php:6
-#: admin/view-translations-term.php:11
-msgid "Translations"
-msgstr "Tulkojumi"
-
-# @ polylang
-#: admin/table-string.php:186
-msgid "View all groups"
-msgstr "Skatīt visas grupas"
-
-#: admin/table-string.php:199
-msgid "Filter"
-msgstr "Filtrs"
 
 # @ polylang
 #: admin/view-about.php:3
@@ -395,251 +70,10 @@ msgstr ""
 "ziedojumi autoram tiks augsti vērtēti."
 
 # @ polylang
-#: admin/view-languages.php:38
-msgid "Edit language"
-msgstr "Rediģēt valodu"
-
-# @ polylang
-#: admin/view-languages.php:38 admin/view-languages.php:113
-msgid "Add new language"
-msgstr "Pievienot jaunu valodu"
-
-# @ polylang
-#: admin/view-languages.php:54
-msgid "Choose a language"
-msgstr "Izvēlēties valodu"
-
-# @ polylang
-#: admin/view-languages.php:68
-msgid "You can choose a language in the list or directly edit it below."
-msgstr "Jūs varat izvēlēties valodu no saraksta, vai ari rediģēt to zemāk."
-
-# @ polylang
-#: admin/view-languages.php:74
-msgid "The name is how it is displayed on your site (for example: English)."
-msgstr "Nosaukums, kādu to attēlos lapā (piemēram: Latviešu)"
-
-# @ polylang
-#: admin/view-languages.php:83
-msgid ""
-"Wordpress Locale for the language (for example: en_US). You will need to "
-"install the .mo file for this language."
-msgstr ""
-"WordPress valodas lokāle šai valodai (piemēram: en_US). Jums nāksies "
-"uzstādīt .mo failu šai valodai."
-
-# @ polylang
-#: admin/view-languages.php:87
-msgid "Language code"
-msgstr "Valodas kods (piem.: lv)"
-
-# @ polylang
-#: admin/view-languages.php:89
-msgid "Language code - preferably 2-letters ISO 639-1  (for example: en)"
-msgstr "Valodas kods - vēlams divu burtu ISO 639-1 (piemēram: lv)"
-
-# @ polylang
-#: admin/view-languages.php:93
-msgid "Text direction"
-msgstr "Lasīšanas virziens"
-
-# @ polylang
-#: admin/view-languages.php:97
-msgid "left to right"
-msgstr "no kreisās uz labo"
-
-# @ polylang
-#: admin/view-languages.php:102
-msgid "right to left"
-msgstr "no labās uz kreiso"
-
-# @ polylang
-#: admin/view-languages.php:104
-msgid "Choose the text direction for the language"
-msgstr "Izvēlieties lasīšanas virzienu šai valodai"
-
-# @ polylang
-#: admin/view-languages.php:110
-msgid "Position of the language in the language switcher"
-msgstr "Valodas atrašanās vieta valodu izvēlnē"
-
-#: admin/view-languages.php:113
-msgid "Update"
-msgstr "Atjaunināt"
-
-# @ polylang
-#: admin/view-languages.php:139
-msgid "Search translations"
-msgstr "Meklēt tulkoumos"
-
-# @ polylang
-#: admin/view-languages.php:142
-msgid "Clean strings translation database"
-msgstr "Iztīrīt tulkojumu datubāzi"
-
-# @ polylang
-#: admin/view-languages.php:143
-msgid ""
-"Use this to remove unused strings from database, for example after a plugin "
-"has been uninstalled."
-msgstr ""
-"Šo iespēju var lietot lai izdzēstu neizmantotos tulkojums. Piemēram pēc "
-"spraudņa noņemšanas."
-
-# @ polylang
-#: admin/view-languages.php:161
-msgid "Default language"
-msgstr "Noklusētā valoda"
-
-# @ polylang
-#: admin/view-languages.php:176
-msgid ""
-"There are posts, pages, categories or tags without language set. Do you want "
-"to set them all to default language ?"
-msgstr ""
-"Ir atrasti raksti, lapas, tēmas, vai birkas bez uzstādītas valodas. Vai "
-"vēlaties uzstādīt tām visām noklusēto valodu?"
-
-# @ polylang
-#: admin/view-languages.php:184
-msgid "URL modifications"
-msgstr "Saišu modifikācijas"
-
-# @ polylang
-#: admin/view-languages.php:190
-msgid "The language is set from content"
-msgstr "Valoda tiek uzstādīt no satura"
-
-# @ polylang
-#: admin/view-languages.php:193
-msgid "Posts, pages, categories and tags urls are not modified."
-msgstr "Rakstu, lapu, kategoriju un birku saites netiek mainītas."
-
-# @ polylang
-#: admin/view-languages.php:199
-msgid "The language is set from the directory name in pretty permalinks"
-msgstr "Valoda tiek uzstādīta no direktorijas nosaukuma glītajās saitēs"
-
-# @ polylang
-#: admin/view-languages.php:202 admin/view-languages.php:211
-#: admin/view-languages.php:258 admin/view-languages.php:267
-msgid "Example:"
-msgstr "Piemērs:"
-
-# @ polylang
-#: admin/view-languages.php:208
-msgid "The language is set from the subdomain name in pretty permalinks"
-msgstr "Valoda tiek uzstādīta no subdomēna nosaukuma"
-
-# @ polylang
-#: admin/view-languages.php:217
-msgid "The language is set from different domains"
-msgstr "Valoda tiek uzstādīta dažādiem domēniem"
-
-# @ polylang
-#: admin/view-languages.php:241
-msgid "Hide URL language information for default language"
-msgstr "Paslēpt noklusētās valodas informāciju hipersaitēs"
-
-# @ polylang
-#: admin/view-languages.php:255
-msgid "Remove /language/ in pretty permalinks"
-msgstr "Nerādīt /language/ glītajās saitēs"
-
-# @ polylang
-#: admin/view-languages.php:264
-msgid "Keep /language/ in pretty permalinks"
-msgstr "Rādīt /language/ glītajās saitēs"
-
-# @ polylang
-#: admin/view-languages.php:279
-msgid ""
-"The front page url contains the language code instead of the page name or "
-"page id"
-msgstr "Sākumlapas adrese satur valodas kodu, nevis lapas nosaukumu vai id"
-
-# @ polylang
-#: admin/view-languages.php:287
-#, php-format
-msgid "Example: %s instead of %s"
-msgstr "Piemēram: %s, nevis %s"
-
-# @ polylang
-#: admin/view-languages.php:297
-msgid "Detect browser language"
-msgstr "Noteikt pārlūka valodu"
-
-# @ polylang
-#: admin/view-languages.php:303
-msgid ""
-"When the front page is visited, set the language according to the browser "
-"preference"
-msgstr ""
-"Kad tiek apmeklēta sākumlapa, uzstāda valodu atkarībā no pārlūkprogrammas "
-"uzstādījumiem"
-
-# @ polylang
-#: admin/view-languages.php:310
-msgid "Media"
-msgstr "Datnes"
-
-# @ polylang
-#: admin/view-languages.php:316
-msgid "Activate languages and translations for media"
-msgstr "Iespējot valodas un tulkošanu datnēm"
-
-# @ polylang
-#: admin/view-languages.php:324
-msgid "Custom post types"
-msgstr "Pielāgotie rakstu tipi"
-
-# @ polylang
-#: admin/view-languages.php:337
-msgid "Activate languages and translations for custom post types."
-msgstr "Iespējot valodas un tulkošanu pielāgotajiem rakstu tipiem."
-
-# @ polylang
-#: admin/view-languages.php:344
-msgid "Custom taxonomies"
-msgstr "Pielāgotās taksonomijas"
-
-# @ polylang
-#: admin/view-languages.php:357
-msgid "Activate languages and translations for custom taxonomies."
-msgstr "Iespējot valodas un tulkošanu pielāgotajām taksonomijām."
-
-# @ polylang
-#: admin/view-languages.php:363
-msgid "Synchronization"
-msgstr "Sinhronizācija"
-
-# @ polylang
-#: admin/view-languages.php:374
-msgid ""
-"The synchronization options allow to maintain exact same values (or "
-"translations in the case of taxonomies and page parent) of meta content "
-"between the translations of a post or page."
-msgstr ""
-"Sinhronizācijas iespēja ļauj uzturēt vienādas lietotāja lauku vērtības, kā "
-"arī taksonomija un lapu vecākus, starp rakstu un lapu tulkojumiem."
-
-# @ polylang
-#: admin/view-translations-media.php:30 admin/view-translations-post.php:21
-#: admin/view-translations-term.php:30
-msgid "Add new"
-msgstr "Pievienot jaunu"
-
-#: frontend/frontend-filters-search.php:81
-msgid "Search"
-msgstr "Meklēt"
-
-#: include/plugins-compat.php:70
-msgid ""
-"Import <strong>posts, pages, comments, custom fields, categories, and tags</"
-"strong> from a WordPress export file."
-msgstr ""
-"Importēt <strong>rakstus, lapas, komentārus, lietotāja laukus, kategorijas, "
-"un birkas</strong> no WordPress eksporta faila."
+#: admin/admin-filters-post.php:115 admin/admin.php:90 admin/settings.php:70
+#: admin/settings.php:97 include/model.php:561
+msgid "Languages"
+msgstr "Valodas"
 
 # @ polylang
 #: include/switcher.php:22
@@ -662,33 +96,384 @@ msgid "Hides the current language"
 msgstr "Paslēpt aktīvo valodu"
 
 # @ polylang
-#: include/switcher.php:29
+#: include/switcher.php:30
 msgid "Displays as dropdown"
 msgstr "Rāda kā nolaižamo izvēlni"
 
 # @ polylang
-#: include/upgrade.php:76
-msgid ""
-"Polylang has been deactivated because you upgraded from a too old version."
-msgstr ""
-"Polylang tika atslēgts, jo jūs atajuninājāt to no pārāk vecas versijas."
+#: admin/admin.php:267
+msgid "Filters content by language"
+msgstr "Filtrēt saturu pēc valodas"
 
 # @ polylang
-#: include/upgrade.php:78
-#, php-format
-msgid "Please upgrade first to %s before ugrading to %s."
-msgstr "Lūdzu vispirms atjauniniet uz %s un tikai pēc tam uz %s."
+#: admin/admin.php:258
+msgid "Show all languages"
+msgstr "Rādīt visas valodas"
 
-#: include/widget-calendar.php:126
-#, php-format
-msgctxt "calendar caption"
-msgid "%1$s %2$s"
-msgstr "%1$s %2$s"
+# @ polylang
+#: admin/admin-filters-columns.php:140 admin/admin-filters-columns.php:230
+msgid "Add new translation"
+msgstr "Pievienot jaunu tulkojumu"
 
-#: include/widget-calendar.php:152 include/widget-calendar.php:160
-#, php-format
-msgid "View posts for %1$s %2$s"
-msgstr "Rādīt rakstus no %1$s %2$s"
+# @ polylang
+#: admin/admin-filters-columns.php:173 admin/admin-filters-media.php:55
+#: admin/admin-filters-post.php:141 admin/admin-filters-term.php:75
+#: admin/admin-filters-term.php:122 include/model.php:562
+msgid "Language"
+msgstr "Valoda"
+
+# @ polylang
+#: admin/table-string.php:112 admin/view-translations-media.php:5
+#: admin/view-translations-post.php:5 admin/view-translations-term.php:6
+#: admin/view-translations-term.php:11
+msgid "Translations"
+msgstr "Tulkojumi"
+
+# @ polylang
+#: admin/admin-filters-term.php:82 admin/admin-filters-term.php:130
+msgid "Sets the language"
+msgstr "Nosaka valodu"
+
+# @ polylang
+#: admin/admin-filters.php:52
+msgid "The widget is displayed for:"
+msgstr "Logdaļa tiek rādīta:"
+
+# @ polylang
+#: admin/admin-filters.php:55 include/model.php:563
+msgid "All languages"
+msgstr "Visas valodas"
+
+# @ polylang
+#: admin/admin-filters.php:123
+msgid "Admin language"
+msgstr "Vadības valoda"
+
+# @ polylang
+#: admin/admin-filters.php:126
+msgid "Wordpress default"
+msgstr "WordPress noklusējums"
+
+# @ default
+# @ polylang
+#: admin/admin.php:167 admin/settings.php:102
+msgid "Settings"
+msgstr "Uzstādījumi"
+
+# @ polylang
+#: admin/admin-filters.php:160 admin/admin-filters.php:169
+msgid "Upgrading language files&#8230;"
+msgstr "Atjaunina valodu failus&#8230;"
+
+# @ polylang
+#: admin/settings.php:62
+msgid "About Polylang"
+msgstr "Par Polylang"
+
+# @ polylang
+#: admin/settings.php:78
+msgid "Strings translations"
+msgstr "Tekstu tulkojumi"
+
+# @ polylang
+#: admin/settings.php:101
+msgid "Strings translation"
+msgstr "Tekstu tulkošana"
+
+# @ polylang
+#: admin/admin-model.php:244
+msgid "Enter a valid WordPress locale"
+msgstr "Lūdzu ievadiet derīgu WordPress lokāles kodu."
+
+# @ polylang
+#: admin/admin-model.php:252
+msgid "The language code must be unique"
+msgstr "Valodas kodam jābūt unikālam"
+
+# @ polylang
+#: admin/admin-model.php:256
+msgid "The language must have a name"
+msgstr "Valodai ir nepieciešams nosaukums"
+
+# @ polylang
+#: admin/admin.php:367 admin/settings.php:180
+msgid ""
+"The language was created, but the WordPress language file was not "
+"downloaded. Please install it manually."
+msgstr ""
+"Valoda tika izveidota, bet WordPress tulkojumu fails netika lejuplādēts. "
+"Lūdzu uzstādiet to manuāli."
+
+# @ polylang
+#: admin/admin-strings.php:59
+msgid "Widget title"
+msgstr "Logdaļas virsraksts"
+
+# @ polylang
+#: admin/settings.php:319
+msgid "Taxonomies"
+msgstr "Taksonomijas"
+
+# @ polylang
+#: admin/settings.php:320
+msgid "Custom fields"
+msgstr "Lietotāja lauki"
+
+# @ polylang
+#: admin/settings.php:321
+msgid "Comment status"
+msgstr "Komentāru statuss"
+
+# @ polylang
+#: admin/settings.php:322
+msgid "Ping status"
+msgstr "Atpingu statuss"
+
+# @ polylang
+#: admin/settings.php:323
+msgid "Sticky posts"
+msgstr "Izceltie raksti"
+
+# @ polylang
+#: admin/settings.php:324
+msgid "Published date"
+msgstr "Publicēšanas Datums"
+
+# @ polylang
+#: admin/settings.php:325
+msgid "Post format"
+msgstr "Raksta formāts"
+
+# @ default
+#: admin/settings.php:326
+msgid "Page parent"
+msgstr "Vecāka lapa"
+
+# @ polylang
+#: admin/settings.php:327
+msgid "Page template"
+msgstr "Lapas veidne"
+
+# @ polylang
+#: admin/settings.php:328
+msgid "Page order"
+msgstr "Kārtas numurs"
+
+# @ polylang
+#: admin/settings.php:329
+msgid "Featured image"
+msgstr "Satura izvēlētais attēls"
+
+# @ polylang
+#: admin/view-tab-lang.php:21
+msgid "Edit language"
+msgstr "Rediģēt valodu"
+
+# @ polylang
+#: admin/view-tab-lang.php:21 admin/view-tab-lang.php:96
+msgid "Add new language"
+msgstr "Pievienot jaunu valodu"
+
+# @ polylang
+#: admin/view-tab-lang.php:37
+msgid "Choose a language"
+msgstr "Izvēlēties valodu"
+
+# @ polylang
+#: admin/view-tab-lang.php:51
+msgid "You can choose a language in the list or directly edit it below."
+msgstr "Jūs varat izvēlēties valodu no saraksta, vai ari rediģēt to zemāk."
+
+# @ polylang
+#: admin/table-languages.php:74 admin/view-tab-lang.php:55
+msgid "Full name"
+msgstr "Pilns nosaukums"
+
+# @ polylang
+#: admin/view-tab-lang.php:57
+msgid "The name is how it is displayed on your site (for example: English)."
+msgstr "Nosaukums, kādu to attēlos lapā (piemēram: Latviešu)"
+
+# @ polylang
+#: admin/table-languages.php:75 admin/view-tab-lang.php:61
+msgid "Locale"
+msgstr "Lokāle"
+
+# @ polylang
+#: admin/view-tab-lang.php:66
+msgid ""
+"Wordpress Locale for the language (for example: en_US). You will need to "
+"install the .mo file for this language."
+msgstr ""
+"WordPress valodas lokāle šai valodai (piemēram: en_US). Jums nāksies "
+"uzstādīt .mo failu šai valodai."
+
+# @ polylang
+#: admin/view-tab-lang.php:70
+msgid "Language code"
+msgstr "Valodas kods (piem.: lv)"
+
+# @ polylang
+#: admin/view-tab-lang.php:76
+msgid "Text direction"
+msgstr "Lasīšanas virziens"
+
+# @ polylang
+#: admin/view-tab-lang.php:80
+msgid "left to right"
+msgstr "no kreisās uz labo"
+
+# @ polylang
+#: admin/view-tab-lang.php:85
+msgid "right to left"
+msgstr "no labās uz kreiso"
+
+# @ polylang
+#: admin/view-tab-lang.php:87
+msgid "Choose the text direction for the language"
+msgstr "Izvēlieties lasīšanas virzienu šai valodai"
+
+# @ polylang
+#: admin/table-languages.php:77 admin/view-tab-lang.php:91
+msgid "Order"
+msgstr "Secība"
+
+# @ polylang
+#: admin/view-tab-lang.php:93
+msgid "Position of the language in the language switcher"
+msgstr "Valodas atrašanās vieta valodu izvēlnē"
+
+# @ polylang
+#: admin/admin-nav-menu.php:54 admin/admin-nav-menu.php:92
+#: admin/admin-nav-menu.php:95 admin/admin-nav-menu.php:126
+#: admin/admin-nav-menu.php:188 install/upgrade.php:301
+msgid "Language switcher"
+msgstr "Valodu izvēlne"
+
+# @ polylang
+#: admin/view-tab-strings.php:8
+msgid "Search translations"
+msgstr "Meklēt tulkoumos"
+
+# @ polylang
+#: admin/view-tab-strings.php:11
+msgid "Clean strings translation database"
+msgstr "Iztīrīt tulkojumu datubāzi"
+
+# @ polylang
+#: admin/view-tab-settings.php:14
+msgid "Default language"
+msgstr "Noklusētā valoda"
+
+# @ polylang
+#: admin/view-tab-settings.php:29
+msgid ""
+"There are posts, pages, categories or tags without language set. Do you want "
+"to set them all to default language ?"
+msgstr ""
+"Ir atrasti raksti, lapas, tēmas, vai birkas bez uzstādītas valodas. Vai "
+"vēlaties uzstādīt tām visām noklusēto valodu?"
+
+# @ polylang
+#: admin/view-tab-settings.php:149
+msgid "Detect browser language"
+msgstr "Noteikt pārlūka valodu"
+
+# @ polylang
+#: admin/view-tab-settings.php:155
+msgid ""
+"When the front page is visited, set the language according to the browser "
+"preference"
+msgstr ""
+"Kad tiek apmeklēta sākumlapa, uzstāda valodu atkarībā no pārlūkprogrammas "
+"uzstādījumiem"
+
+# @ polylang
+#: admin/view-tab-settings.php:37
+msgid "URL modifications"
+msgstr "Saišu modifikācijas"
+
+# @ polylang
+#: admin/view-tab-settings.php:93
+msgid "Hide URL language information for default language"
+msgstr "Paslēpt noklusētās valodas informāciju hipersaitēs"
+
+# @ polylang
+#: admin/view-tab-settings.php:162
+msgid "Media"
+msgstr "Datnes"
+
+# @ polylang
+#: admin/view-tab-settings.php:168
+msgid "Activate languages and translations for media"
+msgstr "Iespējot valodas un tulkošanu datnēm"
+
+# @ polylang
+#: admin/view-tab-settings.php:215
+msgid "Synchronization"
+msgstr "Sinhronizācija"
+
+# @ polylang
+#: admin/view-tab-settings.php:176
+msgid "Custom post types"
+msgstr "Pielāgotie rakstu tipi"
+
+# @ polylang
+#: admin/view-tab-settings.php:189
+msgid "Activate languages and translations for custom post types."
+msgstr "Iespējot valodas un tulkošanu pielāgotajiem rakstu tipiem."
+
+# @ polylang
+#: admin/view-tab-settings.php:196
+msgid "Custom taxonomies"
+msgstr "Pielāgotās taksonomijas"
+
+# @ polylang
+#: admin/view-tab-settings.php:209
+msgid "Activate languages and translations for custom taxonomies."
+msgstr "Iespējot valodas un tulkošanu pielāgotajām taksonomijām."
+
+# @ polylang
+#: admin/admin-filters-post.php:433 admin/admin-filters-term.php:642
+#: admin/table-languages.php:54 admin/view-translations-media.php:21
+msgid "Edit"
+msgstr "Rediģēt"
+
+# @ polylang
+#: admin/table-languages.php:60 admin/table-string.php:168
+msgid "Delete"
+msgstr "Dzēst"
+
+# @ polylang
+#: admin/table-languages.php:76
+msgid "Code"
+msgstr "Kods"
+
+# @ polylang
+#: admin/table-languages.php:78
+msgid "Flag"
+msgstr "Karogs"
+
+# @ polylang
+#: admin/table-languages.php:79
+msgid "Posts"
+msgstr "Raksti"
+
+# @ polylang
+#: admin/table-string.php:110
+msgid "Name"
+msgstr "Nosaukums"
+
+# @ polylang
+#: admin/table-string.php:111
+msgid "String"
+msgstr "Teksts"
+
+# @ polylang
+#: admin/view-translations-media.php:30 admin/view-translations-post.php:21
+#: admin/view-translations-term.php:30
+msgid "Add new"
+msgstr "Pievienot jaunu"
 
 # @ polylang
 #: include/widget-languages.php:16
@@ -701,20 +486,183 @@ msgid "Displays a language switcher"
 msgstr "Parāda valodu izvēlni"
 
 # @ polylang
-#: include/widget-languages.php:100
+#: include/widget-languages.php:75
 msgid "Title:"
 msgstr "Virsraksts:"
 
-#: include/widget-recent-comments.php:47
-msgid "Recent Comments"
-msgstr "Jaunākie komentāri"
+# @ polylang
+#. translators: plugin header field 'Description'
+#: polylang.php:0
+msgid "Adds multilingual capability to WordPress"
+msgstr ""
 
-#: include/widget-recent-comments.php:81
+#  polylang
+#: install/install.php:24
 #, php-format
-msgctxt "widgets"
-msgid "%1$s on %2$s"
-msgstr "%1$s par %2$s"
+msgid "You are using WordPress %s. Polylang requires at least WordPress %s."
+msgstr ""
+"Jūs lietojat WordPress %s. Polylang nepieciešama vismaz WordPress %s versija."
 
-#: include/widget-recent-posts.php:47
-msgid "Recent Posts"
-msgstr "Jaunākie raksti"
+# @ polylang
+#: install/upgrade.php:76
+msgid ""
+"Polylang has been deactivated because you upgraded from a too old version."
+msgstr ""
+"Polylang tika atslēgts, jo jūs atajuninājāt to no pārāk vecas versijas."
+
+# @ polylang
+#: install/upgrade.php:78
+#, php-format
+msgid "Please upgrade first to %s before ugrading to %s."
+msgstr "Lūdzu vispirms atjauniniet uz %s un tikai pēc tam uz %s."
+
+# @ polylang
+#: admin/table-string.php:109
+msgid "Group"
+msgstr "Grupa"
+
+# @ polylang
+#: admin/table-string.php:187
+msgid "View all groups"
+msgstr "Skatīt visas grupas"
+
+# @ polylang
+#: admin/table-languages.php:59
+msgid "You are about to permanently delete this language. Are you sure?"
+msgstr "Šī valoda tiks neatgriezeniski dzēsta. Vai esat pārliecināts?"
+
+# @ polylang
+#: admin/view-tab-strings.php:12
+msgid ""
+"Use this to remove unused strings from database, for example after a plugin "
+"has been uninstalled."
+msgstr ""
+"Šo iespēju var lietot lai izdzēstu neizmantotos tulkojums. Piemēram pēc "
+"spraudņa noņemšanas."
+
+# @ polylang
+#: admin/view-tab-settings.php:226
+msgid ""
+"The synchronization options allow to maintain exact same values (or "
+"translations in the case of taxonomies and page parent) of meta content "
+"between the translations of a post or page."
+msgstr ""
+"Sinhronizācijas iespēja ļauj uzturēt vienādas lietotāja lauku vērtības, kā "
+"arī taksonomija un lapu vecākus, starp rakstu un lapu tulkojumiem."
+
+# @ polylang
+#: admin/admin-model.php:248
+msgid "The language code contains invalid characters"
+msgstr "Ievadītais valodas kods satur neatļautus simbolus"
+
+# @ polylang
+#: admin/view-tab-settings.php:43
+msgid "The language is set from content"
+msgstr "Valoda tiek uzstādīt no satura"
+
+# @ polylang
+#: admin/view-tab-settings.php:46
+msgid "Posts, pages, categories and tags urls are not modified."
+msgstr "Rakstu, lapu, kategoriju un birku saites netiek mainītas."
+
+# @ polylang
+#: admin/view-tab-settings.php:51
+msgid "The language is set from the directory name in pretty permalinks"
+msgstr "Valoda tiek uzstādīta no direktorijas nosaukuma glītajās saitēs"
+
+# @ polylang
+#: admin/view-tab-settings.php:54 admin/view-tab-settings.php:63
+#: admin/view-tab-settings.php:110 admin/view-tab-settings.php:119
+msgid "Example:"
+msgstr "Piemērs:"
+
+# @ polylang
+#: admin/view-tab-settings.php:60
+msgid "The language is set from the subdomain name in pretty permalinks"
+msgstr "Valoda tiek uzstādīta no subdomēna nosaukuma"
+
+# @ polylang
+#: admin/view-tab-settings.php:69
+msgid "The language is set from different domains"
+msgstr "Valoda tiek uzstādīta dažādiem domēniem"
+
+# @ polylang
+#: admin/view-tab-settings.php:107
+msgid "Remove /language/ in pretty permalinks"
+msgstr "Nerādīt /language/ glītajās saitēs"
+
+# @ polylang
+#: admin/view-tab-settings.php:116
+msgid "Keep /language/ in pretty permalinks"
+msgstr "Rādīt /language/ glītajās saitēs"
+
+# @ polylang
+#: admin/view-tab-settings.php:131
+msgid ""
+"The front page url contains the language code instead of the page name or "
+"page id"
+msgstr "Sākumlapas adrese satur valodas kodu, nevis lapas nosaukumu vai id"
+
+# @ polylang
+#: admin/view-tab-settings.php:139
+#, php-format
+msgid "Example: %s instead of %s"
+msgstr "Piemēram: %s, nevis %s"
+
+# @ polylang
+#: admin/admin-model.php:38
+msgid "Impossible to add the language."
+msgstr "Neizdevās pievienot valodu."
+
+# @ polylang
+#: admin/admin-model.php:66
+msgid "Language added."
+msgstr "Valoda pievienota."
+
+# @ polylang
+#: admin/admin-model.php:146
+msgid "Language deleted."
+msgstr "Valoda izdzēsta."
+
+# @ polylang
+#: admin/admin-model.php:227
+msgid "Language updated."
+msgstr "Valoda atjaunināta."
+
+# @ polylang
+#: admin/settings.php:239
+msgid "Translations updated."
+msgstr "Tulkojums atjaunināts."
+
+# @ polylang
+#: admin/view-tab-lang.php:72
+msgid "Language code - preferably 2-letters ISO 639-1  (for example: en)"
+msgstr "Valodas kods - vēlams divu burtu ISO 639-1 (piemēram: lv)"
+
+# @ polylang
+#: admin/admin-filters.php:203
+msgid "The chosen static front page must be translated in all languages."
+msgstr ""
+
+# @ polylang
+#: admin/admin-strings.php:60
+msgid "Widget text"
+msgstr ""
+
+# @ polylang
+#: admin/settings.php:52
+msgid "Recommended plugins"
+msgstr ""
+
+# @ polylang
+#: admin/view-tab-settings.php:51
+msgid "The language is set from the code in the URL"
+msgstr ""
+
+# @ polylang
+#: include/switcher.php:26
+msgid "Hides languages with no translation"
+msgstr ""
+
+#~ msgid "&mdash; No Change &mdash;"
+#~ msgstr "&mdash; Bez izmaiņām &mdash;"

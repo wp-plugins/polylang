@@ -39,6 +39,9 @@ class PLL_Admin_Filters_Columns {
 			add_filter('manage_'.$tax.'_custom_column', array(&$this, 'term_column'), 10, 3);
 		}
 
+		// ajax responses to update list table rows
+		add_action('wp_ajax_pll_update_post_rows', array(&$this, 'ajax_update_post_rows'));
+		add_action('wp_ajax_pll_update_term_rows', array(&$this, 'ajax_update_term_rows'));
 	}
 
 	/*
@@ -96,7 +99,6 @@ class PLL_Admin_Filters_Columns {
 	/*
 	 * fills the language and translations columns in the posts, pages and media library tables
 	 * take care that when doing ajax inline edit, the post may not be updated in database yet
-	 * FIXME if inline edit breaks translations, the rows corresponding to these translations are not updated
 	 *
 	 * @since 0.1
 	 *
@@ -119,12 +121,11 @@ class PLL_Admin_Filters_Columns {
 		$post_type_object = get_post_type_object(get_post_type($post_id));
 
 		// link to edit post (or a translation)
-		// use $_POST['old_lang'] to detect if the language has been modified in quick edit
 		// check capabilities before creating links thanks to Solinx. See http://wordpress.org/support/topic/feature-request-incl-code-check-for-capabilities-in-admin-screens
-		if ($id = ($inline && $lang->slug != $_POST['old_lang']) ? ($language->slug == $lang->slug ? $post_id : 0) : $this->model->get_post($post_id, $language)) {
+		if ($id = $this->model->get_post($post_id, $language)) {
 			if (current_user_can($post_type_object->cap->edit_post, $post_id)) {
 				printf('<a class="%1$s" title="%2$s" href="%3$s"></a>',
-					$id == $post_id ? 'pll_icon_tick' : 'pll_icon_edit',
+					$id == $post_id ? 'pll_icon_tick' : esc_attr('pll_icon_edit translation_' . $id),
 					esc_attr(get_post($id)->post_title),
 					esc_url(get_edit_post_link($id))
 				);
@@ -163,7 +164,6 @@ class PLL_Admin_Filters_Columns {
 			printf(
 				'<fieldset class="inline-edit-col-left">
 					<div class="inline-edit-col">
-						<input type="hidden" value="" name="old_lang">
 						<label class="alignleft">
 							<span class="title">%s</span>
 							%s
@@ -191,7 +191,6 @@ class PLL_Admin_Filters_Columns {
 
 	/*
 	 * fills the language column in the 'Categories' or 'Post Tags' table
-	 * FIXME if inline edit breaks translations, the rows corresponding to these translations are not updated
 	 *
 	 * @since 0.1
 	 *
@@ -208,14 +207,18 @@ class PLL_Admin_Filters_Columns {
 		$taxonomy = isset($GLOBALS['taxonomy']) ? $GLOBALS['taxonomy'] : $_REQUEST['taxonomy'];
 		$language = $this->model->get_language(substr($column, 9));
 
-		if ($column == $this->get_first_language_column())
+		if ($column == $this->get_first_language_column()) {
 			$out = sprintf('<div class="hidden" id="lang_%d">%s</div>', esc_attr($term_id), esc_html($lang->slug));
 
-		$id = ($inline && $lang->slug != $_POST['old_lang']) ? ($language->slug == $lang->slug ? $term_id : 0) : $this->model->get_term($term_id, $language);
+			// identify the default categories to disable the language dropdown in js
+			if (in_array(get_option('default_category'), $this->model->get_translations('term', $term_id)))
+				$out .= sprintf('<div class="hidden" id="default_cat_%1$d">%1$d</div>', esc_attr($term_id));
+		}
+
 		// link to edit term (or a translation)
-		if ($id && $term = get_term($id, $taxonomy)) {
+		if (($id = $this->model->get_term($term_id, $language)) && $term = get_term($id, $taxonomy)) {
 			$out .= sprintf('<a class="%1$s" title="%2$s" href="%3$s"></a>',
-				$id == $term_id ? 'pll_icon_tick' : 'pll_icon_edit',
+				$id == $term_id ? 'pll_icon_tick' : esc_attr('pll_icon_edit translation_' . $id),
 				esc_attr($term->name),
 				esc_url(get_edit_term_link($id, $taxonomy, $post_type))
 			);
@@ -230,5 +233,66 @@ class PLL_Admin_Filters_Columns {
 		}
 
 		return $out;
+	}
+
+	/*
+	 * update rows of translated posts when the language is modified in quick edit
+	 *
+	 * @since 1.7
+	 */
+	public function ajax_update_post_rows() {
+		global $wp_list_table;
+
+		check_ajax_referer('inlineeditnonce', '_pll_nonce');
+
+		$x = new WP_Ajax_Response();
+		$wp_list_table = _get_list_table( 'WP_Posts_List_Table', array( 'screen' => $_POST['screen'] ) );
+
+		$post_type = $_POST['post_type'];
+		$translations = empty($_POST['translations']) ? array() : explode(',', $_POST['translations']); // collect old translations
+		$translations = array_merge($translations, array($_POST['post_id'])); // add current post
+
+		foreach ($translations as $post_id) {
+			$level = is_post_type_hierarchical( $post_type ) ? count( get_ancestors( $post_id, $post_type ) ) : 0;
+			$post = get_post($post_id);
+			ob_start();
+			$wp_list_table->single_row( $post, $level );
+			$data = ob_get_clean();
+
+			$x->add(array('what' => 'row', 'data' => $data, 'supplemental' => array('post_id' => $post_id)));
+		}
+
+		$x->send();
+	}
+
+	/*
+	 * update rows of translated terms when adding / deleting a translation or when the language is modified in quick edit
+	 *
+	 * @since 1.7
+	 */
+	public function ajax_update_term_rows() {
+		global $wp_list_table;
+
+		check_ajax_referer('pll_language', '_pll_nonce');
+
+		$x = new WP_Ajax_Response();
+		$wp_list_table = _get_list_table( 'WP_Terms_List_Table', array( 'screen' => $_POST['screen'] ) );
+
+		$taxonomy = $_POST['taxonomy'];
+		$translations = empty($_POST['translations']) ? array() : explode(',', $_POST['translations']); // collect old translations
+		$translations = array_merge($translations, $this->model->get_translations('term', $_POST['term_id'])); // add current translations
+		$translations = array_unique($translations); // remove doublons
+
+		foreach ($translations as $term_id) {
+			$level = is_taxonomy_hierarchical($taxonomy) ? count( get_ancestors( $term_id, $taxonomy ) ) : 0;
+			$tag = get_term($term_id, $taxonomy);
+			ob_start();
+			$wp_list_table->single_row( $tag, $level );
+			$data = ob_get_clean();
+
+			$x->add(array('what' => 'row', 'data' => $data, 'supplemental' => array('term_id' => $term_id)));
+		}
+
+		$x->send();
 	}
 }

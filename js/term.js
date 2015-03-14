@@ -1,25 +1,89 @@
 // quick edit
-if ('undefined' != typeof(inlineEditTax)) {
-	(function($) {
-		var $wp_inline_edit = inlineEditTax.edit;
+(function($) {
+	$(document).bind('DOMNodeInserted', function(e) {
+		var t = $(e.target);
 
-		inlineEditTax.edit = function( id ) {
-			$wp_inline_edit.apply( this, arguments );
-			var $term_id = 0;
-			if ( typeof( id ) == 'object' )
-				$term_id = parseInt( this.getId( id ) );
+		// WP inserts the quick edit from
+		if ('inline-edit' == t.attr('id')) {
+			var term_id = t.prev().attr('id').replace("tag-", "");
 
-			if ( $term_id > 0 ) {
-				var $edit_row = $('#edit-' + $term_id);
-				var $select = $edit_row.find(':input[name="inline_lang_choice"]');
-				$select.find('option:selected').removeProp('selected');
-				var lang = $('#lang_' + $term_id).html();
-				$("input[name='old_lang']").val(lang);
-				$select.find('option[value="'+lang+'"]').prop('selected', true);
+			if (term_id > 0) {
+				// language dropdown
+				var select = t.find(':input[name="inline_lang_choice"]');
+				var lang = $('#lang_' + term_id).html();
+				select.val(lang); // populates the dropdown
+
+				// disable the language dropdown for default categories
+				var default_cat = $('#default_cat_' + term_id).html();
+				if (term_id == default_cat) {
+					select.prop('disabled', true);
+				}
 			}
 		}
-	})(jQuery);
-}
+	});
+})(jQuery);
+
+
+// update rows of translated terms when adding / deleting a translation or when the language is modified in quick edit
+// acts on ajaxSuccess event
+(function($) {
+	$(document).ajaxSuccess(function(event, xhr, settings) {
+		function update_rows(term_id) {
+			// collect old translations
+			var translations = new Array;
+			$('.translation_'+term_id).each(function() {
+				translations.push($(this).parent().parent().attr('id').substring(4));
+			});
+
+			var data = {
+				action: 'pll_update_term_rows',
+				term_id: term_id,
+				translations: translations.join(','),
+				taxonomy: $("input[name='taxonomy']").val(),
+				screen: $("input[name='screen']").val(),
+				_pll_nonce: $('#_pll_nonce').val()
+			}
+
+			// get the modified rows in ajax and update them
+			$.post(ajaxurl, data, function(response) {
+				var res = wpAjax.parseAjaxResponse(response, 'ajax-response');
+				$.each(res.responses, function() {
+					if ('row' == this.what) {
+						$("#tag-"+this.supplemental.term_id).replaceWith(this.data);
+					}
+				});
+			});
+		}
+
+		var data = wpAjax.unserialize(settings.data); // what were the data sent by the ajax request?
+		if ('undefined' != typeof(data['action'])) {
+			switch(data['action']) {
+				// when adding a term, the new term_id is in the ajax response
+				case 'add-tag':
+					res = wpAjax.parseAjaxResponse(xhr.responseXML, 'ajax-response');
+					$.each(res.responses, function() {
+						if ('term' == this.what) {
+							update_rows(this.supplemental.term_id);
+						}
+					});
+
+					// and also reset translations hidden input fields
+					$('.htr_lang').val(0);
+				break;
+
+				// when deleting a term
+				case 'delete-tag':
+					update_rows(data['tag_ID']);
+					break;
+
+				// in case the language is modified in quick edit and breaks translations
+				case 'inline-save-tax':
+					update_rows(data['tax_ID']);
+					break;
+			}
+		}
+	});
+})(jQuery);
 
 jQuery(document).ready(function($) {
 	// translations autocomplete input box

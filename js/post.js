@@ -56,8 +56,7 @@
 			// add the language in the $_GET variable
 			var lang = $('#post_lang_choice').val();
 			var tax = $(this).closest('div.tagsdiv').attr('id');
-			// change action name for backward compatibility WP < 3.7
-			$(this).suggest( ajaxurl + '?action=polylang-ajax-tag-search&lang=' + lang + '&tax=' + tax, { delay: 500, minchars: 2, multiple: true, multipleSep: "," } );
+			$(this).suggest( ajaxurl + '?action=ajax-tag-search&lang=' + lang + '&tax=' + tax, { delay: 500, minchars: 2, multiple: true, multipleSep: "," } );
 		});
 	}
 
@@ -99,25 +98,82 @@
 })(jQuery);
 
 // quick edit
-// thanks to WP Dreamer http://wpdreamer.com/2012/03/manage-wordpress-posts-using-bulk-edit-and-quick-edit/
 (function($) {
-	var $wp_inline_edit = inlineEditPost.edit;
+	$(document).bind('DOMNodeInserted', function(e) {
+		var t = $(e.target);
 
-	inlineEditPost.edit = function( id ) {
-		$wp_inline_edit.apply( this, arguments );
-		var $post_id = 0;
-		if ( typeof( id ) == 'object' )
-			$post_id = parseInt( this.getId( id ) );
+		// WP inserts the quick edit from
+		if ('inline-edit' == t.attr('id')) {
+			var post_id = t.prev().attr('id').replace("post-", "");
 
-		if ( $post_id > 0 ) {
-			var $edit_row = $( '#edit-' + $post_id );
-			var $select = $edit_row.find(':input[name="inline_lang_choice"]');
-			$select.find('option:selected').removeProp('selected');
-			var lang = $('#lang_' + $post_id).html();
-			$("input[name='old_lang']").val(lang);
-			$select.find('option[value="'+lang+'"]').prop('selected', true);
+			if (post_id > 0) {
+				// language dropdown
+				var select = t.find(':input[name="inline_lang_choice"]');
+				var lang = $('#lang_' + post_id).html();
+				select.val(lang); // populates the dropdown
+
+				// initial filter for category checklist
+				filter_terms(lang);
+
+				// modify category checklist on language change
+				select.change( function() {
+					filter_terms($(this).val());
+				});
+			}
 		}
-	}
+
+		// filter category checklist
+		function filter_terms(lang) {
+			if ("undefined" != typeof(pll_term_languages)) {
+				$.each(pll_term_languages, function(lg, term_tax) {
+					$.each(term_tax, function(tax, terms) {
+						$.each(terms, function(i) {
+							id = '#'+tax+'-'+ pll_term_languages[lg][tax][i];
+							lang == lg ? $(id).show() : $(id).hide();
+						});
+					});
+				});
+			}
+		}
+	});
+})(jQuery);
+
+// update rows of translated posts when the language is modified in quick edit
+// acts on ajaxSuccess event
+(function($) {
+	$(document).ajaxSuccess(function(event, xhr, settings) {
+		function update_rows(post_id) {
+			// collect old translations
+			var translations = new Array;
+			$('.translation_'+post_id).each(function() {
+				translations.push($(this).parent().parent().attr('id').substring(5));
+			});
+
+			var data = {
+				action: 'pll_update_post_rows',
+				post_id: post_id,
+				translations: translations.join(','),
+				post_type: $("input[name='post_type']").val(),
+				screen: $("input[name='screen']").val(),
+				_pll_nonce: $("input[name='_inline_edit']").val() // reuse quick edit nonce
+			}
+
+			// get the modified rows in ajax and update them
+			$.post(ajaxurl, data, function(response) {
+				var res = wpAjax.parseAjaxResponse(response, 'ajax-response');
+				$.each(res.responses, function() {
+					if ('row' == this.what) {
+						$("#post-"+this.supplemental.post_id).replaceWith(this.data);
+					}
+				});
+			});
+		}
+
+		var data = wpAjax.unserialize(settings.data); // what were the data sent by the ajax request?
+		if ('undefined' != typeof(data['action']) && 'inline-save' == data['action']) {
+			update_rows(data['post_ID']);
+		}
+	});
 })(jQuery);
 
 jQuery(document).ready(function($) {

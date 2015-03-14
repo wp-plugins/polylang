@@ -35,7 +35,7 @@ class PLL_Frontend extends PLL_Base {
 		add_action('pll_language_defined', array(&$this, 'pll_language_defined'), 1);
 
 		// filters posts by language
-		add_filter('parse_query', array(&$this, 'parse_query'), 6);
+		add_action('parse_query', array(&$this, 'parse_query'), 6);
 
 		// not before 'check_language_code_in_url'
 		if (!defined('PLL_AUTO_TRANSLATE') || PLL_AUTO_TRANSLATE)
@@ -43,7 +43,6 @@ class PLL_Frontend extends PLL_Base {
 	}
 
 	/*
-	 * setups url modifications based on the links mode
 	 * setups the language chooser based on options
 	 *
 	 * @since 1.2
@@ -52,7 +51,7 @@ class PLL_Frontend extends PLL_Base {
 		$this->links = new PLL_Frontend_Links($this);
 
 		$c = array('Content', 'Url', 'Url', 'Domain');
-		$class = 'PLL_Choose_Lang_' . $c[$this->options['force_lang'] * ($this->links_model->using_permalinks ? 1 : 0 )];
+		$class = 'PLL_Choose_Lang_' . $c[$this->options['force_lang']];
 		$this->choose_lang = new $class($this);
 	}
 
@@ -80,13 +79,8 @@ class PLL_Frontend extends PLL_Base {
 	public function parse_query($query) {
 		$qv = $query->query_vars;
 
-		// to avoid conflict beetwen taxonomies
-		// FIXME generalize post format like taxonomies (untranslated but filtered)
-		$has_tax = false;
-		if (isset($query->tax_query->queries))
-			foreach ($query->tax_query->queries as $tax)
-				if (isset($tax['taxonomy']) && 'post_format' != $tax['taxonomy'])
-					$has_tax = true;
+		// to avoid returning an empty result if the query includes a translated taxonomy in a different language
+		$has_tax = isset($query->tax_query->queries) && $this->have_translated_taxonomy($query->tax_query->queries);
 
 		// allow filtering recent posts and secondary queries by the current language
 		// take care not to break queries for non visible post types such as nav_menu_items
@@ -99,14 +93,17 @@ class PLL_Frontend extends PLL_Base {
 		// modifies query vars when the language is queried
 		if (!empty($qv['lang'])) {
 			// remove pages query when the language is set unless we do a search
-			if (empty($qv['post_type']) && !$query->is_search)
+			// take care not to break the single page query!
+			if (empty($qv['post_type']) && !$query->is_search && !$query->is_page)
 				$query->set('post_type', 'post');
 
-			$tax_query_in_and = wp_list_filter( $query->tax_query->queried_terms, array( 'operator' => 'NOT IN' ), 'NOT' );
-			$queried_taxonomies = array_keys( $tax_query_in_and );
+			if (isset($query->tax_query->queried_terms)) {
+				$tax_query_in_and = wp_list_filter( $query->tax_query->queried_terms, array( 'operator' => 'NOT IN' ), 'NOT' );
+				$queried_taxonomies = array_keys( $tax_query_in_and );
 
-			// do we query another custom taxonomy?
-			$taxonomies = array_diff($queried_taxonomies , array('language', 'category', 'post_tag'));
+				// do we query another custom taxonomy?
+				$taxonomies = array_diff($queried_taxonomies , array('language', 'category', 'post_tag'));
+			}
 
 			// unset the is_archive flag for language pages to prevent loading the archive template
 			// keep archive flag for comment feed otherwise the language filter does not work
@@ -157,6 +154,29 @@ class PLL_Frontend extends PLL_Base {
 			$this->links->init_page_on_front_cache();
 			$this->load_strings_translations();
 		}
+	}
+
+	/*
+	 * check if translated taxonomy is queried
+	 * compatible with nested queries introduced in WP 4.1
+	 * @see https://wordpress.org/support/topic/tax_query-bug
+	 *
+	 * @since 1.7
+	 *
+	 * @param array $tax_queries
+	 * @return bool
+	 */
+	protected function have_translated_taxonomy($tax_queries) {
+		foreach ($tax_queries as $tax_query) {
+			if (isset($tax_query['taxonomy']) && $this->model->is_translated_taxonomy($tax_query['taxonomy']) && ! ( isset($tax_query['operator']) && 'NOT IN' === $tax_query['operator'] ) )
+				return true;
+
+			// nested queries
+			elseif (is_array($tax_query) && $this->have_translated_taxonomy($tax_query))
+				return true;
+		}
+
+		return false;
 	}
 }
 

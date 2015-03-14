@@ -26,7 +26,9 @@ class PLL_Admin_Nav_Menu {
 		add_action('customize_register', array(&$this, 'create_nav_menu_locations'), 5);
 
 		// protection against #24802
-		add_filter('pre_insert_term', array(&$this, 'pre_insert_term'), 10, 2);
+		// backward compatibility with WP < 4.1
+		if (version_compare($GLOBALS['wp_version'], '4.1', '<'))
+			add_filter('pre_insert_term', array(&$this, 'pre_insert_term'), 10, 2);
 	}
 
 	/*
@@ -158,7 +160,7 @@ class PLL_Admin_Nav_Menu {
 		if (current_user_can('edit_theme_options')) {
 			check_admin_referer( 'update-nav_menu', 'update-nav-menu-nonce' );
 
-			$options = array('hide_current' => 0,'force_home' => 0 ,'show_flags' => 0 ,'show_names' => 1); // default values
+			$options = array('hide_if_no_translation' => 0, 'hide_current' => 0,'force_home' => 0 ,'show_flags' => 0 ,'show_names' => 1); // default values
 			// our jQuery form has not been displayed
 			if (empty($_POST['menu-item-pll-detect'][$menu_item_db_id])) {
 				if (!get_post_meta($menu_item_db_id, '_pll_menu_item', true)) // our options were never saved
@@ -280,9 +282,10 @@ class PLL_Admin_Nav_Menu {
 	}
 
 	/*
-	 * FIXME prevents sharing a menu term with a language term by renaming the nav menu before its creation
+	 * prevents sharing a menu term with a language term by renaming the nav menu before its creation
 	 * to avoid http://core.trac.wordpress.org/ticket/24802
 	 * and http://wordpress.org/support/topic/all-connection-between-elements-lost
+	 * backward compatibility with WP < 4.1
 	 *
 	 * @since 1.1.3
 	 *

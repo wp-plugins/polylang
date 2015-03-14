@@ -20,8 +20,10 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 		$this->options = &$polylang->options;
 		$this->curlang = &$polylang->curlang;
 
+		add_action('admin_enqueue_scripts', array(&$this, 'admin_enqueue_scripts'));
+
 		// filters posts, pages and media by language
-		add_filter('parse_query',array(&$this,'parse_query'));
+		add_action('parse_query',array(&$this,'parse_query'));
 
 		// adds the Languages box in the 'Edit Post' and 'Edit Page' panels
 		add_action('add_meta_boxes', array(&$this, 'add_meta_boxes'));
@@ -38,6 +40,38 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 
 		// filters the pages by language in the parent dropdown list in the page attributes metabox
 		add_filter('page_attributes_dropdown_pages_args', array(&$this, 'page_attributes_dropdown_pages_args'), 10, 2);
+	}
+
+	/*
+	 * outputs a javascript list of terms ordered by language and hierarchical taxonomies
+	 * to filter the category checklist per post language in quick edit
+	 *
+	 * @since 1.7
+	 */
+	public function admin_enqueue_scripts() {
+		$screen = get_current_screen();
+
+		if ('edit' == $screen->base && $taxonomies = get_object_taxonomies($screen->post_type, 'object')) {
+			// get translated hierarchical taxonomies
+			foreach ($taxonomies as $taxonomy) {
+				if ( $taxonomy->hierarchical && $this->model->is_translated_taxonomy($taxonomy->name))
+					$hierarchical_taxonomies[] = $taxonomy->name;
+			}
+
+			if (!empty($hierarchical_taxonomies)) {
+				$terms = get_terms($hierarchical_taxonomies, array( 'get' => 'all' ));
+
+				foreach($terms as $term) {
+					if ($lang = $this->model->get_term_language($term->term_id))
+						$term_languages[$lang->slug][$term->taxonomy][] = $term->term_id;
+				}
+
+				// send all these data to javascript
+				if (!empty($term_languages)) {
+					wp_localize_script('pll_post', 'pll_term_languages', $term_languages);
+				}
+			}
+		}
 	}
 
 	/*
@@ -197,15 +231,14 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 	public function ajax_posts_not_translated() {
 		check_ajax_referer('pll_language', '_pll_nonce');
 
+		// don't order by title: see https://wordpress.org/support/topic/find-translated-post-when-10-is-not-enough
 		$posts = get_posts(array(
 			's'                => $_REQUEST['term'],
 			'suppress_filters' => 0, // to make the post_fields filter work
 			'lang'             => 0, // avoid admin language filter
-			'numberposts'      => 10, // limit to 10 posts
+			'numberposts'      => 20, // limit to 20 posts
 			'post_status'      => 'any',
 			'post_type'        => $_REQUEST['post_type'],
-			'orderby'          => 'title',
-			'order'            => 'ASC',
 			'tax_query'        => array(array(
 				'taxonomy' => 'language',
 				'field'    => 'term_taxonomy_id', // WP 3.5+
@@ -255,15 +288,32 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 		// quick edit and bulk edit
 		elseif (isset($_REQUEST['inline_lang_choice'])) {
 			// bulk edit does not modify the language
-			if (isset($_REQUEST['bulk_edit']) && $_REQUEST['inline_lang_choice'] == -1)
-				return;
+			if (isset($_REQUEST['bulk_edit']) && $_REQUEST['inline_lang_choice'] == -1) {
+				check_admin_referer('bulk-posts');
+				$lang = $this->model->get_post_language($post_id); // get the post language for later use when saving terms 
+			}
+			// a language is set in the language dropdown
+			else {
+				isset($_REQUEST['bulk_edit']) ? check_admin_referer('bulk-posts') : check_admin_referer('inlineeditnonce', '_inline_edit');
 
-			isset($_REQUEST['bulk_edit']) ? check_admin_referer('bulk-posts') : check_admin_referer('inlineeditnonce', '_inline_edit');
+				$old_lang = $this->model->get_post_language($post_id); // stores the old  language
+				$this->model->set_post_language($post_id, $lang = $_REQUEST['inline_lang_choice']); // set new language
 
-			if (($old_lang = $this->model->get_post_language($post_id)) && $old_lang->slug != $_REQUEST['inline_lang_choice'])
-				$this->model->delete_translation('post', $post_id);
+				// checks if the new language already exists in the translation group
+				if ($old_lang && $old_lang->slug != $lang) {
+					$translations = $this->model->get_translations('post', $post_id);
 
-			$this->model->set_post_language($post_id, $lang = $_REQUEST['inline_lang_choice']);
+					// if yes, separate this post from the translation group
+					if (array_key_exists($lang, $translations)) {
+						$this->model->delete_translation('post', $post_id);
+					}
+
+					elseif (array_key_exists($old_lang->slug, $translations)) {
+						unset($translations[$old_lang->slug]);
+						$this->model->save_translations('post', $post_id, $translations);
+					}
+				}
+			}
 		}
 
 		// quick press

@@ -29,7 +29,7 @@ abstract class PLL_Choose_Lang {
 			$this->set_language(empty($_REQUEST['lang']) ? $this->get_preferred_language() : $this->model->get_language($_REQUEST['lang']));
 
 		add_action('pre_comment_on_post', array(&$this, 'pre_comment_on_post')); // sets the language of comment
-		add_filter('parse_query', array(&$this, 'parse_main_query'), 2); // sets the language in special cases
+		add_action('parse_query', array(&$this, 'parse_main_query'), 2); // sets the language in special cases
 	}
 
 	/*
@@ -187,8 +187,8 @@ abstract class PLL_Choose_Lang {
 	 * @since 1.5
 	 */
 	protected function set_home_query_var() {
-		if ($this->page_on_front && $page_id = $this->model->get_post($this->page_on_front, $this->curlang))
-			set_query_var('page_id', $page_id);
+		if ($this->page_on_front)
+			set_query_var('page_id', $this->curlang->page_on_front);
 		else
 			$this->set_lang_query_var($GLOBALS['wp_query'], $this->curlang);
 	}
@@ -219,13 +219,13 @@ abstract class PLL_Choose_Lang {
 		$qv = $query->query_vars;
 
 		// redirect the language page to the homepage when using a static front page
-		if ($this->options['redirect_lang'] && is_tax('language') && $this->page_on_front && (count($query->query) == 1 || (is_paged() && count($query->query) == 2))) {
+		if ($this->options['redirect_lang'] && $this->page_on_front && (count($query->query) == 1 || (is_paged() && count($query->query) == 2)) && is_tax('language')) {
 			$this->set_language($this->model->get_language(get_query_var('lang')));
-			if ($page_id = $this->model->get_post($this->page_on_front, $this->model->get_language(get_query_var('lang')))) {
+			if ($page_id = $this->curlang->page_on_front) {
 				$query->set('page_id', $page_id);
 				$query->is_singular = $query->is_page = true;
 				$query->is_archive = $query->is_tax = false;
-				unset($query->query_vars['lang'], $query->queried_object); // reset queried object
+				unset($query->queried_object); // reset queried object
 			}
 			// else : the static front page is not translated
 			// let's things as is and the list of posts in the current language will be displayed
@@ -236,7 +236,7 @@ abstract class PLL_Choose_Lang {
 			$page_id = $this->get_page_id($query);
 
 			// correct <!--nextpage--> for page_on_front
-			if (!empty($page_id) && $this->model->get_post($page_id, $this->model->get_post_language($this->page_on_front)) == $this->page_on_front && !empty($qv['paged'])) {
+			if (!empty($page_id) && in_array($page_id, $this->model->get_translations('post', $this->page_on_front)) && !empty($qv['paged'])) {
 				$query->set('page', $qv['paged']);
 				unset($query->query_vars['paged']);
 			}
@@ -245,7 +245,7 @@ abstract class PLL_Choose_Lang {
 		// sets is_home on translated home page when it displays posts
 		// is_home must be true on page 2, 3... too
 		// as well as when searching an empty string: http://wordpress.org/support/topic/plugin-polylang-polylang-breaks-search-in-spun-theme
-		if (!$this->page_on_front && is_tax('language') && (count($query->query) == 1 || (is_paged() && count($query->query) == 2) || (isset($query->query['s']) && !$query->query['s']))) {
+		if (!$this->page_on_front && (count($query->query) == 1 || (is_paged() && count($query->query) == 2) || (isset($query->query['s']) && !$query->query['s'])) && is_tax('language')) {
 			$this->set_language($this->model->get_language(get_query_var('lang'))); // sets the language now otherwise it will be too late to filter sticky posts !
 			$query->is_home = true;
 			$query->is_archive = $query->is_tax = false;
@@ -255,7 +255,7 @@ abstract class PLL_Choose_Lang {
 		if ($this->page_for_posts) {
 			$page_id = $this->get_page_id($query);
 
-			if (!empty($page_id) && $this->model->get_post($page_id, $this->model->get_post_language($this->page_for_posts)) == $this->page_for_posts) {
+			if (!empty($page_id) && in_array($page_id, $this->model->get_translations('post', $this->page_for_posts))) {
 				$this->set_language($this->model->get_post_language($page_id));
 				$this->set_lang_query_var($query, $this->curlang);
 				$query->is_singular = $query->is_page = false;

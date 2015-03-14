@@ -84,7 +84,6 @@ abstract class PLL_Base {
 		// 2nd test needed when Polylang is not networked activated
 		// 3rd test needed when Polylang is networked activated and a new site is created
 		if ($new_blog != $old_blog && in_array(POLYLANG_BASENAME, $plugins) && get_option('polylang')) {
-			$this->model->blog_id = $new_blog;
 			$this->options = get_option('polylang'); // needed for menus
 			$this->links_model = $this->model->get_links_model();
 			return true;

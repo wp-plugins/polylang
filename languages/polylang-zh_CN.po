@@ -60,8 +60,8 @@ msgstr ""
 "学 - 优秀的WordPress建站资源平台\">WordPress大学</a> 为 Polylang 提供简体中文"
 "支持。"
 
-#: admin/admin-filters-post.php:81 admin/admin.php:90 admin/settings.php:55
-#: admin/settings.php:82 include/model.php:526
+#: admin/admin-filters-post.php:115 admin/admin.php:90 admin/settings.php:70
+#: admin/settings.php:97 include/model.php:561
 msgid "Languages"
 msgstr "语言"
 
@@ -81,35 +81,35 @@ msgstr "强制链接到主页"
 msgid "Hides the current language"
 msgstr "隐藏当前语言"
 
-#: include/switcher.php:29
+#: include/switcher.php:30
 msgid "Displays as dropdown"
 msgstr "显示下拉菜单"
 
-#: admin/admin.php:271
+#: admin/admin.php:267
 msgid "Filters content by language"
 msgstr "按语言过滤内容"
 
-#: admin/admin.php:262
+#: admin/admin.php:258
 msgid "Show all languages"
 msgstr "显示所有语言"
 
-#: admin/admin-filters-columns.php:139 admin/admin-filters-columns.php:227
+#: admin/admin-filters-columns.php:140 admin/admin-filters-columns.php:230
 msgid "Add new translation"
 msgstr "添加新翻译"
 
 #: admin/admin-filters-columns.php:173 admin/admin-filters-media.php:55
-#: admin/admin-filters-post.php:107 admin/admin-filters-term.php:77
-#: admin/admin-filters-term.php:121 include/model.php:527
+#: admin/admin-filters-post.php:141 admin/admin-filters-term.php:75
+#: admin/admin-filters-term.php:122 include/model.php:562
 msgid "Language"
 msgstr "语言"
 
-#: admin/table-string.php:111 admin/view-translations-media.php:5
+#: admin/table-string.php:112 admin/view-translations-media.php:5
 #: admin/view-translations-post.php:5 admin/view-translations-term.php:6
 #: admin/view-translations-term.php:11
 msgid "Translations"
 msgstr "翻译"
 
-#: admin/admin-filters-term.php:84 admin/admin-filters-term.php:128
+#: admin/admin-filters-term.php:82 admin/admin-filters-term.php:130
 msgid "Sets the language"
 msgstr "设置语言"
 
@@ -117,7 +117,7 @@ msgstr "设置语言"
 msgid "The widget is displayed for:"
 msgstr "该小工具显示为："
 
-#: admin/admin-filters.php:55 include/model.php:528
+#: admin/admin-filters.php:55 include/model.php:563
 msgid "All languages"
 msgstr "所有语言"
 
@@ -129,7 +129,7 @@ msgstr "管理语言"
 msgid "Wordpress default"
 msgstr "WordPress默认"
 
-#: admin/admin.php:171 admin/settings.php:87
+#: admin/admin.php:167 admin/settings.php:102
 msgid "Settings"
 msgstr "设置"
 
@@ -137,31 +137,31 @@ msgstr "设置"
 msgid "Upgrading language files&#8230;"
 msgstr "升级语言文件..."
 
-#: admin/settings.php:47
+#: admin/settings.php:62
 msgid "About Polylang"
 msgstr "关于 Polylang"
 
-#: admin/settings.php:63
+#: admin/settings.php:78
 msgid "Strings translations"
 msgstr "字符串翻译"
 
-#: admin/settings.php:86
+#: admin/settings.php:101
 msgid "Strings translation"
 msgstr "字符串翻译"
 
-#: admin/admin-model.php:274
+#: admin/admin-model.php:244
 msgid "Enter a valid WordPress locale"
 msgstr "输入一个有效的 WordPress 区域"
 
-#: admin/admin-model.php:282
+#: admin/admin-model.php:252
 msgid "The language code must be unique"
 msgstr "语言代码必须是唯一的"
 
-#: admin/admin-model.php:286
+#: admin/admin-model.php:256
 msgid "The language must have a name"
 msgstr "语言必须有一个名字"
 
-#: admin/admin.php:371 admin/settings.php:162
+#: admin/admin.php:367 admin/settings.php:180
 msgid ""
 "The language was created, but the WordPress language file was not "
 "downloaded. Please install it manually."
@@ -171,188 +171,188 @@ msgstr "语言已被创建，但是没有下载到WordPress语言包，请手动
 msgid "Widget title"
 msgstr "小工具标题"
 
-#: admin/settings.php:301
+#: admin/settings.php:319
 msgid "Taxonomies"
 msgstr "分类法"
 
-#: admin/settings.php:302
+#: admin/settings.php:320
 msgid "Custom fields"
 msgstr "自定义字段"
 
-#: admin/settings.php:303
+#: admin/settings.php:321
 msgid "Comment status"
 msgstr "评论状态"
 
-#: admin/settings.php:304
+#: admin/settings.php:322
 msgid "Ping status"
 msgstr "Ping 状态"
 
-#: admin/settings.php:305
+#: admin/settings.php:323
 msgid "Sticky posts"
 msgstr "置顶文章"
 
-#: admin/settings.php:306
+#: admin/settings.php:324
 msgid "Published date"
 msgstr "发布日期"
 
-#: admin/settings.php:307
+#: admin/settings.php:325
 msgid "Post format"
 msgstr "文章格式"
 
-#: admin/settings.php:308
+#: admin/settings.php:326
 msgid "Page parent"
 msgstr "父级页面"
 
-#: admin/settings.php:309
+#: admin/settings.php:327
 msgid "Page template"
 msgstr "页面模板"
 
-#: admin/settings.php:310
+#: admin/settings.php:328
 msgid "Page order"
 msgstr "页面顺序"
 
-#: admin/settings.php:311
+#: admin/settings.php:329
 msgid "Featured image"
 msgstr "特色图像"
 
-#: admin/view-languages.php:38
+#: admin/view-tab-lang.php:21
 msgid "Edit language"
 msgstr "编辑语言"
 
-#: admin/view-languages.php:38 admin/view-languages.php:113
+#: admin/view-tab-lang.php:21 admin/view-tab-lang.php:96
 msgid "Add new language"
 msgstr "添加新语言"
 
-#: admin/view-languages.php:54
+#: admin/view-tab-lang.php:37
 msgid "Choose a language"
 msgstr "选择语言"
 
-#: admin/view-languages.php:68
+#: admin/view-tab-lang.php:51
 msgid "You can choose a language in the list or directly edit it below."
 msgstr "你可以在列表中选择一个语言或者直接在下面编辑它。"
 
-#: admin/table-languages.php:74 admin/view-languages.php:72
+#: admin/table-languages.php:74 admin/view-tab-lang.php:55
 msgid "Full name"
 msgstr "全名"
 
-#: admin/view-languages.php:74
+#: admin/view-tab-lang.php:57
 msgid "The name is how it is displayed on your site (for example: English)."
 msgstr "这个名字是用来在网站上显示的（例如： English）"
 
-#: admin/table-languages.php:75 admin/view-languages.php:78
+#: admin/table-languages.php:75 admin/view-tab-lang.php:61
 msgid "Locale"
 msgstr "区域"
 
-#: admin/view-languages.php:83
+#: admin/view-tab-lang.php:66
 msgid ""
 "Wordpress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
 msgstr "WordPress 语言区域（例如：en_US）。你需要为该语言安装 .mo 文件。"
 
-#: admin/view-languages.php:87
+#: admin/view-tab-lang.php:70
 msgid "Language code"
 msgstr "语言代码"
 
-#: admin/view-languages.php:93
+#: admin/view-tab-lang.php:76
 msgid "Text direction"
 msgstr "文字方向"
 
-#: admin/view-languages.php:97
+#: admin/view-tab-lang.php:80
 msgid "left to right"
 msgstr "从左到右"
 
-#: admin/view-languages.php:102
+#: admin/view-tab-lang.php:85
 msgid "right to left"
 msgstr "从右到左"
 
-#: admin/view-languages.php:104
+#: admin/view-tab-lang.php:87
 msgid "Choose the text direction for the language"
 msgstr "选择语言的文字方向"
 
-#: admin/table-languages.php:77 admin/view-languages.php:108
+#: admin/table-languages.php:77 admin/view-tab-lang.php:91
 msgid "Order"
 msgstr "顺序"
 
-#: admin/view-languages.php:110
+#: admin/view-tab-lang.php:93
 msgid "Position of the language in the language switcher"
 msgstr "该语言在语言切换中的排列顺序"
 
-#: admin/admin-nav-menu.php:52 admin/admin-nav-menu.php:90
-#: admin/admin-nav-menu.php:93 admin/admin-nav-menu.php:124
-#: admin/admin-nav-menu.php:186 include/upgrade.php:301
+#: admin/admin-nav-menu.php:54 admin/admin-nav-menu.php:92
+#: admin/admin-nav-menu.php:95 admin/admin-nav-menu.php:126
+#: admin/admin-nav-menu.php:188 install/upgrade.php:301
 msgid "Language switcher"
 msgstr "语言切换"
 
-#: admin/view-languages.php:139
+#: admin/view-tab-strings.php:8
 msgid "Search translations"
 msgstr "搜索翻译"
 
-#: admin/view-languages.php:142
+#: admin/view-tab-strings.php:11
 msgid "Clean strings translation database"
 msgstr "清除未使用的字符串翻译"
 
-#: admin/view-languages.php:161
+#: admin/view-tab-settings.php:14
 msgid "Default language"
 msgstr "默认语言"
 
-#: admin/view-languages.php:176
+#: admin/view-tab-settings.php:29
 msgid ""
 "There are posts, pages, categories or tags without language set. Do you want "
 "to set them all to default language ?"
 msgstr "有文章、页面、分类和标签没有设置语言，你要设置它们为默认语言吗？"
 
-#: admin/view-languages.php:297
+#: admin/view-tab-settings.php:149
 msgid "Detect browser language"
 msgstr "检测浏览器语言"
 
-#: admin/view-languages.php:303
+#: admin/view-tab-settings.php:155
 msgid ""
 "When the front page is visited, set the language according to the browser "
 "preference"
 msgstr "当主页被访问时，根据浏览器偏好设置语言"
 
-#: admin/view-languages.php:184
+#: admin/view-tab-settings.php:37
 msgid "URL modifications"
 msgstr "URL修改"
 
-#: admin/view-languages.php:241
+#: admin/view-tab-settings.php:93
 msgid "Hide URL language information for default language"
 msgstr "为默认语言隐藏 URL 语言信息"
 
-#: admin/view-languages.php:310
+#: admin/view-tab-settings.php:162
 msgid "Media"
 msgstr "多媒体"
 
-#: admin/view-languages.php:316
+#: admin/view-tab-settings.php:168
 msgid "Activate languages and translations for media"
 msgstr "为多媒体启用语言和翻译"
 
-#: admin/view-languages.php:363
+#: admin/view-tab-settings.php:215
 msgid "Synchronization"
 msgstr "同步"
 
-#: admin/view-languages.php:324
+#: admin/view-tab-settings.php:176
 msgid "Custom post types"
 msgstr "自定义文章类型"
 
-#: admin/view-languages.php:337
+#: admin/view-tab-settings.php:189
 msgid "Activate languages and translations for custom post types."
 msgstr "为自定义文章类型启用语言和翻译"
 
-#: admin/view-languages.php:344
+#: admin/view-tab-settings.php:196
 msgid "Custom taxonomies"
 msgstr "自定义分类法"
 
-#: admin/view-languages.php:357
+#: admin/view-tab-settings.php:209
 msgid "Activate languages and translations for custom taxonomies."
 msgstr "为自定义分类法启用语言和翻译"
 
-#: admin/admin-filters-post.php:379 admin/admin-filters-term.php:612
+#: admin/admin-filters-post.php:433 admin/admin-filters-term.php:642
 #: admin/table-languages.php:54 admin/view-translations-media.php:21
 msgid "Edit"
 msgstr "编辑"
 
-#: admin/table-languages.php:60 admin/table-string.php:167
+#: admin/table-languages.php:60 admin/table-string.php:168
 msgid "Delete"
 msgstr "删除"
 
@@ -368,11 +368,11 @@ msgstr "国旗"
 msgid "Posts"
 msgstr "文章"
 
-#: admin/table-string.php:109
+#: admin/table-string.php:110
 msgid "Name"
 msgstr "名称"
 
-#: admin/table-string.php:110
+#: admin/table-string.php:111
 msgid "String"
 msgstr "字符串"
 
@@ -389,7 +389,7 @@ msgstr "语言切换"
 msgid "Displays a language switcher"
 msgstr "显示一个语言切换"
 
-#: include/widget-languages.php:97
+#: include/widget-languages.php:75
 msgid "Title:"
 msgstr "标题："
 
@@ -399,26 +399,26 @@ msgstr "标题："
 msgid "Adds multilingual capability to WordPress"
 msgstr "增加多语言功能到 WordPress"
 
-#: polylang.php:145
+#: install/install.php:24
 #, php-format
 msgid "You are using WordPress %s. Polylang requires at least WordPress %s."
 msgstr "你现在使用的是 WordPress %s，Polylang 要求至少为 WordPress %s。"
 
-#: include/upgrade.php:76
+#: install/upgrade.php:76
 msgid ""
 "Polylang has been deactivated because you upgraded from a too old version."
 msgstr "Polylang 已经停用，因为你是从太旧的版本升级的。"
 
-#: include/upgrade.php:78
+#: install/upgrade.php:78
 #, php-format
 msgid "Please upgrade first to %s before ugrading to %s."
 msgstr "在升级到 %s 前，请先升级到 %s。"
 
-#: admin/table-string.php:108
+#: admin/table-string.php:109
 msgid "Group"
 msgstr "分组"
 
-#: admin/table-string.php:186
+#: admin/table-string.php:187
 msgid "View all groups"
 msgstr "查看所有分组"
 
@@ -426,13 +426,13 @@ msgstr "查看所有分组"
 msgid "You are about to permanently delete this language. Are you sure?"
 msgstr "您将要永久删除此语言。您确定吗？"
 
-#: admin/view-languages.php:143
+#: admin/view-tab-strings.php:12
 msgid ""
 "Use this to remove unused strings from database, for example after a plugin "
 "has been uninstalled."
 msgstr "使用它从数据库中删除未使用的字符串，例如一个插件被卸载以后。"
 
-#: admin/view-languages.php:374
+#: admin/view-tab-settings.php:226
 msgid ""
 "The synchronization options allow to maintain exact same values (or "
 "translations in the case of taxonomies and page parent) of meta content "
@@ -443,59 +443,53 @@ msgstr ""
 "values (or translations in the case of taxonomies and page parent) of meta "
 "content between the translations of a post or page. ]"
 
-#: admin/admin-model.php:278
+#: admin/admin-model.php:248
 msgid "The language code contains invalid characters"
 msgstr "语言代码包含无效字符"
 
-#: admin/view-languages.php:190
+#: admin/view-tab-settings.php:43
 msgid "The language is set from content"
 msgstr "语言根据内容来设置"
 
-#: admin/view-languages.php:193
+#: admin/view-tab-settings.php:46
 msgid "Posts, pages, categories and tags urls are not modified."
 msgstr "文章、页面、分类和标签的URL不会被修改。"
 
-#: admin/view-languages.php:199
+#: admin/view-tab-settings.php:51
 msgid "The language is set from the directory name in pretty permalinks"
 msgstr "语言根据链接的目录名来设置"
 
 # @ polylang
-#: admin/view-languages.php:202 admin/view-languages.php:211
-#: admin/view-languages.php:258 admin/view-languages.php:267
+#: admin/view-tab-settings.php:54 admin/view-tab-settings.php:63
+#: admin/view-tab-settings.php:110 admin/view-tab-settings.php:119
 msgid "Example:"
 msgstr "例如："
 
-#: admin/view-languages.php:208
+#: admin/view-tab-settings.php:60
 msgid "The language is set from the subdomain name in pretty permalinks"
 msgstr "语言根据链接的二级域名来设置"
 
-#: admin/view-languages.php:217
+#: admin/view-tab-settings.php:69
 msgid "The language is set from different domains"
 msgstr "语言根据不同的域名来设置"
 
-#: admin/view-languages.php:255
+#: admin/view-tab-settings.php:107
 msgid "Remove /language/ in pretty permalinks"
 msgstr "在链接中移除 /language/"
 
-#: admin/view-languages.php:264
+#: admin/view-tab-settings.php:116
 msgid "Keep /language/ in pretty permalinks"
 msgstr "在链接中保留 /language/"
 
 # @ polylang
-#: admin/view-languages.php:279
+#: admin/view-tab-settings.php:131
 msgid ""
 "The front page url contains the language code instead of the page name or "
 "page id"
 msgstr "首页的URL中包含语言代码，而不是页面名称或页面ID"
 
 # @ polylang
-#: admin/admin-filters-term.php:167
-#, php-format
-msgid "A translation does already exist for %s"
-msgstr "%s 的翻译已经存在"
-
-# @ polylang
-#: admin/view-languages.php:287
+#: admin/view-tab-settings.php:139
 #, php-format
 msgid "Example: %s instead of %s"
 msgstr "例如：%s 代替 %s"
@@ -505,31 +499,31 @@ msgid "Impossible to add the language."
 msgstr "无法添加语言"
 
 # @ polylang
-#: admin/admin-model.php:62
+#: admin/admin-model.php:66
 msgid "Language added."
 msgstr "语言已添加"
 
 # @ polylang
-#: admin/admin-model.php:176
+#: admin/admin-model.php:146
 msgid "Language deleted."
 msgstr "语言已删除"
 
 # @ polylang
-#: admin/admin-model.php:257
+#: admin/admin-model.php:227
 msgid "Language updated."
 msgstr "语言已更新"
 
 # @ polylang
-#: admin/settings.php:221
+#: admin/settings.php:239
 msgid "Translations updated."
 msgstr "翻译已更新"
 
-#: admin/view-languages.php:89
+#: admin/view-tab-lang.php:72
 msgid "Language code - preferably 2-letters ISO 639-1  (for example: en)"
 msgstr "语言代码 - 最好是2个字母的ISO 639-1（例如 en）"
 
 # @ polylang
-#: admin/admin-filters.php:202
+#: admin/admin-filters.php:203
 msgid "The chosen static front page must be translated in all languages."
 msgstr "所选的静态首页必须翻译为所有语言。"
 
@@ -537,141 +531,15 @@ msgstr "所选的静态首页必须翻译为所有语言。"
 msgid "Widget text"
 msgstr "小工具文本"
 
-#~ msgid "&mdash; No Change &mdash;"
-#~ msgstr "&mdash; 不改变 &mdash;"
+# @ polylang
+#: admin/settings.php:52
+msgid "Recommended plugins"
+msgstr "推荐插件"
 
-#~ msgid "Cheatin&#8217; uh?"
-#~ msgstr "你想作弊？"
+#: admin/view-tab-settings.php:51
+msgid "The language is set from the code in the URL"
+msgstr "语言是从URL中的代码来设置的"
 
-#~ msgid "None"
-#~ msgstr "无"
-
-#~ msgid "Uncategorized"
-#~ msgstr "未分类"
-
-#~ msgid "Settings saved."
-#~ msgstr "设置已保存"
-
-#~ msgid "Site Title"
-#~ msgstr "网站标题"
-
-#~ msgid "Tagline"
-#~ msgstr "副标题"
-
-#~ msgid "Date Format"
-#~ msgstr "日期格式"
-
-#~ msgid "Time Format"
-#~ msgstr "时间格式"
-
-#~ msgid "Filter"
-#~ msgstr "刷选"
-
-#~ msgid "Update"
-#~ msgstr "更新"
-
-#~ msgid "Search"
-#~ msgstr "搜索"
-
-#~ msgid ""
-#~ "Import <strong>posts, pages, comments, custom fields, categories, and "
-#~ "tags</strong> from a WordPress export file."
-#~ msgstr ""
-#~ "从一个 WordPress 导出的文件中导入 <strong>文章、页面、评论、自定义字段、分"
-#~ "类 和 标签</strong>。"
-
-#~ msgctxt "calendar caption"
-#~ msgid "%1$s %2$s"
-#~ msgstr "%1$s %2$s"
-
-#~ msgid "View posts for %1$s %2$s"
-#~ msgstr "查看文章  %1$s %2$s"
-
-#~ msgid "Recent Comments"
-#~ msgstr "最新评论"
-
-#~ msgctxt "widgets"
-#~ msgid "%1$s on %2$s"
-#~ msgstr "%1$s on %2$s"
-
-#~ msgid "Recent Posts"
-#~ msgstr "最新文章"
-
-#~ msgid "Asides"
-#~ msgstr "日志"
-
-#~ msgid "Images"
-#~ msgstr "图像"
-
-#~ msgid "Videos"
-#~ msgstr "视频"
-
-#~ msgid "Audio"
-#~ msgstr "音频"
-
-#~ msgid "Quotes"
-#~ msgstr "引言"
-
-#~ msgid "Links"
-#~ msgstr "链接"
-
-#~ msgid "Galleries"
-#~ msgstr "相册"
-
-#~ msgid "Continue reading <span class=\"meta-nav\">&rarr;</span>"
-#~ msgstr "继续阅读 <span class=\"meta-nav\">&rarr;</span>"
-
-#~ msgid ""
-#~ "This gallery contains <a href=\"%1$s\" rel=\"bookmark\">%2$s photo</a>."
-#~ msgid_plural ""
-#~ "This gallery contains <a href=\"%1$s\" rel=\"bookmark\">%2$s photos</a>."
-#~ msgstr[0] "该相册包含 <a href=\"%1$s\" rel=\"bookmark\">%2$s 张相片</a>。"
-#~ msgstr[1] "该相册包含 <a href=\"%1$s\" rel=\"bookmark\">%2$s 张相片</a>。"
-
-#~ msgid "Leave a comment"
-#~ msgstr "发表评论"
-
-#~ msgid "1 Comment"
-#~ msgstr "1条评论"
-
-#~ msgid "% Comments"
-#~ msgstr "%条评论"
-
-#~ msgid "More %s <span class=\"meta-nav\">&rarr;</span>"
-#~ msgstr "更多 %s <span class=\"meta-nav\">&rarr;</span>"
-
-#~ msgid "2-letters ISO 639-1 language code (for example: en)"
-#~ msgstr "2个字母的 ISO 639-1 语言代码（例如：en）"
-
-#~ msgid "Translation"
-#~ msgstr "翻译"
-
-#~ msgid "ID of pages in other languages:"
-#~ msgstr "在其他语言的页面 ID："
-
-#~ msgid "Page ID"
-#~ msgstr "页面 ID"
-
-#~ msgid "Post ID"
-#~ msgstr "文章 ID"
-
-#~ msgid "No untranslated term"
-#~ msgstr "没有未翻译项目"
-
-#~ msgid "(no parent)"
-#~ msgstr "（无上级）"
-
-#~ msgid ""
-#~ "When using static front page, redirect the language page (example: %s) to "
-#~ "the front page in the right language"
-#~ msgstr ""
-#~ "当使用静态主页时，重置语言页面（例如：%s）到这个静态主页为正确的语言。"
-
-#~ msgid ""
-#~ "For some reasons, Polylang could not create a table in your database."
-#~ msgstr "由于某些原因，Polylang 无法在你的数据库中创建表。"
-
-#~ msgid ""
-#~ "The language code, for example /en/, is added to all urls when using "
-#~ "pretty permalinks."
-#~ msgstr "当你使用漂亮的固定链接时，语言代码，例如 /en/，会被添加到URL中。"
+#: include/switcher.php:26
+msgid "Hides languages with no translation"
+msgstr "隐藏没有翻译的语言"

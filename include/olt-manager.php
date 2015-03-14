@@ -10,6 +10,7 @@
  * @since 1.2
  */
 class PLL_OLT_Manager {
+	static protected $instance; // for singleton
 	protected $default_locale;
 	protected $list_textdomains = array(); // all text domains
 	public $labels = array(); // post types and taxonomies labels to translate
@@ -38,6 +39,20 @@ class PLL_OLT_Manager {
 	}
 
 	/*
+	 * access to the single instance of the class
+	 *
+	 * @since 1.7
+	 *
+	 * @return object
+	 */
+	static public function instance() {
+		if (empty(self::$instance))
+			self::$instance = new self();
+
+		return self::$instance;
+	}
+
+	/*
 	 * loads text domains
 	 *
 	 * @since 0.1
@@ -61,13 +76,24 @@ class PLL_OLT_Manager {
 			}
 		}
 
+		// first remove taxonomies and post_types labels that we don't need to translate
+		$taxonomies = array('language', 'term_language', 'term_translations', 'post_translations');
+		$post_types = array('polylang_mo');
+
+		// we don't need to translate core taxonomies and post types labels when setting the language from the url
+		// as they will be translated when registered the second time
+		if (!did_action('setup_theme')) {
+			$taxonomies = array_merge(array('category', 'post_tag', 'nav_menu', 'link_category', 'post_format'), $taxonomies);
+			$post_types = array_merge(array('post', 'page', 'attachment', 'revision', 'nav_menu_item'), $post_types);
+		}
+
 		// translate labels of post types and taxonomies
-		foreach ($GLOBALS['wp_taxonomies'] as $tax)
+		foreach (array_diff_key($GLOBALS['wp_taxonomies'], array_flip($taxonomies)) as $tax)
 			$this->translate_labels($tax);
-		foreach ($GLOBALS['wp_post_types'] as $pt)
+		foreach (array_diff_key($GLOBALS['wp_post_types'], array_flip($post_types)) as $pt)
 			$this->translate_labels($pt);
 
-		// act only if the language has not been set early (before default textdomain loading and $wp_locale creation
+		// act only if the language has not been set early (before default textdomain loading and $wp_locale creation)
 		if (did_action('after_setup_theme')) {
 			// reinitializes wp_locale for weekdays and months
 			unset($GLOBALS['wp_locale']);

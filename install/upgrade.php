@@ -88,7 +88,7 @@ class PLL_Upgrade {
 	 * @since 1.2
 	 */
 	public function _upgrade() {
-		foreach (array('0.9', '1.0', '1.1', '1.2', '1.2.1', '1.2.3', '1.3', '1.4', '1.4.1', '1.4.4', '1.5', '1.6') as $version)
+		foreach (array('0.9', '1.0', '1.1', '1.2', '1.2.1', '1.2.3', '1.3', '1.4', '1.4.1', '1.4.4', '1.5', '1.6', '1.7') as $version)
 			if (version_compare($this->options['version'], $version, '<'))
 				call_user_func(array(&$this, 'upgrade_' . str_replace('.', '_', $version)));
 
@@ -496,5 +496,15 @@ class PLL_Upgrade {
 			$upgrader = new Language_Pack_Upgrader(new Automatic_Upgrader_Skin);
 			$upgrader->bulk_upgrade($translations_to_load, array('clear_update_cache' => false));
 		}
+	}
+
+	/*
+	 * upgrades if the previous version is < 1.7
+	 * deletes language cache (due to flag properties added)
+	 *
+	 * @since 1.7
+	 */
+	protected function upgrade_1_7() {
+		delete_transient('pll_languages_list');
 	}
 }
