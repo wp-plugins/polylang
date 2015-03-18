@@ -52,6 +52,7 @@ Don't hesitate to [give your feedback](http://wordpress.org/support/view/plugin-
 = Where to find help ? =
 
 * Read the [documentation](http://polylang.wordpress.com/documentation/). It includes [guidelines to start working with Polylang](http://polylang.wordpress.com/documentation/setting-up-a-wordpress-multilingual-site-with-polylang/), a [FAQ](http://polylang.wordpress.com/documentation/frequently-asked-questions/) and the [documentation for programmers](http://polylang.wordpress.com/documentation/documentation-for-developers/).
+* First time users should read [Polylang - Getting started](http://plugins.svn.wordpress.org/polylang/doc/polylang-getting-started.pdf), a PDF document which explains the basics with a lot of screenshots.
 * Search the [support forum](http://wordpress.org/support/plugin/polylang). I know that searching in the WordPress forum is not very convenient, but please give it a try. You can use generic search engines such as Google too as the WordPress forum SEO is very good. You will most probably find your answer here.
 * If you still have a problem, open a new thread in the [support forum](http://wordpress.org/support/plugin/polylang).
 
@@ -103,6 +104,7 @@ See http://polylang.wordpress.com/documentation/contribute/
 * fix: tags created when bulk editing posts are not assigned any language
 * fix: Illegal string offset 'taxonomy' introduced in v1.6.5
 * fix: Undefined property: WP_Query::$queried_object_id when calling pll_the_languages(array('raw' => 1)) in a function hooked to 'wp'. props [KLicheR](https://wordpress.org/support/profile/klicher)
+* fix: Notice in admin.php when used with MailPoet plugin
 
 = 1.6.5 (2015-02-18) =
 

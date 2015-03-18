@@ -100,6 +100,9 @@ class PLL_Admin extends PLL_Base {
 	 */
 	public function admin_enqueue_scripts() {
 		$screen = get_current_screen();
+		if (empty($screen))
+			return;
+			
 		$suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
 
 		// for each script:

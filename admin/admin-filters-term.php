@@ -219,22 +219,24 @@ class PLL_Admin_Filters_Term {
 			if ($_GET['inline_lang_choice'] == -1) {
 				// the language of the current term is set a according to the language of the current post
 				$this->model->set_term_language($term_id, $this->model->get_post_language($this->post_id)); 
-				
-				// get all terms with the same name
-				// no WP function to get all terms with the exact same name so let's use our custom query
 				$term = get_term($term_id, $taxonomy);
+
+				// get all terms with the same name
+				// FIXME backward compatibility WP < 4.2
+				// no WP function to get all terms with the exact same name so let's use a custom query
+				// $terms = get_terms($taxonomy, array('name' => $term->name, 'hide_empty' => false, 'fields' => 'ids')); should be OK in 4.2
+				// I may need to rework the loop below
 				$terms = $wpdb->get_results($wpdb->prepare("
-					SELECT pll_tr.term_taxonomy_id, t.term_id FROM $wpdb->terms AS t
-					INNER JOIN $wpdb->term_relationships AS pll_tr ON pll_tr.object_id = t.term_id
-					INNER JOIN $wpdb->term_taxonomy AS tt ON tt.term_taxonomy_id = pll_tr.term_taxonomy_id
-					WHERE t.name = %s AND tt.taxonomy = %s",
-					$term->name, 'term_language'
-				));
+					SELECT t.term_id FROM $wpdb->terms AS t
+					INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id
+					WHERE tt.taxonomy = %s AND t.name = %s",
+					$taxonomy, $term->name
+				)); 
 				
 				// if we have several terms with the same name, they are translations of each other
 				if (count($terms) > 1) {
 					foreach ($terms as $term) {
-							$translations[$this->model->get_language($term->term_taxonomy_id)->slug] = $term->term_id;
+							$translations[$this->model->get_term_language($term->term_id)->slug] = $term->term_id;
 					}
 
 					$this->model->save_translations('term', $term_id, $translations);

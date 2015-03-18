@@ -7,6 +7,7 @@
  */
 class PLL_Frontend_Links extends PLL_Links {
 	public $curlang, $page_on_front = 0, $page_for_posts = 0;
+	protected $cache; // our internal non persistent cache object
 
 	/*
 	 * constructor
@@ -20,6 +21,8 @@ class PLL_Frontend_Links extends PLL_Links {
 
 		$this->curlang = &$polylang->curlang;
 		$this->init_page_on_front_cache();
+
+		$this->cache = new PLL_Cache();
 
 		add_action('pll_language_defined', array(&$this, 'pll_language_defined'));
 	}
@@ -83,9 +86,86 @@ class PLL_Frontend_Links extends PLL_Links {
 	public function archive_link($link) {
 		return $this->links_model->add_language_to_link($link, $this->curlang);
 	}
+	
+	/*
+	 * modifies post & page links
+	 * caches the result
+	 *
+	 * @since 0.7
+	 *
+	 * @param string $link post link
+	 * @param object $post post object
+	 * @return string modified post link
+	 */
+	public function post_link($link, $post) {
+		$cache_key = 'post:' . $post->ID;
+		if (false === $_link = $this->cache->get($cache_key)) {
+			$_link = parent::post_link($link, $post);
+			$this->cache->set($cache_key, $_link);
+		}
+		return $_link;
+	}
+	
+	/*
+	 * modifies page links
+	 * caches the result
+	 *
+	 * @since 1.7
+	 *
+	 * @param string $link post link
+	 * @param int $post_id post ID
+	 * @return string modified post link
+	 */
+	public function _get_page_link($link, $post_id) {
+		$cache_key = 'post:' . $post_id;
+		if (false === $_link = $this->cache->get($cache_key)) {
+			$_link = parent::_get_page_link($link, $post_id);
+			$this->cache->set($cache_key, $_link);
+		}
+		return $_link;
+	}
 
 	/*
-	 * modifies filtered taxonomies (post format like) links
+	 * modifies attachment links
+	 * caches the result
+	 *
+	 * @since 1.6.2
+	 *
+	 * @param string $link attachment link
+	 * @param int $post_id attachment link
+	 * @return string modified attachment link
+	 */
+	public function attachment_link($link, $post_id) {
+		$cache_key = 'post:' . $post_id;
+		if (false === $_link = $this->cache->get($cache_key)) {
+			$_link = parent::attachment_link($link, $post_id);
+			$this->cache->set($cache_key, $_link);
+		}
+		return $_link;
+	}
+
+	/*
+	 * modifies custom posts links
+	 * caches the result
+	 *
+	 * @since 1.6
+	 *
+	 * @param string $link post link
+	 * @param object $post post object
+	 * @return string modified post link
+	 */
+	public function post_type_link($link, $post) {
+		$cache_key = 'post:' . $post->ID;
+		if (false === $_link = $this->cache->get($cache_key)) {
+			$_link = parent::post_type_link($link, $post);
+			$this->cache->set($cache_key, $_link);
+		}
+		return $_link;
+	}
+
+	/*
+	 * modifies filtered taxonomies (post format like) and translated taxonomies links
+	 * caches the result
 	 *
 	 * @since 0.7
 	 *
@@ -100,12 +180,12 @@ class PLL_Frontend_Links extends PLL_Links {
 			if (in_array($tax, $this->model->get_filtered_taxonomies())) {
 				$_link = $this->links_model->add_language_to_link($link, $this->curlang);
 				$_link = apply_filters('pll_term_link', $_link, $this->curlang, $term);
-				$this->cache->set($cache_key, $_link);
 			}
 
 			else {
 				$_link = parent::term_link($link, $term, $tax);
 			}
+			$this->cache->set($cache_key, $_link);
 		}
 		return $_link;
 	}

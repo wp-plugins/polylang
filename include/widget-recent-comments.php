@@ -6,7 +6,7 @@ if(!class_exists('WP_Widget_Recent_Comments')){
 
 /*
  * obliged to rewrite the whole functionnality to have a language dependant cache key
- * code base is WP 3.9.1
+ * code base is WP 4.2
  *
  * @since 1.5
  */
@@ -57,7 +57,7 @@ class PLL_Widget_Recent_Comments extends WP_Widget_Recent_Comments {
 		 *
 		 * @since 3.4.0
 		 *
-		 * @see get_comments()
+		 * @see WP_Comment_Query::query() for information on accepted arguments.
 		 *
 		 * @param array $comment_args An array of arguments used to retrieve the recent comments.
 		 */
@@ -79,7 +79,13 @@ class PLL_Widget_Recent_Comments extends WP_Widget_Recent_Comments {
 			_prime_post_caches( $post_ids, strpos( get_option( 'permalink_structure' ), '%category%' ), false );
 
 			foreach ( (array) $comments as $comment) {
-				$output .=  '<li class="recentcomments">' . /* translators: comments widget: 1: comment author, 2: post link */ sprintf(_x('%1$s on %2$s', 'widgets'), get_comment_author_link(), '<a href="' . esc_url( get_comment_link($comment->comment_ID) ) . '">' . get_the_title($comment->comment_post_ID) . '</a>') . '</li>';
+				$output .= '<li class="recentcomments">';
+				/* translators: comments widget: 1: comment author, 2: post link */
+				$output .= sprintf( _x( '%1$s on %2$s', 'widgets' ),
+					'<span class="comment-author-link">' . get_comment_author_link() . '</span>',
+					'<a href="' . esc_url( get_comment_link( $comment->comment_ID ) ) . '">' . get_the_title( $comment->comment_post_ID ) . '</a>'
+				);
+				$output .= '</li>';
 			}
 		}
 		$output .= '</ul>';
