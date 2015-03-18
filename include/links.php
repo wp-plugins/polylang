@@ -7,7 +7,6 @@
  */
 class PLL_Links {
 	public $links_model, $model, $options;
-	protected $cache; // our internal non persistent cache object
 
 	/*
 	 * constructor
@@ -20,8 +19,6 @@ class PLL_Links {
 		$this->links_model = &$polylang->links_model;
 		$this->model = &$polylang->model;
 		$this->options = &$polylang->options;
-
-		$this->cache = new PLL_Cache();
 
 		// adds our domains or subdomains to allowed hosts for safe redirection
 		add_filter('allowed_redirect_hosts', array(&$this, 'allowed_redirect_hosts'));
@@ -64,13 +61,8 @@ class PLL_Links {
 	 * @return string modified post link
 	 */
 	public function post_link($link, $post) {
-		$cache_key = 'post:' . $post->ID;
-		if (false === $_link = $this->cache->get($cache_key)) {
-			// /!\ when post_status is not "publish", WP does not use pretty permalinks
-			$_link = $post->post_status != 'publish' ? $link : $this->links_model->add_language_to_link($link, $this->model->get_post_language($post->ID));
-			$this->cache->set($cache_key, $_link);
-		}
-		return $_link;
+		// /!\ when post_status is not "publish", WP does not use pretty permalinks
+		return $post->post_status != 'publish' ? $link : $this->links_model->add_language_to_link($link, $this->model->get_post_language($post->ID));
 	}
 
 
@@ -84,15 +76,10 @@ class PLL_Links {
 	 * @return string modified post link
 	 */
 	public function _get_page_link($link, $post_id) {
-		$cache_key = 'post:' . $post_id;
-		if (false === $_link = $this->cache->get($cache_key)) {
-			$post = get_post($post_id);
+		$post = get_post($post_id);
 
-			// /!\ when post_status is not "publish", WP does not use pretty permalinks
-			$_link = $post->post_status != 'publish' ? $link : $this->links_model->add_language_to_link($link, $this->model->get_post_language($post->ID));
-			$this->cache->set($cache_key, $_link);
-		}
-		return $_link;
+		// /!\ when post_status is not "publish", WP does not use pretty permalinks
+		return $post->post_status != 'publish' ? $link : $this->links_model->add_language_to_link($link, $this->model->get_post_language($post->ID));
 	}
 
 	/*
@@ -105,12 +92,7 @@ class PLL_Links {
 	 * @return string modified attachment link
 	 */
 	public function attachment_link($link, $post_id) {
-		$cache_key = 'post:' . $post_id;
-		if (false === $_link = $this->cache->get($cache_key)) {
-			$_link = $this->links_model->add_language_to_link($link, $this->model->get_post_language($post_id));
-			$this->cache->set($cache_key, $_link);
-		}
-		return $_link;
+		return $this->links_model->add_language_to_link($link, $this->model->get_post_language($post_id));
 	}
 
 	/*
@@ -123,22 +105,14 @@ class PLL_Links {
 	 * @return string modified post link
 	 */
 	public function post_type_link($link, $post) {
-		$cache_key = 'post:' . $post->ID;
-		if (false === $_link = $this->cache->get($cache_key)) {
-			// /!\ when post_status is not "publish", WP does not use pretty permalinks
-			if ('publish' == $post->post_status && $this->model->is_translated_post_type($post->post_type)) {
-				$lang = $this->model->get_post_language($post->ID);
-				$_link = $this->options['force_lang'] ? $this->links_model->add_language_to_link($link, $lang) : $link;
-				$_link = apply_filters('pll_post_type_link', $_link, $lang, $post);
-			}
-
-			else {
-				$_link = $link;
-			}
-
-			$this->cache->set($cache_key, $_link);
+		// /!\ when post_status is not "publish", WP does not use pretty permalinks
+		if ('publish' == $post->post_status && $this->model->is_translated_post_type($post->post_type)) {
+			$lang = $this->model->get_post_language($post->ID);
+			$link = $this->options['force_lang'] ? $this->links_model->add_language_to_link($link, $lang) : $link;
+			$link = apply_filters('pll_post_type_link', $link, $lang, $post);
 		}
-		return $_link;
+
+		return $link;
 	}
 
 	/*
@@ -152,21 +126,13 @@ class PLL_Links {
 	 * @return string modified term link
 	 */
 	public function term_link($link, $term, $tax) {
-		$cache_key = 'term:' . $term->term_id;
-		if (false === $_link = $this->cache->get($cache_key)) {
-			if ($this->model->is_translated_taxonomy($tax)) {
-				$lang = $this->model->get_term_language($term->term_id);
-				$_link = $this->options['force_lang'] ? $this->links_model->add_language_to_link($link, $lang) : $link;
-				$_link = apply_filters('pll_term_link', $_link, $lang, $term);
-			}
-
-			else {
-				$_link = $link;
-			}
-
-			$this->cache->set($cache_key, $_link);
+		if ($this->model->is_translated_taxonomy($tax)) {
+			$lang = $this->model->get_term_language($term->term_id);
+			$link = $this->options['force_lang'] ? $this->links_model->add_language_to_link($link, $lang) : $link;
+			$link = apply_filters('pll_term_link', $link, $lang, $term);
 		}
-		return $_link;
+
+		return $link;
  	}
 
 	/*

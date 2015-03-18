@@ -6,7 +6,7 @@ if(!class_exists('WP_Widget_Calendar')){
 
 /*
  * obliged to rewrite the whole functionnality as there is no filter on sql queries and only a filter on final output
- * code base last checked with WP 3.9.1
+ * code base last checked with WP 4.2
  * a request for making a filter on sql queries exists: http://core.trac.wordpress.org/ticket/15202
  * method used in 0.4.x: use of the get_calendar filter and overwrite the output of get_calendar function -> not very efficient (add 4 to 5 sql queries)
  * method used since 0.5: remove the WP widget and replace it by our own -> our language filter will not work if get_calendar is called directly by a theme
@@ -50,7 +50,6 @@ class PLL_Widget_Calendar extends WP_Widget_Calendar {
 		$join_clause = $polylang->model->join_clause('post'); #added#
 		$where_clause = $polylang->model->where_clause($polylang->curlang, 'post'); #added#
 
-		$cache = array();
 		$key = md5( $polylang->curlang->slug . $m . $monthnum . $year ); #modified#
 		if ( $cache = wp_cache_get( 'get_calendar', 'calendar' ) ) {
 			if ( is_array($cache) && isset( $cache[ $key ] ) ) {
@@ -148,7 +147,7 @@ class PLL_Widget_Calendar extends WP_Widget_Calendar {
 		<tr>';
 
 		if ( $previous ) {
-			$calendar_output .= "\n\t\t".'<td colspan="3" id="prev"><a href="' . get_month_link($previous->year, $previous->month) . '" title="' . esc_attr( sprintf(__('View posts for %1$s %2$s'), $wp_locale->get_month($previous->month), date('Y', mktime(0, 0 , 0, $previous->month, 1, $previous->year)))) . '">&laquo; ' . $wp_locale->get_month_abbrev($wp_locale->get_month($previous->month)) . '</a></td>';
+			$calendar_output .= "\n\t\t".'<td colspan="3" id="prev"><a href="' . get_month_link($previous->year, $previous->month) . '">&laquo; ' . $wp_locale->get_month_abbrev($wp_locale->get_month($previous->month)) . '</a></td>';
 		} else {
 			$calendar_output .= "\n\t\t".'<td colspan="3" id="prev" class="pad">&nbsp;</td>';
 		}
@@ -156,7 +155,7 @@ class PLL_Widget_Calendar extends WP_Widget_Calendar {
 		$calendar_output .= "\n\t\t".'<td class="pad">&nbsp;</td>';
 
 		if ( $next ) {
-			$calendar_output .= "\n\t\t".'<td colspan="3" id="next"><a href="' . get_month_link($next->year, $next->month) . '" title="' . esc_attr( sprintf(__('View posts for %1$s %2$s'), $wp_locale->get_month($next->month), date('Y', mktime(0, 0 , 0, $next->month, 1, $next->year))) ) . '">' . $wp_locale->get_month_abbrev($wp_locale->get_month($next->month)) . ' &raquo;</a></td>';
+			$calendar_output .= "\n\t\t".'<td colspan="3" id="next"><a href="' . get_month_link($next->year, $next->month) . '">' . $wp_locale->get_month_abbrev($wp_locale->get_month($next->month)) . ' &raquo;</a></td>';
 		} else {
 			$calendar_output .= "\n\t\t".'<td colspan="3" id="next" class="pad">&nbsp;</td>';
 		}
@@ -168,6 +167,8 @@ class PLL_Widget_Calendar extends WP_Widget_Calendar {
 		<tbody>
 		<tr>';
 
+		$daywithpost = array();
+
 		// Get days with posts
 		$dayswithposts = $wpdb->get_results("SELECT DISTINCT DAYOFMONTH(post_date)
 			FROM $wpdb->posts $join_clause
@@ -178,8 +179,6 @@ class PLL_Widget_Calendar extends WP_Widget_Calendar {
 			foreach ( (array) $dayswithposts as $daywith ) {
 				$daywithpost[] = $daywith[0];
 			}
-		} else {
-			$daywithpost = array();
 		}
 
 		if (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false || stripos($_SERVER['HTTP_USER_AGENT'], 'camino') !== false || stripos($_SERVER['HTTP_USER_AGENT'], 'safari') !== false)
@@ -197,6 +196,7 @@ class PLL_Widget_Calendar extends WP_Widget_Calendar {
 		if ( $ak_post_titles ) {
 			foreach ( (array) $ak_post_titles as $ak_post_title ) {
 
+				/** This filter is documented in wp-includes/post-template.php */
 				$post_title = esc_attr( apply_filters( 'the_title', $ak_post_title->post_title, $ak_post_title->ID ) );
 
 				if ( empty($ak_titles_for_day['day_'.$ak_post_title->dom]) )

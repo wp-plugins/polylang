@@ -85,8 +85,8 @@ class PLL_Widget_Languages extends WP_Widget {
 				$this->get_field_name($key),
 				$instance[$key] ? 'checked="checked"' : '',
 				esc_html($str),
-				'dropdown' == $key ? '' : 'no-dropdown-' . $this->id,
-				'dropdown' == $key || empty($instance['dropdown']) ? '' : 'style="display:none;"'
+				in_array($key, array('show_names', 'show_flags', 'hide_current')) ? 'no-dropdown-' . $this->id : '',
+				!empty($instance['dropdown']) && in_array($key, array('show_names', 'show_flags', 'hide_current')) ? 'style="display:none;"' : ''
 			);
 
 

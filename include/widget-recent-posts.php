@@ -6,7 +6,7 @@ if(!class_exists('WP_Widget_Recent_Posts')){
 
 /*
  * obliged to rewrite the whole functionnality to have a language dependant cache key
- * code base is WP 3.9.1
+ * code base is WP 4.2
  *
  * @since 1.5
  */
