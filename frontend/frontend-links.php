@@ -470,6 +470,10 @@ class PLL_Frontend_Links extends PLL_Links {
 		if (isset($_POST['wp_customize'], $_POST['customized']))
 			return;
 
+		// don't redirect if we are on a static front page
+		if ($this->options['redirect_lang'] && isset($this->curlang->page_on_front) && is_page($this->curlang->page_on_front))
+			return;
+
 		if (empty($requested_url))
 			$requested_url  = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
