@@ -469,6 +469,10 @@ class PLL_Frontend_Links extends PLL_Links {
 		// the customizer lands here and the code below would redirect to the list of posts
 		if (isset($_POST['wp_customize'], $_POST['customized']))
 			return;
+		
+		// don't redirect if we are on a static front page
+		if ($this->options['redirect_lang'] && isset($this->page_on_front) && is_page($this->model->get_post($this->page_on_front)))
+			return;
 
 		if (empty($requested_url))
 			$requested_url  = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
