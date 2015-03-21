@@ -67,6 +67,10 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 == Changelog ==
 
+= 1.7.2 =
+
+* fix: comments are filtered for posts in a post type not managed by Polylang
+
 = 1.7.1 (2015-03-20) =
 
 * fix: wrong redirection when using a static front page and replacing the page name by the language code (introduced in 1.7)
