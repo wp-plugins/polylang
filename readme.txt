@@ -71,6 +71,7 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 * fix: comments are filtered for posts in a post type not managed by Polylang
 * fix: translated static front page don't work when setting PLL_CACHE_HOME_URL to false (introduced in 1.7)
+* fix: wrong rewrite rules for custom taxonomies archives (introduced in 1.7)
 
 = 1.7.1 (2015-03-20) =
 
