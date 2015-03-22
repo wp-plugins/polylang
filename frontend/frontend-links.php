@@ -25,6 +25,7 @@ class PLL_Frontend_Links extends PLL_Links {
 		$this->cache = new PLL_Cache();
 
 		add_action('pll_language_defined', array(&$this, 'pll_language_defined'));
+		add_action('pll_language_defined', array(&$this, 'init_page_on_front_cache')); // translate page on front and page for posts
 	}
 
 	/*
@@ -200,7 +201,7 @@ class PLL_Frontend_Links extends PLL_Links {
 	 * @return string modified link
 	 */
 	public function page_link($link, $id) {
-		if ($this->page_on_front && ($lang = $this->model->get_post_language($id)) && $id == $lang->page_on_front)
+		if ($this->page_on_front && ($lang = $this->model->get_post_language($id)) && in_array($id, $this->model->get_translations('post', $this->page_on_front)))
 			return $lang->home_url;
 
 		return $link;
@@ -236,7 +237,7 @@ class PLL_Frontend_Links extends PLL_Links {
 	 */
 	public function redirect_canonical($redirect_url, $requested_url) {
 		global $wp_query;
-		if (is_page() && !is_feed() && isset($wp_query->queried_object) && $wp_query->queried_object->ID == $this->curlang->page_on_front) {
+		if (is_page() && !is_feed() && isset($wp_query->queried_object) && $wp_query->queried_object->ID == $this->page_on_front) {
 			return is_paged() ? $this->links_model->add_paged_to_link($this->get_home_url(), $wp_query->query_vars['page']) : $this->get_home_url();
 		}
 
@@ -342,7 +343,7 @@ class PLL_Frontend_Links extends PLL_Links {
 
 		// page
 		elseif (is_page() && ($id = $this->model->get_post($queried_object_id, $language)) && $this->current_user_can_read($id))
-			$url = $hide && $id == $language->page_on_front ? $this->links_model->home : get_page_link($id);
+			$url = $hide && $queried_object_id == $this->page_on_front ? $this->links_model->home : get_page_link($id);
 
 		elseif (is_search()) {
 			$url = $this->get_archive_url($language);
@@ -471,7 +472,7 @@ class PLL_Frontend_Links extends PLL_Links {
 			return;
 
 		// don't redirect if we are on a static front page
-		if ($this->options['redirect_lang'] && isset($this->curlang->page_on_front) && is_page($this->curlang->page_on_front))
+		if ($this->options['redirect_lang'] && isset($this->page_on_front) && is_page($this->page_on_front))
 			return;
 
 		if (empty($requested_url))

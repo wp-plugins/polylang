@@ -36,7 +36,6 @@ class PLL_Language {
 	public $locale, $is_rtl;
 	public $flag_url, $flag;
 	public $home_url, $search_url;
-	public $page_on_front = 0, $page_for_posts = 0;
 	public $host, $mo_id;
 
 	/*
@@ -129,7 +128,6 @@ class PLL_Language {
 
 	/*
 	 * set home_url and search_url properties
-	 * set page_on_front and page_for_posts too
 	 *
 	 * @since 1.3
 	 */
@@ -152,13 +150,6 @@ class PLL_Language {
 
 		else
 			$this->home_url = $this->search_url;
-
-		// page on front and page for posts
-		// FIXME here for convenience but should be moved outside
-		if ('page' == get_option('show_on_front')) {
-			$this->page_on_front = $polylang->model->get_post(get_option('page_on_front'), $this);
-			$this->page_for_posts = $polylang->model->get_post(get_option('page_for_posts'), $this);
-		}
 	}
 
 	/*
