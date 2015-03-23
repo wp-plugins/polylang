@@ -101,7 +101,7 @@ class PLL_Frontend extends PLL_Base {
 			}
 
 			// remove pages query when the language is set unless we do a search
-			// take care not to break the single page query taxonomies queries!
+			// take care not to break the single page and taxonomies queries!
 			if (empty($qv['post_type']) && !$query->is_search && !$query->is_page && empty($taxonomies))
 				$query->set('post_type', 'post');
 

@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, international, localization
 Requires at least: 3.8
 Tested up to: 4.1
-Stable tag: 1.7.1
+Stable tag: 1.7.2
 License: GPLv2 or later
 
 Polylang adds multilingual content management support to WordPress.
@@ -67,7 +67,7 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 == Changelog ==
 
-= 1.7.2 =
+= 1.7.2 (2015-03-23) =
 
 * fix: comments are filtered for posts in a post type not managed by Polylang
 * fix: translated static front page don't work when setting PLL_CACHE_HOME_URL to false (introduced in 1.7)
