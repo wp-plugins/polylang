@@ -2,6 +2,69 @@
 
 This file contains only old changelog. See readme.txt for newer versions.
 
+= 1.6.5 (2015-02-18) =
+
+* Add new correspondances between WordPress locales and Facebook locales (for WPSEO and Jetpack users)
+* fix: quick draft posts are always assigned the default category in the default language
+* fix: Notice: Undefined offset: 0 in wp-includes/query.php introduced in WP 4.1
+* fix: is_tax and is_archive are not correctly set when a custom taxonomy term is queried
+* fix: conflict introduced by WPSEO 1.7.2+
+
+= 1.6.4 (2015-02-01) =
+
+* Add es_MX to predefined languages list
+* Add compatibility with WordPress SEO sitemaps for multiple domains and subdomains
+* fix: a new post is assigned the wrong (untranslated) default category if no category is assigned by the user
+* fix: the home links now have the right scheme even if PLL_CACHE_HOME_URL is not set to false
+* fix: fatal error when using old versions of WPSEO (I should do what I tell other to do!)
+* fix: strings translations are not switched when using switch_to_blog
+
+= 1.6.3 (2015-01-09) =
+
+* Add Georgian translation contributed by [Tours in Georgia](http://www.georgia-tours.eu/)
+* fix: WXR export does not include the language of untranslated terms (will now work only for newly saved terms)
+* fix: better cleaning of DB when translated objects are deleted
+* fix: incorrect (ajax) translations links when modifying a term language
+* fix: warning: Illegal string offset 'taxonomy' introduced by the combination of WP 4.1 and some plugins.
+
+= 1.6.2 (2014-12-14) =
+
+* fix: bugs and inconsistencies compared to WPML in 'icl_get_languages' (should fix a conflict with Avada)
+* fix: https issue
+* fix: stop displaying an error when adding en_US as new language (translation not downloaded)
+* fix: infinite redirect loop on (unattached) attachment links
+* fix: impossible to add tags in post quick edit (introduced in 1.5)
+* fix: the customizer does not land to the right page when cumulating: static front page + page name in url + default language code not hidden
+* fix: read parent theme wpml-config.xml before child theme
+* fix: add protection to avoid empty language
+* fix: page preview link again
+
+= 1.6.1 (2014-11-19) =
+
+* Add Brazilian Portuguese translation contributed by [Henrique Vianna](http://henriquevianna.com/)
+* Improve compatibility with Types: allow custom fields to be populated when creating a new translation
+* Make it impossible to remove the translations of the default category
+* Fix: possibility to add a path when using multiple domains (same path for all languages) broken since v1.5.6
+* Fix: preview link for non default language when using multiple domains
+* Fix: error displayed when setting the static front page and only one language has been defined
+* Fix: revert changes on rewrite rules with front introduced in 1.6
+* Fix: conflict with WordPress SEO when no language has been created
+
+= 1.6 (2014-10-27) =
+
+* Add Croatian translation contributed by Bajro
+* Add new languages to predefined languages list: Azerbaijani, English (Australia), English (UK), Basque
+* Add flag in front of the language select dropdown for posts and terms
+* Add widget text translation
+* Add opengraph support for locale and translations when WordPress SEO or Jetpack are activated
+* Add error message if attempting to assign an untranslated page as static front page
+* Add 'pll_sanitize_string_translation' filter to sanitize registered strings translations when saved
+* Fix: change the en_US flag to US flag. The UK flag is now associated to en_GB
+* Fix: change Belarussian locale from be_BY to bel to in agreement with translate.wordpress.org
+* Fix home pages duplicate urls when using domains or subdomains
+* Fix rewrite rules with front
+* Fix: terms are always in default language when created from post bulk edit
+
 = 1.5.6 (2014-10-11) =
 
 * Fix: the admin language filter is not active for paginated taxonomy in nav menu admin panel

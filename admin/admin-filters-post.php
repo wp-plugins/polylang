@@ -232,7 +232,7 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 		check_ajax_referer('pll_language', '_pll_nonce');
 
 		// don't order by title: see https://wordpress.org/support/topic/find-translated-post-when-10-is-not-enough
-		$posts = get_posts(array(
+		$args = array(
 			's'                => $_REQUEST['term'],
 			'suppress_filters' => 0, // to make the post_fields filter work
 			'lang'             => 0, // avoid admin language filter
@@ -244,7 +244,11 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 				'field'    => 'term_taxonomy_id', // WP 3.5+
 				'terms'    => $this->model->get_language($_REQUEST['translation_language'])->term_taxonomy_id
 			))
-		));
+		);
+		
+		// allow plugins to change args help fixing edge cases: see same topic as above
+		$args = apply_filters('pll_ajax_posts_not_translated_args', $args);
+		$posts = get_posts($args);
 
 		$return = array();
 

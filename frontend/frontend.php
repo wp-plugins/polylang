@@ -92,11 +92,6 @@ class PLL_Frontend extends PLL_Base {
 
 		// modifies query vars when the language is queried
 		if (!empty($qv['lang'])) {
-			// remove pages query when the language is set unless we do a search
-			// take care not to break the single page query!
-			if (empty($qv['post_type']) && !$query->is_search && !$query->is_page)
-				$query->set('post_type', 'post');
-
 			if (isset($query->tax_query->queried_terms)) {
 				$tax_query_in_and = wp_list_filter( $query->tax_query->queried_terms, array( 'operator' => 'NOT IN' ), 'NOT' );
 				$queried_taxonomies = array_keys( $tax_query_in_and );
@@ -104,6 +99,11 @@ class PLL_Frontend extends PLL_Base {
 				// do we query another custom taxonomy?
 				$taxonomies = array_diff($queried_taxonomies , array('language', 'category', 'post_tag'));
 			}
+
+			// remove pages query when the language is set unless we do a search
+			// take care not to break the single page and taxonomies queries!
+			if (empty($qv['post_type']) && !$query->is_search && !$query->is_page && empty($taxonomies))
+				$query->set('post_type', 'post');
 
 			// unset the is_archive flag for language pages to prevent loading the archive template
 			// keep archive flag for comment feed otherwise the language filter does not work
