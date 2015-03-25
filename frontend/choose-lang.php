@@ -224,7 +224,7 @@ abstract class PLL_Choose_Lang {
 			$query->set('page_id', $this->page_on_front);
 			$query->is_singular = $query->is_page = true;
 			$query->is_archive = $query->is_tax = false;
-			unset($query->queried_object); // reset queried object
+			unset($query->query_vars['lang'], $query->queried_object); // reset queried object
 		}
 
 		// takes care of paged front page

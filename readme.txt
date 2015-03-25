@@ -67,6 +67,10 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 == Changelog ==
 
+= 1.7.3 =
+
+* fix: additional query vars are removed from home page
+
 = 1.7.2 (2015-03-23) =
 
 * fix: comments are filtered for posts in a post type not managed by Polylang

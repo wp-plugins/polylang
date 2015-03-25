@@ -238,7 +238,16 @@ class PLL_Frontend_Links extends PLL_Links {
 	public function redirect_canonical($redirect_url, $requested_url) {
 		global $wp_query;
 		if (is_page() && !is_feed() && isset($wp_query->queried_object) && $wp_query->queried_object->ID == $this->page_on_front) {
-			return is_paged() ? $this->links_model->add_paged_to_link($this->get_home_url(), $wp_query->query_vars['page']) : $this->get_home_url();
+			$url = is_paged() ? $this->links_model->add_paged_to_link($this->get_home_url(), $wp_query->query_vars['page']) : $this->get_home_url();
+
+			// don't forget additional query vars
+			$query = parse_url($redirect_url, PHP_URL_QUERY);
+			if (!empty($query)) {
+				parse_str($query, $query_vars);
+				$url = add_query_arg($query_vars, $url);
+			}
+			
+			return $url;
 		}
 
 		// protect against chained redirects
