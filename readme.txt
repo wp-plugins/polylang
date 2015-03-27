@@ -70,6 +70,7 @@ See http://polylang.wordpress.com/documentation/contribute/
 = 1.7.3 =
 
 * fix: additional query vars are removed from home page
+* fix: categories are not filtered by the admin language switcher in posts list table (introduced in 1.7)
 
 = 1.7.2 (2015-03-23) =
 

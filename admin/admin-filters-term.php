@@ -522,10 +522,6 @@ class PLL_Admin_Filters_Term {
 		if (isset($screen) && 'nav-menus' == $screen->base && in_array('nav_menu', $taxonomies))
 			return $clauses;
 
-		// don't filter category checklist in post list table as this will be handled by js
-		if (isset($screen) && 'edit' == $screen->base)
-			return $clauses;
-
 		// if get_terms is queried with a 'lang' parameter
 		if (!empty($args['lang']))
 			return $this->model->terms_clauses($clauses, $args['lang']);
