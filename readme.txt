@@ -69,6 +69,8 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 = 1.7.3 =
 
+* the transient 'pll_languages_list' now stores an array of arrays instead of an array of PLL_Language objects
+* fix: fatal error for users hosted at GoDaddy (due to PLL_Language objects stored in a transient) 
 * fix: additional query vars are removed from home page
 * fix: categories are not filtered by the admin language switcher in posts list table (introduced in 1.7)
 * fix: when using multiple domains, the domain url is lost when modifying the language slug

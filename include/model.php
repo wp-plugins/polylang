@@ -147,6 +147,8 @@ class PLL_Model {
 	 */
 	public function get_languages_list($args = array()) {
 		if (false === $languages = $this->cache->get('languages')) {
+			
+			// create the languages from taxonomies
 			if ((defined('PLL_CACHE_LANGUAGES') && !PLL_CACHE_LANGUAGES) || false === ($languages = get_transient('pll_languages_list'))) {
 				$languages = get_terms('language', array('hide_empty' => false, 'orderby'=> 'term_group'));
 				$languages = empty($languages) || is_wp_error($languages) ? array() : $languages;
@@ -163,6 +165,13 @@ class PLL_Model {
 				}
 				else {
 					$languages = array(); // in case something went wrong
+				}
+			}
+			
+			// create the languages directly from arrays stored in transients
+			else {
+				foreach ($languages as $k => $v) {
+					$languages[$k] = new PLL_Language($v);
 				}
 			}
 
@@ -189,21 +198,20 @@ class PLL_Model {
 	 * @since 1.4
 	 */
 	public function _languages_list() {
-		if ((defined('PLL_CACHE_LANGUAGES') && !PLL_CACHE_LANGUAGES) || false === get_transient('pll_languages_list')) {
-			foreach ($languages = $this->cache->get('languages') as $language) {
-				$language->set_flag();
+		// cache the languages after getting the home urls
+		if ((!defined('PLL_CACHE_LANGUAGES') || PLL_CACHE_LANGUAGES) && false === get_transient('pll_languages_list')) {
+			foreach ($languages = $this->cache->get('languages') as $language)
+				$language->set_home_url();
 
-				if (!defined('PLL_CACHE_HOME_URL') || PLL_CACHE_HOME_URL) {
-					$language->set_home_url();
-				}
-			}
-
-			if (!defined('PLL_CACHE_LANGUAGES') || PLL_CACHE_LANGUAGES)
-				set_transient('pll_languages_list', $languages);
+			// don't store directly objects as it badly break with some hosts (GoDaddy) due to race conditions when using object cache
+			// thanks to captin411 for catching this!
+			// see https://wordpress.org/support/topic/fatal-error-pll_model_languages_list?replies=8#post-6782255
+			set_transient('pll_languages_list', array_map(create_function('$o', 'return (array) $o;'), $languages));
 		}
 
 		foreach ($this->cache->get('languages') as $language) {
-			if (defined('PLL_CACHE_HOME_URL') && !PLL_CACHE_HOME_URL)
+			// get the home urls when not cached
+			if ((defined('PLL_CACHE_LANGUAGES') && !PLL_CACHE_LANGUAGES) || (defined('PLL_CACHE_HOME_URL') && !PLL_CACHE_HOME_URL))
 				$language->set_home_url();
 
 			// ensures that the (possibly cached) home url uses the right scheme http or https

@@ -43,26 +43,36 @@ class PLL_Language {
 	 *
 	 * @since 1.2
 	 *
-	 * @param object $language 'language' term
+	 * @param object|array $language 'language' term or language object properties stored as an array
 	 * @param object $term_language corresponding 'term_language' term
 	 */
-	public function __construct($language, $term_language) {
-		foreach ($language as $prop => $value)
-			$this->$prop = in_array($prop, array('term_id', 'term_taxonomy_id', 'count')) ? (int) $language->$prop : $language->$prop;
+	public function __construct($language, $term_language = null) {
+		// build the object from all properties stored as an array
+		if (empty($term_language)) {
+			foreach ($language as $prop => $value)
+				$this->$prop = $value;
+		}
+		
+		// build the object from taxonomies
+		else {
+			foreach ($language as $prop => $value)
+				$this->$prop = in_array($prop, array('term_id', 'term_taxonomy_id', 'count')) ? (int) $language->$prop : $language->$prop;
 
-		// although it would be convenient here, don't assume the term is shared between taxonomies as it may not be the case in future
-		// http://make.wordpress.org/core/2013/07/28/potential-roadmap-for-taxonomy-meta-and-post-relationships/
-		$this->tl_term_id = (int) $term_language->term_id;
-		$this->tl_term_taxonomy_id = (int) $term_language->term_taxonomy_id;
-		$this->tl_count = (int) $term_language->count;
+			// although it would be convenient here, don't assume the term is shared between taxonomies as it may not be the case in future
+			// http://make.wordpress.org/core/2013/07/28/potential-roadmap-for-taxonomy-meta-and-post-relationships/
+			$this->tl_term_id = (int) $term_language->term_id;
+			$this->tl_term_taxonomy_id = (int) $term_language->term_taxonomy_id;
+			$this->tl_count = (int) $term_language->count;
 
-		$description = maybe_unserialize($language->description);
-		$this->locale = $description['locale'];
-		$this->is_rtl = $description['rtl'];
+			$description = maybe_unserialize($language->description);
+			$this->locale = $description['locale'];
+			$this->is_rtl = $description['rtl'];
 
-		$this->description = &$this->locale; // backward compatibility with Polylang < 1.2
+			$this->description = &$this->locale; // backward compatibility with Polylang < 1.2
 
-		$this->mo_id = PLL_MO::get_id($this);
+			$this->mo_id = PLL_MO::get_id($this);
+			$this->set_flag();
+		}
 	}
 
 	/*
