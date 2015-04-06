@@ -71,6 +71,8 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 * fix: additional query vars are removed from home page
 * fix: categories are not filtered by the admin language switcher in posts list table (introduced in 1.7)
+* fix: when using multiple domains, the domain url is lost when modifying the language slug
+* fix: the queried object is incorrectly set for author archives (introduced in 1.6.5)
 
 = 1.7.2 (2015-03-23) =
 

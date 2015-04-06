@@ -61,7 +61,7 @@ class PLL_Model {
 	public function _prime_terms_cache($terms, $taxonomies) {
 		if ($this->is_translated_taxonomy($taxonomies)) {
 			foreach ($terms as $term) {
-				$term_ids[] = is_object($term) ? $term->term_id : $term;
+				$term_ids[] = is_object($term) ? $term->term_id : (int) $term;
 			}
 		}
 
@@ -101,6 +101,7 @@ class PLL_Model {
 		if (empty($object_id))
 			return false;
 
+		$object_id = (int) $object_id;
 		$term = get_object_term_cache($object_id, $taxonomy);
 
 		if (false === $term) {
@@ -272,10 +273,14 @@ class PLL_Model {
 	 * @param array $translations: an associative array of translations with language code as key and translation id as value
 	 */
 	public function save_translations($type, $id, $translations) {
-		if (($lang = call_user_func(array(&$this, 'get_'.$type.'_language'), $id)) && isset($translations) && is_array($translations)) {
+		$id = (int) $id;
 
+		if (($lang = call_user_func(array(&$this, 'get_'.$type.'_language'), $id)) && isset($translations) && is_array($translations)) {
+			// sanitize the translations array
+			$translations = array_map('intval', $translations);
 			$translations = array_merge(array($lang->slug => $id), $translations); // make sure this object is in translations
 			$translations = array_diff($translations, array(0)); // don't keep non translated languages
+			$translations = array_intersect_key($translations, array_flip($this->get_languages_list(array('fields' => 'slug')))); // keep only valid languages slugs as keys
 
 			// unlink removed translations
 			$old_translations = $this->get_translations($type, $id);
@@ -324,6 +329,7 @@ class PLL_Model {
 	 */
 	public function delete_translation($type, $id) {
 		global $wpdb;
+		$id = (int) $id;
 		$term = $this->get_object_term($id, $type . '_translations');
 
 		if (!empty($term)) {
@@ -364,7 +370,7 @@ class PLL_Model {
 
 		$translations = $this->get_translations($type, $id);
 
-		return isset($translations[$lang->slug]) ? (int) $translations[$lang->slug] : false;
+		return isset($translations[$lang->slug]) ? $translations[$lang->slug] : false;
 	}
 
 	/*
@@ -393,7 +399,7 @@ class PLL_Model {
 	 * @param int|string|object language (term_id or slug or object)
 	 */
 	public function set_post_language($post_id, $lang) {
-		wp_set_post_terms($post_id, $lang ? $this->get_language($lang)->slug : '', 'language' );
+		wp_set_post_terms((int) $post_id, $lang ? $this->get_language($lang)->slug : '', 'language' );
 	}
 
 	/*
@@ -419,7 +425,7 @@ class PLL_Model {
 	 * @return bool|int the translation post id if exists, otherwise the post id, false if the post has no language
 	 */
 	public function get_post($post_id, $lang) {
-		$post_lang = $this->get_post_language($post_id); // FIXME is this necessary?
+		$post_lang = $this->get_post_language($post_id);
 		if (!$lang || !$post_lang)
 			return false;
 
@@ -436,6 +442,7 @@ class PLL_Model {
 	 * @param int|string|object language (term_id or slug or object)
 	 */
 	public function set_term_language($term_id, $lang) {
+		$term_id = (int) $term_id;
 		wp_set_object_terms($term_id, $lang ? $this->get_language($lang)->tl_term_id : '', 'term_language');
 
 		// add translation group for correct WXR export
@@ -765,6 +772,8 @@ class PLL_Model {
 	public function term_exists($term_name, $taxonomy, $parent, $language) {
 		global $wpdb;
 
+		$term_name = trim(wp_unslash($term_name));
+		
 		$select = "SELECT t.term_id FROM $wpdb->terms AS t";
 		$join = " INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id";
 		$join .= $this->join_clause('term');

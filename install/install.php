@@ -12,7 +12,7 @@ class PLL_Install extends PLL_Install_Base {
 	 *
 	 * @since 0.1
 	 */
-	public function activate() {
+	public function activate($networkwide) {
 		global $wp_version;
 
 		Polylang::define_constants();
@@ -27,7 +27,7 @@ class PLL_Install extends PLL_Install_Base {
 				)
 			));
 
-		$this->do_for_all_blogs('activate');
+		$this->do_for_all_blogs('activate', $networkwide);
 	}
 
 	/*

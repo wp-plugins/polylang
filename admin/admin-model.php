@@ -31,14 +31,14 @@ class PLL_Admin_Model extends PLL_Model {
 			return false;
 
 		// first the language taxonomy
-		$description = serialize(array('locale' => $args['locale'], 'rtl' => $args['rtl']));
+		$description = serialize(array('locale' => $args['locale'], 'rtl' => (int) $args['rtl']));
 		$r = wp_insert_term($args['name'], 'language', array('slug' => $args['slug'], 'description' => $description));
 		if (is_wp_error($r)) {
 			// avoid an ugly fatal error if something went wrong (reported once in the forum)
 			add_settings_error('general', 'pll_add_language', __('Impossible to add the language.', 'polylang'));
 			return false;
 		}
-		wp_update_term((int) $r['term_id'], 'language', array('term_group' => $args['term_group'])); // can't set the term group directly in wp_insert_term
+		wp_update_term((int) $r['term_id'], 'language', array('term_group' => (int) $args['term_group'])); // can't set the term group directly in wp_insert_term
 
 		// the term_language taxonomy
 		// don't want shared terms so use a different slug
@@ -95,7 +95,6 @@ class PLL_Admin_Model extends PLL_Model {
 				}
 			}
 		}
-
 
 		// delete menus locations
 		if (!empty($this->options['nav_menus'])) {
@@ -171,7 +170,6 @@ class PLL_Admin_Model extends PLL_Model {
 		$slug = $args['slug'];
 		$old_slug = $lang->slug;
 
-		// FIXME should do this in an action 'edit_term' to prevent translations to break when sharing a term with nav_menu?
 		if ($old_slug != $slug) {
 			// update the language slug in translations
 			$this->update_translations($old_slug, $slug);
@@ -199,7 +197,6 @@ class PLL_Admin_Model extends PLL_Model {
 							$this->options['nav_menus'][$theme][$location][$slug] = $this->options['nav_menus'][$theme][$location][$old_slug];
 							unset($this->options['nav_menus'][$theme][$location][$old_slug]);
 						}
-
 					}
 				}
 			}
@@ -207,7 +204,7 @@ class PLL_Admin_Model extends PLL_Model {
 			// update domains
 			if (!empty($this->options['domains'][$old_slug])) {
 				$this->options['domains'][$slug] = $this->options['domains'][$old_slug];
-				unset($this->options['domains'][$slug]);
+				unset($this->options['domains'][$old_slug]);
 			}
 
 			// update the default language option if necessary
@@ -218,8 +215,8 @@ class PLL_Admin_Model extends PLL_Model {
 		update_option('polylang', $this->options);
 
 		// and finally update the language itself
-		$description = serialize(array('locale' => $args['locale'], 'rtl' => $args['rtl']));
-		wp_update_term((int) $lang->term_id, 'language', array('slug' => $slug, 'name' => $args['name'], 'description' => $description, 'term_group' => $args['term_group']));
+		$description = serialize(array('locale' => $args['locale'], 'rtl' => (int) $args['rtl']));
+		wp_update_term((int) $lang->term_id, 'language', array('slug' => $slug, 'name' => $args['name'], 'description' => $description, 'term_group' => (int) $args['term_group']));
 		wp_update_term((int) $lang->tl_term_id, 'term_language', array('slug' => 'pll_' . $slug, 'name' =>  $args['name']));
 
 		$this->clean_languages_cache();
@@ -252,7 +249,8 @@ class PLL_Admin_Model extends PLL_Model {
 			add_settings_error('general', 'pll_non_unique_slug', __('The language code must be unique', 'polylang'));
 
 		// validate name
-		if ($args['name'] == '')
+		// no need to sanitize it as wp_insert_term will do it for us
+		if (empty($args['name']))
 			add_settings_error('general', 'pll_invalid_name',  __('The language must have a name', 'polylang'));
 
 		return get_settings_errors() ? false : true;
@@ -270,6 +268,7 @@ class PLL_Admin_Model extends PLL_Model {
 	public function set_language_in_mass($type, $ids, $lang) {
 		global $wpdb;
 
+		$ids = array_map('intval', $ids);
 		$lang = $this->get_language($lang);
 		$tt_id = 'term' == $type ? $lang->tl_term_taxonomy_id : $lang->term_taxonomy_id;
 

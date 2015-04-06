@@ -114,15 +114,14 @@ class PLL_Frontend extends PLL_Base {
 			// reset the queried object
 			if (empty($taxonomies) && ($query->is_author || $query->is_post_type_archive || $query->is_date || $query->is_search)) {
 				$query->is_tax = false;
-				unset($query->queried_object);
-				get_queried_object();
+				unset($query->queried_object); // FIXME useless?
 			} 
 					
 			// move the language tax_query at the end to avoid it being the queried object
 			if (!empty($taxonomies) && 'language' == reset( $queried_taxonomies )) {
 				$query->tax_query->queried_terms['language'] = array_shift($query->tax_query->queried_terms);
 				unset($query->queried_object);
-				get_queried_object();
+				get_queried_object(); // necessary to avoid the language being the queried object
 			}
 		}
 	}

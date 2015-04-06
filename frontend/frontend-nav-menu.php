@@ -124,7 +124,7 @@ class PLL_Frontend_Nav_Menu {
 	 */
 	public function nav_menu_link_attributes($atts, $item, $args) {
 		if (isset($item->lang))
-			$atts['hreflang'] = $item->lang;
+			$atts['hreflang'] = esc_attr($item->lang);
 		return $atts;
 	}
 
