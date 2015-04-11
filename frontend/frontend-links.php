@@ -510,9 +510,13 @@ class PLL_Frontend_Links extends PLL_Links {
 			$redirect_url = $requested_url;
 		}
 		else {
+			// first get the canonical url evaluated by WP
+			$redirect_url = (!$redirect_url = redirect_canonical($requested_url, false)) ? $requested_url : $redirect_url;
+			
+			// then get the right language code in url
 			$redirect_url = $this->options['force_lang'] ?
-				$this->links_model->switch_language_in_link($requested_url, $language) :
-				$this->links_model->remove_language_from_link($requested_url);
+				$this->links_model->switch_language_in_link($redirect_url, $language) :
+				$this->links_model->remove_language_from_link($redirect_url); // works only for default permalinks
 		}
 
 		// allow plugins to change the redirection or even cancel it by setting $redirect_url to false 

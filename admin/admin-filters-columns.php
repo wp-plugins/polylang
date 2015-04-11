@@ -286,7 +286,7 @@ class PLL_Admin_Filters_Columns {
 		$x = new WP_Ajax_Response();
 		$wp_list_table = _get_list_table( 'WP_Terms_List_Table', array( 'screen' => $_POST['screen'] ) );
 
-		if (!taxonomy_exits($taxonomy = $_POST['taxonomy']))
+		if (!taxonomy_exists($taxonomy = $_POST['taxonomy']))
 			die(0);
 			
 		$translations = empty($_POST['translations']) ? array() : explode(',', $_POST['translations']); // collect old translations

@@ -102,7 +102,7 @@ class PLL_Admin_Filters_Media extends PLL_Admin_Filters_Post_Base {
 
 		$post = get_post((int) $_GET['from_media']);
 		$post_id = $post->ID;
-		$new_lang = $this->mode->get_language($_GET['new_lang']); // make sure we get a valid language slug
+		$new_lang = $this->model->get_language($_GET['new_lang']); // make sure we get a valid language slug
 
 		// create a new attachment (translate attachment parent if exists)
 		$post->ID = null; // will force the creation
@@ -144,11 +144,9 @@ class PLL_Admin_Filters_Media extends PLL_Admin_Filters_Post_Base {
 		if (!empty($attachment['language']))
 			$this->model->set_post_language($post['ID'], $attachment['language']);
 
-		if (isset($_POST['media_tr_lang'])) {
-			$lang = $this->model->get_language($_POST['media_tr_lang']);
-			$this->save_translations($post['ID'], $lang->slug);
-		}
-		
+		if (isset($_POST['media_tr_lang']))
+			$this->save_translations($post['ID'], $_POST['media_tr_lang']);
+
 		return $post;
 	}
 

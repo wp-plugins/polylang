@@ -572,10 +572,6 @@ class PLL_Admin_Filters_Term {
 		if (isset($_POST['lang']))
 			$lang = $this->model->get_language($_POST['lang']);
 
-		// ajax tag search since WP 3.7
-		elseif (!empty($_GET['lang']) && isset($_GET['action']) && 'polylang-ajax-tag-search' == $_GET['action'])
-			$lang = $this->model->get_language($_GET['lang']);
-
 		// the post (or term) is created with the 'add new' (translation) link
 		// test of $args['page'] to avoid filtering the terms list table in edit-tags panel
 		elseif (!empty($_GET['new_lang']) && empty($args['page']))
