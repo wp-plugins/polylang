@@ -293,8 +293,6 @@ class PLL_Admin extends PLL_Base {
 			if ($selected->slug == $lang->slug)
 				continue;
 
-			$img = empty($lang->flag) ? '' : (false !== strpos($lang->flag, 'img') ? $lang->flag . '&nbsp;' : $lang->flag);
-
 			$wp_admin_bar->add_menu(array(
 				'parent' => 'languages',
 				'id'     => $lang->slug,

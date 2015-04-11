@@ -20,8 +20,8 @@ class PLL_Frontend_Filters extends PLL_Filters{
 		add_filter('locale', array(&$this, 'get_locale'));
 
 		// translates page for posts and page on front
-		add_filter('option_page_on_front', array(&$this, 'translate_page_on_front'));
-		add_filter('option_page_for_posts', array(&$this, 'translate_page_for_posts'));
+		add_filter('option_page_on_front', 'pll_get_post');
+		add_filter('option_page_for_posts', 'pll_get_post');
 
 		// filter sticky posts by current language
 		add_filter('option_sticky_posts', array(&$this, 'option_sticky_posts'));
@@ -72,32 +72,6 @@ class PLL_Frontend_Filters extends PLL_Filters{
 	 */
 	public function get_locale($locale) {
 		return $this->curlang->locale;
-	}
-
-	/*
-	 * translates page on front
-	 *
-	 * @since 1.7
-	 *
-	 * @param int $v page on front page id
-	 * @return int
-	 */
-	public function translate_page_on_front($v) {
-		// returns the current page if there is no translation to avoid ugly notices
-		return isset($this->curlang->page_on_front) ? $this->curlang->page_on_front : $v;
-	}
-
-	/*
-	 * translates page for posts
-	 *
-	 * @since 1.7
-	 *
-	 * @param int $v page for posts page id
-	 * @return int
-	 */
-	public function translate_page_for_posts($v) {
-		// returns the current page if there is no translation to avoid ugly notices
-		return isset($this->curlang->page_for_posts) ? $this->curlang->page_for_posts : $v;
 	}
 
 	/*
