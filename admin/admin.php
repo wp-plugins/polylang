@@ -128,6 +128,8 @@ class PLL_Admin extends PLL_Base {
 
 	/*
 	 * sets pll_ajax_backend on all backend ajax request
+	 * takes care to situations where the ajax request has no options.data thanks to ScreenfeedFr
+	 * see: https://wordpress.org/support/topic/ajaxprefilter-may-not-work-as-expected
 	 *
 	 * @since 1.4
 	 */
@@ -147,11 +149,11 @@ class PLL_Admin extends PLL_Base {
 	if (typeof jQuery != 'undefined') {
 		(function($){
 			$.ajaxPrefilter(function (options, originalOptions, jqXHR) {
-				if (typeof options.data == 'string') {
-					options.data = '<?php echo $str;?>'+options.data;
+				if ( typeof options.data === 'undefined' ) {
+					options.data = options.type === "get" ? '<?php echo $str;?>' : {<?php echo $arr;?>};
 				}
 				else {
-					options.data = $.extend(options.data, {<?php echo $arr;?>});
+					options.data = typeof options.data === "string" ? '<?php echo $str;?>'+options.data : $.extend(options.data, {<?php echo $arr;?>});
 				}
 			});
 		})(jQuery)
