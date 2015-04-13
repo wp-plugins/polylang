@@ -67,6 +67,10 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 == Changelog ==
 
+= 1.7.4 =
+
+* fix: translated taxonomies and post types from wpml-config.xml are not filtered on frontend (introduced in 1.7.2)
+
 = 1.7.3 (2015-04-11) =
 
 * the transient 'pll_languages_list' now stores an array of arrays instead of an array of PLL_Language objects
