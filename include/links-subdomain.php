@@ -68,7 +68,7 @@ class PLL_Links_Subdomain extends PLL_Links_Permalinks {
 	 * @return string
 	 */
 	public function home_url($lang) {
-		return $this->add_language_to_link($this->home, $lang);
+		return $this->options['hide_default'] && $lang->slug == $this->options['default_lang'] ? $this->home : $this->add_language_to_link($this->home, $lang);
 	}
 
 	/*

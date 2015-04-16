@@ -71,7 +71,9 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 * fix: translated taxonomies and post types from wpml-config.xml are not filtered on frontend (introduced in 1.7.2)
 * fix: WPML strings translations not always loaded (introduced in 1.7)
-* fix: $.ajaxPrefilter() may not work as expected [props ScreenfeedFr](https://wordpress.org/support/topic/ajaxprefilter-may-not-work-as-expected) 
+* fix: $.ajaxPrefilter() may not work as expected [props ScreenfeedFr](https://wordpress.org/support/topic/ajaxprefilter-may-not-work-as-expected)
+* fix: can't hide the language code for the default language when using subdomains
+* fix: incorrect static front page url when combining when hiding the default language information 
 
 = 1.7.3 (2015-04-11) =
 

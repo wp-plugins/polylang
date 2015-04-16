@@ -155,7 +155,7 @@ class PLL_Language {
 		$options = get_option('polylang');
 
 		// a static page is used as front page
-		if (!$options['redirect_lang'] && 'page' == get_option('show_on_front') && ($page_on_front = get_option('page_on_front')) && $id = pll_get_post($page_on_front, $this))
+		if (!($options['hide_default'] && $this->slug == $options['default_lang']) && !$options['redirect_lang'] && 'page' == get_option('show_on_front') && ($page_on_front = get_option('page_on_front')) && $id = pll_get_post($page_on_front, $this))
 			$this->home_url = _get_page_link($id); // /!\ don't use get_page_link to avoid infinite loop
 
 		else
