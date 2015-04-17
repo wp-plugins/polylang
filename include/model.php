@@ -395,8 +395,13 @@ class PLL_Model {
 		$translations = $type && ($term = $this->get_object_term($id, $type . '_translations')) && !empty($term) ? unserialize($term->description) : array();
 
 		// make sure we return only translations (thus we allow plugins to store other informations in the array)
-		return array_intersect_key($translations, array_flip($this->get_languages_list(array('fields' => 'slug'))));
-	}
+		$translations = array_intersect_key($translations, array_flip($this->get_languages_list(array('fields' => 'slug'))));
+		
+		// make sure to return at least the passed post or term in its translation array
+		if (empty($translations) && $lang = call_user_func(array(&$this, 'get_'.$type.'_language'), $id))
+			$translations = array($lang->slug => $id);
+		
+		return $translations;	}
 
 	/*
 	 * store the post language in the database
