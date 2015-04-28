@@ -223,7 +223,7 @@ jQuery(document).ready(function($) {
 						$('#' + tax + '-lang').val($('#post_lang_choice').val()); // hidden field
 						break;
 					case 'pages': // parent dropdown list for pages
-						$('#pageparentdiv > .inside').html(this.data);
+						$('#parent_id').html(this.data);
 						break;
 					case 'flag': // flag in front of the select dropdown
 						$('.pll-select-flag').html(this.data);

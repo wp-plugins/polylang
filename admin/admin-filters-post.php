@@ -210,10 +210,23 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 
 		// parent dropdown list (only for hierarchical post types)
 		if (in_array($post_type, get_post_types(array('hierarchical' => true)))) {
-			require_once( ABSPATH . 'wp-admin/includes/meta-boxes.php' );
-			ob_start();
-			page_attributes_meta_box(get_post($post_ID));
-			$x->Add(array('what' => 'pages', 'data' => ob_get_contents()));
+			$post = get_post($post_ID);
+
+			// args and filter from 'page_attributes_meta_box' in wp-admin/includes/meta-boxes.php 
+			$dropdown_args = array(
+				'post_type'        => $post->post_type,
+				'exclude_tree'     => $post->ID,
+				'selected'         => $post->post_parent,
+				'name'             => 'parent_id',
+				'show_option_none' => __('(no parent)'),
+				'sort_column'      => 'menu_order, post_title',
+				'echo'             => 0,
+			);
+			$dropdown_args = apply_filters( 'page_attributes_dropdown_pages_args', $dropdown_args, $post ); // since WP 3.3
+
+			$pages = wp_dropdown_pages( $dropdown_args );
+			
+			$x->Add(array('what' => 'pages', 'data' => $pages));
 			ob_end_clean();
 		}
 

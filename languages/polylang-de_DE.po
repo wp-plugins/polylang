@@ -518,7 +518,7 @@ msgstr ""
 #, php-format
 msgid "Please upgrade first to %s before ugrading to %s."
 msgstr ""
-"Bitte aktualisieren Sie zuerst nach % s bevor Sie nach % s aktualisieren."
+"Bitte aktualisieren Sie zuerst nach %s bevor Sie nach %s aktualisieren."
 
 # @ polylang
 #: admin/table-string.php:109
