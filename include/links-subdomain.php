@@ -8,6 +8,12 @@
  * @since 1.2
  */
 class PLL_Links_Subdomain extends PLL_Links_Permalinks {
+	protected $www;
+	
+	public function __construct(&$model) {
+		parent::__construct($model);
+		$this->www = false === strpos($this->home, '://www.') ? '://' : '://www.';
+	}
 
 	/*
 	 * adds the language code in url
@@ -21,7 +27,7 @@ class PLL_Links_Subdomain extends PLL_Links_Permalinks {
 	 */
 	public function add_language_to_link($url, $lang) {
 		if (!empty($lang))
-			$url = $this->options['default_lang'] == $lang->slug && $this->options['hide_default'] ? $url : str_replace('://', '://'.$lang->slug.'.', $url);
+			$url = $this->options['default_lang'] == $lang->slug && $this->options['hide_default'] ? $url : str_replace($this->www, '://'.$lang->slug.'.', $url);
 		return $url;
 	}
 
@@ -40,7 +46,7 @@ class PLL_Links_Subdomain extends PLL_Links_Permalinks {
 				$languages[] = $language->slug;
 
 		if (!empty($languages))
-			$url = preg_replace('#:\/\/'  . '('.implode('|', $languages).')\.#', '://' , $url);
+			$url = preg_replace('#:\/\/'  . '('.implode('|', $languages).')\.#', $this->www, $url);
 
 		return $url;
 	}

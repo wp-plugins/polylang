@@ -76,6 +76,7 @@ See http://polylang.wordpress.com/documentation/contribute/
 * fix: incorrect static front page url when hiding the default language information
 * fix: an untranslated posts page may display posts in all languages
 * fix: javascript error when changing the language of a hierarchical post type from the languages metabox in WP 4.2
+* fix: subdomains urls are malformed when the main site uses www.
 
 = 1.7.3 (2015-04-11) =
 
