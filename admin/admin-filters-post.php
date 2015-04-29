@@ -212,7 +212,7 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 		if (in_array($post_type, get_post_types(array('hierarchical' => true)))) {
 			$post = get_post($post_ID);
 
-			// args and filter from 'page_attributes_meta_box' in wp-admin/includes/meta-boxes.php 
+			// args and filter from 'page_attributes_meta_box' in wp-admin/includes/meta-boxes.php of WP 4.2.1
 			$dropdown_args = array(
 				'post_type'        => $post->post_type,
 				'exclude_tree'     => $post->ID,
@@ -223,11 +223,8 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 				'echo'             => 0,
 			);
 			$dropdown_args = apply_filters( 'page_attributes_dropdown_pages_args', $dropdown_args, $post ); // since WP 3.3
-
-			$pages = wp_dropdown_pages( $dropdown_args );
 			
-			$x->Add(array('what' => 'pages', 'data' => $pages));
-			ob_end_clean();
+			$x->Add(array('what' => 'pages', 'data' => wp_dropdown_pages( $dropdown_args )));
 		}
 
 		// flag
