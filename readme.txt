@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, international, localization
 Requires at least: 3.8
 Tested up to: 4.2
-Stable tag: 1.7.3
+Stable tag: 1.7.4
 License: GPLv2 or later
 
 Making WordPress multilingual
@@ -67,7 +67,7 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 == Changelog ==
 
-= 1.7.4 =
+= 1.7.4 (2015-05-03) =
 
 * fix: translated taxonomies and post types from wpml-config.xml are not filtered on frontend (introduced in 1.7.2)
 * fix: WPML strings translations not always loaded (introduced in 1.7)
@@ -77,6 +77,8 @@ See http://polylang.wordpress.com/documentation/contribute/
 * fix: an untranslated posts page may display posts in all languages
 * fix: javascript error when changing the language of a hierarchical post type from the languages metabox in WP 4.2
 * fix: subdomains urls are malformed when the main site uses www.
+* fix: suggest tags are not filtered in quick edit
+* fix: parent page dropdown list not filtered in quick edit
 
 = 1.7.3 (2015-04-11) =
 

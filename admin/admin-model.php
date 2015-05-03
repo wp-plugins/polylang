@@ -44,11 +44,11 @@ class PLL_Admin_Model extends PLL_Model {
 		// don't want shared terms so use a different slug
 		wp_insert_term($args['name'], 'term_language', array('slug' => 'pll_' . $args['slug']));
 
+		$this->clean_languages_cache(); // udpate the languages list now !
+
 		// init a mo_id for this language
 		$mo = new PLL_MO();
 		$mo->export_to_db($this->get_language($args['slug']));
-
-		$this->clean_languages_cache(); // udpate the languages list now !
 
 		if (!isset($this->options['default_lang'])) {
 			// if this is the first language created, set it as default language

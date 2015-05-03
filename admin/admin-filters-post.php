@@ -45,12 +45,15 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 	/*
 	 * outputs a javascript list of terms ordered by language and hierarchical taxonomies
 	 * to filter the category checklist per post language in quick edit
+	 * outputs a javascript list of pages ordered by language
+	 * to filter the parent dropdown per post language in quick edit
 	 *
 	 * @since 1.7
 	 */
 	public function admin_enqueue_scripts() {
 		$screen = get_current_screen();
 
+		//hierarchical taxonomies
 		if ('edit' == $screen->base && $taxonomies = get_object_taxonomies($screen->post_type, 'object')) {
 			// get translated hierarchical taxonomies
 			foreach ($taxonomies as $taxonomy) {
@@ -70,6 +73,21 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 				if (!empty($term_languages)) {
 					wp_localize_script('pll_post', 'pll_term_languages', $term_languages);
 				}
+			}
+		}
+		
+		// hierarchical post types
+		if ('edit' == $screen->base && is_post_type_hierarchical($screen->post_type)) {
+			$pages = get_pages();
+
+			foreach($pages as $page) {
+				if ($lang = $this->model->get_post_language($page->ID))
+					$page_languages[$lang->slug][] = $page->ID;
+			}
+
+			// send all these data to javascript
+			if (!empty($page_languages)) {
+				wp_localize_script('pll_post', 'pll_page_languages', $page_languages);
 			}
 		}
 	}
