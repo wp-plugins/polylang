@@ -205,14 +205,19 @@ class PLL_Admin_Filters_Columns {
 
 		$post_type = isset($GLOBALS['post_type']) ? $GLOBALS['post_type'] : $_REQUEST['post_type']; // 2nd case for quick edit
 		$taxonomy = isset($GLOBALS['taxonomy']) ? $GLOBALS['taxonomy'] : $_REQUEST['taxonomy'];
+
+		if (!post_type_exists($post_type) || !taxonomy_exists($taxonomy))
+			return $out;
+		
+		$term_id = (int) $term_id;
 		$language = $this->model->get_language(substr($column, 9));
 
 		if ($column == $this->get_first_language_column()) {
-			$out = sprintf('<div class="hidden" id="lang_%d">%s</div>', esc_attr($term_id), esc_html($lang->slug));
+			$out = sprintf('<div class="hidden" id="lang_%d">%s</div>', $term_id, esc_html($lang->slug));
 
 			// identify the default categories to disable the language dropdown in js
 			if (in_array(get_option('default_category'), $this->model->get_translations('term', $term_id)))
-				$out .= sprintf('<div class="hidden" id="default_cat_%1$d">%1$d</div>', esc_attr($term_id));
+				$out .= sprintf('<div class="hidden" id="default_cat_%1$d">%1$d</div>', $term_id);
 		}
 
 		// link to edit term (or a translation)
@@ -248,9 +253,12 @@ class PLL_Admin_Filters_Columns {
 		$x = new WP_Ajax_Response();
 		$wp_list_table = _get_list_table( 'WP_Posts_List_Table', array( 'screen' => $_POST['screen'] ) );
 
-		$post_type = $_POST['post_type'];
+		if (!post_type_exists($post_type = $_POST['post_type']))
+			die(0);
+			
 		$translations = empty($_POST['translations']) ? array() : explode(',', $_POST['translations']); // collect old translations
 		$translations = array_merge($translations, array($_POST['post_id'])); // add current post
+		$translations = array_map('intval', $translations);
 
 		foreach ($translations as $post_id) {
 			$level = is_post_type_hierarchical( $post_type ) ? count( get_ancestors( $post_id, $post_type ) ) : 0;
@@ -278,10 +286,13 @@ class PLL_Admin_Filters_Columns {
 		$x = new WP_Ajax_Response();
 		$wp_list_table = _get_list_table( 'WP_Terms_List_Table', array( 'screen' => $_POST['screen'] ) );
 
-		$taxonomy = $_POST['taxonomy'];
+		if (!taxonomy_exists($taxonomy = $_POST['taxonomy']))
+			die(0);
+			
 		$translations = empty($_POST['translations']) ? array() : explode(',', $_POST['translations']); // collect old translations
-		$translations = array_merge($translations, $this->model->get_translations('term', $_POST['term_id'])); // add current translations
+		$translations = array_merge($translations, $this->model->get_translations('term', (int) $_POST['term_id'])); // add current translations
 		$translations = array_unique($translations); // remove doublons
+		$translations = array_map('intval', $translations);		
 
 		foreach ($translations as $term_id) {
 			$level = is_taxonomy_hierarchical($taxonomy) ? count( get_ancestors( $term_id, $taxonomy ) ) : 0;

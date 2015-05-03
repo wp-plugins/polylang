@@ -31,7 +31,7 @@ class PLL_Admin_Sync {
 	 * @since 0.6
 	 */
 	function wp_insert_post_parent($post_parent) {
-		return isset($_GET['from_post'], $_GET['new_lang']) && ($id = wp_get_post_parent_id($_GET['from_post'])) && ($parent = $this->model->get_translation('post', $id, $_GET['new_lang'])) ? $parent : $post_parent;
+		return isset($_GET['from_post'], $_GET['new_lang']) && ($id = wp_get_post_parent_id((int) $_GET['from_post'])) && ($parent = $this->model->get_translation('post', $id, $_GET['new_lang'])) ? $parent : $post_parent;
 	}
 
 	/*
@@ -47,15 +47,18 @@ class PLL_Admin_Sync {
 		if ('post-new.php' == $GLOBALS['pagenow'] && isset($_GET['from_post'], $_GET['new_lang'])) {
 			if (!$this->model->is_translated_post_type($post->post_type))
 			return;
-
+			
 			// capability check already done in post-new.php
-			$this->copy_post_metas($_GET['from_post'], $post->ID, $_GET['new_lang']);
+			$from_post_id = (int) $_GET['from_post'];
+			$lang = $this->model->get_language($_GET['new_lang']);
 
-			$from_post = get_post($_GET['from_post']);
+			$this->copy_post_metas($from_post_id, $post->ID, $lang->slug);
+
+			$from_post = get_post($from_post_id);
 			foreach (array('menu_order', 'comment_status', 'ping_status') as $property)
 				$post->$property = $from_post->$property;
 
-			if (in_array('sticky_posts', $this->options['sync']) && is_sticky($_GET['from_post']))
+			if (in_array('sticky_posts', $this->options['sync']) && is_sticky($from_post_id))
 				stick_post($post->ID);
 		}
 	}
@@ -255,12 +258,12 @@ class PLL_Admin_Sync {
 					continue;
 
 				if (isset($_POST['parent']) && $_POST['parent'] != -1) // since WP 3.1
-					$term_parent = $this->model->get_translation('term', $_POST['parent'], $lang);
+					$term_parent = $this->model->get_translation('term', (int) $_POST['parent'], $lang);
 
 				global $wpdb;
 				$wpdb->update($wpdb->term_taxonomy,
 					array('parent'=> isset($term_parent) ? $term_parent : 0),
-					array('term_taxonomy_id' => get_term($tr_id, $taxonomy)->term_taxonomy_id));
+					array('term_taxonomy_id' => get_term((int) $tr_id, $taxonomy)->term_taxonomy_id));
 			}
 		}
 	}

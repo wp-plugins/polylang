@@ -44,6 +44,16 @@ class PLL_Filters {
 	public function comments_clauses($clauses, $query) {
 		global $wpdb;
 
+		// don't filter comments if comment ids or post ids are specified
+		$plucked = wp_array_slice_assoc( $query->query_vars, array( 'comment__in', 'parent', 'post_id', 'post__in', 'post_parent' ) );
+		$fields = array_filter( $plucked );
+		if (!empty($fields))
+			return $clauses;
+
+		// don't filter comments if a non translated post type is specified
+		if (!empty($query->query_vars['post_type']) && !$this->model->is_translated_post_type($query->query_vars['post_type']))
+			return $clauses;
+
 		$lang = empty($query->query_vars['lang']) ? $this->curlang : $this->model->get_language($query->query_vars['lang']);
 
 		if (!empty($lang)) {

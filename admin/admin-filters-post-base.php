@@ -30,8 +30,8 @@ abstract class PLL_Admin_Filters_Post_Base {
 	 */
 	public function set_default_language($post_id) {
 		if (!$this->model->get_post_language($post_id)) {
-			if (isset($_GET['new_lang']))
-				$this->model->set_post_language($post_id, $_GET['new_lang']);
+			if (isset($_GET['new_lang']) && $lang = $this->model->get_language($_GET['new_lang']))
+				$this->model->set_post_language($post_id, $lang);
 
 			elseif (($parent_id = wp_get_post_parent_id($post_id)) && $parent_lang = $this->model->get_post_language($parent_id))
 				$this->model->set_post_language($post_id, $parent_lang);

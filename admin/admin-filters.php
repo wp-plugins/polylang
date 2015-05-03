@@ -77,8 +77,8 @@ class PLL_Admin_Filters extends PLL_Filters {
 	 * @return array widget options
 	 */
 	public function widget_update_callback($instance, $new_instance, $old_instance, $widget) {
-		if (!empty($_POST[$widget->id.'_lang_choice']))
-			$instance['pll_lang'] = $_POST[$widget->id.'_lang_choice'];
+		if (!empty($_POST[$key = $widget->id.'_lang_choice']) && in_array($_POST[$key], $this->model->get_languages_list(array('fields' => 'slug'))))
+			$instance['pll_lang'] = $_POST[$key];
 		else
 			unset($instance['pll_lang']);
 
@@ -95,7 +95,7 @@ class PLL_Admin_Filters extends PLL_Filters {
 	public function personal_options_update($user_id) {
 		// admin language
 		$user_lang = in_array($_POST['user_lang'], $this->model->get_languages_list(array('fields' => 'locale'))) ? $_POST['user_lang'] : 0;
-		update_user_meta($user_id, 'user_lang', $_POST['user_lang']);
+		update_user_meta($user_id, 'user_lang', $user_lang);
 
 		// biography translations
 		foreach ($this->model->get_languages_list() as $lang) {
