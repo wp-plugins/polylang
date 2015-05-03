@@ -398,10 +398,11 @@ class PLL_Model {
 		$translations = array_intersect_key($translations, array_flip($this->get_languages_list(array('fields' => 'slug'))));
 		
 		// make sure to return at least the passed post or term in its translation array
-		if (empty($translations) && $lang = call_user_func(array(&$this, 'get_'.$type.'_language'), $id))
+		if (empty($translations) && $type && $lang = call_user_func(array(&$this, 'get_'.$type.'_language'), $id))
 			$translations = array($lang->slug => $id);
 		
-		return $translations;	}
+		return $translations;
+	}
 
 	/*
 	 * store the post language in the database

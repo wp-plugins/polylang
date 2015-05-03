@@ -67,6 +67,10 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 == Changelog ==
 
+= 1.7.5 =
+
+* fix: warning when a plugin calls 'icl_object_id' with an untranslated post type (seen in ACF 4.4.1)
+
 = 1.7.4 (2015-05-03) =
 
 * fix: translated taxonomies and post types from wpml-config.xml are not filtered on frontend (introduced in 1.7.2)
