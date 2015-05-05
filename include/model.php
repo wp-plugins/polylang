@@ -162,6 +162,8 @@ class PLL_Model {
 					foreach ($languages as $k => $v) {
 						$languages[$k] = new PLL_Language($v, $term_languages[$v->name]);
 					}
+					
+					$languages = apply_filters('pll_languages_list', $languages);
 				}
 				else {
 					$languages = array(); // in case something went wrong
