@@ -21,6 +21,9 @@ class PLL_Links_Directory extends PLL_Links_Permalinks {
 	public function __construct(&$model) {
 		parent::__construct($model);
 
+		// inspired by wp-includes/rewrite.php
+		$this->root = preg_match('#^/*' . $this->index . '#', get_option('permalink_structure')) ? $this->index . '/' : '';
+
 		add_action('pll_init', array(&$this, 'init'));
 	}
 
@@ -30,9 +33,6 @@ class PLL_Links_Directory extends PLL_Links_Permalinks {
 	 * @since 1.6
 	 */
 	public function init() {
-		// inspired by wp-includes/rewrite.php
-		$this->root = preg_match('#^/*' . $this->index . '#', get_option('permalink_structure')) ? $this->index . '/' : '';
-
 		add_action('setup_theme', array(&$this, 'add_permastruct'), 2);
 
 		// make sure to prepare rewrite rules when flushing
