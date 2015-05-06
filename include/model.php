@@ -497,10 +497,8 @@ class PLL_Model {
 		elseif (is_string($value) && $taxonomy)
 			$term_id = get_term_by('slug', $value , $taxonomy)->term_id;
 
-		$lang = $this->get_object_term($term_id, 'term_language');
-
-		// switch to PLL_Language
-		return ($lang) ? $this->get_language($lang->term_id) : false;
+		// get the language and make sure it is a PLL_Language object
+		return isset($term_id) && ($lang = $this->get_object_term($term_id, 'term_language')) ? $this->get_language($lang->term_id) : false;
 	}
 
 	/*

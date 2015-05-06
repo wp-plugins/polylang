@@ -367,7 +367,8 @@ class PLL_Frontend_Links extends PLL_Links {
 						$terms = get_terms($tax->name, array('fields' => 'id=>slug')); // filtered by current language
 
 						foreach ($tax_query['terms'] as $slug) {
-							if ($term_id = $this->model->get_translation('term', array_search($slug, $terms), $language)) { // get the translated term_id
+							$term_id = array_search($slug, $terms); // what is the term_id corresponding to taxonomy term?
+							if ($term_id && $term_id = $this->model->get_translation('term', $term_id, $language)) { // get the translated term_id
 								$term = get_term($term_id, $tax->name);
 								$url = str_replace($slug, $term->slug, $url);
 							}

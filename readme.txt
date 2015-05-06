@@ -72,6 +72,7 @@ See http://polylang.wordpress.com/documentation/contribute/
 * Add 'pll_languages_list' filter
 * fix: warning when a plugin calls 'icl_object_id' with an untranslated post type (seen in ACF 4.4.1)
 * fix: the language is not correctly set from the url when using PATHINFO permalinks (introduced in 1.6!)
+* fix: notice when a search is filtered by a taxonomy term in a different language
 
 = 1.7.4 (2015-05-03) =
 
