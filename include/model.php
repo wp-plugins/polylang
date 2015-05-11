@@ -909,8 +909,12 @@ class PLL_Model {
 	 * @return object implementing "links_model interface"
 	 */
 	public function get_links_model() {
-		$c = array('Directory', 'Directory', 'Subdomain', 'Domain');
-		$class = get_option('permalink_structure') ? 'PLL_Links_' .$c[$this->options['force_lang']] : 'PLL_Links_Default';
-		return new $class($this);
+		if (!$links_model = $this->cache->get('links_model')) {
+			$c = array('Directory', 'Directory', 'Subdomain', 'Domain');
+			$class = get_option('permalink_structure') ? 'PLL_Links_' .$c[$this->options['force_lang']] : 'PLL_Links_Default';
+			$links_model = new $class($this);
+			$this->cache->set('links_model', $links_model);
+		}
+		return $links_model;
 	}
 }

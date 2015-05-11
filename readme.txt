@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, international, localization
 Requires at least: 3.8
 Tested up to: 4.2
-Stable tag: 1.7.4
+Stable tag: 1.7.5
 License: GPLv2 or later
 
 Making WordPress multilingual
@@ -67,7 +67,7 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 == Changelog ==
 
-= 1.7.5 =
+= 1.7.5 (2015-05-11) =
 
 * Add 'pll_languages_list' filter
 * fix: warning when a plugin calls 'icl_object_id' with an untranslated post type (seen in ACF 4.4.1)
