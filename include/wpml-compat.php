@@ -256,7 +256,7 @@ if (!function_exists('wpml_get_copied_fields_for_post_edit')) {
 			return array();
 
 		// don't know what WPML does but Polylang does copy all public meta keys by default
-		foreach ($keys = array_unique(array_keys(get_post_custom($_GET['from_post']))) as $k => $meta_key)
+		foreach ($keys = array_unique(array_keys(get_post_custom((int) $_GET['from_post']))) as $k => $meta_key)
 			if (is_protected_meta($meta_key))
 				unset ($keys[$k]);
 

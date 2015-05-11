@@ -48,7 +48,7 @@ class PLL_Switcher {
 		foreach ($links->model->get_languages_list(array('hide_empty' => $args['hide_if_empty'])) as $language) {
 			$id = (int) $language->term_id;
 			$slug = $language->slug;
-			$classes = array('lang-item', 'lang-item-' . esc_attr($id), 'lang-item-' . esc_attr($slug));
+			$classes = array('lang-item', 'lang-item-' . $id, 'lang-item-' . esc_attr($slug));
 
 			if ($current_lang = pll_current_language() == $slug) {
 				if ($args['hide_current'] && !$args['dropdown'])

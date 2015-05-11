@@ -21,6 +21,9 @@ class PLL_Links_Directory extends PLL_Links_Permalinks {
 	public function __construct(&$model) {
 		parent::__construct($model);
 
+		// inspired by wp-includes/rewrite.php
+		$this->root = preg_match('#^/*' . $this->index . '#', get_option('permalink_structure')) ? $this->index . '/' : '';
+
 		add_action('pll_init', array(&$this, 'init'));
 	}
 
@@ -30,9 +33,6 @@ class PLL_Links_Directory extends PLL_Links_Permalinks {
 	 * @since 1.6
 	 */
 	public function init() {
-		// inspired by wp-includes/rewrite.php
-		$this->root = preg_match('#^/*' . $this->index . '#', get_option('permalink_structure')) ? $this->index . '/' : '';
-
 		add_action('setup_theme', array(&$this, 'add_permastruct'), 2);
 
 		// make sure to prepare rewrite rules when flushing
@@ -176,12 +176,13 @@ class PLL_Links_Directory extends PLL_Links_Permalinks {
 		$cpts = $cpts ? '#post_type=('.implode('|', $cpts).')#' : '';
 
 		foreach ($rules as $key => $rule) {
-			// special case for translated post types and taxonomies to allow canonical redirection
+			// we don't need the lang parameter for post types and taxonomies
+			// moreover adding it would create issues for pages and taxonomies
 			if ($this->options['force_lang'] && in_array($filter, array_merge($this->model->get_translated_post_types(), $this->model->get_translated_taxonomies()))) {
 				if (isset($slug))
 					$newrules[$slug.str_replace($wp_rewrite->root, '', $key)] = str_replace(
-						array('[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '[1]', '?'),
-						array('[9]', '[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '?lang=$matches[1]&'),
+						array('[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '[1]'),
+						array('[9]', '[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]'),
 						$rule
 					); // should be enough!
 

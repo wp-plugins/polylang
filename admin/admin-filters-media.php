@@ -100,12 +100,13 @@ class PLL_Admin_Filters_Media extends PLL_Admin_Filters_Post_Base {
 		//security check
 		check_admin_referer('translate_media');
 
-		$post = get_post($_GET['from_media']);
+		$post = get_post((int) $_GET['from_media']);
 		$post_id = $post->ID;
+		$new_lang = $this->model->get_language($_GET['new_lang']); // make sure we get a valid language slug
 
 		// create a new attachment (translate attachment parent if exists)
 		$post->ID = null; // will force the creation
-		$post->post_parent = ($post->post_parent && $tr_parent = $this->model->get_translation('post', $post->post_parent, $_GET['new_lang'])) ? $tr_parent : 0;
+		$post->post_parent = ($post->post_parent && $tr_parent = $this->model->get_translation('post', $post->post_parent, $new_lang->slug)) ? $tr_parent : 0;
 		$tr_id = wp_insert_attachment($post);
 		add_post_meta($tr_id, '_wp_attachment_metadata', get_post_meta($post_id, '_wp_attachment_metadata', true));
 		add_post_meta($tr_id, '_wp_attached_file', get_post_meta($post_id, '_wp_attached_file', true));
@@ -118,7 +119,7 @@ class PLL_Admin_Filters_Media extends PLL_Admin_Filters_Post_Base {
 		if (!$translations && $lang = $this->model->get_post_language($post_id))
 			$translations[$lang->slug] = $post_id;
 
-		$translations[$_GET['new_lang']] = $tr_id;
+		$translations[$new_lang->slug] = $tr_id;
 		$this->model->save_translations('post', $tr_id, $translations);
 
 		do_action('pll_translate_media', $tr_id, $post, $translations);

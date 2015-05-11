@@ -1,8 +1,17 @@
+// tag suggest
+// valid for both tag metabox and quick edit
+(function($){
+	$.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+		if(-1 !== options.url.indexOf('action=ajax-tag-search') && ((lang = $('#post_lang_choice').val()) || (lang = $(':input[name="inline_lang_choice"]').val()))) {
+			options.data = 'lang='+lang+'&'+options.data;
+		}
+	});
+})(jQuery);
 
-// overrides tagBox but mainly copy paste of WP code
+// overrides tagBox.get
 (function($){
 	// overrides function to add the language
-	tagBox.get = function(id, a) {
+	tagBox.get = function(id) {
 		var tax = id.substr(id.indexOf('-')+1);
 
 		// add the language in the $_POST variable
@@ -23,76 +32,13 @@
 			});
 
 			// add an if else condition to allow modifying the tags outputed when switching the language
-			if (a == 1)
-				$('#'+id).after(r);
-			else {
-				v = $('.the-tagcloud').css('display');
+			if (v = $('.the-tagcloud').css('display')) {
 				$('.the-tagcloud').replaceWith(r);
 				$('.the-tagcloud').css('display', v);
 			}
-		});
-	},
-
-	// creates the function to be reused
-	tagBox.suggest = function() {
-		ajaxtag = $('div.ajaxtag');
-		// add the unbind function to allow calling the function when the language is modified
-		$('input.newtag', ajaxtag).unbind().blur(function() {
-			if ( this.value == '' )
-	            $(this).parent().siblings('.taghint').css('visibility', '');
-	    }).focus(function(){
-			$(this).parent().siblings('.taghint').css('visibility', 'hidden');
-		}).keyup(function(e){
-			if ( 13 == e.which ) {
-				tagBox.flushTags( $(this).closest('.tagsdiv') );
-				return false;
+			else {
+				$('#'+id).after(r);
 			}
-		}).keypress(function(e){
-			if ( 13 == e.which ) {
-				e.preventDefault();
-				return false;
-			}
-		}).each(function(){
-			// add the language in the $_GET variable
-			var lang = $('#post_lang_choice').val();
-			var tax = $(this).closest('div.tagsdiv').attr('id');
-			$(this).suggest( ajaxurl + '?action=ajax-tag-search&lang=' + lang + '&tax=' + tax, { delay: 500, minchars: 2, multiple: true, multipleSep: "," } );
-		});
-	}
-
-	// overrides function to add language (in tagBox.suggest)
-	tagBox.init = function() {
-		var t = this, ajaxtag = $('div.ajaxtag');
-
-	    $('.tagsdiv').each( function() {
-	        tagBox.quickClicks(this);
-	    });
-
-		$('input.tagadd', ajaxtag).click(function(){
-			t.flushTags( $(this).closest('.tagsdiv') );
-		});
-
-		$('div.taghint', ajaxtag).click(function(){
-			$(this).css('visibility', 'hidden').parent().siblings('.newtag').focus();
-		});
-
-		tagBox.suggest();
-
-	    // save tags on post save/publish
-	    $('#post').submit(function(){
-			$('div.tagsdiv').each( function() {
-	        	tagBox.flushTags(this, false, 1);
-			});
-		});
-
-		// tag cloud
-		$('a.tagcloud-link').click(function(){
-			tagBox.get( $(this).attr('id'), 1 );
-			$(this).unbind().click(function(){
-				$(this).siblings('.the-tagcloud').toggle();
-				return false;
-			});
-			return false;
 		});
 	}
 })(jQuery);
@@ -112,12 +58,13 @@
 				var lang = $('#lang_' + post_id).html();
 				select.val(lang); // populates the dropdown
 
-				// initial filter for category checklist
-				filter_terms(lang);
+				filter_terms(lang); // initial filter for category checklist
+				filter_pages(lang); // initial filter for parent dropdown
 
-				// modify category checklist on language change
+				// modify category checklist an parent dropdown on language change
 				select.change( function() {
 					filter_terms($(this).val());
+					filter_pages($(this).val());
 				});
 			}
 		}
@@ -135,6 +82,18 @@
 				});
 			}
 		}
+		
+		// filter parent page dropdown list
+		function filter_pages(lang) {
+			if ("undefined" != typeof(pll_page_languages)) {
+				$.each(pll_page_languages, function(lg, pages) {
+					$.each(pages, function(i) {
+						v = $('#post_parent option[value="' + pll_page_languages[lg][i] + '"]');
+						lang == lg ? v.show() : v.hide();
+					});
+				});
+			}
+		}		
 	});
 })(jQuery);
 
@@ -223,7 +182,7 @@ jQuery(document).ready(function($) {
 						$('#' + tax + '-lang').val($('#post_lang_choice').val()); // hidden field
 						break;
 					case 'pages': // parent dropdown list for pages
-						$('#pageparentdiv > .inside').html(this.data);
+						$('#parent_id').html(this.data);
 						break;
 					case 'flag': // flag in front of the select dropdown
 						$('.pll-select-flag').html(this.data);
@@ -236,11 +195,8 @@ jQuery(document).ready(function($) {
 			// modifies the language in the tag cloud
 			$('.tagcloud-link').each(function() {
 				var id = $(this).attr('id');
-				tagBox.get(id, 0);
+				tagBox.get(id);
 			});
-
-			// modifies the language in the tags suggestion input
-			tagBox.suggest();
 		});
 	});
 

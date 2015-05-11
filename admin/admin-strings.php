@@ -106,7 +106,7 @@ class PLL_Admin_Strings {
 	 * @return string
 	 */
 	static public function sanitize_string_translation($translation, $name) {
-		$translation = stripslashes(trim($translation));
+		$translation = wp_unslash(trim($translation));
 
 		if (false !== ($option = array_search($name, self::$default_strings['options'], true)))
 			$translation = sanitize_option($option, $translation);
@@ -115,7 +115,7 @@ class PLL_Admin_Strings {
 			$translation = strip_tags($translation);
 
 		if ($name == self::$default_strings['widget_text'] && !current_user_can('unfiltered_html'))
-			$translation = stripslashes( wp_filter_post_kses( addslashes($translation) ) ); // wp_filter_post_kses() expects slashed
+			$translation = wp_unslash( wp_filter_post_kses( addslashes($translation) ) ); // wp_filter_post_kses() expects slashed
 
 		return $translation;
 	}

@@ -34,7 +34,18 @@ class PLL_Table_Languages extends WP_List_Table {
 	 * @return string
 	 */
 	function column_default($item, $column_name) {
-		return $item->$column_name;
+		switch($column_name) {
+			case 'locale':
+			case 'slug':
+				return esc_html($item->$column_name);
+				
+			case 'term_group':
+			case 'count':
+				return (int) $item->$column_name;
+				
+			default:
+				return $item->$column_name; // flag
+		}
 	}
 
 	/*
@@ -47,7 +58,7 @@ class PLL_Table_Languages extends WP_List_Table {
 	 * @return string
 	 */
 	function column_name($item) {
-		return $item->name . $this->row_actions(array(
+		return esc_html($item->name) . $this->row_actions(array(
 			'edit'   => sprintf(
 				'<a href="%s">%s</a>',
 				esc_url(admin_url('admin.php?page=mlang&amp;pll_action=edit&amp;lang=' . $item->term_id)),
@@ -89,11 +100,11 @@ class PLL_Table_Languages extends WP_List_Table {
 	 */
 	function get_sortable_columns() {
 		return array(
-			'name'		=> array('name', true), // sorted by name by default
-			'locale' => array('locale', false),
-			'slug'		=> array('slug', false),
+			'name'		    => array('name', true), // sorted by name by default
+			'locale'      => array('locale', false),
+			'slug'		    => array('slug', false),
 			'term_group'  => array('term_group', false),
-			'count'	   => array('count', false)
+			'count'	      => array('count', false)
 		);
 	}
 

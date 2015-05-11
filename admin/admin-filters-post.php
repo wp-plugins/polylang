@@ -45,12 +45,15 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 	/*
 	 * outputs a javascript list of terms ordered by language and hierarchical taxonomies
 	 * to filter the category checklist per post language in quick edit
+	 * outputs a javascript list of pages ordered by language
+	 * to filter the parent dropdown per post language in quick edit
 	 *
 	 * @since 1.7
 	 */
 	public function admin_enqueue_scripts() {
 		$screen = get_current_screen();
 
+		//hierarchical taxonomies
 		if ('edit' == $screen->base && $taxonomies = get_object_taxonomies($screen->post_type, 'object')) {
 			// get translated hierarchical taxonomies
 			foreach ($taxonomies as $taxonomy) {
@@ -70,6 +73,21 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 				if (!empty($term_languages)) {
 					wp_localize_script('pll_post', 'pll_term_languages', $term_languages);
 				}
+			}
+		}
+		
+		// hierarchical post types
+		if ('edit' == $screen->base && is_post_type_hierarchical($screen->post_type)) {
+			$pages = get_pages();
+
+			foreach($pages as $page) {
+				if ($lang = $this->model->get_post_language($page->ID))
+					$page_languages[$lang->slug][] = $page->ID;
+			}
+
+			// send all these data to javascript
+			if (!empty($page_languages)) {
+				wp_localize_script('pll_post', 'pll_page_languages', $page_languages);
 			}
 		}
 	}
@@ -92,7 +110,7 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 
 		if (isset($qvars['post_type']) && !isset($qvars['lang'])) {
 			// filters the list of media (or wp-links) by language when uploading from post
-			if (isset($_REQUEST['pll_post_id']) && $lang = $this->model->get_post_language($_REQUEST['pll_post_id']))
+			if (isset($_REQUEST['pll_post_id']) && $lang = $this->model->get_post_language((int) $_REQUEST['pll_post_id']))
 				$query->set('lang', $lang->slug);
 
 			elseif (!empty($this->curlang))
@@ -161,7 +179,7 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 		check_ajax_referer('pll_language', '_pll_nonce');
 
 		global $post_ID; // obliged to use the global variable for wp_popular_terms_checklist
-		$post_ID = $_POST['post_id'];
+		$post_ID = (int) $_POST['post_id'];
 		$post_type = get_post_type($post_ID);
 		$lang = $this->model->get_language($_POST['lang']);
 
@@ -210,11 +228,21 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 
 		// parent dropdown list (only for hierarchical post types)
 		if (in_array($post_type, get_post_types(array('hierarchical' => true)))) {
-			require_once( ABSPATH . 'wp-admin/includes/meta-boxes.php' );
-			ob_start();
-			page_attributes_meta_box(get_post($post_ID));
-			$x->Add(array('what' => 'pages', 'data' => ob_get_contents()));
-			ob_end_clean();
+			$post = get_post($post_ID);
+
+			// args and filter from 'page_attributes_meta_box' in wp-admin/includes/meta-boxes.php of WP 4.2.1
+			$dropdown_args = array(
+				'post_type'        => $post->post_type,
+				'exclude_tree'     => $post->ID,
+				'selected'         => $post->post_parent,
+				'name'             => 'parent_id',
+				'show_option_none' => __('(no parent)'),
+				'sort_column'      => 'menu_order, post_title',
+				'echo'             => 0,
+			);
+			$dropdown_args = apply_filters( 'page_attributes_dropdown_pages_args', $dropdown_args, $post ); // since WP 3.3
+			
+			$x->Add(array('what' => 'pages', 'data' => wp_dropdown_pages( $dropdown_args )));
 		}
 
 		// flag
@@ -231,9 +259,15 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 	public function ajax_posts_not_translated() {
 		check_ajax_referer('pll_language', '_pll_nonce');
 
+		if (!post_type_exists($_REQUEST['post_type']))
+			die(0);
+		
+		$post_language = $this->model->get_language($_REQUEST['post_language']);
+		$translation_language = $this->model->get_language($_REQUEST['translation_language']);
+		
 		// don't order by title: see https://wordpress.org/support/topic/find-translated-post-when-10-is-not-enough
-		$posts = get_posts(array(
-			's'                => $_REQUEST['term'],
+		$args = array(
+			's'                => wp_unslash($_REQUEST['term']),
 			'suppress_filters' => 0, // to make the post_fields filter work
 			'lang'             => 0, // avoid admin language filter
 			'numberposts'      => 20, // limit to 20 posts
@@ -242,19 +276,23 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 			'tax_query'        => array(array(
 				'taxonomy' => 'language',
 				'field'    => 'term_taxonomy_id', // WP 3.5+
-				'terms'    => $this->model->get_language($_REQUEST['translation_language'])->term_taxonomy_id
+				'terms'    => $translation_language->term_taxonomy_id
 			))
-		));
+		);
+		
+		// allow plugins to change args help fixing edge cases: see same topic as above
+		$args = apply_filters('pll_ajax_posts_not_translated_args', $args);
+		$posts = get_posts($args);
 
 		$return = array();
 
 		foreach ($posts as $key => $post) {
-			if (!$this->model->get_translation('post', $post->ID, $_REQUEST['post_language']))
+			if (!$this->model->get_translation('post', $post->ID, $post_language))
 				$return[] = array('id' => $post->ID, 'value' => $post->post_title, 'link' => $this->edit_translation_link($post->ID));
 		}
 
 		// add current translation in list
-		if ($post_id = $this->model->get_translation('post', $_REQUEST['pll_post_id'],$_REQUEST['translation_language'])) {
+		if ($post_id = $this->model->get_translation('post', (int) $_REQUEST['pll_post_id'], $translation_language)) {
 			$post = get_post($post_id);
 			array_unshift($return, array(
 				'id' => $post_id,
@@ -282,7 +320,7 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 		// edit post
 		if (isset($_REQUEST['post_lang_choice'])) {
 			check_admin_referer('pll_language', '_pll_nonce');
-			$this->model->set_post_language($post_id, $lang = $_REQUEST['post_lang_choice']);
+			$this->model->set_post_language($post_id, $lang = $this->model->get_language($_REQUEST['post_lang_choice']));
 		}
 
 		// quick edit and bulk edit
@@ -297,14 +335,14 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 				isset($_REQUEST['bulk_edit']) ? check_admin_referer('bulk-posts') : check_admin_referer('inlineeditnonce', '_inline_edit');
 
 				$old_lang = $this->model->get_post_language($post_id); // stores the old  language
-				$this->model->set_post_language($post_id, $lang = $_REQUEST['inline_lang_choice']); // set new language
+				$this->model->set_post_language($post_id, $lang = $this->model->get_language($_REQUEST['inline_lang_choice'])); // set new language
 
 				// checks if the new language already exists in the translation group
-				if ($old_lang && $old_lang->slug != $lang) {
+				if ($old_lang && $old_lang->slug != $lang->slug) {
 					$translations = $this->model->get_translations('post', $post_id);
 
 					// if yes, separate this post from the translation group
-					if (array_key_exists($lang, $translations)) {
+					if (array_key_exists($lang->slug, $translations)) {
 						$this->model->delete_translation('post', $post_id);
 					}
 
