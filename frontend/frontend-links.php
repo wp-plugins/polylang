@@ -48,8 +48,11 @@ class PLL_Frontend_Links extends PLL_Links {
 	 */
 	public function pll_language_defined() {
 		// rewrites author and date links to filter them by language
-		foreach (array('feed_link', 'author_link', 'post_type_archive_link', 'search_link', 'year_link', 'month_link', 'day_link') as $filter)
+		foreach (array('feed_link', 'author_link', 'search_link', 'year_link', 'month_link', 'day_link') as $filter)
 			add_filter($filter, array(&$this, 'archive_link'), 20);
+
+		// rewrites post types archives links to filter them by language
+		add_filter('post_type_archive_link', array(&$this, 'post_type_archive_link'), 20, 2);
 
 		// modifies the page link in case the front page is not in the default language
 		add_filter('page_link', array(&$this, 'page_link'), 20, 2);
@@ -86,6 +89,20 @@ class PLL_Frontend_Links extends PLL_Links {
 	 */
 	public function archive_link($link) {
 		return $this->links_model->add_language_to_link($link, $this->curlang);
+	}
+	
+	/*
+	 * modifies the post type archive links to add the language parameter
+	 * only if the post type is translated
+	 *
+	 * @since 1.7.6
+	 *
+	 * @param string $link
+	 * @param string $post_type
+	 * @return string modified link
+	 */
+	public function post_type_archive_link($link, $post_type) {
+		return $this->model->is_translated_post_type($post_type) ? $this->links_model->add_language_to_link($link, $this->curlang) : $link;
 	}
 	
 	/*
