@@ -49,7 +49,7 @@ class PLL_Install_Base {
 
 			foreach ($wpdb->get_col("SELECT blog_id FROM $wpdb->blogs") as $blog_id) {
 				switch_to_blog($blog_id);
-				$what == 'activate' ? $this->_activate() : $this->_deactivate();
+				$what == 'activate' ? $this->_activate($networkwide) : $this->_deactivate($networkwide);
 			}
 			restore_current_blog();
 		}
@@ -73,7 +73,7 @@ class PLL_Install_Base {
 	 *
 	 * @since 0.5
 	 */
-	protected function _activate() {
+	protected function _activate($networkwide) {
 		// can be overriden in child class
 	}
 
@@ -91,7 +91,7 @@ class PLL_Install_Base {
 	 *
 	 * @since 0.5
 	 */
-	protected function _deactivate() {
+	protected function _deactivate($networkwide) {
 		// can be overriden in child class
 	}
 
@@ -104,7 +104,7 @@ class PLL_Install_Base {
 	 */
 	public function wpmu_new_blog($blog_id) {
 		switch_to_blog($blog_id);
-		$this->_activate();
+		$this->_activate($networkwide); // FIXME will avoid flushing rules
 		restore_current_blog();
 	}
 }
