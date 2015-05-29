@@ -123,7 +123,7 @@ class PLL_Admin_Filters_Columns {
 		// link to edit post (or a translation)
 		// check capabilities before creating links thanks to Solinx. See http://wordpress.org/support/topic/feature-request-incl-code-check-for-capabilities-in-admin-screens
 		if ($id = $this->model->get_post($post_id, $language)) {
-			if (current_user_can($post_type_object->cap->edit_post, $post_id)) {
+			if (current_user_can($post_type_object->cap->edit_post, $id)) {
 				printf('<a class="%1$s" title="%2$s" href="%3$s"></a>',
 					$id == $post_id ? 'pll_icon_tick' : esc_attr('pll_icon_edit translation_' . $id),
 					esc_attr(get_post($id)->post_title),
@@ -208,7 +208,7 @@ class PLL_Admin_Filters_Columns {
 
 		if (!post_type_exists($post_type) || !taxonomy_exists($taxonomy))
 			return $out;
-		
+
 		$term_id = (int) $term_id;
 		$language = $this->model->get_language(substr($column, 9));
 
@@ -255,7 +255,7 @@ class PLL_Admin_Filters_Columns {
 
 		if (!post_type_exists($post_type = $_POST['post_type']))
 			die(0);
-			
+
 		$translations = empty($_POST['translations']) ? array() : explode(',', $_POST['translations']); // collect old translations
 		$translations = array_merge($translations, array($_POST['post_id'])); // add current post
 		$translations = array_map('intval', $translations);
@@ -288,11 +288,11 @@ class PLL_Admin_Filters_Columns {
 
 		if (!taxonomy_exists($taxonomy = $_POST['taxonomy']))
 			die(0);
-			
+
 		$translations = empty($_POST['translations']) ? array() : explode(',', $_POST['translations']); // collect old translations
 		$translations = array_merge($translations, $this->model->get_translations('term', (int) $_POST['term_id'])); // add current translations
 		$translations = array_unique($translations); // remove doublons
-		$translations = array_map('intval', $translations);		
+		$translations = array_map('intval', $translations);
 
 		foreach ($translations as $term_id) {
 			$level = is_taxonomy_hierarchical($taxonomy) ? count( get_ancestors( $term_id, $taxonomy ) ) : 0;
