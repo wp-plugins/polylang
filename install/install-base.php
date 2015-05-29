@@ -56,7 +56,7 @@ class PLL_Install_Base {
 
 		// single blog
 		else
-			$what == 'activate' ? $this->_activate() : $this->_deactivate();
+			$what == 'activate' ? $this->_activate($networkwide) : $this->_deactivate($networkwide);
 	}
 
 	/*
