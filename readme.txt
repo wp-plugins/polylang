@@ -114,6 +114,7 @@ See http://polylang.wordpress.com/documentation/contribute/
 * fix: avoid flushing rewrite rules at network activation and de-activation
 * fix: the note below the category list table displays the default category according to the admin language filter
 * fix: wrong future posts permalinks
+* fix: deleting a media translation deletes the file too
 
 = 1.7.5 (2015-05-11) =
 
