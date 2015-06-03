@@ -51,7 +51,7 @@ msgid ""
 "WordPress, the %sGPL%s."
 msgstr ""
 "Polylang ist kostenlos und wird unter derselben Lizenz veröffentlicht wie "
-"Wordpress, die %sGPL%s."
+"WordPress, die %sGPL%s."
 
 # @ polylang
 #: admin/view-about.php:22
@@ -151,8 +151,8 @@ msgid "Admin language"
 msgstr "Adminsprache"
 
 #: admin/admin-filters.php:126
-msgid "Wordpress default"
-msgstr "Wordpress Standard-Einstellung"
+msgid "WordPress default"
+msgstr "WordPress Standard-Einstellung"
 
 # @ default
 # @ polylang
@@ -305,10 +305,10 @@ msgstr "Sprachdatei"
 # @ polylang
 #: admin/view-tab-lang.php:66
 msgid ""
-"Wordpress Locale for the language (for example: en_US). You will need to "
+"WordPress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
 msgstr ""
-"Wordpress Sprachdatei für die Sprache (beispielweise : de_DE). Du musst die ."
+"WordPress Sprachdatei für die Sprache (beispielweise : de_DE). Du musst die ."
 "mo-Datei für diese Sprache installieren."
 
 # @ polylang

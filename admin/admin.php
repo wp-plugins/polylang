@@ -40,7 +40,7 @@ class PLL_Admin extends PLL_Base {
 		// plugin i18n, only needed for backend
 		load_plugin_textdomain('polylang', false, basename(POLYLANG_DIR).'/languages');
 
-		// adds the link to the languages panel in the wordpress admin menu
+		// adds the link to the languages panel in the WordPress admin menu
 		add_action('admin_menu', array(&$this, 'add_menus'));
 
 		// setup js scripts and css styles
@@ -84,7 +84,7 @@ class PLL_Admin extends PLL_Base {
 	}
 
 	/*
-	 * adds the link to the languages panel in the wordpress admin menu
+	 * adds the link to the languages panel in the WordPress admin menu
 	 *
 	 * @since 0.1
 	 */
@@ -102,7 +102,7 @@ class PLL_Admin extends PLL_Base {
 		$screen = get_current_screen();
 		if (empty($screen))
 			return;
-			
+
 		$suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
 
 		// for each script:
@@ -217,21 +217,21 @@ class PLL_Admin extends PLL_Base {
 		else
 			do_action('pll_no_language_defined'); // to load overriden textdomains
 	}
-	
+
 	/*
 	 * avoids parsing a tax query when all languages are requested
 	 * fixes https://wordpress.org/support/topic/notice-undefined-offset-0-in-wp-includesqueryphp-on-line-3877 introduced in WP 4.1
 	 * @see the suggestion of @boonebgorges, https://core.trac.wordpress.org/ticket/31246
-	 * 
+	 *
 	 * @since 1.6.5
-	 * 
+	 *
 	 * @param array $qvars
 	 * @return array
 	 */
 	public function request($qvars) {
 			if (isset($qvars['lang']) && 'all' === $qvars['lang'])
 				unset($qvars['lang']);
-				
+
 			return $qvars;
 	}
 

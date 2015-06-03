@@ -123,7 +123,7 @@ class PLL_Admin_Filters extends PLL_Filters {
 			__('Admin language', 'polylang'),
 			$dropdown->walk(
 				array_merge(
-					array((object) array('locale' => 0, 'name' => __('Wordpress default', 'polylang'))),
+					array((object) array('locale' => 0, 'name' => __('WordPress default', 'polylang'))),
 					$this->model->get_languages_list()
 				),
 				array(

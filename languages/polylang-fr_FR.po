@@ -151,7 +151,7 @@ msgstr "Langue pour l&rsquo;interface d&rsquo;administration"
 
 # @ polylang
 #: admin/admin-filters.php:126
-msgid "Wordpress default"
+msgid "WordPress default"
 msgstr "Langue par défaut de WordPress"
 
 # @ polylang
@@ -303,10 +303,10 @@ msgstr "Code local"
 # @ polylang
 #: admin/view-tab-lang.php:66
 msgid ""
-"Wordpress Locale for the language (for example: en_US). You will need to "
+"WordPress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
 msgstr ""
-"Code local utilisé par Wordpress pour la langue (par exemple&nbsp;: fr_FR). "
+"Code local utilisé par WordPress pour la langue (par exemple&nbsp;: fr_FR). "
 "Vous aurez besoin d&rsquo;installer les fichiers .mo correspondant."
 
 # @ polylang

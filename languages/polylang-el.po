@@ -53,7 +53,7 @@ msgid ""
 "WordPress, the %sGPL%s."
 msgstr ""
 "Το Polylang είναι δωρεάν και διανέμεται κάτω από την ίδια άδεια χρήσης όπως "
-"και το Wordpress, την %sΓενική Άδεια Χρήσης - GPL%s."
+"και το WordPress, την %sΓενική Άδεια Χρήσης - GPL%s."
 
 # @ polylang
 #: admin/view-about.php:22
@@ -151,8 +151,8 @@ msgid "Admin language"
 msgstr "Γλώσσα διαχείρισης"
 
 #: admin/admin-filters.php:126
-msgid "Wordpress default"
-msgstr "Προκαθορισμένο σε Wordpress"
+msgid "WordPress default"
+msgstr "Προκαθορισμένο σε WordPress"
 
 # @ default
 # @ polylang
@@ -183,7 +183,7 @@ msgstr "Μετάφραση συμβολοσειρών"
 # @ polylang
 #: admin/admin-model.php:244
 msgid "Enter a valid WordPress locale"
-msgstr "Εισάγετε μια έγκυρη τοπικοποίηση Wordpress"
+msgstr "Εισάγετε μια έγκυρη τοπικοποίηση WordPress"
 
 # @ polylang
 #: admin/admin-model.php:252
@@ -201,7 +201,7 @@ msgid ""
 "The language was created, but the WordPress language file was not "
 "downloaded. Please install it manually."
 msgstr ""
-"Η γλώσσα δημιουργήθηκε αλλά το αρχείο γλώσσας του Wordpress δεν έχει "
+"Η γλώσσα δημιουργήθηκε αλλά το αρχείο γλώσσας του WordPress δεν έχει "
 "κατέβει. Παρακαλώ εγκαταστήστε το εσείς."
 
 # @ polylang
@@ -304,10 +304,10 @@ msgstr "Τοπικοποίηση"
 # @ polylang
 #: admin/view-tab-lang.php:66
 msgid ""
-"Wordpress Locale for the language (for example: en_US). You will need to "
+"WordPress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
 msgstr ""
-"Τοπικοποίηση Wordpress για την γλώσσα (πχ: en_US). Θα χρειαστεί να "
+"Τοπικοποίηση WordPress για την γλώσσα (πχ: en_US). Θα χρειαστεί να "
 "εγκαταστήσετε το αρχείο .mo για αυτή την γλώσσα."
 
 # @ polylang

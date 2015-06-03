@@ -45,6 +45,9 @@ class PLL_Admin_Filters_Term {
 		add_action('wp_ajax_term_lang_choice', array(&$this,'term_lang_choice'));
 		add_action('wp_ajax_pll_terms_not_translated', array(&$this,'ajax_terms_not_translated'));
 
+		// adds cache domain when querying terms
+		add_filter('get_terms_args', array(&$this, 'get_terms_args'), 10, 2);
+
 		// filters categories and post tags by language
 		add_filter('terms_clauses', array(&$this, 'terms_clauses'), 10, 3);
 
@@ -521,52 +524,51 @@ class PLL_Admin_Filters_Term {
 		wp_die(json_encode($return));
 	}
 
+
 	/*
-	 * filters categories and post tags by language when needed on admin side
+	 * get the language(s) to filter get_terms
 	 *
-	 * @since 0.5
+	 * @since 1.7.6
 	 *
-	 * @param array $clauses list of sql clauses
-	 * @param array $taxonomies list of taxonomies
+	 * @param array $taxonomies queried taxonomies
 	 * @param array $args get_terms arguments
-	 * @return array modified sql clauses
+	 * @return object|string|bool the language(s) to use in the filter, false otherwise
 	 */
-	public function terms_clauses($clauses, $taxonomies, $args) {
+	protected function get_queried_language($taxonomies, $args) {
 		// does nothing except on taxonomies which are filterable
-		foreach ($taxonomies as $tax)
-			if (!$this->model->is_translated_taxonomy($tax))
-				return $clauses;
+		if (!$this->model->is_translated_taxonomy($taxonomies))
+			return false;
+
+		// if get_terms is queried with a 'lang' parameter
+		if (!empty($args['lang']))
+			return $args['lang'];
+
+		// do not filter 'get_terms_not_translated'
+		if (!empty($args['pll_get_terms_not_translated']))
+			return false;
 
 		if (function_exists('get_current_screen'))
 			$screen = get_current_screen(); // since WP 3.1, may not be available the first time(s) get_terms is called
 
 		// don't filter nav menus on nav menus screen
 		if (isset($screen) && 'nav-menus' == $screen->base && in_array('nav_menu', $taxonomies))
-			return $clauses;
-
-		// if get_terms is queried with a 'lang' parameter
-		if (!empty($args['lang']))
-			return $this->model->terms_clauses($clauses, $args['lang']);
+			return false;
 
 		// does nothing in Languages and dasboard admin panels
 		if (isset($screen) && in_array($screen->base, array('toplevel_page_mlang', 'dashboard')))
-			return $clauses;
-
-		// do not filter 'get_terms_not_translated'
-		if (!empty($args['pll_get_terms_not_translated']))
-			return $clauses;
+			return false;
 
 		// admin language filter for ajax paginate_links in taxonomies metabox in nav menus panel
 		if (!empty($_POST['action']) && !empty($this->curlang) && 'menu-get-metabox' == $_POST['action'])
-			return $this->model->terms_clauses($clauses, $this->curlang);
+			return $this->curlang;
 
 		// The only ajax response I want to deal with is when changing the language in post metabox
 		if (isset($_POST['action']) && !in_array($_POST['action'], array('post_lang_choice', 'term_lang_choice', 'get-tagcloud')))
-			return $clauses;
+			return false;
 
 		// I only want to filter the parent dropdown list when editing a term in a hierarchical taxonomy
 		if (isset($_POST['action']) && $_POST['action'] == 'term_lang_choice' && !(isset($args['class']) || isset($args['unit'])))
-			return $clauses;
+			return false;
 
 		// ajax response for changing the language in the post metabox (or in the edit-tags panels)
 		if (isset($_POST['lang']))
@@ -606,8 +608,40 @@ class PLL_Admin_Filters_Term {
 		elseif (isset($screen) && ($screen->base == 'post' || ($screen->base == 'edit-tags' && isset($args['class']))))
 			$lang = $this->pref_lang;
 
-		// adds our clauses to filter by current language
-		return !empty($lang) ? $this->model->terms_clauses($clauses, $lang) : $clauses;
+		return empty($lang) ? false : $lang;
+	}
+
+	/*
+	 * adds language dependent cache domain when querying terms
+	 * useful as the 'lang' parameter is not included in cache key by WordPress
+	 *
+	 * @since 1.3
+	 *
+	 * @param array $args
+	 * @param array $taxonomies
+	 * @return array modified arguments
+	 */
+	public function get_terms_args($args, $taxonomies) {
+		if ($lang = $this->get_queried_language($taxonomies, $args)) {
+			$key = '_' . (is_array($lang) ? implode(',', $lang) : $this->model->get_language($lang)->slug);
+			$args['cache_domain'] = empty($args['cache_domain']) ? 'pll' . $key : $args['cache_domain'] . $key;
+		}
+		return $args;
+	}
+
+	/*
+	 * filters categories and post tags by language(s) when needed on admin side
+	 *
+	 * @since 0.5
+	 *
+	 * @param array $clauses list of sql clauses
+	 * @param array $taxonomies list of taxonomies
+	 * @param array $args get_terms arguments
+	 * @return array modified sql clauses
+	 */
+	public function terms_clauses($clauses, $taxonomies, $args) {
+		$lang = $this->get_queried_language($taxonomies, $args);
+		return !empty($lang) ? $this->model->terms_clauses($clauses, $lang) : $clauses; // adds our clauses to filter by current language
 	}
 
 	/*

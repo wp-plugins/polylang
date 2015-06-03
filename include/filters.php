@@ -26,9 +26,6 @@ class PLL_Filters {
 
 		// filters the get_pages function according to the current language
 		add_filter('get_pages', array(&$this, 'get_pages'), 10, 2);
-
-		// adds cache domain when querying terms
-		add_filter('get_terms_args', array(&$this, 'get_terms_args'));
 	}
 
 	/*
@@ -123,25 +120,5 @@ class PLL_Filters {
 
 		$once = false; // in case get_pages is called another time
 		return $pages;
-	}
-
-	/*
-	 * adds language dependent cache domain when querying terms
-	 * useful as the 'lang' parameter is not included in cache key by WordPress
-	 *
-	 * @since 1.3
-	 */
-	public function get_terms_args($args) {
-		if (!empty($args['lang']))
-			$lang = $args['lang'];
-		elseif (!empty($this->curlang))
-			$lang = $this->curlang->slug;
-
-		if (isset($lang)) {
-			$key = '_' . (is_array($lang) ? implode(',', $lang) : $lang);
-			$args['cache_domain'] = empty($args['cache_domain']) ? 'pll' . $key : $args['cache_domain'] . $key;
-		}
-
-		return $args;
 	}
 }

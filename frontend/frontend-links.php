@@ -76,7 +76,7 @@ class PLL_Frontend_Links extends PLL_Links {
 		}
 
 		// redirects to canonical url
-		add_action('wp', array(&$this, 'check_canonical_url'), 10, 0); // before Wordpress redirect_canonical, avoid passing the WP object
+		add_action('wp', array(&$this, 'check_canonical_url'), 10, 0); // before WordPress redirect_canonical, avoid passing the WP object
 	}
 
 	/*
