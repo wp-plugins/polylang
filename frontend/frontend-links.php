@@ -90,7 +90,7 @@ class PLL_Frontend_Links extends PLL_Links {
 	public function archive_link($link) {
 		return $this->links_model->add_language_to_link($link, $this->curlang);
 	}
-	
+
 	/*
 	 * modifies the post type archive links to add the language parameter
 	 * only if the post type is translated
@@ -104,7 +104,7 @@ class PLL_Frontend_Links extends PLL_Links {
 	public function post_type_archive_link($link, $post_type) {
 		return $this->model->is_translated_post_type($post_type) ? $this->links_model->add_language_to_link($link, $this->curlang) : $link;
 	}
-	
+
 	/*
 	 * modifies post & page links
 	 * caches the result
@@ -123,7 +123,7 @@ class PLL_Frontend_Links extends PLL_Links {
 		}
 		return $_link;
 	}
-	
+
 	/*
 	 * modifies page links
 	 * caches the result
@@ -263,7 +263,7 @@ class PLL_Frontend_Links extends PLL_Links {
 				parse_str($query, $query_vars);
 				$url = add_query_arg($query_vars, $url);
 			}
-			
+
 			return $url;
 		}
 
@@ -273,13 +273,13 @@ class PLL_Frontend_Links extends PLL_Links {
 
 		return $redirect_url;
 	}
-	
+
 	/*
 	 * checks if a file is in a directory or its subdirectories
 	 * the comparison takes care of Windows on which WP can mix \ and /
-	 * 
+	 *
 	 * @since 1.7
-	 *  
+	 *
 	 * @param string $file
 	 * @param string $dir
 	 * @return bool
@@ -354,7 +354,7 @@ class PLL_Frontend_Links extends PLL_Links {
 		global $wp_query;
 		$qv = $wp_query->query_vars;
 		$hide = $this->options['default_lang'] == $language->slug && $this->options['hide_default'];
-		
+
 		// make sure that we have the queried object
 		// see https://wordpress.org/support/topic/patch-for-fixing-a-notice
 		$queried_object_id = $wp_query->get_queried_object_id();
@@ -373,7 +373,7 @@ class PLL_Frontend_Links extends PLL_Links {
 
 		elseif (is_search()) {
 			$url = $this->get_archive_url($language);
-			
+
 			// special case for search filtered by translated taxonomies: taxonomy terms are translated in the translation url
 			if (!empty($wp_query->tax_query->queries)) {
 
@@ -394,7 +394,7 @@ class PLL_Frontend_Links extends PLL_Links {
 				}
 			}
 		}
-		
+
 		// translated taxonomy
 		// take care that is_tax() is false for categories and tags
 		elseif ((is_category() || is_tag() || is_tax()) && ($term = get_queried_object()) && $this->model->is_translated_taxonomy($term->taxonomy)) {
@@ -410,8 +410,14 @@ class PLL_Frontend_Links extends PLL_Links {
 			}
 		}
 
+		// post type archive
+		elseif (is_post_type_archive()) {
+			if ($this->model->is_translated_post_type($qv['post_type']) && $this->model->count_posts($language, array('post_type' => $qv['post_type'])))
+				$url = $this->get_archive_url($language);
+		}
+
 		elseif (is_archive()) {
-			$keys = array('post_type', 'm', 'year', 'monthnum', 'day', 'author', 'author_name');
+			$keys = array('m', 'year', 'monthnum', 'day', 'author', 'author_name');
 			$keys = array_merge($keys, $this->model->get_filtered_taxonomies_query_vars());
 
 			// check if there are existing translations before creating the url
@@ -530,14 +536,14 @@ class PLL_Frontend_Links extends PLL_Links {
 		else {
 			// first get the canonical url evaluated by WP
 			$redirect_url = (!$redirect_url = redirect_canonical($requested_url, false)) ? $requested_url : $redirect_url;
-			
+
 			// then get the right language code in url
 			$redirect_url = $this->options['force_lang'] ?
 				$this->links_model->switch_language_in_link($redirect_url, $language) :
 				$this->links_model->remove_language_from_link($redirect_url); // works only for default permalinks
 		}
 
-		// allow plugins to change the redirection or even cancel it by setting $redirect_url to false 
+		// allow plugins to change the redirection or even cancel it by setting $redirect_url to false
 		$redirect_url = apply_filters('pll_check_canonical_url', $redirect_url, $language);
 
 		// the language is not correctly set so let's redirect to the correct url for this object

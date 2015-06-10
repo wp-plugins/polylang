@@ -106,6 +106,10 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 == Changelog ==
 
+= 1.7.7 =
+
+* fix: make sure that the language switcher never finds translations for untranslated post types (could occur when the post type was previously translated)
+
 = 1.7.6 (2015-06-10) =
 
 * Add Galician translation contributed by [Toño Calo](http://fedellar.wordpress.com/)
