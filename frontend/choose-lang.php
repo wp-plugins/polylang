@@ -188,7 +188,7 @@ abstract class PLL_Choose_Lang {
 	 */
 	protected function set_home_query_var() {
 		if ($this->page_on_front)
-			set_query_var('page_id', $this->curlang->page_on_front);
+			set_query_var('page_id', $this->page_on_front);
 		else
 			$this->set_lang_query_var($GLOBALS['wp_query'], $this->curlang);
 	}
@@ -221,14 +221,10 @@ abstract class PLL_Choose_Lang {
 		// redirect the language page to the homepage when using a static front page
 		if ($this->options['redirect_lang'] && $this->page_on_front && (count($query->query) == 1 || (is_paged() && count($query->query) == 2)) && is_tax('language')) {
 			$this->set_language($this->model->get_language(get_query_var('lang')));
-			if ($page_id = $this->curlang->page_on_front) {
-				$query->set('page_id', $page_id);
-				$query->is_singular = $query->is_page = true;
-				$query->is_archive = $query->is_tax = false;
-				unset($query->queried_object); // reset queried object
-			}
-			// else : the static front page is not translated
-			// let's things as is and the list of posts in the current language will be displayed
+			$query->set('page_id', $this->page_on_front);
+			$query->is_singular = $query->is_page = true;
+			$query->is_archive = $query->is_tax = false;
+			unset($query->query_vars['lang'], $query->queried_object); // reset queried object
 		}
 
 		// takes care of paged front page

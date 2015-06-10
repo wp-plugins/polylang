@@ -51,7 +51,7 @@ msgid ""
 "WordPress, the %sGPL%s."
 msgstr ""
 "Polylang is gratis te gebruiken en is vrijgegeven onder dezelfde licentie "
-"als Wordpress, de %sGPL%s."
+"als WordPress, de %sGPL%s."
 
 # @ polylang
 #: admin/view-about.php:22
@@ -149,7 +149,7 @@ msgid "Admin language"
 msgstr "Admin taal"
 
 #: admin/admin-filters.php:126
-msgid "Wordpress default"
+msgid "WordPress default"
 msgstr ""
 
 # @ default
@@ -181,7 +181,7 @@ msgstr "Tekstvertaling"
 # @ polylang
 #: admin/admin-model.php:244
 msgid "Enter a valid WordPress locale"
-msgstr "Voer een geldige Wordpress lokaal in"
+msgstr "Voer een geldige WordPress lokaal in"
 
 # @ polylang
 #: admin/admin-model.php:252
@@ -199,7 +199,7 @@ msgid ""
 "The language was created, but the WordPress language file was not "
 "downloaded. Please install it manually."
 msgstr ""
-"De taal was gecreëerd, maar het Wordpress taalbestand was niet gedownload. "
+"De taal was gecreëerd, maar het WordPress taalbestand was niet gedownload. "
 "Handmatige installatie is noodzakelijk."
 
 # @ polylang
@@ -300,10 +300,10 @@ msgstr "Locale"
 # @ polylang
 #: admin/view-tab-lang.php:66
 msgid ""
-"Wordpress Locale for the language (for example: en_US). You will need to "
+"WordPress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
 msgstr ""
-"Wordpress Locale voor de taal (bv.: nl_NL). Installeer het .mo bestand voor "
+"WordPress Locale voor de taal (bv.: nl_NL). Installeer het .mo bestand voor "
 "deze taal."
 
 # @ polylang
@@ -497,7 +497,7 @@ msgstr ""
 #: install/install.php:24
 #, php-format
 msgid "You are using WordPress %s. Polylang requires at least WordPress %s."
-msgstr "Je gebruikt Wordpress %s. Polylang vereist tenminste Wordpress %s."
+msgstr "Je gebruikt WordPress %s. Polylang vereist tenminste WordPress %s."
 
 # @ polylang
 #: install/upgrade.php:76

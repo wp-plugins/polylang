@@ -12,7 +12,7 @@ class PLL_Install extends PLL_Install_Base {
 	 *
 	 * @since 0.1
 	 */
-	public function activate() {
+	public function activate($networkwide) {
 		global $wp_version;
 
 		Polylang::define_constants();
@@ -27,7 +27,7 @@ class PLL_Install extends PLL_Install_Base {
 				)
 			));
 
-		$this->do_for_all_blogs('activate');
+		$this->do_for_all_blogs('activate', $networkwide);
 	}
 
 	/*
@@ -35,7 +35,7 @@ class PLL_Install extends PLL_Install_Base {
 	 *
 	 * @since 0.5
 	 */
-	protected function _activate() {
+	protected function _activate($networkwide) {
 		global $polylang;
 
 		if ($options = get_option('polylang')) {
@@ -70,7 +70,10 @@ class PLL_Install extends PLL_Install_Base {
 		$polylang->model = new PLL_Admin_Model($options);
 		$polylang->links_model = $polylang->model->get_links_model();
 		do_action('pll_init');
-		flush_rewrite_rules();
+
+		// FIXME don't flush rewrite rules at network activation. See #32471
+		if (!$networkwide)
+			flush_rewrite_rules();
 	}
 
 	/*
@@ -78,7 +81,9 @@ class PLL_Install extends PLL_Install_Base {
 	 *
 	 * @since 0.5
 	 */
-	protected function _deactivate() {
-		flush_rewrite_rules();
+	protected function _deactivate($networkwide) {
+		// FIXME don't flush rewrite rules at network deactivation. See #32471
+		if (!$networkwide)
+			flush_rewrite_rules();
 	}
 }

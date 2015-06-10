@@ -149,7 +149,7 @@ msgstr "管理語言"
 
 # @ polylang
 #: admin/admin-filters.php:126
-msgid "Wordpress default"
+msgid "WordPress default"
 msgstr "WordPress 預設"
 
 # @ polylang
@@ -297,7 +297,7 @@ msgstr "語言環境"
 # @ polylang
 #: admin/view-tab-lang.php:66
 msgid ""
-"Wordpress Locale for the language (for example: en_US). You will need to "
+"WordPress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
 msgstr "WordPress 語言環境設定(範例：en_US)。你必須安裝對應此語言的 .mo 檔案。"
 

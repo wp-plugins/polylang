@@ -46,7 +46,7 @@ msgid ""
 "Polylang is free of charge and is released under the same license as "
 "WordPress, the %sGPL%s."
 msgstr ""
-"Polylang er gratis og frigivet under den samme licens som Wordpress, %sGPL%s."
+"Polylang er gratis og frigivet under den samme licens som WordPress, %sGPL%s."
 
 #: admin/view-about.php:22
 #, php-format
@@ -128,8 +128,8 @@ msgid "Admin language"
 msgstr "Administrator sprog"
 
 #: admin/admin-filters.php:126
-msgid "Wordpress default"
-msgstr "Wordpress standard"
+msgid "WordPress default"
+msgstr "WordPress standard"
 
 #: admin/admin.php:167 admin/settings.php:102
 msgid "Settings"
@@ -153,7 +153,7 @@ msgstr "Strings oversættelse"
 
 #: admin/admin-model.php:244
 msgid "Enter a valid WordPress locale"
-msgstr "Indtast en gyldig Wordpress locale"
+msgstr "Indtast en gyldig WordPress locale"
 
 #: admin/admin-model.php:252
 msgid "The language code must be unique"
@@ -258,10 +258,10 @@ msgstr "Landestandard"
 
 #: admin/view-tab-lang.php:66
 msgid ""
-"Wordpress Locale for the language (for example: en_US). You will need to "
+"WordPress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
 msgstr ""
-"Wordpress Landestandarden for sproget (for eksempel: da_DK). Du skal "
+"WordPress Landestandarden for sproget (for eksempel: da_DK). Du skal "
 "installere .mo filen til dette sprog."
 
 #: admin/view-tab-lang.php:70

@@ -20,7 +20,7 @@ else {
 		$translation = 0;
 		if (isset($term_id) && ($translation_id = $this->model->get_translation('term', $term_id, $language)) && $translation_id != $term_id)
 			$translation = get_term($translation_id, $taxonomy);
-		if (isset($_REQUEST['from_tag']) && ($translation_id = $this->model->get_term((int) $_REQUEST['from_tag'], $language)))
+		if (isset($_REQUEST['from_tag']) && ($translation_id = $this->model->get_term((int) $_REQUEST['from_tag'], $language)) && !$this->model->get_translation('term', $translation_id, $lang))
 			$translation = get_term($translation_id, $taxonomy);
 
 		if (isset($term_id)) { // do not display the add new link in add term form ($term_id not set !!!) {
@@ -37,7 +37,7 @@ else {
 
 		<tr>
 			<td class = "pll-language-column">
-				<span class = "pll-translation-flag"><?php echo $language->flag; ?></span><?php 
+				<span class = "pll-translation-flag"><?php echo $language->flag; ?></span><?php
 				if (isset($term_id)) { ?>
 					<span class = "pll-language-name"><?php echo esc_html($language->name); ?></span><?php
 				} ?>

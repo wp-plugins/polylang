@@ -128,8 +128,8 @@ msgid "Admin language"
 msgstr "Admin taal"
 
 #: admin/admin-filters.php:126
-msgid "Wordpress default"
-msgstr "Wordpress default"
+msgid "WordPress default"
+msgstr "WordPress default"
 
 #: admin/admin.php:167 admin/settings.php:102
 msgid "Settings"
@@ -259,10 +259,10 @@ msgstr "Locale"
 
 #: admin/view-tab-lang.php:66
 msgid ""
-"Wordpress Locale for the language (for example: en_US). You will need to "
+"WordPress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
 msgstr ""
-"Wordpress Locale vir die taal (byvoorbeeld: af_ZA). Jy gaan nodig hê om die ."
+"WordPress Locale vir die taal (byvoorbeeld: af_ZA). Jy gaan nodig hê om die ."
 "mo leêr te installeer vir die taal."
 
 #: admin/view-tab-lang.php:70

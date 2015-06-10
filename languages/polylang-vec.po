@@ -151,8 +151,8 @@ msgstr "Łéngua de l'aministrador"
 
 # @ polylang
 #: admin/admin-filters.php:126
-msgid "Wordpress default"
-msgstr "Stàndard de Wordpress"
+msgid "WordPress default"
+msgstr "Stàndard de WordPress"
 
 # @ polylang
 #: admin/admin.php:167 admin/settings.php:102
@@ -302,7 +302,7 @@ msgstr "Inpostaçion locałi"
 # @ polylang
 #: admin/view-tab-lang.php:66
 msgid ""
-"Wordpress Locale for the language (for example: en_US). You will need to "
+"WordPress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
 msgstr ""
 "Inpostaçion locałi par ła łéngua (par exenpio: en_US). Par sta łéngua cuà "

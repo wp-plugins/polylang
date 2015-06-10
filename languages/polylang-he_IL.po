@@ -147,7 +147,7 @@ msgid "Admin language"
 msgstr "שפת פאנל ניהול"
 
 #: admin/admin-filters.php:126
-msgid "Wordpress default"
+msgid "WordPress default"
 msgstr "ברירת מחדל"
 
 # @ default
@@ -298,7 +298,7 @@ msgstr "מיקום"
 # @ polylang
 #: admin/view-tab-lang.php:66
 msgid ""
-"Wordpress Locale for the language (for example: en_US). You will need to "
+"WordPress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
 msgstr ""
 "קבצי שפה של וורדפרס (לדוגמא he_IL ). חייב להיות קובץ .MO בשביל הגדרת שפה"

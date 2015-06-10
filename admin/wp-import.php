@@ -6,6 +6,7 @@
  * @since 1.2
  */
 class PLL_WP_Import extends WP_Import {
+	public $post_translations = array();
 
 	/*
 	 * overrides WP_Import::process_terms to remap terms translations
@@ -13,6 +14,8 @@ class PLL_WP_Import extends WP_Import {
 	 * @since 1.2
 	 */
 	function process_terms() {
+		$term_translations = array();
+
 		// store this for future usage as parent function unsets $this->terms
 		foreach ($this->terms as $term) {
 			if ('post_translations' == $term['term_taxonomy'])
@@ -44,6 +47,8 @@ class PLL_WP_Import extends WP_Import {
 	 * @since 1.2
 	 */
 	function process_posts() {
+		$menu_items = $mo_posts = array();
+
 		// store this for future usage as parent function unset $this->posts
 		foreach ($this->posts as $post) {
 			if ('nav_menu_item' == $post['post_type'])

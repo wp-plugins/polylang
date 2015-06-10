@@ -151,7 +151,7 @@ msgstr "Vadības valoda"
 
 # @ polylang
 #: admin/admin-filters.php:126
-msgid "Wordpress default"
+msgid "WordPress default"
 msgstr "WordPress noklusējums"
 
 # @ default
@@ -302,7 +302,7 @@ msgstr "Lokāle"
 # @ polylang
 #: admin/view-tab-lang.php:66
 msgid ""
-"Wordpress Locale for the language (for example: en_US). You will need to "
+"WordPress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
 msgstr ""
 "WordPress valodas lokāle šai valodai (piemēram: en_US). Jums nāksies "

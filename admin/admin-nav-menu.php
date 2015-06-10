@@ -44,7 +44,8 @@ class PLL_Admin_Nav_Menu {
 
 		// translation of menus based on chosen locations
 		add_filter('pre_update_option_theme_mods_' . $this->theme, array($this, 'update_nav_menu_locations'));
-		add_filter('theme_mod_nav_menu_locations', array($this, 'nav_menu_locations'), 20);
+		add_filter('theme_mod_nav_menu_locations', array($this, 'nav_menu_locations'), 20);			
+		add_action('delete_nav_menu', array(&$this, 'delete_nav_menu'));
 
 		// filter _wp_auto_add_pages_to_menu by language
 		add_action('transition_post_status', array(&$this, 'auto_add_pages_to_menu'), 5, 3); // before _wp_auto_add_pages_to_menu
@@ -252,7 +253,7 @@ class PLL_Admin_Nav_Menu {
 		if (is_array($menus)) {
 			foreach ($menus as $loc => $menu) {
 				foreach ($this->model->get_languages_list() as $lang) {
-					if (pll_default_language() != $lang->slug && !empty($this->options['nav_menus'][$this->theme][$loc][$lang->slug]))
+					if (pll_default_language() != $lang->slug && !empty($this->options['nav_menus'][$this->theme][$loc][$lang->slug]) && term_exists($this->options['nav_menus'][$this->theme][$loc][$lang->slug], 'nav_menu'))
 						$menus[$loc . '___' . $lang->slug] = $this->options['nav_menus'][$this->theme][$loc][$lang->slug];
 				}
 			}
@@ -261,6 +262,26 @@ class PLL_Admin_Nav_Menu {
 		return $menus;
 	}
 
+	/*
+	 * removes the nav menu term_id from the locations stored in Polylang options when a nav menu is deleted
+	 *
+	 * @since 1.7.3
+	 *
+	 * @param int nav menu id
+	 */
+	function delete_nav_menu($term_id) {
+		foreach ($this->options['nav_menus'] as $theme => $locations) {
+			foreach ($locations as $loc => $languages)  {
+				foreach ($languages as $lang => $menu_id) {
+					if ($menu_id === $term_id)
+						unset($this->options['nav_menus'][$theme][$loc][$lang]);
+				}
+			}
+		}
+		
+		update_option('polylang', $this->options);
+	}
+	
 	/*
 	 * filters _wp_auto_add_pages_to_menu by language
 	 *

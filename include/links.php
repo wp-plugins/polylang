@@ -61,8 +61,8 @@ class PLL_Links {
 	 * @return string modified post link
 	 */
 	public function post_link($link, $post) {
-		// /!\ when post_status is not "publish", WP does not use pretty permalinks
-		return $post->post_status != 'publish' ? $link : $this->links_model->add_language_to_link($link, $this->model->get_post_language($post->ID));
+		// /!\ WP does not use pretty permalinks for preview
+		return ($query = parse_url($link, PHP_URL_QUERY)) && false !== strpos($query, 'p=') ? $link : $this->links_model->add_language_to_link($link, $this->model->get_post_language($post->ID));
 	}
 
 
@@ -76,10 +76,8 @@ class PLL_Links {
 	 * @return string modified post link
 	 */
 	public function _get_page_link($link, $post_id) {
-		$post = get_post($post_id);
-
-		// /!\ when post_status is not "publish", WP does not use pretty permalinks
-		return $post->post_status != 'publish' ? $link : $this->links_model->add_language_to_link($link, $this->model->get_post_language($post->ID));
+		// /!\ WP does not use pretty permalinks for preview
+		return ($query = parse_url($link, PHP_URL_QUERY)) && false !== strpos($query, 'page_id=') ? $link : $this->links_model->add_language_to_link($link, $this->model->get_post_language($post_id));
 	}
 
 	/*
@@ -105,8 +103,9 @@ class PLL_Links {
 	 * @return string modified post link
 	 */
 	public function post_type_link($link, $post) {
-		// /!\ when post_status is not "publish", WP does not use pretty permalinks
-		if ('publish' == $post->post_status && $this->model->is_translated_post_type($post->post_type)) {
+		// /!\ WP does not use pretty permalinks for preview
+		$query = parse_url($link, PHP_URL_QUERY);
+		if ((!$query || false === strpos($query, 'p=')) && $this->model->is_translated_post_type($post->post_type)) {
 			$lang = $this->model->get_post_language($post->ID);
 			$link = $this->options['force_lang'] ? $this->links_model->add_language_to_link($link, $lang) : $link;
 			$link = apply_filters('pll_post_type_link', $link, $lang, $post);

@@ -151,8 +151,8 @@ msgstr "Jezik Administratora"
 
 # @ polylang
 #: admin/admin-filters.php:126
-msgid "Wordpress default"
-msgstr "Podrazumevani (originalni) Wordpress (Wordpress default)"
+msgid "WordPress default"
+msgstr "Podrazumevani (originalni) WordPress (WordPress default)"
 
 # @ polylang
 #: admin/admin.php:167 admin/settings.php:102
@@ -301,10 +301,10 @@ msgstr "Lokalno"
 # @ polylang
 #: admin/view-tab-lang.php:66
 msgid ""
-"Wordpress Locale for the language (for example: en_US). You will need to "
+"WordPress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
 msgstr ""
-"Wordpress (lokalni) prostor za jezik (na primer: en_US ). Moraćete da "
+"WordPress (lokalni) prostor za jezik (na primer: en_US ). Moraćete da "
 "instalirate Mo datoteku za taj jezik"
 
 # @ polylang

@@ -149,7 +149,7 @@ msgstr "Admin språk"
 
 # @ polylang
 #: admin/admin-filters.php:126
-msgid "Wordpress default"
+msgid "WordPress default"
 msgstr "WordPress standard"
 
 # @ default
@@ -300,10 +300,10 @@ msgstr "Locale"
 # @ polylang
 #: admin/view-tab-lang.php:66
 msgid ""
-"Wordpress Locale for the language (for example: en_US). You will need to "
+"WordPress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
 msgstr ""
-"Wordpress Locale for språket (for eksempel: en_US). Du må installere .mo "
+"WordPress Locale for språket (for eksempel: en_US). Du må installere .mo "
 "filen for dette språket."
 
 # @ polylang
@@ -490,7 +490,7 @@ msgstr "Tittel:"
 #. translators: plugin header field 'Description'
 #: polylang.php:0
 msgid "Adds multilingual capability to WordPress"
-msgstr "Legger til flerspråklig funksjonalitet til Wordpress"
+msgstr "Legger til flerspråklig funksjonalitet til WordPress"
 
 # @ polylang
 #: install/install.php:24

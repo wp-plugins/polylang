@@ -25,6 +25,7 @@ class PLL_Frontend_Links extends PLL_Links {
 		$this->cache = new PLL_Cache();
 
 		add_action('pll_language_defined', array(&$this, 'pll_language_defined'));
+		add_action('pll_language_defined', array(&$this, 'init_page_on_front_cache')); // translate page on front and page for posts
 	}
 
 	/*
@@ -47,8 +48,11 @@ class PLL_Frontend_Links extends PLL_Links {
 	 */
 	public function pll_language_defined() {
 		// rewrites author and date links to filter them by language
-		foreach (array('feed_link', 'author_link', 'post_type_archive_link', 'search_link', 'year_link', 'month_link', 'day_link') as $filter)
+		foreach (array('feed_link', 'author_link', 'search_link', 'year_link', 'month_link', 'day_link') as $filter)
 			add_filter($filter, array(&$this, 'archive_link'), 20);
+
+		// rewrites post types archives links to filter them by language
+		add_filter('post_type_archive_link', array(&$this, 'post_type_archive_link'), 20, 2);
 
 		// modifies the page link in case the front page is not in the default language
 		add_filter('page_link', array(&$this, 'page_link'), 20, 2);
@@ -72,7 +76,7 @@ class PLL_Frontend_Links extends PLL_Links {
 		}
 
 		// redirects to canonical url
-		add_action('wp', array(&$this, 'check_canonical_url'), 10, 0); // before Wordpress redirect_canonical, avoid passing the WP object
+		add_action('wp', array(&$this, 'check_canonical_url'), 10, 0); // before WordPress redirect_canonical, avoid passing the WP object
 	}
 
 	/*
@@ -85,6 +89,20 @@ class PLL_Frontend_Links extends PLL_Links {
 	 */
 	public function archive_link($link) {
 		return $this->links_model->add_language_to_link($link, $this->curlang);
+	}
+	
+	/*
+	 * modifies the post type archive links to add the language parameter
+	 * only if the post type is translated
+	 *
+	 * @since 1.7.6
+	 *
+	 * @param string $link
+	 * @param string $post_type
+	 * @return string modified link
+	 */
+	public function post_type_archive_link($link, $post_type) {
+		return $this->model->is_translated_post_type($post_type) ? $this->links_model->add_language_to_link($link, $this->curlang) : $link;
 	}
 	
 	/*
@@ -200,7 +218,7 @@ class PLL_Frontend_Links extends PLL_Links {
 	 * @return string modified link
 	 */
 	public function page_link($link, $id) {
-		if ($this->page_on_front && ($lang = $this->model->get_post_language($id)) && $id == $lang->page_on_front)
+		if ($this->page_on_front && ($lang = $this->model->get_post_language($id)) && in_array($id, $this->model->get_translations('post', $this->page_on_front)))
 			return $lang->home_url;
 
 		return $link;
@@ -236,8 +254,17 @@ class PLL_Frontend_Links extends PLL_Links {
 	 */
 	public function redirect_canonical($redirect_url, $requested_url) {
 		global $wp_query;
-		if (is_page() && !is_feed() && isset($wp_query->queried_object) && $wp_query->queried_object->ID == $this->curlang->page_on_front) {
-			return is_paged() ? $this->links_model->add_paged_to_link($this->get_home_url(), $wp_query->query_vars['page']) : $this->get_home_url();
+		if (is_page() && !is_feed() && isset($wp_query->queried_object) && $wp_query->queried_object->ID == $this->page_on_front) {
+			$url = is_paged() ? $this->links_model->add_paged_to_link($this->get_home_url(), $wp_query->query_vars['page']) : $this->get_home_url();
+
+			// don't forget additional query vars
+			$query = parse_url($redirect_url, PHP_URL_QUERY);
+			if (!empty($query)) {
+				parse_str($query, $query_vars);
+				$url = add_query_arg($query_vars, $url);
+			}
+			
+			return $url;
 		}
 
 		// protect against chained redirects
@@ -342,7 +369,7 @@ class PLL_Frontend_Links extends PLL_Links {
 
 		// page
 		elseif (is_page() && ($id = $this->model->get_post($queried_object_id, $language)) && $this->current_user_can_read($id))
-			$url = $hide && $id == $language->page_on_front ? $this->links_model->home : get_page_link($id);
+			$url = $hide && $queried_object_id == $this->page_on_front ? $this->links_model->home : get_page_link($id);
 
 		elseif (is_search()) {
 			$url = $this->get_archive_url($language);
@@ -357,7 +384,8 @@ class PLL_Frontend_Links extends PLL_Links {
 						$terms = get_terms($tax->name, array('fields' => 'id=>slug')); // filtered by current language
 
 						foreach ($tax_query['terms'] as $slug) {
-							if ($term_id = $this->model->get_translation('term', array_search($slug, $terms), $language)) { // get the translated term_id
+							$term_id = array_search($slug, $terms); // what is the term_id corresponding to taxonomy term?
+							if ($term_id && $term_id = $this->model->get_translation('term', $term_id, $language)) { // get the translated term_id
 								$term = get_term($term_id, $tax->name);
 								$url = str_replace($slug, $term->slug, $url);
 							}
@@ -470,6 +498,10 @@ class PLL_Frontend_Links extends PLL_Links {
 		if (isset($_POST['wp_customize'], $_POST['customized']))
 			return;
 
+		// don't redirect if we are on a static front page
+		if ($this->options['redirect_lang'] && isset($this->page_on_front) && is_page($this->page_on_front))
+			return;
+
 		if (empty($requested_url))
 			$requested_url  = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
@@ -496,9 +528,13 @@ class PLL_Frontend_Links extends PLL_Links {
 			$redirect_url = $requested_url;
 		}
 		else {
+			// first get the canonical url evaluated by WP
+			$redirect_url = (!$redirect_url = redirect_canonical($requested_url, false)) ? $requested_url : $redirect_url;
+			
+			// then get the right language code in url
 			$redirect_url = $this->options['force_lang'] ?
-				$this->links_model->switch_language_in_link($requested_url, $language) :
-				$this->links_model->remove_language_from_link($requested_url);
+				$this->links_model->switch_language_in_link($redirect_url, $language) :
+				$this->links_model->remove_language_from_link($redirect_url); // works only for default permalinks
 		}
 
 		// allow plugins to change the redirection or even cancel it by setting $redirect_url to false 

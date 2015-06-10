@@ -154,8 +154,8 @@ msgstr "Bahasa untuk Admin"
 
 # @ polylang
 #: admin/admin-filters.php:126
-msgid "Wordpress default"
-msgstr "Setelan asli Wordpress"
+msgid "WordPress default"
+msgstr "Setelan asli WordPress"
 
 # @ polylang
 #: admin/admin.php:167 admin/settings.php:102
@@ -185,7 +185,7 @@ msgstr "Terjemahan string"
 # @ polylang
 #: admin/admin-model.php:244
 msgid "Enter a valid WordPress locale"
-msgstr "Masukkan lokala (locale) Wordpress yang valid."
+msgstr "Masukkan lokala (locale) WordPress yang valid."
 
 # @ polylang
 #: admin/admin-model.php:252
@@ -203,7 +203,7 @@ msgid ""
 "The language was created, but the WordPress language file was not "
 "downloaded. Please install it manually."
 msgstr ""
-"Bahasa telah dibuat, namun file bahasa untuk Wordpress belum terunduh. "
+"Bahasa telah dibuat, namun file bahasa untuk WordPress belum terunduh. "
 "Silahkan menginstalnya secara manual."
 
 # @ polylang
@@ -308,10 +308,10 @@ msgstr "Lokala <i>(locale)</i>"
 # @ polylang
 #: admin/view-tab-lang.php:66
 msgid ""
-"Wordpress Locale for the language (for example: en_US). You will need to "
+"WordPress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
 msgstr ""
-"Lokala Wordpress untuk bahasa tersebut (contohnya: id_ID). Anda harus "
+"Lokala WordPress untuk bahasa tersebut (contohnya: id_ID). Anda harus "
 "menginstal file .mo untuk bahasa ini."
 
 # @ polylang
@@ -500,7 +500,7 @@ msgstr "Judul:"
 #. translators: plugin header field 'Description'
 #: polylang.php:0
 msgid "Adds multilingual capability to WordPress"
-msgstr "Tambahkan kapabilitas multi-bahasa ke Wordpress"
+msgstr "Tambahkan kapabilitas multi-bahasa ke WordPress"
 
 # @ polylang
 #: install/install.php:24
