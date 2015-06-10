@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, international, localization
 Requires at least: 3.8
 Tested up to: 4.2
-Stable tag: 1.7.5
+Stable tag: 1.7.6
 License: GPLv2 or later
 
 Making WordPress multilingual
