@@ -121,11 +121,11 @@ class PLL_Switcher {
 		);
 		$args = wp_parse_args($args, $defaults);
 		$args = apply_filters('pll_the_languages_args', $args);
-		
+
 		// prevents showing empty options in dropdown
 		if ($args['dropdown'])
 			$args['show_names'] = 1;
-		
+
 		$elements = $this->get_elements($links, $args);
 
 		if ($args['raw'])
@@ -157,7 +157,7 @@ class PLL_Switcher {
 					}
 					//]]>
 				</script>',
-				'urls_' . preg_replace('#[^a-zA-Z0-9]#', '', $args['dropdown']), wp_json_encode($urls), esc_js($args['name'])
+				'urls_' . preg_replace('#[^a-zA-Z0-9]#', '', $args['dropdown']), json_encode($urls), esc_js($args['name'])
 			);
 		}
 

@@ -106,7 +106,7 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 == Changelog ==
 
-= 1.7.6 =
+= 1.7.6 (2015-06-10) =
 
 * Add Galician translation contributed by [Toño Calo](http://fedellar.wordpress.com/)
 * fix: incorrect post type archive link for untranslated post types
@@ -116,6 +116,8 @@ See http://polylang.wordpress.com/documentation/contribute/
 * fix: wrong future posts permalinks
 * fix: deleting a media translation deletes the file too
 * fix: when using persistent object cache, get_terms is not always filtered by the correct language on admin side
+* fix: it is possible to create two categories having the same translation
+* fix: fatal error when using the dropdown language switcher in WP < 4.1
 
 = 1.7.5 (2015-05-11) =
 

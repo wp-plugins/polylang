@@ -730,6 +730,7 @@ class PLL_Admin_Filters_Term {
 		}
 
 		$this->model->save_translations('term', $new_term_id, $translations);
+		$avoid_recursion = false;
 	}
 
 	/*
