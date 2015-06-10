@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://polylang.wordpress.com/
-Version: 1.7.6
+Version: 1.7.6.1
 Author: Frédéric Demarle
 Author uri: http://polylang.wordpress.com
 Description: Adds multilingual capability to WordPress
@@ -34,7 +34,7 @@ Domain Path: /languages
 if (!function_exists('add_action'))
 	exit();
 
-define('POLYLANG_VERSION', '1.7.6');
+define('POLYLANG_VERSION', '1.7.6.1');
 define('PLL_MIN_WP_VERSION', '3.8');
 
 define('POLYLANG_BASENAME', plugin_basename(__FILE__)); // plugin name as known by WP
