@@ -417,7 +417,7 @@ class PLL_Frontend_Links extends PLL_Links {
 		}
 
 		elseif (is_archive()) {
-			$keys = array('m', 'year', 'monthnum', 'day', 'author', 'author_name');
+			$keys = array('post_type', 'm', 'year', 'monthnum', 'day', 'author', 'author_name');
 			$keys = array_merge($keys, $this->model->get_filtered_taxonomies_query_vars());
 
 			// check if there are existing translations before creating the url
