@@ -664,9 +664,11 @@ class PLL_Admin_Filters_Term {
 				return $this->model->get_term($value, $this->model->get_term_language($traces[4]['args'][0]));
 		}
 
-		elseif (false != strpos($traces[3]['file'], 'wp-admin/edit-tags.php')) {
+		// filters the default category in note below the category list table and in settings->writing dropdown
+		elseif (false != strpos($traces[3]['file'], 'wp-admin/edit-tags.php') || false != strpos($traces[3]['file'], 'wp-admin/options-writing.php')) {
 			return $this->model->get_term($value,  $this->pref_lang);
 		}
+
 		return $value;
 	}
 
@@ -706,6 +708,9 @@ class PLL_Admin_Filters_Term {
 	 * @param string $taxonomy
 	 */
 	public function split_shared_term($term_id, $new_term_id, $term_taxonomy_id, $taxonomy) {
+		if (!$this->model->is_translated_taxonomy($taxonomy))
+			return;
+
 		// avoid recursion
 		static $avoid_recursion = false;
 		if ($avoid_recursion)

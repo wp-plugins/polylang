@@ -109,6 +109,7 @@ See http://polylang.wordpress.com/documentation/contribute/
 = 1.7.7 =
 
 * fix: make sure that the language switcher never finds translations for untranslated post types (could occur when the post type was previously translated)
+* fix: display the default category according to the admin language filter in settings->writing
 
 = 1.7.6 (2015-06-10) =
 

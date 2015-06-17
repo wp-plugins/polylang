@@ -93,7 +93,7 @@
 					<p><?php _e('Position of the language in the language switcher', 'polylang');?></p>
 				</div>
 
-				<?php submit_button( $action == 'edit' ? __('Update') : __('Add new language', 'polylang'), 'button'); // since WP 3.1 ?>
+				<?php submit_button( $action == 'edit' ? __('Update') : __('Add new language', 'polylang')); // since WP 3.1 ?>
 
 				</form>
 			</div><!-- form-wrap -->
