@@ -110,6 +110,7 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 * fix: make sure that the language switcher never finds translations for untranslated post types (could occur when the post type was previously translated)
 * fix: display the default category according to the admin language filter in settings->writing
+* fix: flushing rewrite rules at network activation and de-activation is back. [props RavanH](https://polylang.wordpress.com/2015/06/10/polylang-1-7-6-and-multisite/comment-page-1/#comment-1138)
 
 = 1.7.6 (2015-06-10) =
 

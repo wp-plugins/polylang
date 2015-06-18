@@ -35,7 +35,7 @@ class PLL_Install extends PLL_Install_Base {
 	 *
 	 * @since 0.5
 	 */
-	protected function _activate($networkwide) {
+	protected function _activate() {
 		global $polylang;
 
 		if ($options = get_option('polylang')) {
@@ -71,9 +71,9 @@ class PLL_Install extends PLL_Install_Base {
 		$polylang->links_model = $polylang->model->get_links_model();
 		do_action('pll_init');
 
-		// FIXME don't flush rewrite rules at network activation. See #32471
-		if (!$networkwide)
-			flush_rewrite_rules();
+		// don't use flush_rewrite_rules at network activation. See #32471
+		// thanks to RavanH for the trick. See https://polylang.wordpress.com/2015/06/10/polylang-1-7-6-and-multisite/
+		delete_option('rewrite_rules');
 	}
 
 	/*
@@ -81,9 +81,7 @@ class PLL_Install extends PLL_Install_Base {
 	 *
 	 * @since 0.5
 	 */
-	protected function _deactivate($networkwide) {
-		// FIXME don't flush rewrite rules at network deactivation. See #32471
-		if (!$networkwide)
-			flush_rewrite_rules();
+	protected function _deactivate() {
+		delete_option('rewrite_rules'); // don't use flush_rewrite_rules at network activation. See #32471
 	}
 }
