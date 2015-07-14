@@ -147,7 +147,7 @@ class PLL_Model {
 	 */
 	public function get_languages_list($args = array()) {
 		if (false === $languages = $this->cache->get('languages')) {
-			
+
 			// create the languages from taxonomies
 			if ((defined('PLL_CACHE_LANGUAGES') && !PLL_CACHE_LANGUAGES) || false === ($languages = get_transient('pll_languages_list'))) {
 				$languages = get_terms('language', array('hide_empty' => false, 'orderby'=> 'term_group'));
@@ -162,14 +162,14 @@ class PLL_Model {
 					foreach ($languages as $k => $v) {
 						$languages[$k] = new PLL_Language($v, $term_languages[$v->name]);
 					}
-					
+
 					$languages = apply_filters('pll_languages_list', $languages);
 				}
 				else {
 					$languages = array(); // in case something went wrong
 				}
 			}
-			
+
 			// create the languages directly from arrays stored in transients
 			else {
 				foreach ($languages as $k => $v) {
@@ -398,11 +398,11 @@ class PLL_Model {
 
 		// make sure we return only translations (thus we allow plugins to store other informations in the array)
 		$translations = array_intersect_key($translations, array_flip($this->get_languages_list(array('fields' => 'slug'))));
-		
+
 		// make sure to return at least the passed post or term in its translation array
 		if (empty($translations) && $type && $lang = call_user_func(array(&$this, 'get_'.$type.'_language'), $id))
 			$translations = array($lang->slug => $id);
-		
+
 		return $translations;
 	}
 
@@ -698,9 +698,10 @@ class PLL_Model {
 	 * @return array array of registered taxonomy names
 	 */
 	public function get_filtered_taxonomies($filter = true) {
-		static $taxonomies = null;
+		if (did_action('after_setup_theme'))
+			static $taxonomies = null;
 
-		if (null === $taxonomies || !did_action('after_setup_theme')) {
+		if (empty($taxonomies)) {
 			$taxonomies = array('post_format' => 'post_format');
 			$taxonomies = apply_filters('pll_filtered_taxonomies', $taxonomies, false);
 		}
@@ -789,7 +790,7 @@ class PLL_Model {
 		global $wpdb;
 
 		$term_name = trim(wp_unslash($term_name));
-		
+
 		$select = "SELECT t.term_id FROM $wpdb->terms AS t";
 		$join = " INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id";
 		$join .= $this->join_clause('term');

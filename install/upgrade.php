@@ -95,6 +95,7 @@ class PLL_Upgrade {
 		if (absint(get_transient('pll_upgrade_1_4')) < time())
 			$this->delete_pre_1_2_data();
 
+		$this->options['previous_version'] = $this->options['version']; // remember the previous version of Polylang
 		$this->options['version'] = POLYLANG_VERSION;
 		update_option('polylang', $this->options);
 	}
@@ -496,11 +497,11 @@ class PLL_Upgrade {
 			$upgrader = new Language_Pack_Upgrader(new Automatic_Upgrader_Skin);
 			$upgrader->bulk_upgrade($translations_to_load, array('clear_update_cache' => false));
 		}
-	}	
-		
+	}
+
 	/*
 	 * upgrades if the previous version is < 1.7.4
-	 * 
+	 *
 	 * @since 1.7.4
 	 */
 	protected function upgrade_1_7_4() {

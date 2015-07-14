@@ -665,7 +665,7 @@ class PLL_Admin_Filters_Term {
 		}
 
 		// filters the default category in note below the category list table and in settings->writing dropdown
-		elseif (false != strpos($traces[3]['file'], 'wp-admin/edit-tags.php') || false != strpos($traces[3]['file'], 'wp-admin/options-writing.php')) {
+		elseif (false != stripos($traces[3]['file'], 'edit-tags.php') || false != stripos($traces[3]['file'], 'options-writing.php')) {
 			return $this->model->get_term($value,  $this->pref_lang);
 		}
 

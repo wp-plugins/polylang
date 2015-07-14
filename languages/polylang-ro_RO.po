@@ -1,23 +1,24 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Polylang v1.6beta1\n"
+"Project-Id-Version: Polylang v1.7beta1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2015-06-26 10:13+0100\n"
-"Last-Translator: fxbenard | FxB <fx@fxbenard.com>\n"
+"PO-Revision-Date: 2015-07-01 19:41+0300\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n>1;\n"
-"X-Generator: Poedit 1.8.1\n"
-"X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
+"X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
 "_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2\n"
-"X-Poedit-Basepath: .\n"
+"X-Poedit-Basepath: ..\n"
 "X-Textdomain-Support: yes\n"
-"Language: fr_FR\n"
-"X-Poedit-SearchPath-0: ..\n"
+"X-Generator: Poedit 1.8.2\n"
+"Language: ro\n"
+"X-Poedit-SearchPath-0: .\n"
 
 # @ polylang
 #: admin/view-about.php:3
@@ -28,10 +29,11 @@ msgid ""
 "on a daily basis, a FAQ, as well as a documentation for programmers to adapt "
 "their plugins and themes."
 msgstr ""
-"Polylang est fourni avec une %sdocumentation%s (en anglais). Elle explique "
-"comment installer votre site multilingue et l&rsquo;utiliser au jour le "
-"jour. Elle contient aussi une FAQ et une documentation pour les développeurs "
-"leur permettant d&rsquo;adapter leurs extensions et leurs thèmes."
+"Polylang include o %sdocumentație%s detaliată (disponibilă doar în limba "
+"engleză), care include informații precum: cum să îți configurezi situl "
+"multilingvistic și cum să îl utilizezi zilnic, o listă de întrebări puse "
+"frecvent, precum și o documentație pentru programatori, pentru a-și adapta "
+"extensiile și temele lor pentru Polylang."
 
 # @ polylang
 #: admin/view-about.php:9
@@ -40,9 +42,9 @@ msgid ""
 "You will also find useful information in the %ssupport forum%s. However "
 "don't forget to make a search before posting a new topic."
 msgstr ""
-"Vous pouvez aussi trouver des informations dans le %sforum de support%s (en "
-"anglais). Cependant, n&rsquo;oubliez pas de faire une recherche avant de "
-"publier."
+"Veți găsi informații utile și în %sforumurile de suport%s. Cu toate acestea, "
+"nu uita să cauți în postările existente, înainte de a deschide un subiect "
+"nou."
 
 # @ polylang
 #: admin/view-about.php:16
@@ -51,14 +53,14 @@ msgid ""
 "Polylang is free of charge and is released under the same license as "
 "WordPress, the %sGPL%s."
 msgstr ""
-"Polylang est gratuit et publié sous la même licence que WordPress, la %sGPL"
-"%s."
+"Polylang este gratis și este disponibil sub aceeași licență ca WordPress, "
+"%sGPL%s."
 
 # @ polylang
 #: admin/view-about.php:22
 #, php-format
 msgid "If you wonder how you can help the project, just %sread this%s."
-msgstr "Si vous souhaitez aider le projet, %slisez ceci%s."
+msgstr "Dacă vreți să știți cum puteți să ajutați proiectul, %scitiți aici%s."
 
 # @ polylang
 #: admin/view-about.php:27
@@ -66,133 +68,133 @@ msgid ""
 "Finally if you like this plugin or if it helps your business, donations to "
 "the author are greatly appreciated."
 msgstr ""
-"Enfin, si vous aimez cette extension ou si elle vous aide dans votre "
-"business, vous pouvez faire un don à l&rsquo;auteur."
+"Nu în ultimul rând, dacă vă place această extensie, sau dacă vă ajută "
+"afacerea, donațiile către autor sunt binevenite."
 
 # @ polylang
 #: admin/admin-filters-post.php:115 admin/admin.php:90 admin/settings.php:70
 #: admin/settings.php:97 include/model.php:561
 msgid "Languages"
-msgstr "Langues"
+msgstr "Limbi disponibile"
 
 # @ polylang
 #: include/switcher.php:22
 msgid "Displays language names"
-msgstr "Afficher le nom des langues"
+msgstr "Numele afișat al limbilor disponibile"
 
 # @ polylang
 #: include/switcher.php:23
 msgid "Displays flags"
-msgstr "Afficher les drapeaux"
+msgstr "Steagurile afișate ale limbilor disponibile"
 
 # @ polylang
 #: include/switcher.php:24
 msgid "Forces link to front page"
-msgstr "Force le lien vers la page d&rsquo;accueil"
+msgstr "Forțează link-ul către prima pagină"
 
 # @ polylang
 #: include/switcher.php:25
 msgid "Hides the current language"
-msgstr "Cacher la langue courante"
+msgstr "Ascunde limba curentă"
 
 # @ polylang
 #: include/switcher.php:30
 msgid "Displays as dropdown"
-msgstr "Afficher en liste déroulante"
+msgstr "Afișaj ca listă dropdown"
 
 # @ polylang
 #: admin/admin.php:267
 msgid "Filters content by language"
-msgstr "Filtrer le contenu par langue"
+msgstr "Filtrează conținutul după limbă"
 
 # @ polylang
 #: admin/admin.php:258
 msgid "Show all languages"
-msgstr "Afficher toutes les langues"
+msgstr "Afișează toate limbile"
 
 # @ polylang
 #: admin/admin-filters-columns.php:140 admin/admin-filters-columns.php:230
 msgid "Add new translation"
-msgstr "Ajouter une nouvelle traduction"
+msgstr "Adaugă traduceri noi"
 
 # @ polylang
 #: admin/admin-filters-columns.php:173 admin/admin-filters-media.php:55
 #: admin/admin-filters-post.php:141 admin/admin-filters-term.php:75
 #: admin/admin-filters-term.php:122 include/model.php:562
 msgid "Language"
-msgstr "Langue"
+msgstr "Limbi"
 
 # @ polylang
 #: admin/table-string.php:112 admin/view-translations-media.php:5
 #: admin/view-translations-post.php:5 admin/view-translations-term.php:6
 #: admin/view-translations-term.php:11
 msgid "Translations"
-msgstr "Traductions"
+msgstr "Traduceri"
 
 # @ polylang
 #: admin/admin-filters-term.php:82 admin/admin-filters-term.php:130
 msgid "Sets the language"
-msgstr "Définit la langue"
+msgstr "Setează limba"
 
 # @ polylang
 #: admin/admin-filters.php:52
 msgid "The widget is displayed for:"
-msgstr "Afficher le widget pour&nbsp;:"
+msgstr "Widget-ul este afișat pentru:"
 
 # @ polylang
 #: admin/admin-filters.php:55 include/model.php:563
 msgid "All languages"
-msgstr "Toutes les langues"
+msgstr "Toate limbile"
 
 # @ polylang
 #: admin/admin-filters.php:123
 msgid "Admin language"
-msgstr "Langue pour l&rsquo;interface d&rsquo;administration"
+msgstr "Limba de admin"
 
 # @ polylang
 #: admin/admin-filters.php:126
-msgid "WordPress default"
-msgstr "Langue par défaut de WordPress"
+msgid "Wordpress default"
+msgstr "Wordpress default"
 
 # @ polylang
 #: admin/admin.php:167 admin/settings.php:102
 msgid "Settings"
-msgstr "Réglages"
+msgstr "Setări"
 
 # @ polylang
 #: admin/admin-filters.php:160 admin/admin-filters.php:169
 msgid "Upgrading language files&#8230;"
-msgstr "Mise à jour des fichiers de langues&#8230;"
+msgstr "Actualizarea fișierelor lingvistice;"
 
 # @ polylang
 #: admin/settings.php:62
 msgid "About Polylang"
-msgstr "À propos de Polylang"
+msgstr "Despre Polylang"
 
 # @ polylang
 #: admin/settings.php:78
 msgid "Strings translations"
-msgstr "Traductions des chaînes"
+msgstr "Traduceri generale"
 
 # @ polylang
 #: admin/settings.php:101
 msgid "Strings translation"
-msgstr "Traduction des chaînes"
+msgstr "Traduceri generale"
 
 # @ polylang
 #: admin/admin-model.php:244
 msgid "Enter a valid WordPress locale"
-msgstr "Entrez un code local WordPress valide"
+msgstr "Introdu o localizare validă pentru WordPress"
 
 # @ polylang
 #: admin/admin-model.php:252
 msgid "The language code must be unique"
-msgstr "Le code de la langue doit être unique"
+msgstr "Codul de limbă trebuie să fie unic"
 
 # @ polylang
 #: admin/admin-model.php:256
 msgid "The language must have a name"
-msgstr "La langue doit avoir un nom"
+msgstr "Limba trebuie să aibă un nume"
 
 # @ polylang
 #: admin/admin.php:367 admin/settings.php:180
@@ -200,171 +202,169 @@ msgid ""
 "The language was created, but the WordPress language file was not "
 "downloaded. Please install it manually."
 msgstr ""
-"La langue a été créée, mais le fichier de langue WordPress n&rsquo;a pu être "
-"téléchargé. Merci de l&rsquo;installer manuellement."
+"Limba a fost creată, dar fișierul de limbă Wordpress nu a fost downloadat. "
+"Te rugăm să-l instalezi manual."
 
 # @ polylang
 #: admin/admin-strings.php:59
 msgid "Widget title"
-msgstr "Titre du widget"
+msgstr "Titlu widget"
 
 # @ polylang
 #: admin/settings.php:319
 msgid "Taxonomies"
-msgstr "Taxinomies"
+msgstr "Taxonomii"
 
 # @ polylang
 #: admin/settings.php:320
 msgid "Custom fields"
-msgstr "Champs personnalisés"
+msgstr "Câmpuri customizate"
 
 # @ polylang
 #: admin/settings.php:321
 msgid "Comment status"
-msgstr "Autorisation des commentaires"
+msgstr "Status comentariu"
 
 # @ polylang
 #: admin/settings.php:322
 msgid "Ping status"
-msgstr "Autorisation des pings"
+msgstr "Status ping"
 
 # @ polylang
 #: admin/settings.php:323
 msgid "Sticky posts"
-msgstr "Articles mis en avant"
+msgstr "Postări importante"
 
 # @ polylang
 #: admin/settings.php:324
 msgid "Published date"
-msgstr "Date de publication"
+msgstr "Data publicării"
 
 # @ polylang
 #: admin/settings.php:325
 msgid "Post format"
-msgstr "Format"
+msgstr "Formatul postării"
 
 # @ polylang
 #: admin/settings.php:326
 msgid "Page parent"
-msgstr "Page parent"
+msgstr "Pagina părinte"
 
 # @ polylang
 #: admin/settings.php:327
 msgid "Page template"
-msgstr "Modèle de page"
+msgstr "Template de pagină"
 
 # @ polylang
 #: admin/settings.php:328
 msgid "Page order"
-msgstr "Ordre des pages"
+msgstr "Ordinea paginii"
 
 # @ polylang
 #: admin/settings.php:329
 msgid "Featured image"
-msgstr "Image à la Une"
+msgstr "Imagine atașată"
 
 # @ polylang
 #: admin/view-tab-lang.php:21
 msgid "Edit language"
-msgstr "Modifier la langue"
+msgstr "Editează limba"
 
 # @ polylang
 #: admin/view-tab-lang.php:21 admin/view-tab-lang.php:96
 msgid "Add new language"
-msgstr "Ajouter une nouvelle langue"
+msgstr "Adaugă o limbă nouă"
 
 # @ polylang
 #: admin/view-tab-lang.php:37
 msgid "Choose a language"
-msgstr "Choisir une langue"
+msgstr "Alege o limbă"
 
 # @ polylang
 #: admin/view-tab-lang.php:51
 msgid "You can choose a language in the list or directly edit it below."
-msgstr ""
-"Choisissez une langue dans la liste ou modifiez-la directement ci-dessous."
+msgstr "Alege o limbă din listă sau editează-le direct dedesubt."
 
 # @ polylang
 #: admin/table-languages.php:74 admin/view-tab-lang.php:55
 msgid "Full name"
-msgstr "Nom"
+msgstr "Nume și prenume"
 
 # @ polylang
 #: admin/view-tab-lang.php:57
 msgid "The name is how it is displayed on your site (for example: English)."
-msgstr ""
-"Le nom est utilisé un peu partout sur le site (par exemple&nbsp;: Français)"
+msgstr "Numele, așa cum va fi afișat pe sait (spre exemplu: Engleză)."
 
 # @ polylang
 #: admin/table-languages.php:75 admin/view-tab-lang.php:61
 msgid "Locale"
-msgstr "Code local"
+msgstr "Localizare"
 
 # @ polylang
 #: admin/view-tab-lang.php:66
 msgid ""
-"WordPress Locale for the language (for example: en_US). You will need to "
+"Wordpress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
 msgstr ""
-"Code local utilisé par WordPress pour la langue (par exemple&nbsp;: fr_FR). "
-"Vous aurez besoin d&rsquo;installer les fichiers .mo correspondant."
+"Localizarea WordPress pentru limbă (spre exemplu ro_RO). Va trebui să "
+"instalezi fișierul .mo al acestei limbi."
 
 # @ polylang
 #: admin/view-tab-lang.php:70
 msgid "Language code"
-msgstr "Code de la langue"
+msgstr "Codul de limbă"
 
 # @ polylang
 #: admin/view-tab-lang.php:76
 msgid "Text direction"
-msgstr "Système d&rsquo;écriture"
+msgstr "Direcția textului"
 
 # @ polylang
 #: admin/view-tab-lang.php:80
 msgid "left to right"
-msgstr "de gauche à droite"
+msgstr "stânga-dreapta"
 
 # @ polylang
 #: admin/view-tab-lang.php:85
 msgid "right to left"
-msgstr "de droite à gauche"
+msgstr "dreapta-stânga"
 
 # @ polylang
 #: admin/view-tab-lang.php:87
 msgid "Choose the text direction for the language"
-msgstr "Choisir le système d&rsquo;écriture pour la langue"
+msgstr "Alege direcția textului pentru limbă"
 
 # @ polylang
 #: admin/table-languages.php:77 admin/view-tab-lang.php:91
 msgid "Order"
-msgstr "Ordre"
+msgstr "Ordine"
 
 # @ polylang
 #: admin/view-tab-lang.php:93
 msgid "Position of the language in the language switcher"
-msgstr "Position de la langue dans la liste de langues"
+msgstr "Poziția limbii în lista de schimbare"
 
 # @ polylang
 #: admin/admin-nav-menu.php:54 admin/admin-nav-menu.php:92
 #: admin/admin-nav-menu.php:95 admin/admin-nav-menu.php:126
 #: admin/admin-nav-menu.php:188 install/upgrade.php:301
 msgid "Language switcher"
-msgstr "Liste des langues"
+msgstr "Lista de schimbare"
 
 # @ polylang
 #: admin/view-tab-strings.php:8
 msgid "Search translations"
-msgstr "Chercher dans les traductions"
+msgstr "Caută traduceri"
 
 # @ polylang
 #: admin/view-tab-strings.php:11
 msgid "Clean strings translation database"
-msgstr "Nettoyer les chaines de traduction de la base de données"
+msgstr "Șterge baza de date de traduceri generale"
 
 # @ polylang
 #: admin/view-tab-settings.php:14
 msgid "Default language"
-msgstr "Langue par défaut"
+msgstr "Limba principală"
 
 # @ polylang
 #: admin/view-tab-settings.php:29
@@ -372,13 +372,13 @@ msgid ""
 "There are posts, pages, categories or tags without language set. Do you want "
 "to set them all to default language ?"
 msgstr ""
-"Il y a des articles, pages, catégories ou étiquettes sans jeu de langue. "
-"Voulez-vous leur attribuer la langue par défaut&nbsp;?"
+"Sunt postări, pagini, categorii sau taguri fără o limbă atașată. Dorești să "
+"le atașezi la limba principală?"
 
 # @ polylang
 #: admin/view-tab-settings.php:149
 msgid "Detect browser language"
-msgstr "Détecter la langue du navigateur"
+msgstr "Detectează limba browserului"
 
 # @ polylang
 #: admin/view-tab-settings.php:155
@@ -386,155 +386,154 @@ msgid ""
 "When the front page is visited, set the language according to the browser "
 "preference"
 msgstr ""
-"Lorsque la page d&rsquo;accueil est visitée, le visiteur est redirigé en "
-"fonction des préférences de langue de son navigateur"
+"Când este accesată pagina principipală, setează limba potrivit preferințelor "
+"browserului"
 
 # @ polylang
 #: admin/view-tab-settings.php:37
 msgid "URL modifications"
-msgstr "Modifications des URL"
+msgstr "Modificări de URL"
 
 # @ polylang
 #: admin/view-tab-settings.php:93
 msgid "Hide URL language information for default language"
-msgstr ""
-"Cacher l&rsquo;information de langue dans l&rsquo;URL pour la langue par "
-"défaut"
+msgstr "Ascunde informațiile de limbă în URL pentru limba principală"
 
 # @ polylang
 #: admin/view-tab-settings.php:162
 msgid "Media"
-msgstr "Médias"
+msgstr "Media"
 
 # @ polylang
 #: admin/view-tab-settings.php:168
 msgid "Activate languages and translations for media"
-msgstr "Activer la gestion des langues et des traductions pour les médias."
+msgstr "Activează limbi și traduceri pentru media"
 
 # @ polylang
 #: admin/view-tab-settings.php:215
 msgid "Synchronization"
-msgstr "Synchronisation"
+msgstr "Sincronizare"
 
 # @ polylang
 #: admin/view-tab-settings.php:176
 msgid "Custom post types"
-msgstr "Types de contenu personnalisé"
+msgstr "Postări customizate"
 
 # @ polylang
 #: admin/view-tab-settings.php:189
 msgid "Activate languages and translations for custom post types."
-msgstr ""
-"Activer la gestion des langues et des traductions pour les types de contenu."
+msgstr "Activează limbi și traduceri pentru postări customizate."
 
 # @ polylang
 #: admin/view-tab-settings.php:196
 msgid "Custom taxonomies"
-msgstr "Taxinomies"
+msgstr "Taxonomii customizate"
 
 # @ polylang
 #: admin/view-tab-settings.php:209
 msgid "Activate languages and translations for custom taxonomies."
-msgstr "Activer la gestion des langues et des traductions pour les taxinomies."
+msgstr "Activează limbi și traduceri pentru taxonomii customizate."
 
 # @ polylang
 #: admin/admin-filters-post.php:433 admin/admin-filters-term.php:642
 #: admin/table-languages.php:54 admin/view-translations-media.php:21
 msgid "Edit"
-msgstr "Modifier"
+msgstr "Editează"
 
 # @ polylang
 #: admin/table-languages.php:60 admin/table-string.php:168
 msgid "Delete"
-msgstr "Supprimer"
+msgstr "Șterge"
 
 # @ polylang
 #: admin/table-languages.php:76
 msgid "Code"
-msgstr "Code"
+msgstr "Cod"
 
 # @ polylang
 #: admin/table-languages.php:78
 msgid "Flag"
-msgstr "Drapeau"
+msgstr "Steag"
 
 # @ polylang
 #: admin/table-languages.php:79
 msgid "Posts"
-msgstr "Articles"
+msgstr "Postări"
 
 # @ polylang
 #: admin/table-string.php:110
 msgid "Name"
-msgstr "Nom"
+msgstr "Nume"
 
 # @ polylang
 #: admin/table-string.php:111
 msgid "String"
-msgstr "Chaîne"
+msgstr "Șiruri de caractere"
 
 # @ polylang
 #: admin/view-translations-media.php:30 admin/view-translations-post.php:21
 #: admin/view-translations-term.php:30
 msgid "Add new"
-msgstr "Ajouter"
+msgstr "Adaugă"
 
 # @ polylang
 #: include/widget-languages.php:16
 msgid "Language Switcher"
-msgstr "Liste des langues"
+msgstr "Lista de limbi"
 
 # @ polylang
 #: include/widget-languages.php:16
 msgid "Displays a language switcher"
-msgstr "Afficher la liste des langues"
+msgstr "Afișează lista de limbi"
 
 # @ polylang
 #: include/widget-languages.php:75
 msgid "Title:"
-msgstr "Titre&nbsp;:"
+msgstr "Titlu"
 
 # @ polylang
 #. translators: plugin header field 'Description'
 #: polylang.php:0
 msgid "Adds multilingual capability to WordPress"
-msgstr "Permet une utilisation multilingue de WordPress"
+msgstr "Adaugă capacitate multilingvistică pentru WordPress"
 
 # @ polylang
 #: install/install.php:24
 #, php-format
 msgid "You are using WordPress %s. Polylang requires at least WordPress %s."
-msgstr "Vous utilisez WordPress %s. Polylang nécessite au moins WordPress %s."
+msgstr ""
+"Folosești Wordpress versiunea %s. Polylang are nevoie de cel puțin WordPress "
+"versiunea %s."
 
 # @ polylang
 #: install/upgrade.php:76
 msgid ""
 "Polylang has been deactivated because you upgraded from a too old version."
 msgstr ""
-"Polylang a été désactivé parce que vous avez fait une mise à jour depuis une "
-"version trop ancienne."
+"Polylang a fost dezactivat, deoarece ai upgradat de la o versiune prea veche."
 
 # @ polylang
 #: install/upgrade.php:78
 #, php-format
 msgid "Please upgrade first to %s before ugrading to %s."
 msgstr ""
-"Veuillez d&rsquo;abord mettre à jour en %s avant de mettre à jour en %s."
+"Te rugăm, upgradează întâi la versiunea %s, înainte de a upgrada la "
+"versiunea %s."
 
 # @ polylang
 #: admin/table-string.php:109
 msgid "Group"
-msgstr "Groupe"
+msgstr "Grup"
 
 # @ polylang
 #: admin/table-string.php:187
 msgid "View all groups"
-msgstr "Voir tous les groupes"
+msgstr "Vezi toate grupurile"
 
 # @ polylang
 #: admin/table-languages.php:59
 msgid "You are about to permanently delete this language. Are you sure?"
-msgstr "Êtes-vous sûr de vouloir supprimer cette langue définitivement&nbsp;?"
+msgstr "Ești pe cale să ștergi această limbă permanent. Ești sigur?"
 
 # @ polylang
 #: admin/view-tab-strings.php:12
@@ -542,8 +541,8 @@ msgid ""
 "Use this to remove unused strings from database, for example after a plugin "
 "has been uninstalled."
 msgstr ""
-"Utilisez cette option pour supprimer les phrases inutiles dans la base de "
-"données, par exemple après avoir déssinstallé une extension."
+"Folosește asta pentru a înlătura orice șiruri de caractere nefolosite din "
+"baza de date, spre exemplu, după dezinstalarea unei extensii."
 
 # @ polylang
 #: admin/view-tab-settings.php:226
@@ -552,57 +551,57 @@ msgid ""
 "translations in the case of taxonomies and page parent) of meta content "
 "between the translations of a post or page."
 msgstr ""
-"Les options de synchronisation permettent de maintenir les mêmes valeurs de "
-"métacontenus entre les traductions d&rsquo;un article ou d&rsquo;une page "
-"(ou de les traduire dans le cas des taxinomies et de la page parent)"
+"Opțiunile de sincronizare permit menținerea acelorași valori (sau traduceri, "
+"în cazul taxonomiilor și a paginii părinte) a conținutului meta, între "
+"traducerile unei postări sau pagini."
 
 # @ polylang
 #: admin/admin-model.php:248
 msgid "The language code contains invalid characters"
-msgstr "Le code de la langue contient des caractères invalides"
+msgstr "Codul de limbă conține caractere invalide"
 
 # @ polylang
 #: admin/view-tab-settings.php:43
 msgid "The language is set from content"
-msgstr "La langue est déterminée par le contenu"
+msgstr "Limba este stabilită din conținut"
 
 # @ polylang
 #: admin/view-tab-settings.php:46
 msgid "Posts, pages, categories and tags urls are not modified."
 msgstr ""
-"Les adresses des articles, pages, catégories et mots clés ne sont pas "
-"modifiées."
+"Postările, paginile, categoriile și URL-urile tagurilor nu sunt modificate."
 
 # @ polylang
 #: admin/view-tab-settings.php:51
 msgid "The language is set from the directory name in pretty permalinks"
-msgstr "La langue est déterminée par le nom du répertoire dans les permaliens"
+msgstr "Limba e stabilită din numele directorului, în permalink-uri drăguțe"
 
 # @ polylang
 #: admin/view-tab-settings.php:54 admin/view-tab-settings.php:63
 #: admin/view-tab-settings.php:110 admin/view-tab-settings.php:119
 msgid "Example:"
-msgstr "Exemple&nbsp;:"
+msgstr "Exemplu:"
 
 # @ polylang
 #: admin/view-tab-settings.php:60
 msgid "The language is set from the subdomain name in pretty permalinks"
-msgstr "La langue est déterminée par le sous-domaine dans les permaliens"
+msgstr ""
+"Limba este stabilită din numele subdomeniilor, în permalinkuril drăguțe."
 
 # @ polylang
 #: admin/view-tab-settings.php:69
 msgid "The language is set from different domains"
-msgstr "La langue est déterminée par des noms de domaine différents"
+msgstr "Limba este stabilită din domenii diferite"
 
 # @ polylang
 #: admin/view-tab-settings.php:107
 msgid "Remove /language/ in pretty permalinks"
-msgstr "Supprimer /language/ dans les permaliens"
+msgstr "Înlătură /language/ din link-uri."
 
 # @ polylang
 #: admin/view-tab-settings.php:116
 msgid "Keep /language/ in pretty permalinks"
-msgstr "Conserver /language/ dans les permaliens"
+msgstr "Păstreaza /language/ în link-uri."
 
 # @ polylang
 #: admin/view-tab-settings.php:131
@@ -610,68 +609,68 @@ msgid ""
 "The front page url contains the language code instead of the page name or "
 "page id"
 msgstr ""
-"L'adresse de la page d'accueil contient le code de la langue au lieu du nom "
-"de la page"
+"URL-ul paginii de pornire conține codul de limbă și nu numele paginii sau id-"
+"ul acesteia"
 
 # @ polylang
 #: admin/view-tab-settings.php:139
 #, php-format
 msgid "Example: %s instead of %s"
-msgstr "Exemple : %s au lieu de %s"
+msgstr "Exemplu: %s în loc de  %s"
 
 # @ polylang
 #: admin/admin-model.php:38
 msgid "Impossible to add the language."
-msgstr "Impossible d'ajouter la langue."
+msgstr "Imposibil de adăugat limba."
 
 # @ polylang
 #: admin/admin-model.php:66
 msgid "Language added."
-msgstr "Langue ajoutée."
+msgstr "Limbă identificată."
 
 # @ polylang
 #: admin/admin-model.php:146
 msgid "Language deleted."
-msgstr "Langue supprimée."
+msgstr "Limbă ștearsă."
 
 # @ polylang
 #: admin/admin-model.php:227
 msgid "Language updated."
-msgstr "Langue mise à jour."
+msgstr "Limbă actualizată."
 
 # @ polylang
 #: admin/settings.php:239
 msgid "Translations updated."
-msgstr "Traductions mises à jour."
+msgstr "Traduceri actualizate."
 
 # @ polylang
 #: admin/view-tab-lang.php:72
 msgid "Language code - preferably 2-letters ISO 639-1  (for example: en)"
 msgstr ""
-"Code de langue, de préférence code ISO 639-1 à 2 lettres (par exemple&nbsp;: "
-"fr)"
+"Codul de limbă - preferabil 2 litere, în formatul ISO 639-1 (spre exemplu: "
+"ro)"
 
 # @ polylang
 #: admin/admin-filters.php:203
 msgid "The chosen static front page must be translated in all languages."
-msgstr "La page d'accueil statique doit être traduite dans toutes les langues."
+msgstr "Pagina principală statică trebuie tradusă în toate limbile."
 
 # @ polylang
 #: admin/admin-strings.php:60
 msgid "Widget text"
-msgstr "Widget texte"
+msgstr "Textul de widget."
 
 # @ polylang
 #: admin/settings.php:52
 msgid "Recommended plugins"
-msgstr "Extensions recommandées"
+msgstr "Extensii recomandate"
 
 # @ polylang
 #: admin/view-tab-settings.php:51
 msgid "The language is set from the code in the URL"
-msgstr "La langue est déterminée par le code dans l'URL"
+msgstr "Limba este stabilită din codul din URL"
 
 # @ polylang
 #: include/switcher.php:26
 msgid "Hides languages with no translation"
-msgstr "Cacher les langues sans traduction"
+msgstr "Ascunde limbile fără traduceri"
