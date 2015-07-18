@@ -25,7 +25,7 @@ Polylang allows you to create a bilingual or multilingual WordPress site. You wr
 
 = Translators =
 
-The plugin admin interface is currently available in 39 languages:
+The plugin admin interface is currently available in 40 languages:
 
 * English
 * French by [fxbenard](http://fxbenard.com/)
@@ -66,6 +66,7 @@ The plugin admin interface is currently available in 39 languages:
 * Georgian by [Tours in Georgia](http://www.georgia-tours.eu/)
 * Galician by [Toño Calo](http://fedellar.wordpress.com/)
 * Romanian by uskro
+* Japanese by [Eiko Toda](http://www.eikotoda.com)
 
 = Credits =
 
@@ -109,7 +110,9 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 = 1.7.7 =
 
-* Add Romanian translation contributed by uskro and update French translation contributed by [fxbenard](http://fxbenard.com/)
+* Add Romanian translation contributed by uskro
+* Add Japanese translation contributed by [Eiko Toda](http://www.eikotoda.com)
+* Update French translation contributed by [fxbenard](http://fxbenard.com/)
 * The language locale is now validated with the same pattern as in WP 4.3. See #28303
 * fix: make sure that the language switcher never finds translations for untranslated post types (could occur when the post type was previously translated)
 * fix: display the default category according to the admin language filter in settings->writing
