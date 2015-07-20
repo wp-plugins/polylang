@@ -111,7 +111,11 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 == Changelog ==
 
-= 1.7.7 =
+= 1.7.8 =
+
+* fix: PHP warning for PHP < 5.4
+
+= 1.7.7 (2015-07-20) =
 
 * Add Romanian translation contributed by uskro
 * Add Japanese translation contributed by [Eiko Toda](http://www.eikotoda.com)

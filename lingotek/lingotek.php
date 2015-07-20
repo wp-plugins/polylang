@@ -100,7 +100,7 @@ class PLL_Lingotek {
 			)
 		);
 
-		printf('<p>%s</p>', __('Polylang is now fully integrated with Lingotek, a professional translation management System!', 'polylang'));
+		printf('<p>%s</p>', __('Polylang is now fully integrated with Lingotek, a professional translation management system!', 'polylang'));
 
 		$this->box(
 			__('Automatically Translate My Site', 'polylang'),
@@ -120,7 +120,7 @@ class PLL_Lingotek {
 				__('Access free machine translation for your site for up to 100,000 characters.', 'polylang'),
 				__('Access an online translator workbench.', 'polylang'),
 				__('Have linguists compare side-by-side versions of original and translated text.', 'polylang'),
-				__('Save and re-use previously translated material (leverage translation memory (TM).', 'polylang'),
+				__('Save and re-use previously translated material (leverage translation memory (TM)).', 'polylang'),
 			),
 			array_intersect_key($links, array_flip(array('activate'))),
 			'image02.png'

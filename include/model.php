@@ -616,7 +616,7 @@ class PLL_Model {
 			if (!empty($this->options['media_support']))
 				$post_types['attachement'] = 'attachment';
 
-			if (is_array($this->options['post_types']))
+			if (!empty($this->options['post_types']) && is_array($this->options['post_types']))
 				$post_types = array_merge($post_types,  array_combine($this->options['post_types'], $this->options['post_types']));
 
 			$post_types = apply_filters('pll_get_post_types', $post_types , false);
@@ -667,7 +667,7 @@ class PLL_Model {
 		if (empty($taxonomies)) {
 			$taxonomies = array('category' => 'category', 'post_tag' => 'post_tag');
 
-			if (is_array($this->options['taxonomies']))
+			if (!empty($this->options['taxonomies']) && is_array($this->options['taxonomies']))
 				$taxonomies = array_merge($taxonomies, array_combine($this->options['taxonomies'], $this->options['taxonomies']));
 
 			$taxonomies = apply_filters('pll_get_taxonomies', $taxonomies, false);
