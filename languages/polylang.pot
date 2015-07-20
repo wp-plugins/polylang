@@ -141,7 +141,7 @@ msgstr ""
 
 #: admin/admin-filters.php:126
 #@ polylang
-msgid "Wordpress default"
+msgid "WordPress default"
 msgstr ""
 
 #: admin/admin.php:167
@@ -292,7 +292,7 @@ msgstr ""
 
 #: admin/view-tab-lang.php:66
 #@ polylang
-msgid "Wordpress Locale for the language (for example: en_US). You will need to install the .mo file for this language."
+msgid "WordPress Locale for the language (for example: en_US). You will need to install the .mo file for this language."
 msgstr ""
 
 #: admin/view-tab-lang.php:70

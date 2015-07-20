@@ -12,7 +12,7 @@ class PLL_Install extends PLL_Install_Base {
 	 *
 	 * @since 0.1
 	 */
-	public function activate() {
+	public function activate($networkwide) {
 		global $wp_version;
 
 		Polylang::define_constants();
@@ -27,7 +27,7 @@ class PLL_Install extends PLL_Install_Base {
 				)
 			));
 
-		$this->do_for_all_blogs('activate');
+		$this->do_for_all_blogs('activate', $networkwide);
 	}
 
 	/*
@@ -70,7 +70,10 @@ class PLL_Install extends PLL_Install_Base {
 		$polylang->model = new PLL_Admin_Model($options);
 		$polylang->links_model = $polylang->model->get_links_model();
 		do_action('pll_init');
-		flush_rewrite_rules();
+
+		// don't use flush_rewrite_rules at network activation. See #32471
+		// thanks to RavanH for the trick. See https://polylang.wordpress.com/2015/06/10/polylang-1-7-6-and-multisite/
+		delete_option('rewrite_rules');
 	}
 
 	/*
@@ -79,6 +82,6 @@ class PLL_Install extends PLL_Install_Base {
 	 * @since 0.5
 	 */
 	protected function _deactivate() {
-		flush_rewrite_rules();
+		delete_option('rewrite_rules'); // don't use flush_rewrite_rules at network activation. See #32471
 	}
 }

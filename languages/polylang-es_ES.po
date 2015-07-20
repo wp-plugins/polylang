@@ -128,7 +128,7 @@ msgid "Admin language"
 msgstr "Idioma del administrador"
 
 #: admin/admin-filters.php:126
-msgid "Wordpress default"
+msgid "WordPress default"
 msgstr "Opción por defecto de WordPress"
 
 #: admin/admin.php:167 admin/settings.php:102
@@ -258,10 +258,10 @@ msgstr "Región"
 
 #: admin/view-tab-lang.php:66
 msgid ""
-"Wordpress Locale for the language (for example: en_US). You will need to "
+"WordPress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
 msgstr ""
-"Región idiomática de Wordpress (por ejemplo: es_ES). Deberás instalar el "
+"Región idiomática de WordPress (por ejemplo: es_ES). Deberás instalar el "
 "archivo .mo para este idioma."
 
 #: admin/view-tab-lang.php:70
@@ -422,12 +422,12 @@ msgstr "Título:"
 #. translators: plugin header field 'Description'
 #: polylang.php:0
 msgid "Adds multilingual capability to WordPress"
-msgstr "Añade capacidad multilingüística a Wordpress"
+msgstr "Añade capacidad multilingüística a WordPress"
 
 #: install/install.php:24
 #, php-format
 msgid "You are using WordPress %s. Polylang requires at least WordPress %s."
-msgstr "Estás usando Wordpress %s. Polylang necesita como mínimo WordPress %s."
+msgstr "Estás usando WordPress %s. Polylang necesita como mínimo WordPress %s."
 
 # @ polylang
 #: install/upgrade.php:76

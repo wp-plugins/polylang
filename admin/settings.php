@@ -115,16 +115,19 @@ class PLL_Settings {
 				// get the strings to translate
 				$data = PLL_Admin_Strings::get_strings();
 
-				$selected = empty($_REQUEST['group']) ? -1 : $_REQUEST['group'];
-				foreach ($data as $key=>$row) {
-					$groups[] = $row['context']; // get the groups
+				// get the groups
+				foreach ($data as $key => $row)
+					$groups[] = $row['context']; 
 
-					// filter for search string
-					if (($selected !=-1 && $row['context'] != $selected) || (!empty($_REQUEST['s']) && stripos($row['name'], $_REQUEST['s']) === false && stripos($row['string'], $_REQUEST['s']) === false))
+				$groups = array_unique($groups);				
+				$selected = empty($_REQUEST['group']) || !in_array($_REQUEST['group'], $groups) ? -1 : $_REQUEST['group'];
+				$s = empty($_REQUEST['s']) ? '' : wp_unslash($_REQUEST['s']);
+				
+				// filter for search string
+				foreach ($data as $key => $row) {
+					if (($selected !=-1 && $row['context'] != $selected) || (!empty($s) && stripos($row['name'], $s) === false && stripos($row['string'], $s) === false))
 						unset ($data[$key]);
 				}
-
-				$groups = array_unique($groups);
 
 				// load translations
 				foreach ($listlanguages as $language) {
@@ -215,7 +218,7 @@ class PLL_Settings {
 					$strings = PLL_Admin_Strings::get_strings();
 
 					foreach ($this->model->get_languages_list() as $language) {
-						if(empty($_POST['translation'][$language->slug])) // in case the language filter is active (thanks to John P. Bloch)
+						if (empty($_POST['translation'][$language->slug])) // in case the language filter is active (thanks to John P. Bloch)
 							continue;
 
 						$mo = new PLL_MO();

@@ -20,11 +20,14 @@ class PLL_Frontend_Filters extends PLL_Filters{
 		add_filter('locale', array(&$this, 'get_locale'));
 
 		// translates page for posts and page on front
-		add_filter('option_page_on_front', array(&$this, 'translate_page_on_front'));
-		add_filter('option_page_for_posts', array(&$this, 'translate_page_for_posts'));
+		add_filter('option_page_on_front', 'pll_get_post');
+		add_filter('option_page_for_posts', 'pll_get_post');
 
 		// filter sticky posts by current language
 		add_filter('option_sticky_posts', array(&$this, 'option_sticky_posts'));
+
+		// adds cache domain when querying terms
+		add_filter('get_terms_args', array(&$this, 'get_terms_args'));
 
 		// filters categories and post tags by language
 		add_filter('terms_clauses', array(&$this, 'terms_clauses'), 10, 3);
@@ -75,32 +78,6 @@ class PLL_Frontend_Filters extends PLL_Filters{
 	}
 
 	/*
-	 * translates page on front
-	 *
-	 * @since 1.7
-	 *
-	 * @param int $v page on front page id
-	 * @return int
-	 */
-	public function translate_page_on_front($v) {
-		// returns the current page if there is no translation to avoid ugly notices
-		return isset($this->curlang->page_on_front) ? $this->curlang->page_on_front : $v;
-	}
-
-	/*
-	 * translates page for posts
-	 *
-	 * @since 1.7
-	 *
-	 * @param int $v page for posts page id
-	 * @return int
-	 */
-	public function translate_page_for_posts($v) {
-		// returns the current page if there is no translation to avoid ugly notices
-		return isset($this->curlang->page_for_posts) ? $this->curlang->page_for_posts : $v;
-	}
-
-	/*
 	 * filters sticky posts by current language
 	 *
 	 * @since 0.8
@@ -118,6 +95,22 @@ class PLL_Frontend_Filters extends PLL_Filters{
 			}
 		}
 		return $posts;
+	}
+
+	/*
+	 * adds language dependent cache domain when querying terms
+	 * useful as the 'lang' parameter is not included in cache key by WordPress
+	 *
+	 * @since 1.3
+	 *
+	 * @param array $args
+	 * @return array
+	 */
+	public function get_terms_args($args) {
+		$lang = isset($args['lang']) ? $args['lang'] : $this->curlang->slug;
+		$key = '_' . (is_array($lang) ? implode(',', $lang) : $lang);
+		$args['cache_domain'] = empty($args['cache_domain']) ? 'pll' . $key : $args['cache_domain'] . $key;
+		return $args;
 	}
 
 	/*

@@ -126,7 +126,7 @@ msgid "Admin language"
 msgstr "管理语言"
 
 #: admin/admin-filters.php:126
-msgid "Wordpress default"
+msgid "WordPress default"
 msgstr "WordPress默认"
 
 #: admin/admin.php:167 admin/settings.php:102
@@ -245,7 +245,7 @@ msgstr "区域"
 
 #: admin/view-tab-lang.php:66
 msgid ""
-"Wordpress Locale for the language (for example: en_US). You will need to "
+"WordPress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
 msgstr "WordPress 语言区域（例如：en_US）。你需要为该语言安装 .mo 文件。"
 

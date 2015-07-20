@@ -42,7 +42,7 @@ class PLL_MO extends MO {
 		// json_encode would take less space but is slower to decode
 		// wp_insert_post expects slashed data
 		$post['post_content'] = addslashes(serialize($strings));
-		$post['post_status'] = 'publish';
+		$post['post_status'] = 'private'; // to avoid a conflict with WP Super Cache. See https://wordpress.org/support/topic/polylang_mo-and-404s-take-2
 		$post['post_type'] = 'polylang_mo';
 		wp_insert_post($post);
 	}

@@ -2,8 +2,9 @@
 /*
 Plugin Name: Polylang
 Plugin URI: http://polylang.wordpress.com/
-Version: 1.7beta5
+Version: 1.7.7
 Author: Frédéric Demarle
+Author uri: http://polylang.wordpress.com
 Description: Adds multilingual capability to WordPress
 Text Domain: polylang
 Domain Path: /languages
@@ -33,7 +34,7 @@ Domain Path: /languages
 if (!function_exists('add_action'))
 	exit();
 
-define('POLYLANG_VERSION', '1.7beta5');
+define('POLYLANG_VERSION', '1.7.7');
 define('PLL_MIN_WP_VERSION', '3.8');
 
 define('POLYLANG_BASENAME', plugin_basename(__FILE__)); // plugin name as known by WP
@@ -88,7 +89,7 @@ class Polylang {
 
 		// WPML API
 		if (!defined('PLL_WPML_COMPAT') || PLL_WPML_COMPAT)
-			require_once (PLL_INC.'/wpml-compat.php');
+			PLL_WPML_Compat::instance();
 
 		// extra code for compatibility with some plugins
 		if (!defined('PLL_PLUGINS_COMPAT') || PLL_PLUGINS_COMPAT)
@@ -136,7 +137,7 @@ class Polylang {
 		// default url to access user data such as custom flags
 		if (!defined('PLL_LOCAL_URL'))
 			define('PLL_LOCAL_URL', content_url('/polylang'));
-			
+
 		// cookie name. no cookie will be used if set to false
 		if (!defined('PLL_COOKIE'))
 			define('PLL_COOKIE', 'pll_language');
@@ -197,7 +198,7 @@ class Polylang {
 		// load wpml-config.xml
 		if (!defined('PLL_WPML_COMPAT') || PLL_WPML_COMPAT)
 			PLL_WPML_Config::instance();
-	
+
 		do_action('pll_init');
 	}
 }

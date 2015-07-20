@@ -132,8 +132,8 @@ msgid "Admin language"
 msgstr "Lingua degli amministratori"
 
 #: admin/admin-filters.php:126
-msgid "Wordpress default"
-msgstr "Impostazione predefinita di Wordpress"
+msgid "WordPress default"
+msgstr "Impostazione predefinita di WordPress"
 
 #: admin/admin.php:167 admin/settings.php:102
 msgid "Settings"
@@ -264,10 +264,10 @@ msgstr "Impostazioni locali"
 
 #: admin/view-tab-lang.php:66
 msgid ""
-"Wordpress Locale for the language (for example: en_US). You will need to "
+"WordPress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
 msgstr ""
-"Impostazioni locali di Wordpress per la lingua (per esempio: en_US). è "
+"Impostazioni locali di WordPress per la lingua (per esempio: en_US). è "
 "necessario installare il file .mo per questa lingua."
 
 #: admin/view-tab-lang.php:70

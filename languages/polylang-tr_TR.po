@@ -53,7 +53,7 @@ msgid ""
 "Polylang is free of charge and is released under the same license as "
 "WordPress, the %sGPL%s."
 msgstr ""
-"Polylang'ın kullanımı ücretsizdir ve dağıtımı Wordpress ile aynı lisans "
+"Polylang'ın kullanımı ücretsizdir ve dağıtımı WordPress ile aynı lisans "
 "sözleşmesi %sGPL%s altında yapılmıştır."
 
 #: admin/view-about.php:22
@@ -138,7 +138,7 @@ msgid "Admin language"
 msgstr "Yönetici dili"
 
 #: admin/admin-filters.php:126
-msgid "Wordpress default"
+msgid "WordPress default"
 msgstr "WordPress varsayılanı"
 
 #: admin/admin.php:167 admin/settings.php:102
@@ -270,7 +270,7 @@ msgstr "Bölge Kodu"
 
 #: admin/view-tab-lang.php:66
 msgid ""
-"Wordpress Locale for the language (for example: en_US). You will need to "
+"WordPress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
 msgstr ""
 "Dil için WordPress Bölge Kodu (örneğin: tr_TR). Bu dilin .mo uzantılı dil "

@@ -40,7 +40,7 @@ class PLL_Admin extends PLL_Base {
 		// plugin i18n, only needed for backend
 		load_plugin_textdomain('polylang', false, basename(POLYLANG_DIR).'/languages');
 
-		// adds the link to the languages panel in the wordpress admin menu
+		// adds the link to the languages panel in the WordPress admin menu
 		add_action('admin_menu', array(&$this, 'add_menus'));
 
 		// setup js scripts and css styles
@@ -50,6 +50,10 @@ class PLL_Admin extends PLL_Base {
 		// adds a 'settings' link in the plugins table
 		add_filter('plugin_action_links_' . POLYLANG_BASENAME, array(&$this, 'plugin_action_links'));
 		add_action('in_plugin_update_message-' . POLYLANG_BASENAME, array(&$this, 'plugin_update_message'), 10, 2);
+
+		// Lingotek
+		if (!defined('PLL_LINGOTEK_AD') || PLL_LINGOTEK_AD)
+			require(POLYLANG_DIR . '/lingotek/lingotek.php');
 	}
 
 	/*
@@ -84,7 +88,7 @@ class PLL_Admin extends PLL_Base {
 	}
 
 	/*
-	 * adds the link to the languages panel in the wordpress admin menu
+	 * adds the link to the languages panel in the WordPress admin menu
 	 *
 	 * @since 0.1
 	 */
@@ -102,7 +106,7 @@ class PLL_Admin extends PLL_Base {
 		$screen = get_current_screen();
 		if (empty($screen))
 			return;
-			
+
 		$suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
 
 		// for each script:
@@ -128,6 +132,8 @@ class PLL_Admin extends PLL_Base {
 
 	/*
 	 * sets pll_ajax_backend on all backend ajax request
+	 * takes care to situations where the ajax request has no options.data thanks to ScreenfeedFr
+	 * see: https://wordpress.org/support/topic/ajaxprefilter-may-not-work-as-expected
 	 *
 	 * @since 1.4
 	 */
@@ -147,11 +153,25 @@ class PLL_Admin extends PLL_Base {
 	if (typeof jQuery != 'undefined') {
 		(function($){
 			$.ajaxPrefilter(function (options, originalOptions, jqXHR) {
-				if (typeof options.data == 'string') {
-					options.data = '<?php echo $str;?>'+options.data;
-				}
-				else {
-					options.data = $.extend(options.data, {<?php echo $arr;?>});
+				if (options.url.indexOf(ajaxurl) != -1) {
+					if ( typeof options.data === 'undefined' ) {
+						options.data = options.type === "get" ? '<?php echo $str;?>' : {<?php echo $arr;?>};
+					}
+					else {
+						if (typeof options.data === "string") {
+							try {
+								o = $.parseJSON(options.data);
+								o = $.extend(o, {<?php echo $arr;?>});
+								options.data = JSON.stringify(o);
+							}
+							catch(e) {
+								options.data = '<?php echo $str;?>'+options.data;
+							}
+						}
+						else {
+							options.data = $.extend(options.data, {<?php echo $arr;?>});
+						}
+					}
 				}
 			});
 		})(jQuery)
@@ -215,21 +235,21 @@ class PLL_Admin extends PLL_Base {
 		else
 			do_action('pll_no_language_defined'); // to load overriden textdomains
 	}
-	
+
 	/*
 	 * avoids parsing a tax query when all languages are requested
 	 * fixes https://wordpress.org/support/topic/notice-undefined-offset-0-in-wp-includesqueryphp-on-line-3877 introduced in WP 4.1
 	 * @see the suggestion of @boonebgorges, https://core.trac.wordpress.org/ticket/31246
-	 * 
+	 *
 	 * @since 1.6.5
-	 * 
+	 *
 	 * @param array $qvars
 	 * @return array
 	 */
 	public function request($qvars) {
 			if (isset($qvars['lang']) && 'all' === $qvars['lang'])
 				unset($qvars['lang']);
-				
+
 			return $qvars;
 	}
 
@@ -292,8 +312,6 @@ class PLL_Admin extends PLL_Base {
 		foreach (array_merge(array($all_item), $this->model->get_languages_list()) as $lang) {
 			if ($selected->slug == $lang->slug)
 				continue;
-
-			$img = empty($lang->flag) ? '' : (false !== strpos($lang->flag, 'img') ? $lang->flag . '&nbsp;' : $lang->flag);
 
 			$wp_admin_bar->add_menu(array(
 				'parent' => 'languages',

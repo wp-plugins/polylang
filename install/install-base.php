@@ -24,7 +24,6 @@ class PLL_Install_Base {
 		add_action('wpmu_new_blog', array(&$this, 'wpmu_new_blog'), 5); // before WP attempts to send mails which can break on some PHP versions
 	}
 
-
 	/*
 	 * allows to detect plugin deactivation
 	 *
@@ -43,9 +42,9 @@ class PLL_Install_Base {
 	 *
 	 * @param string $what either 'activate' or 'deactivate'
 	 */
-	protected function do_for_all_blogs($what) {
+	protected function do_for_all_blogs($what, $networkwide) {
 		// network
-		if (is_multisite() && isset($_GET['networkwide']) && ($_GET['networkwide'] == 1)) {
+		if (is_multisite() && $networkwide) {
 			global $wpdb;
 
 			foreach ($wpdb->get_col("SELECT blog_id FROM $wpdb->blogs") as $blog_id) {
@@ -65,8 +64,8 @@ class PLL_Install_Base {
 	 *
 	 * @since 1.7
 	 */
-	public function activate() {
-		$this->do_for_all_blogs('activate');
+	public function activate($networkwide) {
+		$this->do_for_all_blogs('activate', $networkwide);
 	}
 
 	/*
@@ -83,8 +82,8 @@ class PLL_Install_Base {
 	 *
 	 * @since 0.1
 	 */
-	public function deactivate() {
-		$this->do_for_all_blogs('deactivate');
+	public function deactivate($networkwide) {
+		$this->do_for_all_blogs('deactivate', $networkwide);
 	}
 
 	/*

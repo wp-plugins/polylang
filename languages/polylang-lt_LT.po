@@ -129,8 +129,8 @@ msgid "Admin language"
 msgstr "Administravimo skydelio kalba"
 
 #: admin/admin-filters.php:126
-msgid "Wordpress default"
-msgstr "Wordpress numatytasis"
+msgid "WordPress default"
+msgstr "WordPress numatytasis"
 
 #: admin/admin.php:167 admin/settings.php:102
 msgid "Settings"
@@ -260,7 +260,7 @@ msgstr "Lokalė"
 
 #: admin/view-tab-lang.php:66
 msgid ""
-"Wordpress Locale for the language (for example: en_US). You will need to "
+"WordPress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
 msgstr ""
 "Kalbos WordPress lokalė (pavyzdžiui: lt_LT). Jums reikės įsidiegti šios "
@@ -424,7 +424,7 @@ msgstr "Pavadinimas:"
 #. translators: plugin header field 'Description'
 #: polylang.php:0
 msgid "Adds multilingual capability to WordPress"
-msgstr "Prideda daugiakalbystės funkciją Wordpress sistemai"
+msgstr "Prideda daugiakalbystės funkciją WordPress sistemai"
 
 #: install/install.php:24
 #, php-format
