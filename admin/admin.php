@@ -50,6 +50,10 @@ class PLL_Admin extends PLL_Base {
 		// adds a 'settings' link in the plugins table
 		add_filter('plugin_action_links_' . POLYLANG_BASENAME, array(&$this, 'plugin_action_links'));
 		add_action('in_plugin_update_message-' . POLYLANG_BASENAME, array(&$this, 'plugin_update_message'), 10, 2);
+
+		// Lingotek
+		if (!defined('PLL_LINGOTEK_AD') || PLL_LINGOTEK_AD)
+			require(POLYLANG_DIR . '/lingotek/lingotek.php');
 	}
 
 	/*
