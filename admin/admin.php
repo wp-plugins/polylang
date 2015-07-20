@@ -149,11 +149,25 @@ class PLL_Admin extends PLL_Base {
 	if (typeof jQuery != 'undefined') {
 		(function($){
 			$.ajaxPrefilter(function (options, originalOptions, jqXHR) {
-				if ( typeof options.data === 'undefined' ) {
-					options.data = options.type === "get" ? '<?php echo $str;?>' : {<?php echo $arr;?>};
-				}
-				else {
-					options.data = typeof options.data === "string" ? '<?php echo $str;?>'+options.data : $.extend(options.data, {<?php echo $arr;?>});
+				if (options.url.indexOf(ajaxurl) != -1) {
+					if ( typeof options.data === 'undefined' ) {
+						options.data = options.type === "get" ? '<?php echo $str;?>' : {<?php echo $arr;?>};
+					}
+					else {
+						if (typeof options.data === "string") {
+							try {
+								o = $.parseJSON(options.data);
+								o = $.extend(o, {<?php echo $arr;?>});
+								options.data = JSON.stringify(o);
+							}
+							catch(e) {
+								options.data = '<?php echo $str;?>'+options.data;
+							}
+						}
+						else {
+							options.data = $.extend(options.data, {<?php echo $arr;?>});
+						}
+					}
 				}
 			});
 		})(jQuery)

@@ -120,6 +120,8 @@ See http://polylang.wordpress.com/documentation/contribute/
 * fix: avoid a conflict with WP Super Cache preloading (loading 'polylang_mo' posts which are 404). [props ecdltf](https://wordpress.org/support/topic/polylang_mo-and-404s-take-2)
 * fix: customizer menus issues introduced by changes in WP 4.1
 * fix: strings translations are not saved when pressing enter
+* fix: it is not possible to de-activate the translation for custom post types and taxonomies from wpml-config.xml
+* fix: conflict whith plugins using stringified json in ajax requests
 
 = 1.7.6 (2015-06-10) =
 

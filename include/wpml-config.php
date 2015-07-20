@@ -22,7 +22,7 @@ class PLL_WPML_Config {
 	public function __construct() {
 		$this->init();
 	}
-	
+
 	/*
 	 * access to the single instance of the class
 	 *
@@ -268,7 +268,7 @@ class PLL_WPML_Config {
 			foreach ($context['custom-type'] as $pt) {
 				if ($pt['attributes']['translate'] == 1 && !$hide)
 					$types[$pt['value']] = $pt['value'];
-				elseif ($hide)
+				else
 					unset ($types[$pt['value']]); // the author decided what to do with the post type so don't allow the user to change this
 			}
 		}
@@ -289,7 +289,7 @@ class PLL_WPML_Config {
 			foreach ($context['taxonomy'] as $tax) {
 				if ($tax['attributes']['translate'] == 1 && !$hide)
 					$taxonomies[$tax['value']] = $tax['value'];
-				elseif ($hide)
+				else
 					unset ($taxonomies[$tax['value']]); // the author decided what to do with the taxonomy so don't allow the user to change this
 			}
 		}
