@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, international, localization
 Requires at least: 3.8
 Tested up to: 4.2
-Stable tag: 1.7.7
+Stable tag: 1.7.8
 License: GPLv2 or later
 
 Making WordPress multilingual
@@ -111,9 +111,9 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 == Changelog ==
 
-= 1.7.8 =
+= 1.7.8 (2015-07-21) =
 
-* fix: PHP warning for PHP < 5.4
+* fix: conflict with PHP < 5.4 introduced in 1.7.7
 
 = 1.7.7 (2015-07-20) =
 
