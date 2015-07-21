@@ -64,7 +64,7 @@ msgid "Admin language"
 msgstr "Språk i Admin"
 
 #: ../admin/admin-filters.php:126
-msgid "Wordpress default"
+msgid "WordPress default"
 msgstr "WordPress standard"
 
 #: ../admin/admin-filters.php:160 ../admin/admin-filters.php:169
@@ -370,7 +370,7 @@ msgstr "Namnet är hur språket visas på din sida (t.ex. Engelska)"
 
 #: ../admin/view-tab-lang.php:66
 msgid ""
-"Wordpress Locale for the language (for example: en_US). You will need to "
+"WordPress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
 msgstr ""
 "WordPress språkprefix för språket (t.ex: en_US). Du kan komma att behöva "

@@ -10,6 +10,15 @@ jQuery(document).ready(function($) {
 		$('#lang_name').val(selected[0]);
 	});
 
+	// strings translations
+	// save translations when pressing enter
+	$('.translation input').keypress( function(event){
+		if( 13 === event.keyCode ) {
+			event.preventDefault();
+			$('#submit').click();
+		}
+	});
+
 	// settings page
 	// manages visibility of fields
 	$("input[name='force_lang']").change(function() {

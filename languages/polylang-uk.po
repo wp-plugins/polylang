@@ -150,8 +150,8 @@ msgid "Admin language"
 msgstr "Адміністратор мови"
 
 #: admin/admin-filters.php:126
-msgid "Wordpress default"
-msgstr "Wordpress за замовчуванням"
+msgid "WordPress default"
+msgstr "WordPress за замовчуванням"
 
 # @ default
 # @ polylang
@@ -302,10 +302,10 @@ msgstr "Локаль"
 # @ polylang
 #: admin/view-tab-lang.php:66
 msgid ""
-"Wordpress Locale for the language (for example: en_US). You will need to "
+"WordPress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
 msgstr ""
-"Локаль Wordpress для мови (наприклад, en_US). Вам потрібно буде встановити "
+"Локаль WordPress для мови (наприклад, en_US). Вам потрібно буде встановити "
 "файл .mo для даної мови."
 
 # @ polylang

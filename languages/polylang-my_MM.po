@@ -148,7 +148,7 @@ msgstr "ထိန်းချုပ်ခလုပ်ခုံ ဘာသာစ�
 
 # @ polylang
 #: admin/admin-filters.php:126
-msgid "Wordpress default"
+msgid "WordPress default"
 msgstr "WordPress မူလဘာသာစကား"
 
 # @ polylang
@@ -298,7 +298,7 @@ msgstr "ေဒသန္တရဘာသာစကားအုပ်စု"
 # @ polylang
 #: admin/view-tab-lang.php:66
 msgid ""
-"Wordpress Locale for the language (for example: en_US). You will need to "
+"WordPress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
 msgstr ""
 "WordPress ဘာသာစကားသင်္ကေတ (  ဥပမာ။   ။  my_MM ) ။ ဤဘာသာစကားအတွက် .mo ဖိုင်အား "

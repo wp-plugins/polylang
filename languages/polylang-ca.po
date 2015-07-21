@@ -128,8 +128,8 @@ msgid "Admin language"
 msgstr "Idioma de l'administrador"
 
 #: admin/admin-filters.php:126
-msgid "Wordpress default"
-msgstr "Opció per defecte de Wordpress"
+msgid "WordPress default"
+msgstr "Opció per defecte de WordPress"
 
 #: admin/admin.php:167 admin/settings.php:102
 msgid "Settings"
@@ -258,10 +258,10 @@ msgstr "Codi d'idioma i regió (locale)"
 
 #: admin/view-tab-lang.php:66
 msgid ""
-"Wordpress Locale for the language (for example: en_US). You will need to "
+"WordPress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
 msgstr ""
-"Codi d'idioma i regió de Wordpress (per exemple: ca_ES). Hauràs d'instal·lar "
+"Codi d'idioma i regió de WordPress (per exemple: ca_ES). Hauràs d'instal·lar "
 "l'arxiu .mo per a aquest idioma"
 
 #: admin/view-tab-lang.php:70
@@ -422,7 +422,7 @@ msgstr "Títol:"
 #. translators: plugin header field 'Description'
 #: polylang.php:0
 msgid "Adds multilingual capability to WordPress"
-msgstr "Afegeix capacitat multilingüística a Wordpress"
+msgstr "Afegeix capacitat multilingüística a WordPress"
 
 #: install/install.php:24
 #, php-format

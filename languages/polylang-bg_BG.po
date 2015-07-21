@@ -129,7 +129,7 @@ msgid "Admin language"
 msgstr "Езика на администраторския панел"
 
 #: admin/admin-filters.php:126
-msgid "Wordpress default"
+msgid "WordPress default"
 msgstr "Езика по подразбиране"
 
 #: admin/admin.php:167 admin/settings.php:102
@@ -262,7 +262,7 @@ msgstr "Местоположение"
 
 #: admin/view-tab-lang.php:66
 msgid ""
-"Wordpress Locale for the language (for example: en_US). You will need to "
+"WordPress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
 msgstr ""
 "Местоположение според WordPress (например: bg_BG, en_GB). Ще трябва да "

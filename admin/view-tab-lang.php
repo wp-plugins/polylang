@@ -63,7 +63,7 @@
 						'<input name="locale" id="lang_locale" type="text" value="%s" size="40" aria-required="true" />',
 						$action=='edit' ? esc_attr($edit_lang->locale) : ''
 					);?>
-					<p><?php _e('Wordpress Locale for the language (for example: en_US). You will need to install the .mo file for this language.', 'polylang');?></p>
+					<p><?php _e('WordPress Locale for the language (for example: en_US). You will need to install the .mo file for this language.', 'polylang');?></p>
 				</div>
 
 				<div class="form-field">
@@ -93,7 +93,7 @@
 					<p><?php _e('Position of the language in the language switcher', 'polylang');?></p>
 				</div>
 
-				<?php submit_button( $action == 'edit' ? __('Update') : __('Add new language', 'polylang'), 'button'); // since WP 3.1 ?>
+				<?php submit_button( $action == 'edit' ? __('Update') : __('Add new language', 'polylang')); // since WP 3.1 ?>
 
 				</form>
 			</div><!-- form-wrap -->

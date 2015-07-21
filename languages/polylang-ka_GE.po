@@ -148,8 +148,8 @@ msgstr "ადმინისტრატორის ენა"
 
 # @ polylang
 #: admin/admin-filters.php:126
-msgid "Wordpress default"
-msgstr "Wordpress ნაგულისხმევი"
+msgid "WordPress default"
+msgstr "WordPress ნაგულისხმევი"
 
 # @ polylang
 #: admin/admin.php:167 admin/settings.php:102
@@ -298,10 +298,10 @@ msgstr "ლოკალური"
 # @ polylang
 #: admin/view-tab-lang.php:66
 msgid ""
-"Wordpress Locale for the language (for example: en_US). You will need to "
+"WordPress Locale for the language (for example: en_US). You will need to "
 "install the .mo file for this language."
 msgstr ""
-"Wordpress ლოკალური ენისთვის (მაგალითად: ka_GE). თქვენ უნდა დააყენოთ .mo ამ "
+"WordPress ლოკალური ენისთვის (მაგალითად: ka_GE). თქვენ უნდა დააყენოთ .mo ამ "
 "ენისთვის."
 
 # @ polylang

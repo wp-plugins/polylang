@@ -53,6 +53,9 @@ class PLL_Frontend extends PLL_Base {
 		$c = array('Content', 'Url', 'Url', 'Domain');
 		$class = 'PLL_Choose_Lang_' . $c[$this->options['force_lang']];
 		$this->choose_lang = new $class($this);
+
+		// need to load nav menu class early to correctly define the locations in the customizer when the language is set from the content
+		$this->nav_menu = new PLL_Frontend_Nav_Menu($this);
 	}
 
 	/*
@@ -64,9 +67,6 @@ class PLL_Frontend extends PLL_Base {
 		// filters
 		$this->filters = new PLL_Frontend_Filters($this);
 		$this->filters_search = new PLL_Frontend_Filters_Search($this);
-
-		// nav menu
-		$this->nav_menu = new PLL_Frontend_Nav_Menu($this);
 	}
 
 	/*
@@ -92,11 +92,6 @@ class PLL_Frontend extends PLL_Base {
 
 		// modifies query vars when the language is queried
 		if (!empty($qv['lang'])) {
-			// remove pages query when the language is set unless we do a search
-			// take care not to break the single page query!
-			if (empty($qv['post_type']) && !$query->is_search && !$query->is_page)
-				$query->set('post_type', 'post');
-
 			if (isset($query->tax_query->queried_terms)) {
 				$tax_query_in_and = wp_list_filter( $query->tax_query->queried_terms, array( 'operator' => 'NOT IN' ), 'NOT' );
 				$queried_taxonomies = array_keys( $tax_query_in_and );
@@ -104,6 +99,11 @@ class PLL_Frontend extends PLL_Base {
 				// do we query another custom taxonomy?
 				$taxonomies = array_diff($queried_taxonomies , array('language', 'category', 'post_tag'));
 			}
+
+			// remove pages query when the language is set unless we do a search
+			// take care not to break the single page and taxonomies queries!
+			if (empty($qv['post_type']) && !$query->is_search && !$query->is_page && empty($taxonomies))
+				$query->set('post_type', 'post');
 
 			// unset the is_archive flag for language pages to prevent loading the archive template
 			// keep archive flag for comment feed otherwise the language filter does not work
@@ -114,15 +114,14 @@ class PLL_Frontend extends PLL_Base {
 			// reset the queried object
 			if (empty($taxonomies) && ($query->is_author || $query->is_post_type_archive || $query->is_date || $query->is_search)) {
 				$query->is_tax = false;
-				unset($query->queried_object);
-				get_queried_object();
-			} 
-					
+				unset($query->queried_object); // FIXME useless?
+			}
+
 			// move the language tax_query at the end to avoid it being the queried object
 			if (!empty($taxonomies) && 'language' == reset( $queried_taxonomies )) {
 				$query->tax_query->queried_terms['language'] = array_shift($query->tax_query->queried_terms);
 				unset($query->queried_object);
-				get_queried_object();
+				get_queried_object(); // necessary to avoid the language being the queried object
 			}
 		}
 	}
