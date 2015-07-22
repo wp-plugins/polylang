@@ -116,6 +116,9 @@ class PLL_Plugins_Compat {
 			add_filter('home_url', array(&$this, 'wpseo_home_url'), 10, 2); // fix home_url
 			add_filter('wpseo_posts_join', array(&$this, 'wpseo_posts_join'), 10, 2);
 			add_filter('wpseo_posts_where', array(&$this, 'wpseo_posts_where'), 10, 2);
+			add_filter('wpseo_enable_xml_sitemap_transient_caching', array(&$this, 'wpseo_enable_xml_sitemap_transient_caching'));
+			add_filter('wpseo_typecount_join', array(&$this, 'wpseo_typecount_join'), 10, 2 );
+			add_filter('wpseo_typecount_where', array(&$this, 'wpseo_typecount_where'), 10, 2 );
 		}
 
 		// one sitemap for all languages when the language is set from the content or directory name
@@ -178,6 +181,55 @@ class PLL_Plugins_Compat {
 	public function wpseo_posts_where($sql, $post_type) {
 		global $polylang;
 		return pll_is_translated_post_type($post_type) ? $sql . $polylang->model->where_clause($polylang->curlang, 'post') : $sql;
+	}
+
+	/*
+	 * WordPress SEO by Yoast
+	 * turns off the transient caching
+	 * only when using multiple domains or subdomains
+	 *
+	 * @since 1.7.9
+	 *
+	 * @param string $sql where clause
+	 * @param string $post_type
+	 * @return string
+	 */
+	function wpseo_enable_xml_sitemap_transient_caching() {
+		return false;
+	}
+
+	/*
+	 * WordPress SEO by Yoast
+	 * modifies the sql request for posts sitemaps
+	 * only when using multiple domains or subdomains
+	 *
+	 * @since 1.7.9
+	 *
+	 * @param string $sql join clause
+	 * @param string $post_type
+	 * @return string
+	 */
+	function wpseo_typecount_join( $join, $post_type ) {
+		global $wpdb;
+		$join .= " INNER JOIN $wpdb->term_relationships AS pll_lng ON pll_lng.object_id = ID";
+		return $join;
+	}
+
+	/*
+	 * WordPress SEO by Yoast
+	 * modifies the sql request for posts sitemaps
+	 * only when using multiple domains or subdomains
+	 *
+	 * @since 1.7.9
+	 *
+	 * @param string $sql where clause
+	 * @param string $post_type
+	 * @return string
+	 */
+	function wpseo_typecount_where( $where, $post_type ) {
+		global $polylang, $wpdb;
+		$where .= $wpdb->prepare( " AND pll_lng.term_taxonomy_id = %d", $polylang->curlang->term_taxonomy_id );
+		return $where;
 	}
 
 	/*
