@@ -111,6 +111,10 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 == Changelog ==
 
+= 1.7.9 =
+
+* fix: conflict with WPSEO sitemap caching when using multiple domains
+
 = 1.7.8 (2015-07-21) =
 
 * fix: conflict with PHP < 5.4 introduced in 1.7.7
