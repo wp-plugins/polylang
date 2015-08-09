@@ -230,16 +230,24 @@ class PLL_Frontend_Links extends PLL_Links {
 	 * @since 0.1
 	 */
 	public function wp_head() {
-		// google recommends to include self link https://support.google.com/webmasters/answer/189077?hl=en
+		// Google recommends to include self link https://support.google.com/webmasters/answer/189077?hl=en
 		foreach ($this->model->get_languages_list() as $language) {
 			if ($url = $this->get_translation_url($language))
 				$urls[$language->slug] = $url;
 		}
 
 		// ouptputs the section only if there are translations ($urls always contains self link)
-		if (!empty($urls) && count($urls) > 1) {
-			foreach ($urls as $lang => $url)
+		// don't output anything on paged archives: see https://wordpress.org/support/topic/hreflang-on-page2
+		if (!empty($urls) && count($urls) > 1 && !is_paged()) {
+			foreach ($urls as $lang => $url) {
 				printf('<link rel="alternate" href="%s" hreflang="%s" />'."\n", esc_url($url), esc_attr($lang));
+			}
+
+			// adds the site root url when the default language code is not hidden
+			// see https://wordpress.org/support/topic/implementation-of-hreflangx-default
+			if ( is_front_page() && ! $this->options['hide_default'] ) {
+				printf( '<link rel="alternate" href="%s" hreflang="x-default" />'."\n", home_url() );
+			}
 		}
 	}
 

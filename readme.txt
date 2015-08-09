@@ -114,10 +114,13 @@ See http://polylang.wordpress.com/documentation/contribute/
 = 1.7.9 =
 
 * Minimum WordPress version is now v3.9
+* Add: hreflang="x-default" on front page when the default language code is not hidden in urls
+* fix: remove hreflang links in html head section of paged archives to please Google
 * fix: conflict with WPSEO sitemap caching when using multiple domains
 * fix: issues on mobile devices in list tables in WP 4.3
 * fix: various issues with nav menus and customizer nav menus in WP 4.3
 * fix: correctly disallow unchecking both show names and show flags in the language switcher form
+
 
 = 1.7.8 (2015-07-21) =
 
