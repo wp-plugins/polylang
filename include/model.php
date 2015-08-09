@@ -46,7 +46,7 @@ class PLL_Model {
 		add_action('registered_post_type', array(&$this, 'registered_post_type'));
 
 		// just in case someone would like to display the language description ;-)
-		add_filter('language_description', create_function('$v', "return '';"));
+		add_filter('language_description', '__return_empty_string');
 	}
 
 	/*

@@ -113,7 +113,7 @@ class PLL_Plugins_Compat {
 		// one sitemap per language when using multiple domains or subdomains
 		// because WPSEO does not accept several domains or subdomains in one sitemap
 		if ($polylang->options['force_lang'] > 1) {
-			add_filter('wpseo_enable_xml_sitemap_transient_caching', create_function('', 'return false;')); // disable cache! otherwise WPSEO keeps only one domain
+			add_filter('wpseo_enable_xml_sitemap_transient_caching', '__return_false'); // disable cache! otherwise WPSEO keeps only one domain
 			add_filter('home_url', array(&$this, 'wpseo_home_url'), 10, 2); // fix home_url
 			add_filter('wpseo_posts_join', array(&$this, 'wpseo_posts_join'), 10, 2);
 			add_filter('wpseo_posts_where', array(&$this, 'wpseo_posts_where'), 10, 2);

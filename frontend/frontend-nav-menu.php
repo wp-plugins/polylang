@@ -19,7 +19,7 @@ class PLL_Frontend_Nav_Menu extends PLL_Nav_Menu {
 		$this->curlang = &$polylang->curlang;
 
 		// split the language switcher menu item in several language menu items
-		add_filter('wp_get_nav_menu_items', array(&$this, 'wp_get_nav_menu_items'));
+		add_filter('wp_get_nav_menu_items', array(&$this, 'wp_get_nav_menu_items'), 20); // after the customizer menus
 		add_filter('wp_nav_menu_objects', array(&$this, 'wp_nav_menu_objects'));
 		add_filter('nav_menu_link_attributes', array(&$this, 'nav_menu_link_attributes'), 10, 3);
 
@@ -37,6 +37,16 @@ class PLL_Frontend_Nav_Menu extends PLL_Nav_Menu {
 	 * @return array modified items
 	 */
 	public function wp_get_nav_menu_items($items) {
+		if (doing_action('customize_register')) { // needed since WP 4.3, doing_action available since WP 3.9
+			return $items;
+		}
+
+		// the customizer menus does not sort the items and we need them to be sorted before splitting the language switcher
+		function pll_usort_menu_items($a, $b){
+			return ($a->menu_order < $b->menu_order) ? -1 : 1;
+		};
+		usort($items, 'pll_usort_menu_items');
+
 		$new_items = array();
 		$offset = 0;
 

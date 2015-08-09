@@ -136,7 +136,7 @@ class PLL_Links_Directory extends PLL_Links_Permalinks {
 		// don't modify the rules if there is no languages created yet
 		if ($this->model->get_languages_list() && !$done) {
 			// suppress the rules created by WordPress for our taxonomy
-			add_filter('language_rewrite_rules', create_function('$rules', 'return array();'));
+			add_filter('language_rewrite_rules', '__return_empty_array');
 
 			foreach ($this->get_rewrite_rules_filters() as $type)
 				add_filter($type . '_rewrite_rules', array(&$this, 'rewrite_rules'));

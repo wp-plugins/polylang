@@ -106,9 +106,9 @@ class PLL_Table_String extends WP_List_Table {
 	function get_columns() {
 		return array(
 			'cb'           => '<input type="checkbox" />', //checkbox
-			'context'      => __('Group', 'polylang'),
-			'name'         => __('Name', 'polylang'),
 			'string'       => __('String', 'polylang'),
+			'name'         => __('Name', 'polylang'),
+			'context'      => __('Group', 'polylang'),
 			'translations' => __('Translations', 'polylang'),
 		);
 	}
@@ -122,9 +122,9 @@ class PLL_Table_String extends WP_List_Table {
 	 */
 	function get_sortable_columns() {
 		return array(
-			'context' => array('context', false),
-			'name'    => array('name', false),
 			'string'  => array('string', false),
+			'name'    => array('name', false),
+			'context' => array('context', false),
 		);
 	}
 
@@ -200,4 +200,19 @@ class PLL_Table_String extends WP_List_Table {
 		submit_button( __( 'Filter' ), 'button', false, false, array( 'id' => 'post-query-submit' ) );
 		echo '</div>';
 	}
+
+	/**
+	 * Displays the toggle row button for mobile devices
+	 * Needed since WP 4.3 due to #33313
+	 *
+	 * @since 1.7.9
+	 *
+	 * @param object $item The item being acted upon.
+	 * @param string $column_name Current column name.
+	 * @param string $primary Primary column name.
+	 * @return string The toggle row button or an empty string.
+	 */
+	protected function handle_row_actions( $item, $column_name, $primary ) {
+		return $column_name == $primary ? '<button type="button" class="toggle-row"><span class="screen-reader-text">' . __( 'Show more details' ) . '</span></button>' : '';
+ 	}
 }

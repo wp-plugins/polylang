@@ -61,8 +61,9 @@ class PLL_Admin_Filters_Columns {
 
 		foreach ($this->model->get_languages_list() as $language) {
 			// don't add the column for the filtered language
-			if (empty($this->curlang) || $language->slug != $this->curlang->slug)
-				$columns['language_'.$language->slug] = $language->flag ? $language->flag : esc_html($language->slug);
+			if (empty($this->curlang) || $language->slug != $this->curlang->slug) {
+				$columns['language_'.$language->slug] = $language->flag ? $language->flag . '<span class="screen-reader-text">' . $language->name . '</span>' : esc_html($language->slug);
+			}
 		}
 
 		return isset($end) ? array_merge($columns, $end) : $columns;

@@ -3,15 +3,16 @@ jQuery(document).ready(function($) {
 		if ( e.target && e.target.className && -1 != e.target.className.indexOf('item-edit')) {
 			$("input[value='#pll_switcher'][type=text]").parent().parent().parent().each( function(){
 				var item = $(this).attr('id').substring(19);
-				// remove default fields we don't need
-				$(this).children('.description-thin,.field-link-target,.field-description,.field-url').remove();
+				$(this).children('p:not(.field-move)').remove(); // remove default fields we don't need
+
 				h = $('<input>').attr({
 						type: 'hidden',
 						id: 'edit-menu-item-title-'+item,
 						name: 'menu-item-title['+item+']',
-						value: pll_data.strings[4]
+						value: pll_data.title
 				});
 				$(this).append(h);
+
 				h = $('<input>').attr({
 						type: 'hidden',
 						id: 'edit-menu-item-url-'+item,
@@ -19,6 +20,7 @@ jQuery(document).ready(function($) {
 						value: '#pll_switcher'
 				});
 				$(this).append(h);
+
 				// a hidden field which exits only if our jQuery code has been executed
 				h = $('<input>').attr({
 						type: 'hidden',
@@ -51,9 +53,12 @@ jQuery(document).ready(function($) {
 			// disallow unchecking both show names and show flags
 			$('.menu-item-data-object-id').each(function() {
 				var id = $(this).val();
-				$('#edit-menu-item-show_flags-'+id).change(function() {
-					if ('checked' != $(this).attr('checked'))
-						$('#edit-menu-item-show_names-'+id).prop('checked', true);
+				var options = ['names-', 'flags-'];
+				$.each(options, function(i, v) {
+					$('#edit-menu-item-show_'+v+id).change(function() {
+						if ('checked' != $(this).attr('checked'))
+							$('#edit-menu-item-show_'+options[1-i]+id).prop('checked', true);
+					});
 				});
 			});
 

@@ -104,7 +104,7 @@ class PLL_Admin_Nav_Menu extends PLL_Nav_Menu {
 		foreach (array_reverse(PLL_Switcher::get_switcher_options('menu', 'string')) as $str)
 			$data['strings'][] = $str;
 
-		$data['strings'][] = __('Language switcher', 'polylang'); // the title
+		$data['title'] = __('Language switcher', 'polylang'); // the title
 
 		// get all language switcher menu items
 		$items = get_posts(array(

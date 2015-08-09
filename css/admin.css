@@ -65,8 +65,8 @@
 /* language columns in edit.php and edit-tags.php */
 th[class*='column-language_'], td[class*='column-language_'] {
 	width: 2em;
-	text-align: center;
 }
+
 
 /* languages metabox in post.php */
 #post-translations table {
@@ -177,26 +177,26 @@ th[class*='column-language_'], td[class*='column-language_'] {
 	.stringstranslations .column-name {
 		display: none;
 	}
-	
+
 	/* hide selected language flag and translations language name */
 	#select-add-term-language .pll-select-flag,
 	#select-edit-term-language .pll-select-flag,
 	#edit-term-translations .pll-language-name {
 		display: none;
 	}
-	
+
 	#edit-term-translations {
 		width: 100%;
 	}
 
 	#add-term-translations .pll-language-column {
-		line-height: 38px;	
+		line-height: 38px;
 	}
-	
+
 	#edit-term-translations td {
 		padding: 8px 10px;
 	}
-	
+
 	#edit-term-translations .pll-language-column,
 	#edit-term-translations .pll-edit-column {
 		width: 20px;
@@ -208,11 +208,11 @@ th[class*='column-language_'], td[class*='column-language_'] {
 	.term-translations .pll-translation-column {
 		display: table-cell;
 	}
-	
+
 	.term-translations .hidden {
 		display: none;
 	}
-	
+
 	/* admin bar */
 	#wpadminbar li#wp-admin-bar-languages {
 		display: block; /*shows our menu on mobile devices */

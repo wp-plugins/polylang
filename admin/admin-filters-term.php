@@ -558,17 +558,25 @@ class PLL_Admin_Filters_Term {
 		if (isset($screen) && in_array($screen->base, array('toplevel_page_mlang', 'dashboard')))
 			return false;
 
-		// admin language filter for ajax paginate_links in taxonomies metabox in nav menus panel
-		if (!empty($_POST['action']) && !empty($this->curlang) && 'menu-get-metabox' == $_POST['action'])
-			return $this->curlang;
+		// ajax actions
+		if (isset($_POST['action'])) {
+			// admin language filter for:
+			// ajax paginate_links in taxonomies metabox in nav menus panel
+			// and taxonomies menus items in customizer menus (since WP 4.3)
+			if (!empty($this->curlang) && in_array($_POST['action'], array('menu-get-metabox', 'load-available-menu-items-customizer'))) {
+				return $this->curlang;
+			}
 
-		// The only ajax response I want to deal with is when changing the language in post metabox
-		if (isset($_POST['action']) && !in_array($_POST['action'], array('post_lang_choice', 'term_lang_choice', 'get-tagcloud')))
-			return false;
+			// The only ajax response I want to deal with is when changing the language in post metabox
+			if (!in_array($_POST['action'], array('post_lang_choice', 'term_lang_choice', 'get-tagcloud'))) {
+				return false;
+			}
 
-		// I only want to filter the parent dropdown list when editing a term in a hierarchical taxonomy
-		if (isset($_POST['action']) && $_POST['action'] == 'term_lang_choice' && !(isset($args['class']) || isset($args['unit'])))
-			return false;
+			// I only want to filter the parent dropdown list when editing a term in a hierarchical taxonomy
+			if ('term_lang_choice' == $_POST['action'] && !(isset($args['class']) || isset($args['unit']))) {
+				return false;
+			}
+		}
 
 		// ajax response for changing the language in the post metabox (or in the edit-tags panels)
 		if (isset($_POST['lang']))

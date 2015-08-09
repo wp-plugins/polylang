@@ -127,9 +127,12 @@ class PLL_Widget_Languages extends WP_Widget {
 						});
 
 						// disallow unchecking both show names and show flags
-						$('#widget-'+this_id+'-show_flags').change(function() {
-							if ('checked' != $(this).attr('checked'))
-								$('#widget-'+this_id+'-show_names').prop('checked', true);
+						var options = ['-show_flags', '-show_names'];
+						$.each(options, function(i, v) {
+							$('#widget-'+this_id+v).change(function() {
+								if ('checked' != $(this).attr('checked'))
+									$('#widget-'+this_id+options[1-i]).prop('checked', true);
+							});
 						});
 
 					});

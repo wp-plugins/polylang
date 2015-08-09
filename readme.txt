@@ -2,7 +2,7 @@
 Contributors: Chouby
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CCWWYUUQV8F4E
 Tags: multilingual, bilingual, translate, translation, language, multilanguage, international, localization
-Requires at least: 3.8
+Requires at least: 3.9
 Tested up to: 4.2
 Stable tag: 1.7.8
 License: GPLv2 or later
@@ -113,7 +113,11 @@ See http://polylang.wordpress.com/documentation/contribute/
 
 = 1.7.9 =
 
+* Minimum WordPress version is now v3.9
 * fix: conflict with WPSEO sitemap caching when using multiple domains
+* fix: issues on mobile devices in list tables in WP 4.3
+* fix: various issues with nav menus and customizer nav menus in WP 4.3
+* fix: correctly disallow unchecking both show names and show flags in the language switcher form
 
 = 1.7.8 (2015-07-21) =
 
