@@ -363,7 +363,7 @@ class PLL_Plugins_Compat {
 			'bs_BA' => 'bs_BA', 'ca' => 'ca_ES', 'ckb' => 'ku_TR', 'cs_CZ' => 'cs_CZ', 'cy' => 'cy_GB', 'da_DK' => 'da_DK',
 			'de_DE' => 'de_DE', 'el' => 'el_GR', 'en_US' => 'en_US', 'en_GB' => 'en_GB', 'eo' => 'eo_EO', 'es_CL' => 'es_LA',
 			'es_CO' => 'es_LA', 'es_MX' => 'es_LA', 'es_PE' => 'es_LA', 'es_PR' => 'es_LA', 'es_VE' => 'es_LA', 'es_ES' => 'es_ES',
-			'et' => 'et_EE', 'eu' => 'eu_ES', 'fa_IR' => 'fa_IR', 'fi' => 'fi_FI', 'fo' => 'fo_FO', 'fr_CA' => 'fr_CA',
+			'et' => 'et_EE', 'eu' => 'eu_ES', 'fa_IR' => 'fa_IR', 'fi' => 'fi_FI', 'sv_FI' => 'sv_FI', 'fo' => 'fo_FO', 'fr_CA' => 'fr_CA',
 			'fr_FR' => 'fr_FR', 'fy' => 'fy_NL', 'ga' => 'ga_IE', 'gl_ES' => 'gl_ES', 'gn' => 'gn_PY', 'gu_IN' => 'gu_IN',
 			'he_IL' => 'he_IL', 'hi_IN' => 'hi_IN', 'hr' => 'hr_HR', 'hu_HU' => 'hu_HU', 'hy' => 'hy_AM', 'id_ID' => 'id_ID',
 			'is_IS' => 'is_IS', 'it_IT' => 'it_IT', 'ja' => 'ja_JP', 'jv_ID' => 'jv_ID', 'ka_GE' => 'ka_GE', 'kk' => 'kk_KZ',

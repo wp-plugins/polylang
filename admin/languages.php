@@ -78,6 +78,7 @@ $languages = array(
 	array('sr', 'sr_RS', 'Српски језик'),
 	array('su', 'su_ID', 'Basa Sunda'),
 	array('sv', 'sv_SE', 'Svenska'),
+	array('sv', 'sv_FI', 'Finlandssvenska'),
 	array('ta', 'ta_LK', 'தமிழ்'),
 	array('th', 'th', 'ไทย'),
 	array('tr', 'tr_TR', 'Türkçe'),
