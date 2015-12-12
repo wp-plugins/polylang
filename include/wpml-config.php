@@ -248,7 +248,8 @@ class PLL_WPML_Config {
 				if ('copy' == $cf['attributes']['action'] || (!$sync && 'translate' == $cf['attributes']['action']))
 					$metas[] = $cf['value'];
 				else
-					$metas = array_diff($metas,  array($cf['value']));
+					if (isset($cf['value']))
+						$metas = array_diff($metas,  array($cf['value']));
 			}
 		}
 		return $metas;
