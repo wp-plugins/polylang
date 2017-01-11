@@ -22,6 +22,7 @@ class PLL_Switcher {
 			'show_names'             => array('string' => __('Displays language names', 'polylang'), 'default' => 1),
 			'show_flags'             => array('string' => __('Displays flags', 'polylang'), 'default' => 0),
 			'force_home'             => array('string' => __('Forces link to front page', 'polylang'), 'default' => 0),
+			'current_first'          => array('string' => __('Current language first', 'polylang'), 'default' => 0),
 			'hide_current'           => array('string' => __('Hides the current language', 'polylang'), 'default' => 0),
 			'hide_if_no_translation' => array('string' => __('Hides languages with no translation', 'polylang'), 'default' => 0),
 		);
@@ -76,6 +77,17 @@ class PLL_Switcher {
 
 			$out[] = compact('id', 'slug', 'name', 'url', 'flag', 'current_lang', 'no_translation', 'classes');
 		}
+		
+		if (isset($args['current_first']) && $args['current_first']) {
+			foreach ($out as $key => $value) {
+				if ($value['current_lang']) {
+					$current = $value;
+					unset($out[$key]);
+					array_unshift($out, $current);
+				}
+			}
+		}
+		
 		return empty($out) ? array() : $out;
 
 	}
